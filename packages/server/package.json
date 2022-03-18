@@ -1,0 +1,11 @@
+{
+  "name": "@veloce/server",
+  "version": "0.0.1",
+  "description": "Server core using uWebsocket.js with additional helpers",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "author": "NEWBRAN LTD & TO1SOURCE",
+  "license": "ISC"
+}

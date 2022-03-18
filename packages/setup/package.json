@@ -6,7 +6,7 @@
   "scripts": {
     "test": "ava",
     "ex": "node ./index.js"
-  },
+},
   "author": "",
   "license": "ISC",
   "dependencies": {
