@@ -14,9 +14,9 @@
   "author": "NEWBRAN LTD & TO1SOURCE",
   "license": "ISC",
   "dependencies": {
-    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.6.0",
     "fs-extra": "^10.0.0",
     "tslib": "^1.14.1",
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.6.0",
     "yargs": "^16.2.0"
   },
   "devDependencies": {
@@ -29,9 +29,10 @@
     "esbuild": "^0.12.0",
     "esbuild-register": "^2.5.0",
     "eslint": "^7.27.0",
-    "typedoc": "^0.20.36"
+    "node-fetch": "^3.2.3"
   },
   "ava": {
+    "verbose": true,
     "extensions": [
       "ts"
     ],
