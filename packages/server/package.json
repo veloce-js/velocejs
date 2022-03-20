@@ -19,8 +19,8 @@
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register"
   },
-  "author": "NEWBRAN LTD & TO1SOURCE",
-  "license": "ISC",
+  "author": "Joel Chu <joelchu@foxmail.com>",
+  "license": "UNLICENSED",
   "dependencies": {
     "mime-types": "^2.1.35",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.6.0"
