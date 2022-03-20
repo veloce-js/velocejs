@@ -5,7 +5,9 @@ import path from 'path'
 
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
 
-
+/**
+ * serve static files from assetDir
+ */
 export function serveStatic(assetDir: string) {
 
   return function(res: HttpResponse, req: HttpRequest) {
