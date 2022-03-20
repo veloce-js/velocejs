@@ -3,6 +3,13 @@
   "version": "0.0.1",
   "description": "Server core using uWebsocket.js with additional helpers",
   "main": "index.js",
+  "files": [
+    "dist",
+    "src",
+    "index.js",
+    "index.d.ts",
+    "index.ts"
+  ],
   "scripts": {
     "test": "ava",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
@@ -15,13 +22,12 @@
   "author": "NEWBRAN LTD & TO1SOURCE",
   "license": "ISC",
   "dependencies": {
-    "fs-extra": "^10.0.0",
     "mime-types": "^2.1.35",
-    "tslib": "^1.14.1",
-    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.6.0",
-    "yargs": "^16.2.0"
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.6.0"
   },
   "devDependencies": {
+    "fs-extra": "^10.0.0",
+    "tslib": "^1.14.1",
     "@ava/typescript": "^1.1.1",
     "@types/fs-extra": "^9.0.11",
     "@types/mime-types": "^2.1.1",
@@ -35,7 +41,6 @@
     "node-fetch": "^3.2.3"
   },
   "ava": {
-    "verbose": true,
     "extensions": [
       "ts"
     ],
