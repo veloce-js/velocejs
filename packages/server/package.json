@@ -1,5 +1,5 @@
 {
-  "name": "@veloce/server",
+  "name": "@velocejs/server",
   "version": "0.0.1",
   "description": "Server core using uWebsocket.js with additional helpers",
   "main": "index.js",
