@@ -1,8 +1,8 @@
 // Main entry point
 import uWS from 'uWebSockets.js'
-import { createApp } from './src/create-app'
-import { readJsonAsync } from './src/read-json-async'
-import { serveStatic } from './src/serve-static'
+import { createApp } from './create-app'
+import { readJsonAsync } from './read-json-async'
+import { serveStatic } from './serve-static'
 // default export
 export default uWS
 // named

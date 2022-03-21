@@ -8,7 +8,11 @@
   },
   "scripts": {
     "test": "ava",
-    "inst": "pnpm i @velocejs/${1} -r --filter ${2}"
+    "example-install": "pnpm i @velocejs/${1} -r --filter ${2}",
+    "start": "pnpm -C ",
+    "ssr:dev": "pnpm start -- ./packages/ssr-vue serve",
+    "server:dev": "",
+    "setup:dev": ""
   },
   "repository": {
     "type": "git",

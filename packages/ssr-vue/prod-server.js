@@ -2,15 +2,19 @@
 const fs = require('fs')
 const path = require('path')
 const uWS = require('uWebSockets.js')
+
+// const { serveStatic } = require('@velocejs/server')
+
 const mime = require('mime-types')
 
 const port = process.env.PORT || 9001
 // This is the production server using uWebSocket.js
 const resolve = (p) => path.resolve(__dirname, p)
 
-uWS.
-  App({})
+uWS.App()
   // serve up the static files
+  //.get('/assets/*', serveStatic(resolve('app/assets')))
+
   .get('/assets/*', async (res, req) => {
     const url = req.getUrl()
     const assetDir = path.join(__dirname, 'dist', 'client')
@@ -24,7 +28,6 @@ uWS.
       // @TODO
       res.writeStatus(404)
     }
-
   })
   .get('/*', async (res, req) => {
 
@@ -41,7 +44,7 @@ uWS.
 
     // @TODO we should have a map to tell which should be SSG (cached)
     // then look up here or even better prefix with a path
-    // and move to another handler to make code cleaner 
+    // and move to another handler to make code cleaner
 
 
     let template, render

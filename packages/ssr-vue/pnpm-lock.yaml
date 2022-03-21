@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@velocejs/server': workspace:^0.0.1
   '@vitejs/plugin-vue': ^1.0.0
   '@vitejs/plugin-vue-jsx': ^1.1.2
   '@vue/compiler-sfc': ^3.0.8
@@ -17,6 +18,7 @@ specifiers:
   vue-router: ^4.0.3
 
 dependencies:
+  '@velocejs/server': link:../server
   mime-types: 2.1.35
   uWebSockets.js: github.com/uNetworking/uWebSockets.js/a58e810e47a23696410f6073c8c905dc38f75da5
   vue: 3.2.31
@@ -1405,7 +1407,7 @@ packages:
     dev: true
 
   github.com/uNetworking/uWebSockets.js/a58e810e47a23696410f6073c8c905dc38f75da5:
-    resolution: {tarball: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/a58e810e47a23696410f6073c8c905dc38f75da5}
+    resolution: {commit: a58e810e47a23696410f6073c8c905dc38f75da5, repo: git+ssh://git@github.com/uNetworking/uWebSockets.js.git, type: git}
     name: uWebSockets.js
     version: 20.6.0
     dev: false
