@@ -5,15 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "ex": "node ./index.js"
+    "start": "node ./index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "prompts": "^2.4.2"
-  },
-  "devDependencies": {
-    "@types/node": "^17.0.21",
-    "@types/prompts": "^2.0.14"
+    "minimist": "^1.2.5",
+    "plop": "^3.0.5"
   }
 }
