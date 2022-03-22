@@ -19,7 +19,7 @@
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",
     "clean:dist": "rimraf ./dist",
-    "prepublishOnly": "pnpm clean:dist && pnpm build:tsc"
+    "prepublishOnly": "pnpm clean:dist && pnpm build:tsc && pnpm test"
   },
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "UNLICENSED",
