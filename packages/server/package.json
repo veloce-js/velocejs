@@ -8,9 +8,7 @@
   "files": [
     "dist",
     "src",
-    "index.js",
-    "index.d.ts",
-    "index.ts"
+    "index.d.ts"
   ],
   "scripts": {
     "test": "ava",
@@ -19,7 +17,9 @@
     "build": "esbuild src/index.ts --platform=node --outfile=dist/index.js",
     "clean": "node ./clean.js",
     "docs": "typedoc --entryPoints src/main.ts",
-    "ts": "node -r esbuild-register"
+    "ts": "node -r esbuild-register",
+    "clean:dist": "rimraf ./dist",
+    "prepublishOnly": "pnpm clean:dist && pnpm build:tsc"
   },
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "UNLICENSED",
@@ -40,10 +40,11 @@
     "esbuild": "^0.14.27",
     "esbuild-register": "^3.3.2",
     "eslint": "^8.11.0",
+    "rimraf": "^3.0.2",
     "node-fetch": "^3.2.3"
   },
   "ava": {
-    "verbose": true,
+    "verbose": false,
     "files": [
 			"tests/**/*.test.ts"
     ],

@@ -1,10 +1,17 @@
 import test from 'ava'
-import { createApp, readJsonAsync } from '../src/index'
+import uWS, { createApp, readJsonAsync } from '../src/index'
 import Fetch from 'node-fetch'
 import { HttpResponse } from 'uWebSockets.js'
 
 const port = 9002
 const payload = {data: [1,2,3]}
+
+let listenSocket: any = null
+
+test.after(() => {
+  uWS.us_listen_socket_close(listenSocket)
+})
+
 
 test(`Testing the readJsonAsync method`, async t => {
   t.plan(1)
@@ -20,11 +27,11 @@ test(`Testing the readJsonAsync method`, async t => {
 
     })
     .listen(port, token => {
+      listenSocket = token
       if (!token) {
         console.log(`Start up server failed on`, port)
       }
     })
-
 
 
     await Fetch(`http://localhost:${port}`, {
