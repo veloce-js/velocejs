@@ -1,5 +1,5 @@
 import test from 'ava'
-import uWS, { createApp } from '../src/index'
+import { createApp,shutdownApp } from '../src'
 import { TemplatedApp, HttpResponse } from 'uWebSockets.js'
 import Fetch from 'node-fetch'
 
@@ -13,7 +13,7 @@ test.before(() => {
 })
 // clean up
 test.after(() => {
-  uWS.us_listen_socket_close(listenSocket)
+  shutdownApp(listenSocket)
 })
 
 test(`testing the createApp method`, async (t) => {

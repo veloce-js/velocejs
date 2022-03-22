@@ -1,5 +1,5 @@
 import test from 'ava'
-import uWS, { createApp, readJsonAsync, writeJson } from '../src/index'
+import { createApp, shutdownApp, writeJson } from '../src/index'
 import Fetch from 'node-fetch'
 import { HttpResponse } from 'uWebSockets.js'
 
@@ -23,7 +23,7 @@ test.before(() => {
 })
 // clean up otherwise ava throw error
 test.after(() => {
-  uWS.us_listen_socket_close(listenSocket)
+  shutdownApp(listenSocket)
 })
 
 test(`Testing the writeJson method`, async (t) => {
