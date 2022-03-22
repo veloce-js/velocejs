@@ -1,21 +1,21 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@velocejs/server': workspace:^0.0.1
-  '@vitejs/plugin-vue': ^1.0.0
-  '@vitejs/plugin-vue-jsx': ^1.1.2
-  '@vue/compiler-sfc': ^3.0.8
-  '@vue/server-renderer': ^3.0.6
+  '@velocejs/server': workspace:^0.0.2
+  '@vitejs/plugin-vue': ^2.2.4
+  '@vitejs/plugin-vue-jsx': ^1.3.8
+  '@vue/compiler-sfc': ^3.2.31
+  '@vue/server-renderer': ^3.2.31
   compression: ^1.7.4
   cross-env: ^7.0.3
   dep-import-type: link:./dep-import-type
-  express: ^4.17.1
+  express: ^4.17.3
   mime-types: ^2.1.35
-  serve-static: ^1.14.1
+  serve-static: ^1.14.2
   uWebSockets.js: github:uNetworking/uWebSockets.js#v20.6.0
   vite: ^2.8.6
-  vue: ^3.0.8
-  vue-router: ^4.0.3
+  vue: ^3.2.31
+  vue-router: ^4.0.14
 
 dependencies:
   '@velocejs/server': link:../server
@@ -25,7 +25,7 @@ dependencies:
   vue-router: 4.0.14_vue@3.2.31
 
 devDependencies:
-  '@vitejs/plugin-vue': 1.10.2_vite@2.8.6
+  '@vitejs/plugin-vue': 2.2.4_vite@2.8.6+vue@3.2.31
   '@vitejs/plugin-vue-jsx': 1.3.8
   '@vue/compiler-sfc': 3.2.31
   '@vue/server-renderer': 3.2.31_vue@3.2.31
@@ -377,13 +377,15 @@ packages:
       - supports-color
     dev: true
 
-  /@vitejs/plugin-vue/1.10.2_vite@2.8.6:
-    resolution: {integrity: sha512-/QJ0Z9qfhAFtKRY+r57ziY4BSbGUTGsPRMpB/Ron3QPwBZM4OZAZHdTa4a8PafCwU5DTatXG8TMDoP8z+oDqJw==}
+  /@vitejs/plugin-vue/2.2.4_vite@2.8.6+vue@3.2.31:
+    resolution: {integrity: sha512-ev9AOlp0ljCaDkFZF3JwC/pD2N4Hh+r5srl5JHM6BKg5+99jiiK0rE/XaRs3pVm1wzyKkjUy/StBSoXX5fFzcw==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       vite: ^2.5.10
+      vue: ^3.2.25
     dependencies:
       vite: 2.8.6
+      vue: 3.2.31
     dev: true
 
   /@vue/babel-helper-vue-transform-on/1.0.2:

@@ -1,6 +1,7 @@
+// this is not part of the test but just testing the server setup 
 
 import uWS from 'uWebSockets.js'
-import { createApp } from './create-app'
+import { createApp } from '../src/create-app'
 import { HttpResponse } from 'uWebSockets.js'
 import Fetch from 'node-fetch'
 

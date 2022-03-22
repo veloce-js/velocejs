@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/veloce-js/main#readme",
   "devDependencies": {
-    "@types/node": "^17.0.21",
+    "@types/node": "^17.0.22",
     "ava": "^4.1.0",
     "esbuild": "^0.14.27",
     "esbuild-register": "^3.3.2",

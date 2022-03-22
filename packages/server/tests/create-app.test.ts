@@ -1,5 +1,5 @@
 import test from 'ava'
-import { createApp } from '../index'
+import { createApp } from '../src/index'
 import { TemplatedApp, HttpResponse } from 'uWebSockets.js'
 import Fetch from 'node-fetch'
 

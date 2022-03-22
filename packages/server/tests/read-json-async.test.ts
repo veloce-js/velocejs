@@ -1,5 +1,5 @@
 import test from 'ava'
-import { createApp, readJsonAsync } from '../index'
+import { createApp, readJsonAsync } from '../src/index'
 import Fetch from 'node-fetch'
 import { HttpResponse } from 'uWebSockets.js'
 
@@ -12,7 +12,7 @@ test(`Testing the readJsonAsync method`, async t => {
     .post('/*', async (res: HttpResponse) => {
 
       const result = await readJsonAsync(res)
-      
+
       t.deepEqual(result, payload)
 
       res.writeHeader('Content-type', 'application/json')

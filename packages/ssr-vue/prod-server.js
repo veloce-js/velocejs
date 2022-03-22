@@ -1,9 +1,10 @@
 // @ts-check
 const fs = require('fs')
 const path = require('path')
-const uWS = require('uWebSockets.js')
+// const uWS = require('uWebSockets.js')
 
-// const { serveStatic } = require('@velocejs/server')
+// const uWS = require('@velocejs/server')
+const { createApp, serveStatic } = require('@velocejs/server')
 
 const mime = require('mime-types')
 
@@ -11,10 +12,11 @@ const port = process.env.PORT || 9001
 // This is the production server using uWebSocket.js
 const resolve = (p) => path.resolve(__dirname, p)
 
-uWS.App()
+// uWS.App()
   // serve up the static files
-  //.get('/assets/*', serveStatic(resolve('app/assets')))
-
+createApp()
+  .get('/assets/*', serveStatic(resolve('app/assets')))
+  /*
   .get('/assets/*', async (res, req) => {
     const url = req.getUrl()
     const assetDir = path.join(__dirname, 'dist', 'client')
@@ -28,7 +30,7 @@ uWS.App()
       // @TODO
       res.writeStatus(404)
     }
-  })
+  }) */
   .get('/*', async (res, req) => {
 
     // Here we modified it for our SSR app
