@@ -39,14 +39,9 @@ Read the JSON from response
 ```ts
 createApp()
   .post('/*', async (res: HttpResponse) => {
-
     const json = await readJsonAsync(res)
     // do your thing with your json
-
-
-    res.writeHeader('Content-type', 'application/json')
-    res.end(JSON.stringify({OK: true}))
-    
+    writeJson(res, {OK: true})
   })
   .listen(port, token => {
     listenSocket = token
@@ -56,9 +51,15 @@ createApp()
   })
 ```
 
+### writeJson(res: HttpResponse, jsonObj: any): void
 
+Super simple return json
 
-#### async serveStatic(path: string | Array<string>): void
+```ts
+writeJson(res, {OK: true}) // <-- as seen in the above example 
+```
+
+### async serveStatic(path: string | Array<string>): void
 
 It's not a good idea to use the node server to serve up static file, instead your should use your actual webserver (i.e. Nginx) we will provide you with working example how to combine it, but if you really need to, there here it is for you to use.
 
