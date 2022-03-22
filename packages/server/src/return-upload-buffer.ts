@@ -17,8 +17,8 @@ export async function returnUploadBuffer(res: HttpResponse): Promise<any> {
 }
 
 // writing the ArrayBuffer to a file
-export function writeBufferToFile(path: string, buffer: Buffer, permission=438): void {
-  let fileDescriptor;
+export function writeBufferToFile(buffer: Buffer, path: string, permission=0o666): void {
+  let fileDescriptor
   try {
     fileDescriptor = fs.openSync(path, 'w', permission)
   } catch (e) {
