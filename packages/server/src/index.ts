@@ -5,6 +5,7 @@ import { readJsonAsync } from './read-json-async'
 import { writeJson } from './write-json'
 import { serveStatic } from './serve-static'
 import { rateLimit } from './rate-limit'
+import { returnUploadBuffer, writeBufferToFile } from './return-upload-buffer'
 // default export
 export default uWS
 // named
@@ -14,5 +15,7 @@ export {
   readJsonAsync,
   writeJson,
   serveStatic,
-  rateLimit
+  rateLimit,
+  returnUploadBuffer,
+  writeBufferToFile
 }

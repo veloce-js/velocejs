@@ -11,10 +11,7 @@ function bconcat(args: Array<any>, str?: boolean): any {
   return str ? b.toString() : b
 }
 
-/**
- *
- *
- */
+// Reading buffer from response and return the json object
 export async function readJsonAsync(res: HttpResponse):  Promise<any> {
   return new Promise((resolver: (value: unknown) => void, rejecter: (reason?: any) => void) => {
     let buffer: any
@@ -26,7 +23,7 @@ export async function readJsonAsync(res: HttpResponse):  Promise<any> {
           try {
             json = JSON.parse(bconcat([buffer, chunk], true)) // Buffer to string
           } catch(e) {
-            res.close()
+            res.close() // Do we need to call close here?
 
             return rejecter(e)
           }
