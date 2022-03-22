@@ -1,7 +1,7 @@
 import { WebSocket } from 'uWebSockets.js'
 
 // this is from the examples/RateLimit.js
-export function RateLimit(limit: number, interval: number): (ws: WebSocket) => boolean | void {
+export function rateLimit(limit: number, interval: number): (ws: WebSocket) => boolean | void {
   let now = 0;
   // we couldn't use the symbol as key here, the problem is in the Type definition
   // the ws has ws[string]: any but not Symbol they need to expand this crap
