@@ -3,11 +3,11 @@ import test from 'ava'
 import * as fs from 'fs'
 import { join } from 'path'
 import FormData from 'form-data'
-
+import { sendFile } from './fixtures/send-file'
 import {
   createServer,
   shutdownServer,
-  returnUploadBuffer,
+  handleUpload,
   writeBufferToFile
 } from '../src'
 import { TemplatedApp, HttpResponse } from 'uWebSockets.js'
@@ -22,10 +22,14 @@ test.before(()=>{
   createServer()
     .post('/upload', async (res: HttpResponse) => {
 
-      console.log('got something')
+      handleUpload(
+        res,
+        buffer => {
+          writeBufferToFile(buffer, outFile)
+        },
+        () => console.log(`Server aborted!`)
+      )
 
-      const buffer = await returnUploadBuffer(res)
-      writeBufferToFile(buffer, outFile)
       res.end('OK')
     })
     .listen(port, (token) => {
@@ -37,27 +41,7 @@ test.after(()=>{
   shutdownServer(listenSocket)
 })
 
-// from https://stackoverflow.com/questions/44021538/how-to-send-a-file-in-request-node-fetch-or-node
-async function sendFile() {
-  return new Promise((resolver, rejecter) => {
-    const form = new FormData()
-    const buffer = fs.readFileSync(join(__dirname, 'fixtures', 'test.txt'))
-    form.append('file', buffer, {
-      contentType: 'text/plain',
-      name: 'file',
-      filename: fileName,
-    })
-    form.submit({
-      host: `http://localhost:${port}`,
-      path: '/upload'
-    }, function(err, res) {
-      if (err) {
-        return rejecter(err)
-      }
-      resolver(res)
-    })
-  })
-}
+
 
 test(`should able to capture the uploaded file and write to dist`, async (t) => {
   t.plan(1)

@@ -7,12 +7,13 @@ import { HttpResponse } from 'uWebSockets.js'
 // when isLast is true
 export function handleUpload(
   res: HttpResponse,
-  bufferHandler: (b: ArrayBuffer) => void,
+  bufferHandler: (b: Buffer) => void,
   onAbortedHandler?: () => void
 ): void {
   let data: any;
   res.onData((chunk: ArrayBuffer, isLast: boolean) => {
-    data = Buffer.concat([data, chunk])
+    let _chunk = Buffer.from(chunk)
+    data = data ? Buffer.concat([data, _chunk]) : Buffer.concat([_chunk])
     if (isLast) {
       bufferHandler(data)
     }
@@ -23,18 +24,20 @@ export function handleUpload(
   })
 }
 
-// writing the ArrayBuffer to a file
-export function writeBufferToFile(buffer: Buffer, path: string, permission=0o666): void {
+// writing the Buffer to a file
+export function writeBufferToFile(buffer: Buffer, path: string, permission=0o666): boolean {
   let fileDescriptor
   try {
     fileDescriptor = fs.openSync(path, 'w', permission)
   } catch (e) {
-    fs.chmodSync(path, permission);
+    fs.chmodSync(path, permission)
     fileDescriptor = fs.openSync(path, 'w', permission)
   }
 
   if (fileDescriptor) {
     fs.writeSync(fileDescriptor, buffer, 0, buffer.length, 0)
     fs.closeSync(fileDescriptor)
+    return true
   }
+  return false
 }

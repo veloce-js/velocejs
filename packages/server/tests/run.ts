@@ -10,15 +10,16 @@ import {
 } from '../src'
 
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
-import Fetch from 'node-fetch'
+// import Fetch from 'node-fetch'
 import { sendFile } from './fixtures/send-file'
 import { join } from 'path'
+import rimraf from 'rimraf'
 
 let connectedSocket: any
 let port: number
 let serverUrl: string
-const fileName = 'test.txt'
-const outFile = './fixtures/tmp/test.txt'
+// const fileName = 'test.txt'
+const outFile = join(__dirname, 'fixtures', 'tmp', 'test.txt')
 
 createServer()
   .any('/*', async (res: HttpResponse, req: HttpRequest) => {
@@ -26,47 +27,49 @@ createServer()
 
     console.log(`Calling ${url}\n`)
     req.forEach((k, v) => {
-      res.write(k)
-      res.write(' = ')
-      res.write(v)
-      res.write("\n")
+      console.log(`${k} = ${v}\n`)
     })
 
-
     if (url === '/upload') {
-      const buffer = await returnUploadBuffer(res)
-      console.log(`Got a file`, buffer.toString())
+      handleUpload(
+        res,
+        (buffer) => {
+          if (writeBufferToFile(buffer, outFile)) {
+            console.log(`Got an upload`, buffer.toString())
+          } else {
+            console.error(`Failed to create file`)
+          }
+          res.end(`done`)
+        },
+        () => {
+          console.log(`Server aborted`)
+        }
+      )
+    } else {
+      res.end('Hello')
     }
-
-    res.end('Hello')
   })
   .listen(0, async (token) => {
     if (token) {
-
       connectedSocket = token
-
       port = getPort(token)
       serverUrl = `http://localhost:${port}`
-      const response = await Fetch(serverUrl)
-      const txt = await response.text()
-
-      console.log(port, txt)
+      console.log(`Server is running on ${serverUrl}`)
+      // const response = await Fetch(serverUrl)
+      // const txt = await response.text()
+      // console.log(port, txt)
     }
   })
-
-
 
 setTimeout(async () => {
   await sendFile(
     serverUrl + '/upload',
-    join(__dirname, 'fixtures', 'test.txt'),
-    'text/plain'
+    join(__dirname, 'fixtures', 'test.txt')
   )
 },600)
 
-/*
 setTimeout(() => {
   console.log(`shutdown now`)
+  rimraf(outFile, () => console.log(`file remove`))
   shutdownServer(connectedSocket)
 },2000)
-*/
