@@ -2,6 +2,7 @@
   "name": "@velocejs/ssr-vue",
   "private": true,
   "version": "0.0.1",
+  "description": "Based on https://github.com/vitejs/vite/tree/main/packages/playground/ssr-vue",
   "scripts": {
     "dev": "node dev-server",
     "build": "pnpm run build:client && pnpm run build:server",
@@ -9,7 +10,9 @@
     "build:server": "vite build --ssr app/entry-server.js --outDir dist/server",
     "generate": "vite build --ssrManifest --outDir dist/static && pnpm run build:server && node prerender",
     "serve": "cross-env NODE_ENV=production node prod-server",
-    "debug": "node --inspect-brk server"
+    "debug": "node --inspect-brk server",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@velocejs/server": "workspace:^0.1.0",
@@ -28,6 +31,7 @@
     "dep-import-type": "link:./dep-import-type",
     "express": "^4.17.3",
     "serve-static": "^1.14.2",
-    "vite": "^2.8.6"
+    "vite": "^2.8.6",
+    "vitest": "^0.7.9"
   }
 }

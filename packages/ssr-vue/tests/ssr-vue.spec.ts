@@ -1,4 +1,4 @@
-import { editFile, getColor, isBuild, untilUpdated } from '../../testUtils'
+import { editFile, getColor, isBuild, untilUpdated } from '../lib/test-utils'
 import { port } from './serve'
 import fetch from 'node-fetch'
 

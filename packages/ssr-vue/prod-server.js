@@ -1,17 +1,11 @@
 // @ts-check
 const fs = require('fs')
 const path = require('path')
-// const uWS = require('uWebSockets.js')
-
-// const uWS = require('@velocejs/server')
-const { createApp, serveStatic } = require('@velocejs/server')
-
+const { createServer, serveStatic } = require('@velocejs/server')
 const mime = require('mime-types')
-
 const port = process.env.PORT || 9001
 // This is the production server using uWebSocket.js
 const resolve = (p) => path.resolve(__dirname, p)
-
 // uWS.App()
   // serve up the static files
 createApp()
