@@ -12,7 +12,8 @@
     "start": "pnpm -C ",
     "ssr:dev": "pnpm start -- ./packages/ssr-vue serve",
     "server:dev": "",
-    "setup:dev": ""
+    "setup:dev": "",
+    "push": "git push origin main && git push gh main"
   },
   "repository": {
     "type": "git",

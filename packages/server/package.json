@@ -39,7 +39,6 @@
     "esbuild": "^0.14.27",
     "esbuild-register": "^3.3.2",
     "eslint": "^8.11.0",
-    "form-data": "^4.0.0",
     "fs-extra": "^10.0.1",
     "node-fetch": "^3.2.3",
     "rimraf": "^3.0.2"

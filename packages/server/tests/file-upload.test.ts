@@ -1,7 +1,7 @@
 // testing the file upload related methods
 import test from 'ava'
 import * as fs from 'fs'
-// import { join } from 'path'
+import { join } from 'path'
 import FormData from 'form-data'
 
 import {
@@ -12,15 +12,25 @@ import {
 } from '../src'
 import { TemplatedApp, HttpResponse } from 'uWebSockets.js'
 
+let listenSocket: any = null
 
 const port = 9004
-let app: TemplatedApp
-let listenSocket: any = null
 const fileName = 'test.txt'
 const outFile = './fixtures/tmp/test.txt'
 
 test.before(()=>{
-  app = createApp()
+  createApp()
+    .post('/upload', async (res: HttpResponse) => {
+
+      console.log('got something')
+
+      const buffer = await returnUploadBuffer(res)
+      writeBufferToFile(buffer, outFile)
+      res.end('OK')
+    })
+    .listen(port, (token) => {
+      listenSocket = token
+    })
 })
 
 test.after(()=>{
@@ -31,7 +41,7 @@ test.after(()=>{
 async function sendFile() {
   return new Promise((resolver, rejecter) => {
     const form = new FormData()
-    const buffer = fs.readFileSync('./fixtures/test.txt')
+    const buffer = fs.readFileSync(join(__dirname, 'fixtures', 'test.txt'))
     form.append('file', buffer, {
       contentType: 'text/plain',
       name: 'file',
@@ -50,14 +60,11 @@ async function sendFile() {
 }
 
 test(`should able to capture the uploaded file and write to dist`, async (t) => {
-  app
-    .post('/upload', async (res: HttpResponse) => {
-      const buffer = await returnUploadBuffer(res)
-      writeBufferToFile(buffer, outFile)
+  t.plan(1)
+  const result = await sendFile()
 
-      t.true(fs.existsSync(outFile))
+  console.log('RESPONSE', result)
 
-      res.end('OK')
-    })
+  t.true(fs.existsSync(outFile))
 
 })

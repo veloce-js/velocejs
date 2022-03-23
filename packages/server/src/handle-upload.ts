@@ -3,16 +3,23 @@ import fs from 'fs'
 import { HttpResponse } from 'uWebSockets.js'
 
 // get the upload buffer from response
-export async function returnUploadBuffer(res: HttpResponse): Promise<any> {
-
-  return new Promise((resolver) => {
-    let data: any;
-    res.onData((chunk: ArrayBuffer, isLast: boolean) => {
-      data = Buffer.concat([data, chunk])
-      if (isLast) {
-        return resolver(data)
-      }
-    })
+// WE CAN NOT do this with async because all the handler must get call
+// when isLast is true
+export function handleUpload(
+  res: HttpResponse,
+  bufferHandler: (b: ArrayBuffer) => void,
+  onAbortedHandler?: () => void
+): void {
+  let data: any;
+  res.onData((chunk: ArrayBuffer, isLast: boolean) => {
+    data = Buffer.concat([data, chunk])
+    if (isLast) {
+      bufferHandler(data)
+    }
+  })
+  // if we don't attach an onAborted handler then we get complain
+  res.onAborted(() => {
+    onAbortedHandler && onAbortedHandler()
   })
 }
 

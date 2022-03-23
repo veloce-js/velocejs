@@ -12,10 +12,7 @@ function bconcat(args, str) {
     const b = Buffer.concat(args);
     return str ? b.toString() : b;
 }
-/**
- *
- *
- */
+// Reading buffer from response and return the json object
 function readJsonAsync(res) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         return new Promise((resolver, rejecter) => {
@@ -29,7 +26,7 @@ function readJsonAsync(res) {
                             json = JSON.parse(bconcat([buffer, chunk], true)); // Buffer to string
                         }
                         catch (e) {
-                            res.close();
+                            res.close(); // Do we need to call close here?
                             return rejecter(e);
                         }
                         return resolver(json);
