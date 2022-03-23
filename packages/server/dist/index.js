@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.writeBufferToFile = exports.returnUploadBuffer = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createServer = void 0;
+exports.writeBufferToFile = exports.handleUpload = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createServer = void 0;
 const tslib_1 = require("tslib");
 // Main entry point
 const uWebSockets_js_1 = tslib_1.__importDefault(require("uWebSockets.js"));
@@ -16,8 +16,8 @@ const serve_static_1 = require("./serve-static");
 Object.defineProperty(exports, "serveStatic", { enumerable: true, get: function () { return serve_static_1.serveStatic; } });
 const rate_limit_1 = require("./rate-limit");
 Object.defineProperty(exports, "rateLimit", { enumerable: true, get: function () { return rate_limit_1.rateLimit; } });
-const return_upload_buffer_1 = require("./return-upload-buffer");
-Object.defineProperty(exports, "returnUploadBuffer", { enumerable: true, get: function () { return return_upload_buffer_1.returnUploadBuffer; } });
-Object.defineProperty(exports, "writeBufferToFile", { enumerable: true, get: function () { return return_upload_buffer_1.writeBufferToFile; } });
+const handle_upload_1 = require("./handle-upload");
+Object.defineProperty(exports, "handleUpload", { enumerable: true, get: function () { return handle_upload_1.handleUpload; } });
+Object.defineProperty(exports, "writeBufferToFile", { enumerable: true, get: function () { return handle_upload_1.writeBufferToFile; } });
 // default export
 exports.default = uWebSockets_js_1.default;

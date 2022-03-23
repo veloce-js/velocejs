@@ -1,25 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.writeBufferToFile = exports.returnUploadBuffer = void 0;
+exports.writeBufferToFile = exports.handleUpload = void 0;
 const tslib_1 = require("tslib");
 // return the upload Data
 const fs_1 = tslib_1.__importDefault(require("fs"));
 // get the upload buffer from response
-function returnUploadBuffer(res) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolver) => {
-            let data;
-            res.onData((chunk, isLast) => {
-                data = Buffer.concat([data, chunk]);
-                if (isLast) {
-                    return resolver(data);
-                }
-            });
-        });
+// WE CAN NOT do this with async because all the handler must get call
+// when isLast is true
+function handleUpload(res, bufferHandler, onAbortedHandler) {
+    let data;
+    res.onData((chunk, isLast) => {
+        let _chunk = Buffer.from(chunk);
+        data = data ? Buffer.concat([data, _chunk]) : Buffer.concat([_chunk]);
+        if (isLast) {
+            bufferHandler(data);
+        }
+    });
+    // if we don't attach an onAborted handler then we get complain
+    res.onAborted(() => {
+        onAbortedHandler && onAbortedHandler();
     });
 }
-exports.returnUploadBuffer = returnUploadBuffer;
-// writing the ArrayBuffer to a file
+exports.handleUpload = handleUpload;
+// writing the Buffer to a file
 function writeBufferToFile(buffer, path, permission = 0o666) {
     let fileDescriptor;
     try {
@@ -32,6 +35,8 @@ function writeBufferToFile(buffer, path, permission = 0o666) {
     if (fileDescriptor) {
         fs_1.default.writeSync(fileDescriptor, buffer, 0, buffer.length, 0);
         fs_1.default.closeSync(fileDescriptor);
+        return true;
     }
+    return false;
 }
 exports.writeBufferToFile = writeBufferToFile;

@@ -1,5 +1,5 @@
 import test from 'ava'
-import { createServer,shutdownServer } from '../src'
+import { createServer, shutdownServer } from '../src'
 import { TemplatedApp, HttpResponse } from 'uWebSockets.js'
 import Fetch from 'node-fetch'
 
@@ -17,7 +17,7 @@ test.after(() => {
 })
 
 test(`testing the createServer method`, async (t) => {
-  t.plan(1)
+  t.plan(2)
   app.get('/*', (res: HttpResponse) => {
     res.end(msg)
   }).listen(port, async (token) => {
