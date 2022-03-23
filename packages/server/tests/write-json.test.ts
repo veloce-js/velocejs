@@ -11,7 +11,6 @@ let listenSocket: any = null
 test.before(() => {
   createServer()
     .post('/*', async (res: HttpResponse) => {
-      // const result = await readJsonAsync(res)
       writeJson(res, reply)
     })
     .listen(port, token => {

@@ -10,7 +10,7 @@ export function handleUpload(
   bufferHandler: (b: Buffer) => void,
   onAbortedHandler?: () => void
 ): void {
-  let data: any;
+  let data: any
   res.onData((chunk: ArrayBuffer, isLast: boolean) => {
     let _chunk = Buffer.from(chunk)
     data = data ? Buffer.concat([data, _chunk]) : Buffer.concat([_chunk])
