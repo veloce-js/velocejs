@@ -6,13 +6,13 @@ The core is using [uWebSocket.js]() with several additional helpers methods
 
 The following example using Typescript
 
-### createApp(opt?: AppOptions): TemplatedApp
+### createServer(opt?: AppOptions): TemplatedApp
 
 ```ts
-import { createApp } from '@velocejs/server'
+import { createServer } from '@velocejs/server'
 const port = 9001
 
-createApp()
+createServer()
   .get('/*', (res: HttpResponse) => {
     res.end('Hello')
   })
@@ -37,7 +37,7 @@ If you pass the following object, then it will create a `SSLApp`
 Read the JSON from response
 
 ```ts
-createApp()
+createServer()
   .post('/*', async (res: HttpResponse) => {
     const json = await readJsonAsync(res)
     // do your thing with your json

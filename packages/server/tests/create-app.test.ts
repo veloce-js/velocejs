@@ -1,5 +1,5 @@
 import test from 'ava'
-import { createApp,shutdownApp } from '../src'
+import { createServer,shutdownServer } from '../src'
 import { TemplatedApp, HttpResponse } from 'uWebSockets.js'
 import Fetch from 'node-fetch'
 
@@ -9,14 +9,14 @@ const msg = `Hello`
 let listenSocket: any = null
 
 test.before(() => {
-  app = createApp()
+  app = createServer()
 })
 // clean up
 test.after(() => {
-  shutdownApp(listenSocket)
+  shutdownServer(listenSocket)
 })
 
-test(`testing the createApp method`, async (t) => {
+test(`testing the createServer method`, async (t) => {
   t.plan(1)
   app.get('/*', (res: HttpResponse) => {
     res.end(msg)

@@ -2,10 +2,10 @@
 
 // import uWS from 'uWebSockets.js'
 import {
-  createApp,
-  shutdownApp,
+  createServer,
+  shutdownServer,
   getPort,
-  returnUploadBuffer,
+  handleUpload,
   writeBufferToFile
 } from '../src'
 
@@ -20,7 +20,7 @@ let serverUrl: string
 const fileName = 'test.txt'
 const outFile = './fixtures/tmp/test.txt'
 
-createApp()
+createServer()
   .any('/*', async (res: HttpResponse, req: HttpRequest) => {
     const url = req.getUrl()
 
@@ -67,6 +67,6 @@ setTimeout(async () => {
 /*
 setTimeout(() => {
   console.log(`shutdown now`)
-  shutdownApp(connectedSocket)
+  shutdownServer(connectedSocket)
 },2000)
 */

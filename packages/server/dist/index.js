@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.writeBufferToFile = exports.returnUploadBuffer = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownApp = exports.createApp = void 0;
+exports.writeBufferToFile = exports.returnUploadBuffer = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createServer = void 0;
 const tslib_1 = require("tslib");
 // Main entry point
 const uWebSockets_js_1 = tslib_1.__importDefault(require("uWebSockets.js"));
 const create_app_1 = require("./create-app");
-Object.defineProperty(exports, "createApp", { enumerable: true, get: function () { return create_app_1.createApp; } });
-Object.defineProperty(exports, "shutdownApp", { enumerable: true, get: function () { return create_app_1.shutdownApp; } });
+Object.defineProperty(exports, "createServer", { enumerable: true, get: function () { return create_app_1.createServer; } });
+Object.defineProperty(exports, "shutdownServer", { enumerable: true, get: function () { return create_app_1.shutdownServer; } });
 Object.defineProperty(exports, "getPort", { enumerable: true, get: function () { return create_app_1.getPort; } });
 const read_json_async_1 = require("./read-json-async");
 Object.defineProperty(exports, "readJsonAsync", { enumerable: true, get: function () { return read_json_async_1.readJsonAsync; } });

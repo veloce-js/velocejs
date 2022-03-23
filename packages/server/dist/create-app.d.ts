@@ -1,6 +1,6 @@
 import { AppOptions, TemplatedApp } from 'uWebSockets.js';
-export declare function createApp(opt?: AppOptions): TemplatedApp;
-export declare function shutdownApp(listenSocket: any): void;
+export declare function createServer(opt?: AppOptions): TemplatedApp;
+export declare function shutdownServer(listenSocket: any): void;
 export declare function getPort(token: any): number;
 export interface HandlersMap {
     type: string;

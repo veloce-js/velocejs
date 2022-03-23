@@ -1,5 +1,5 @@
 import test from 'ava'
-import { createApp, shutdownApp, writeJson } from '../src/index'
+import { createServer, shutdownServer, writeJson } from '../src/index'
 import Fetch from 'node-fetch'
 import { HttpResponse } from 'uWebSockets.js'
 
@@ -9,7 +9,7 @@ const reply = {OK: true}
 
 let listenSocket: any = null
 test.before(() => {
-  createApp()
+  createServer()
     .post('/*', async (res: HttpResponse) => {
       // const result = await readJsonAsync(res)
       writeJson(res, reply)
@@ -23,7 +23,7 @@ test.before(() => {
 })
 // clean up otherwise ava throw error
 test.after(() => {
-  shutdownApp(listenSocket)
+  shutdownServer(listenSocket)
 })
 
 test(`Testing the writeJson method`, async (t) => {

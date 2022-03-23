@@ -5,8 +5,8 @@ import { join } from 'path'
 import FormData from 'form-data'
 
 import {
-  createApp,
-  shutdownApp,
+  createServer,
+  shutdownServer,
   returnUploadBuffer,
   writeBufferToFile
 } from '../src'
@@ -19,7 +19,7 @@ const fileName = 'test.txt'
 const outFile = './fixtures/tmp/test.txt'
 
 test.before(()=>{
-  createApp()
+  createServer()
     .post('/upload', async (res: HttpResponse) => {
 
       console.log('got something')
@@ -34,7 +34,7 @@ test.before(()=>{
 })
 
 test.after(()=>{
-  shutdownApp(listenSocket)
+  shutdownServer(listenSocket)
 })
 
 // from https://stackoverflow.com/questions/44021538/how-to-send-a-file-in-request-node-fetch-or-node
