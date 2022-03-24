@@ -5,14 +5,12 @@ specifiers:
   glob: ^7.2.0
   minimist: ^1.2.5
   plop: ^3.0.5
-  rimraf: ^3.0.2
 
 dependencies:
   fs-extra: 10.0.1
   glob: 7.2.0
   minimist: 1.2.5
   plop: 3.0.5
-  rimraf: 3.0.2
 
 packages:
 
