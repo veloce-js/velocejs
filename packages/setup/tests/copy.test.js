@@ -1,8 +1,8 @@
-const test = require('ava')
-const fs = require('fs-extra')
-const { join } = require('path')
+import test from 'ava'
+import fs from 'fs-extra'
+import { join } from 'path'
 
-const copyFunc = require('../src/copy')
+const copyFunc from '../src/copy'
 const baseDir = join(__dirname, '..', 'templates')
 
 test(`Testing the copy template function`, t => {

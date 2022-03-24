@@ -5,7 +5,7 @@ const fs = require('fs-extra')
 const { join, basename } = require('path')
 // props
 const src = join(__dirname, '..', '..', 'ssr-vue')
-const dest = join(__dirname, '..', 'templates')
+const tplDir = join(__dirname, '..', 'templates')
 // list of files not to copy
 const ignores = ['package.json', 'server.js']
 
@@ -20,13 +20,13 @@ function filterFunc(src) {
 
 // wrap the whole thing in a function
 function copyTemplate() {
-  const viteDest = join(dest, 'vite')
+  const vitetplDir = join(tplDir, 'vite')
 
-  return fs.emptyDir(viteDest)
+  return fs.emptyDir(vitetplDir)
           .then(() => // copy the whole folder
             Promise.all([
-              fs.copy(src, viteDest, { filter: filterFunc }),
-              fs.copy(join(src, 'package.json'),join(dest, 'package.json'))
+              fs.copy(src, vitetplDir, { filter: filterFunc }),
+              fs.copy(join(src, 'package.json'), join(tplDir, 'package.json'))
             ])
           )
 

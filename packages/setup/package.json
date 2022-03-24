@@ -1,10 +1,12 @@
 {
   "name": "@veloce/setup",
   "version": "0.0.1",
+  "type": "module",
   "description": "Interactively setup veloce",
   "main": "index.js",
   "scripts": {
     "test": "ava",
+    "plop": "node ./index.js",
     "start": "plop",
     "copy": "node ./src/copy.js"
   },
