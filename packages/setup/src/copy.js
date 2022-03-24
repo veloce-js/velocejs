@@ -6,8 +6,11 @@ import getDirname from './dirname.js'
 
 const __dirname = getDirname(import.meta.url)
 // props
-const src = join(__dirname, '..', '..', 'ssr-vue')
+const packagesDir = join(__dirname, '..', '..')
+const src = join(packagesDir, 'ssr-vue')
+const srvDir = join(packagesDir, 'server')
 const tplDir = join(__dirname, '..', 'templates')
+
 // list of files not to copy
 const ignores = ['package.json', 'server.js']
 
@@ -21,21 +24,41 @@ function filterFunc(src) {
   return !(ignores.indexOf(f) > -1)
 }
 
+// this need to handle differently because
+// we need to modify the version number in the deps
+export function copyPkgJson() {
+  const file = 'package.json'
+  return Promise.all([
+      fs.readJson(join(src, file)),
+      fs.readJson(join(srvDir, file))
+    ])
+    .then(pkgs => {
+      const version = pkgs[1].version
+      const json = pkgs[0]
+      json.dependencies['@velocejs/server'] = version
+      return json
+    })
+    .then(json =>
+      fs.writeJson(join(tplDir, 'package.json'), json, { spaces: 2 })
+    )
+}
+
 // wrap the whole thing in a function
-export default function copyTemplate() {
+export function copyTemplate() {
   const vitetplDir = join(tplDir, 'vite')
 
   return fs.emptyDir(vitetplDir)
           .then(() => // copy the whole folder
-            Promise.all([
-              fs.copy(src, vitetplDir, { filter: filterFunc }),
-              fs.copy(join(src, 'package.json'), join(tplDir, 'package.json'))
-            ])
+            fs.copy(src, vitetplDir, { filter: filterFunc })
           )
+}
 
+export function copyAll() {
+  return copyTemplate()
+    .then(() => copyPkgJson())
 }
 
 if (process.env.NODE_ENV !== 'test') {
   // just run it
-  copyTemplate()
+  copyAll()
 }

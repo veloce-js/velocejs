@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/setup",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "Interactively setup velocejs",
   "main": "index.js",
