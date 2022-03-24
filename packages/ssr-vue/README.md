@@ -4,6 +4,8 @@
 
 This is for developing our Vue (3) + uWebSocket.js framework Veloce
 
+Based on https://github.com/vitejs/vite/tree/main/packages/playground/ssr-vue
+
 # Folder structure
 
 - app - where your front end code
