@@ -34,8 +34,7 @@ export default function(
     const { name } = answers
     const pkg = fs.readJsonSync( join(tplDir, 'package.json') )
     pkg.name = name
-
-    fs.writeJsonSync( join(destDir, name, 'package.json') , pkg)
+    fs.writeJsonSync( join(destDir, name, 'package.json') , pkg, { spaces: 2 })
 
     return `package.json created`
   })
