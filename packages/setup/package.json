@@ -21,6 +21,8 @@
     "veloce": "./index.js"
   },
   "ava": {
-    
+    "files": [
+      "tests/**/*.test.js"
+    ]
   }
 }
