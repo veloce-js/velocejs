@@ -5,16 +5,22 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "start": "plop"
+    "start": "plop",
+    "copy": "node ./src/copy.js"
   },
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "ISC",
   "preferGlobal": true,
   "dependencies": {
+    "fs-extra": "^10.0.1",
     "minimist": "^1.2.5",
-    "plop": "^3.0.5"
+    "plop": "^3.0.5",
+    "rimraf": "^3.0.2"
   },
   "bin": {
     "veloce": "./index.js"
+  },
+  "ava": {
+    
   }
 }
