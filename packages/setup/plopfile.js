@@ -8,6 +8,9 @@ const __dirname = getDirname(import.meta.url)
 const tplDir = join(__dirname, 'templates')
 const destDir = process.env.NODE_ENV === 'test' ? join(__dirname, 'tests', 'fixtures') : process.cwd()
 
+// @TODO scan the dest to see if there is any plopfile.js
+// if yes then import it here and run within the method also
+
 // export
 export default function(
   /** @type {import('plop').NodePlopAPI} */
@@ -16,20 +19,30 @@ export default function(
   // create custom actions
   plop.setActionType('copyTemplates', function(answers, config, plop) {
     const { name } = answers
-
-    console.log(name)
-
-    return `${name} is OK`
+    return fs.copy(
+      join(tplDir, 'vite'),
+      join(destDir, name),
+      {
+        overwrite: false,
+        errorOnExist: true
+      }
+    ).then(() => `Project ${name} created`)
   })
 
   // setting up the package.json
   plop.setActionType('setupPackageJson', function(answers, config, plop) {
+    const { name } = answers
     const pkg = fs.readJsonSync( join(tplDir, 'package.json') )
-    pkg.name = answers.name
+    pkg.name = name
 
-    // fs.writeJsonSync( join(destDir, 'package.json') , pkg)
+    fs.writeJsonSync( join(destDir, name, 'package.json') , pkg)
 
     return `package.json created`
+  })
+
+  plop.setActionType('justEndMessage', function() {
+
+    return `Setup completed, now please run "npm install" then run "npm run dev"`
   })
 
   // create the generator
@@ -47,6 +60,9 @@ export default function(
       },
       {
         type: 'setupPackageJson'
+      },
+      {
+        type: 'justEndMessage'
       }
     ]
   })

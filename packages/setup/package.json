@@ -1,13 +1,13 @@
 {
-  "name": "@veloce/setup",
+  "name": "@velocejs/setup",
   "version": "0.0.1",
   "type": "module",
-  "description": "Interactively setup veloce",
+  "description": "Interactively setup velocejs",
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "plop": "node ./index.js",
-    "start": "plop",
+    "plop": "NODE_ENV=test node ./index.js",
+    "start": "NODE_ENV=test plop",
     "copy": "node ./src/copy.js"
   },
   "author": "Joel Chu <joelchu@foxmail.com>",
