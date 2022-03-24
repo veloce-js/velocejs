@@ -1,8 +1,10 @@
 import test from 'ava'
 import fs from 'fs-extra'
 import { join } from 'path'
+import getDirname from '../src/dirname.js'
+import copyFunc from '../src/copy.js'
 
-const copyFunc from '../src/copy'
+const __dirname = getDirname(import.meta.url)
 const baseDir = join(__dirname, '..', 'templates')
 
 test(`Testing the copy template function`, t => {

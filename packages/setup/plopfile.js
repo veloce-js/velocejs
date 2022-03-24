@@ -1,11 +1,12 @@
 // plop file for all the commands
-// scan folder and inject them using cjs
+import { join } from 'path'
 import fs from 'fs-extra'
-const { join } from 'path'
+import getDirname from './src/dirname.js'
+
+const __dirname = getDirname(import.meta.url)
 
 const tplDir = join(__dirname, 'templates')
-
-const destDir = process.env.NODE_ENV === 'dev' ? join(__dirname, 'tests', 'fixtures') : process.cwd()
+const destDir = process.env.NODE_ENV === 'test' ? join(__dirname, 'tests', 'fixtures') : process.cwd()
 
 // export
 export default function(

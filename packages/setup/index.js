@@ -3,23 +3,24 @@
 import minimist from 'minimist'
 import { Plop, run } from 'plop'
 import { join, dirname } from "node:path"
-import { fileURLToPath } from "node:url"
+
+import getDirname from './src/dirname.js'
 
 const args = process.argv.slice(2)
 const argv = minimist(args)
+const __dirname = getDirname(import.meta.url)
 
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const dest = process.env.NODE_ENV === 'test' ? join(__dirname, 'tests', 'fixtures') : process.cwd()
 
 Plop.prepare({
   cwd: argv.cwd,
-  configPath: path.join(__dirname, 'plopfile.js'),
+  configPath: join(__dirname, 'plopfile.js'),
   preload: argv.preload || [],
   completion: argv.completion
 }, env => Plop.execute(env, (env) => {
   const options = {
     ...env,
-    dest: process.cwd()
+    dest
   }
 
   return run(options, undefined, true)

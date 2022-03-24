@@ -1,8 +1,10 @@
 // just copy the entire folder from ssr-vue --> templates
 // excluding some of the things we don't need
+import fs from 'fs-extra'
+import { join, basename } from 'path'
+import getDirname from './dirname.js'
 
-const fs = require('fs-extra')
-const { join, basename } = require('path')
+const __dirname = getDirname(import.meta.url)
 // props
 const src = join(__dirname, '..', '..', 'ssr-vue')
 const tplDir = join(__dirname, '..', 'templates')
@@ -15,11 +17,12 @@ function filterFunc(src) {
     return false
   }
   const f = basename(src)
+
   return !(ignores.indexOf(f) > -1)
 }
 
 // wrap the whole thing in a function
-function copyTemplate() {
+export default function copyTemplate() {
   const vitetplDir = join(tplDir, 'vite')
 
   return fs.emptyDir(vitetplDir)
@@ -31,9 +34,6 @@ function copyTemplate() {
           )
 
 }
-
-
-module.exports = copyTemplate
 
 if (process.env.NODE_ENV !== 'test') {
   // just run it
