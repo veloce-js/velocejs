@@ -5,12 +5,16 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "start": "node ./index.js"
+    "start": "plop"
   },
-  "author": "",
+  "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "ISC",
+  "preferGlobal": true,
   "dependencies": {
     "minimist": "^1.2.5",
     "plop": "^3.0.5"
+  },
+  "bin": {
+    "veloce": "./index.js"
   }
 }

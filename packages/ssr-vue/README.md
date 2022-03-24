@@ -18,4 +18,7 @@ If you have [esrun]() installed globally, then just `esrun file.ts` to execute t
 Or you could `pnpm run ts -- file.ts` using the already installed `esbuild-register` module
 
 
+https://github.com/antfu/vite-ssg
+
+
 03-2022
