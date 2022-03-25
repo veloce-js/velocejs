@@ -1,5 +1,5 @@
 <template>
-  <h1>Velocejs esm edition</h1>
+  <h1>Velocejs ts edition</h1>
   <p>
     <img src="../assets/logo.png" alt="logo" />
   </p>
@@ -11,7 +11,7 @@
   <ImportType />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import foo from '@foo'
 import { reactive, defineAsyncComponent } from 'vue'
 const ImportType = load('ImportType')

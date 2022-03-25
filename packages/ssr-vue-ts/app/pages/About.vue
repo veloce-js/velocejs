@@ -2,7 +2,10 @@
   <h1>{{ msg }}</h1>
 </template>
 
-<script>
+<script lang="ts">
+// example from HelloWorld.vue 
+defineProps<{ msg: string }>()
+
 export default {
   async setup() {
     return {
