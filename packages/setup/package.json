@@ -26,5 +26,9 @@
     "files": [
       "tests/**/*.test.js"
     ]
+  },
+  "devDependencies": {
+    "eslint": "^8.11.0",
+    "eslint-config-airbnb": "^19.0.4"
   }
 }
