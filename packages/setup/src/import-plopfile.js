@@ -24,7 +24,6 @@ export async function findPlopfile(pathToFiles, options = {}) {
         )
       )
     })
-
   })
 }
 

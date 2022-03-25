@@ -41,9 +41,9 @@ export default function(
     return `package.json created`
   })
 
-  plop.setActionType('copyVeloceConfig', function() {
+  plop.setActionType('copyVeloceConfig', function(answers) {
 
-    return fs.copy(join(tplDir, 'veloce.config.js'), join(destDir, 'veloce.config.js'))
+    return fs.copy(join(tplDir, 'veloce.config.tpl.js'), join(destDir, answers.name, 'veloce.config.js'))
   })
 
   plop.setActionType('justEndMessage', function() {
@@ -69,7 +69,7 @@ export default function(
       },
       {
         type: 'copyVeloceConfig'
-      }
+      },
       {
         type: 'justEndMessage'
       }
