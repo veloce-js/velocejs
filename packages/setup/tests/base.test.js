@@ -1,15 +1,20 @@
-
+// here we just test small methods here and there
 import test from 'ava'
 
+import { checkUpdate } from '../src/check-update.js'
 
-test('should able to run the base', t => {
+test('testing the regex for the project name input', t => {
+    const result = /^[\w\s]{1,}$/.test(`Hello world`)
+    t.true(result)
+})
 
-  t.truthy(1)
 
-/*
-  const result = /^[\w\s]{1,}$/.test(`Hello_world`)
-
-  console.log(result)
-*/
-
+test('should able to get the version before timeout', t => {
+  t.plan(1)
+  // 5 seconds timeout??? WTF
+  return checkUpdate()
+    .then(version => {
+      console.log(version)
+      t.truthy(version)
+    })
 })
