@@ -5,7 +5,7 @@ import glob from 'glob'
  * @param {string} pathToFiles where to search
  * @return {Array<unknown>} list of functions
  */
-export async function importPlopfile(pathToFiles) {
+export async function importPlopfile(pathToFiles, options = {}) {
 
   return new Promise((resolver, rejecter) => {
     // @TODO should we clean that pathToFiles via dirname
