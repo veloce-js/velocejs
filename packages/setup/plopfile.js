@@ -3,12 +3,14 @@ import { join } from 'path'
 import fs from 'fs-extra'
 import getDirname from './src/dirname.js'
 import { importPlopfile } from './src/import-plopfile.js'
+import { getConfigProp } from './src/get-config-prop.js'
 
 const __dirname = getDirname(import.meta.url)
 
 const tplDir = join(__dirname, 'templates')
-const destDir = process.env.NODE_ENV === 'test' ? join(__dirname, 'tests', 'fixtures') : process.cwd()
-
+const isTest = process.env.NODE_ENV === 'test'
+const destDir = isTest ? join(__dirname, 'tests', 'fixtures') : process.cwd()
+const projectRoot = isTest ? __dirname : process.cwd()
 // @TODO scan the dest to see if there is any plopfile.js
 // if yes then import it here and run within the method also
 
@@ -33,11 +35,16 @@ export default function(
   // setting up the package.json
   plop.setActionType('setupPackageJson', function(answers, config, plop) {
     const { name } = answers
-    const pkg = fs.readJsonSync( join(tplDir, 'package.json') )
+    const pkg = fs.readJsonSync( join(tplDir, 'package.tpl.json') )
     pkg.name = name
     fs.writeJsonSync( join(destDir, name, 'package.json') , pkg, { spaces: 2 })
 
     return `package.json created`
+  })
+
+  plop.setActionType('copyVeloceConfig', function() {
+
+    return fs.copy(join(tplDir, 'veloce.config.js'), join(destDir, 'veloce.config.js'))
   })
 
   plop.setActionType('justEndMessage', function() {
@@ -62,8 +69,15 @@ export default function(
         type: 'setupPackageJson'
       },
       {
+        type: 'copyVeloceConfig'
+      }
+      {
         type: 'justEndMessage'
       }
     ]
   })
+
+  // next we will try to import plopfile that is written by the developer
+  // then import it here
+
 }

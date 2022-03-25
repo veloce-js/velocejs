@@ -40,7 +40,7 @@ export async function copyPkgJson() {
       return json
     })
     .then(json =>
-      fs.writeJson(join(tplDir, 'package.json'), json, { spaces: 2 })
+      fs.writeJson(join(tplDir, 'package.tpl.json'), json, { spaces: 2 })
     )
 }
 
@@ -54,7 +54,7 @@ export async function copyTemplate() {
           )
 }
 
-// wrapper to run them all 
+// wrapper to run them all
 export async function copyAll() {
 
   return copyTemplate()

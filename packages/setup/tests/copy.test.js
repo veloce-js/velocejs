@@ -21,6 +21,6 @@ test(`Test the copy package.json function`, t => {
   t.plan(1)
   return copyPkgJson()
     .then(() => {
-      t.true(fs.existsSync(join(baseDir, 'package.json')))
+      t.true(fs.existsSync(join(baseDir, 'package.tpl.json')))
     })
 })
