@@ -1,30 +1,17 @@
 // @ts-check
-const fs = require('fs')
-const path = require('path')
-const { createServer, serveStatic } = require('@velocejs/server')
-const mime = require('mime-types')
+import fs from 'fs'
+import path from 'path'
+import { createServer, serveStatic } from '@velocejs/server'
+import mime from 'mime-types'
+import getDirname from './lib/get-dirname.js'
+
 const port = process.env.PORT || 9001
-// This is the production server using uWebSocket.js
+const __dirname = getDirname(import.meta.url)
 const resolve = (p) => path.resolve(__dirname, p)
-// uWS.App()
+
   // serve up the static files
 createApp()
   .get('/assets/*', serveStatic(resolve('app/assets')))
-  /*
-  .get('/assets/*', async (res, req) => {
-    const url = req.getUrl()
-    const assetDir = path.join(__dirname, 'dist', 'client')
-    const file = fs.readFileSync(path.join(assetDir, url))
-    if (file) {
-      const mimeType = mime.lookup(url) || 'application/octet-stream'
-      console.log(mimeType, url)
-      res.writeHeader('Content-Type', mimeType)
-      res.end(file)
-    } else {
-      // @TODO
-      res.writeStatus(404)
-    }
-  }) */
   .get('/*', async (res, req) => {
 
     // Here we modified it for our SSR app
