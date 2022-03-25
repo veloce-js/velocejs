@@ -12,7 +12,7 @@ const srvDir = join(packagesDir, 'server')
 const tplDir = join(__dirname, '..', 'templates')
 
 // list of files not to copy
-const ignores = ['package.json', 'server.js']
+const ignores = ['package.json', 'server.js', 'pnpm-lock.yaml']
 
 // filter out the files we don't want
 function filterFunc(src) {
