@@ -20,9 +20,11 @@ export default function(
 ) {
   // create custom actions
   plop.setActionType('copyTemplates', function(answers, config, plop) {
-    const { name } = answers
+    const { name, lang } = answers
+    const d = 'vue' + lang
+
     return fs.copy(
-      join(tplDir, 'vite'),
+      join(tplDir, d),
       join(destDir, name),
       {
         overwrite: false,
@@ -52,6 +54,7 @@ export default function(
   })
 
   // create the generator
+  // @TODO add more framework support next 
   plop.setGenerator('base', {
     description: 'Hello world',
     prompts: [{
@@ -59,6 +62,15 @@ export default function(
       name: 'name',
       message: 'Project Name',
       validate: (value) => !(/^[\w\s]{1,}$/.test(value))
+    },{
+      type: 'list',
+      name: 'lang',
+      message: 'Select development langauge',
+      choices: [
+        {name: 'Javascript', value: 'js'},
+        {name: 'Typescript', value: 'ts'}
+      ],
+      default: 'js'
     }],
     actions: [
       {
