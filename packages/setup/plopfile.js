@@ -3,7 +3,6 @@ import { join } from 'path'
 import fs from 'fs-extra'
 import getDirname from './src/dirname.js'
 import { importPlopfile } from './src/import-plopfile.js'
-import { getConfigProp } from './src/get-config-prop.js'
 
 const __dirname = getDirname(import.meta.url)
 
@@ -79,5 +78,5 @@ export default function(
 
   // next we will try to import plopfile that is written by the developer
   // then import it here
-
+  importPlopfile(projectRoot, plop)
 }

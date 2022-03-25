@@ -2,7 +2,7 @@
 import test from 'ava'
 
 import { join } from 'path'
-import { importPlopfile } from '../src/import-plopfile.js'
+import { findPlopfile } from '../src/import-plopfile.js'
 import getDirname from '../src/dirname.js'
 import { checkUpdate } from '../src/check-update.js'
 
@@ -27,7 +27,7 @@ test('should able to get the version before timeout', t => {
 test(`Should able to dynamically import other esm module`, t => {
   t.plan(1)
 
-  return importPlopfile(join(__dirname, 'fixtures' ,'dummy'))
+  return findPlopfile(join(__dirname, 'fixtures' ,'dummy'))
     .then(fns => {
       if (fns && fns.length) {
         t.true(typeof fns[0].default === 'function')
