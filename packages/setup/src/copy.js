@@ -36,7 +36,11 @@ export async function copyPkgJson() {
     .then(pkgs => {
       const version = pkgs[1].version
       const json = pkgs[0]
+      // need to update the version
       json.dependencies['@velocejs/server'] = version
+      // need to delete the private prop
+      delete json.private
+      
       return json
     })
     .then(json =>
