@@ -8,10 +8,9 @@ test('testing the regex for the project name input', t => {
     t.true(result)
 })
 
-
 test('should able to get the version before timeout', t => {
   t.plan(1)
-  // 5 seconds timeout??? WTF
+  
   return checkUpdate()
     .then(version => {
       console.log(version)

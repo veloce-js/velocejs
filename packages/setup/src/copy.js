@@ -26,8 +26,9 @@ function filterFunc(src) {
 
 // this need to handle differently because
 // we need to modify the version number in the deps
-export function copyPkgJson() {
+export async function copyPkgJson() {
   const file = 'package.json'
+
   return Promise.all([
       fs.readJson(join(src, file)),
       fs.readJson(join(srvDir, file))
@@ -44,7 +45,7 @@ export function copyPkgJson() {
 }
 
 // wrap the whole thing in a function
-export function copyTemplate() {
+export async function copyTemplate() {
   const vitetplDir = join(tplDir, 'vite')
 
   return fs.emptyDir(vitetplDir)
@@ -53,7 +54,9 @@ export function copyTemplate() {
           )
 }
 
-export function copyAll() {
+// wrapper to run them all 
+export async function copyAll() {
+
   return copyTemplate()
     .then(() => copyPkgJson())
 }

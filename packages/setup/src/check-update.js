@@ -15,7 +15,8 @@ const urls = {
  * @param {number} timeout set a timeout if the result not return before that we just resolve it
  * @return Promise<any> json
  */
-export function checkUpdate(timeout = 2000) {
+export async function checkUpdate(timeout = 2000) {
+
   return new Promise((resolver, rejecter) => {
     // set a timeout to resolve it
     const timer = setTimeout(() => {
