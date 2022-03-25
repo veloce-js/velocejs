@@ -2,6 +2,7 @@
 import { join } from 'path'
 import fs from 'fs-extra'
 import getDirname from './src/dirname.js'
+import { importPlopfile } from './src/import-plopfile.js'
 
 const __dirname = getDirname(import.meta.url)
 

@@ -1,5 +1,5 @@
 // config file
 
 export default {
-
+  
 }
