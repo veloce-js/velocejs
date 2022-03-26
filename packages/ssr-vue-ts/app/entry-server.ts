@@ -1,7 +1,7 @@
 import { createApp } from './main'
 import { renderToString } from '@vue/server-renderer'
 
-export async function render(url, manifest) {
+export async function render(url: string, manifest: any): Promise<any> {
   const { app, router } = createApp()
 
   // set the router to the desired URL before rendering
@@ -19,16 +19,17 @@ export async function render(url, manifest) {
   // which we can then use to determine what files need to be preloaded for this
   // request.
   const preloadLinks = renderPreloadLinks(ctx.modules, manifest)
+
   return [html, preloadLinks]
 }
 
-function renderPreloadLinks(modules, manifest) {
+function renderPreloadLinks(modules: Array<any>, manifest: any): string {
   let links = ''
   const seen = new Set()
-  modules.forEach((id) => {
+  modules.forEach((id: string) => {
     const files = manifest[id]
     if (files) {
-      files.forEach((file) => {
+      files.forEach((file: string) => {
         if (!seen.has(file)) {
           seen.add(file)
           links += renderPreloadLink(file)
@@ -36,10 +37,11 @@ function renderPreloadLinks(modules, manifest) {
       })
     }
   })
+
   return links
 }
 
-function renderPreloadLink(file) {
+function renderPreloadLink(file: string): string {
   if (file.endsWith('.js')) {
     return `<link rel="modulepreload" crossorigin href="${file}">`
   } else if (file.endsWith('.css')) {
