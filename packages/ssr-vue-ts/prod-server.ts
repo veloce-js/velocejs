@@ -2,21 +2,24 @@
 import fs from 'fs'
 import path from 'path'
 import { createServer, serveStatic } from '@velocejs/server'
-import mime from 'mime-types'
-import getDirname from './lib/get-dirname.js'
+// import mime from 'mime-types'
+// import getDirname from './lib/get-dirname.js'
 
+import { render } from './dist/server/entry-server'
+const manifest = /* @ts-ignore */ require('./dist/client/ssr-manifest.json')
+
+// @TODO we should use the velocejs.config to determine if they want to use different index file 
+// for different part of the app (i.e. SSG use one, SSR use another)
+const indexProd = fs.readFileSync(resolve('dist/client/index.html'), 'utf-8')
 const port = process.env.PORT || 9001
-const __dirname = getDirname(import.meta.url)
+// const __dirname = getDirname(import.meta.url)
 const resolve = (p) => path.resolve(__dirname, p)
 
   // serve up the static files
-createApp()
+createServer()
   .get('/assets/*', serveStatic(resolve('app/assets')))
   .get('/*', async (res, req) => {
 
-    // Here we modified it for our SSR app
-    const indexProd = fs.readFileSync(resolve('dist/client/index.html'), 'utf-8')
-    const manifest = /* @ts-ignore */ require('./dist/client/ssr-manifest.json')
     const url = req.getUrl()
 
     // now we just need to figure out how to serve the static files
@@ -32,9 +35,7 @@ createApp()
 
     let template, render
     template = indexProd
-    render = require('./dist/server/entry-server.js').render
-
-
+    
     const [appHtml, preloadLinks] = await render(url, manifest)
 
     const html = template
