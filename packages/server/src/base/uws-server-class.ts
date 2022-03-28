@@ -4,11 +4,12 @@ import { createApp, shutdownServer, getPort } from './create-app'
 import { serveStatic } from './serve-static'
 
 export interface UwsEndPointHandler {
+  type: string
   path: string
   handler: any
 }
 
-export default class UwsServer {
+export class UwsServer {
   port: number = 0
   private token: any = null
 
