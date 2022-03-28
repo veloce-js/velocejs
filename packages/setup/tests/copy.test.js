@@ -15,7 +15,7 @@ test(`Testing the copy template function`, t => {
   return copyTemplate()
     .then(() => {
       frameworks.forEach(fw => {
-        t.true(fs.existsSync(join(baseDir, fw, ,'tpl', 'index.html')))
+        t.true(fs.existsSync(join(baseDir, fw, 'tpl', 'index.html')))
         t.false(fs.existsSync(join(baseDir, fw, 'tpl', 'package.json')))
       })
     })
@@ -23,7 +23,7 @@ test(`Testing the copy template function`, t => {
 
 test(`Test the copy package.json function`, t => {
   t.plan(4)
-  
+
   return copyPkgJson()
     .then(() => {
       frameworks.forEach(fw =>  {
@@ -31,7 +31,7 @@ test(`Test the copy package.json function`, t => {
         t.true(fs.existsSync(pkgTplFile))
         // should also check the content
         const json = fs.readJsonSync(pkgTplFile)
-        t.equals(fw, json.name)
+        t.is(fw, json.name)
       })
     })
 })

@@ -3,9 +3,9 @@ import fs from 'fs'
 import path from 'path'
 import express from 'express'
 import { createServer } from 'vite'
-import getDirname from './lib/get-dirname.js'
+// import getDirname from './lib/get-dirname.js'
 
-const __dirname = getDirname(import.meta.url)
+// const __dirname = getDirname(import.meta.url)
 const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITE_TEST_BUILD
 
 /**
@@ -40,7 +40,7 @@ export async function createDevServer(
       // always read fresh template in dev
       template = fs.readFileSync(resolve('index.html'), 'utf-8')
       template = await vite.transformIndexHtml(url, template)
-      render = (await vite.ssrLoadModule('/app/entry-server.js')).render
+      render = (await vite.ssrLoadModule('/app/entry-server.ts')).render
 
       const [appHtml, preloadLinks] = await render(url, manifest)
       const html = template
@@ -59,7 +59,7 @@ export async function createDevServer(
 }
 
 if (!isTest) {
-  const PORT = process.env.PORT || 3004
+  const PORT = process.env.PORT || 3005
   createDevServer().then(({ app }) =>
     app.listen(PORT, () => {
       console.log(`http://localhost:${PORT}`)

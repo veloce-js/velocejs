@@ -1,10 +1,9 @@
 import vuePlugin from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import { defineConfig } from 'vite'
 
-/**
- * @type {import('vite').UserConfig}
- */
-export default {
+// https://vitejs.dev/config/
+export default defineConfig({
   plugins: [
     vuePlugin(),
     vueJsx(),
@@ -25,4 +24,4 @@ export default {
   build: {
     minify: false
   }
-}
+})
