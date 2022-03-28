@@ -31,12 +31,15 @@ export class UwsServer {
     if (!handlers.length) {
       throw new Error(`You must have at least 1 handler!`)
     }
-    handlers.forEach(handler => {
+    handlers.forEach(o => {
+      const { type, path, handler } = o
       // provide a shorthand options
-      if (handler.handler === 'static') {
-        app[handler.path] = serveStatic
+      if (handler === 'static') {
+        // Reflect.apply( app[type], null, [path, serveStatic] )
+        // if we use the above call signature, we get a internal field out of bound error
+        app[type](path, serveStatic)
       } else {
-        app[handler.path] = handler.handler
+        app[type](path, handler)
       }
     })
 

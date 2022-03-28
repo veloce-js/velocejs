@@ -1,5 +1,5 @@
 import test from 'ava'
-import { createServer, shutdownServer, writeJson } from '../src/index'
+import { createApp, shutdownServer, writeJson } from '../src/index'
 import Fetch from 'node-fetch'
 import { HttpResponse } from 'uWebSockets.js'
 
@@ -9,7 +9,7 @@ const reply = {OK: true}
 
 let listenSocket: any = null
 test.before(() => {
-  createServer()
+  createApp()
     .post('/*', async (res: HttpResponse) => {
       writeJson(res, reply)
     })

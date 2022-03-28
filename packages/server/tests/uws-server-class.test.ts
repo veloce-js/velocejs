@@ -1,5 +1,5 @@
 import test from 'ava'
-import UwsServer from '../src/'
+import { UwsServer } from '../src/'
 import { HttpResponse } from 'uWebSockets.js'
 import Fetch from 'node-fetch'
 
@@ -15,7 +15,7 @@ test.after(() => {
 
 
 test(`Should able to create the server and handle request`, async t => {
-  t.plan(2)
+  // t.plan()
   const msg = `Hello`
   // we run it without assign a port
   app.run([{
@@ -29,9 +29,10 @@ test(`Should able to create the server and handle request`, async t => {
 
   t.true(port > 0)
 
-  const response = await Fetch(`http://localhost:${port}`)
+  const url = `http://localhost:${port}`
+  const response = await Fetch(url)
   const txt = await response.text()
 
   t.is(txt, msg)
-  
+
 })

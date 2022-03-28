@@ -2,12 +2,12 @@
 import test from 'ava'
 import * as fs from 'fs'
 import { join } from 'path'
-import FormData from 'form-data'
+// import FormData from 'form-data'
 import rimraf from 'rimraf'
 
 import { sendFile } from './fixtures/send-file'
 import {
-  createServer,
+  createApp,
   shutdownServer,
   handleUpload,
   writeBufferToFile
@@ -21,7 +21,7 @@ const port = 9004
 const outFile = join(__dirname, 'fixtures', 'tmp', 'test.txt')
 
 test.before(()=>{
-  createServer()
+  createApp()
     .post('/upload', async (res: HttpResponse) => {
 
       handleUpload(

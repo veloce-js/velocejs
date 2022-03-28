@@ -1,5 +1,5 @@
 import test from 'ava'
-import { createServer, shutdownServer, readJsonAsync, writeJson } from '../src/index'
+import { createApp, shutdownServer, readJsonAsync, writeJson } from '../src/index'
 import Fetch from 'node-fetch'
 import { HttpResponse } from 'uWebSockets.js'
 
@@ -16,7 +16,7 @@ test.after(() => {
 test(`Testing the readJsonAsync method`, async (t) => {
   t.plan(1)
 
-  createServer()
+  createApp()
     .post('/*', async (res: HttpResponse) => {
       const result = await readJsonAsync(res)
       // test (1)
