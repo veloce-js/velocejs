@@ -11,9 +11,10 @@
     "example-install": "pnpm i @velocejs/${1} -r --filter ${2}",
     "start": "pnpm -C ",
     "ssr:dev": "pnpm start -- ./packages/ssr-vue serve",
-    "server:dev": "",
-    "setup:dev": "",
-    "push": "git push origin main && git push gh main"
+    "test:setup": "pnpm -C ./packages/setup test",
+    "server:dev": "pnpm -C ./packages/server dev",
+    "push": "git push origin main && git push gh main",
+    "clean": "rm -rf node_modules **/*/node_modules"
   },
   "repository": {
     "type": "git",

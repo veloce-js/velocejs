@@ -45,6 +45,8 @@ export async function copyPkgJson() {
 
       for (let i = 1; i < ctn; ++i ) {
         const json = pkgs[i]
+
+        json.name = frameworks[i-1]
         // need to update the version
         json.dependencies['@velocejs/server'] = version
         // need to delete the private prop
