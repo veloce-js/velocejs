@@ -1,9 +1,10 @@
 import uWS from 'uWebSockets.js';
-import { createServer, shutdownServer, getPort } from './create-app';
-import { readJsonAsync } from './read-json-async';
-import { writeJson } from './write-json';
-import { serveStatic } from './serve-static';
-import { rateLimit } from './rate-limit';
-import { handleUpload, writeBufferToFile } from './handle-upload';
+import { createApp, shutdownServer, getPort } from './base/create-app';
+import { readJsonAsync } from './base/read-json-async';
+import { writeJson } from './base/write-json';
+import { serveStatic } from './base/serve-static';
+import { rateLimit } from './base/rate-limit';
+import { handleUpload, writeBufferToFile } from './base/handle-upload';
+import { UwsServer, UwsEndPointHandler } from './base/uws-server-class';
 export default uWS;
-export { createServer, shutdownServer, getPort, readJsonAsync, writeJson, serveStatic, rateLimit, handleUpload, writeBufferToFile };
+export { createApp, shutdownServer, getPort, readJsonAsync, writeJson, serveStatic, rateLimit, handleUpload, writeBufferToFile, UwsServer, UwsEndPointHandler };

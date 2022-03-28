@@ -4,7 +4,7 @@
   "description": "Server core using uWebsocket.js with additional helpers",
   "main": "dist/index.js",
   "module": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "typings": "index.d.ts",
   "files": [
     "dist",
     "src",
@@ -14,7 +14,7 @@
     "test": "ava",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
-    "build": "esbuild src/index.ts --platform=node --outfile=dist/index.js",
+    "build:esr": "esbuild src/index.ts --platform=node --outfile=dist/index.js",
     "clean": "node ./clean.js",
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",
