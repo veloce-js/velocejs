@@ -12,12 +12,12 @@ import {
   handleUpload,
   writeBufferToFile
 } from '../src'
-import { TemplatedApp, HttpResponse } from 'uWebSockets.js'
+import { HttpResponse } from 'uWebSockets.js'
 
 let listenSocket: any = null
 
 const port = 9004
-const fileName = 'test.txt'
+// const fileName = 'test.txt'
 const outFile = join(__dirname, 'fixtures', 'tmp', 'test.txt')
 
 test.before(()=>{
@@ -34,7 +34,7 @@ test.before(()=>{
 
       res.end('OK')
     })
-    .listen(port, (token) => {
+    .listen(port, (token: any) => {
       listenSocket = token
     })
 })

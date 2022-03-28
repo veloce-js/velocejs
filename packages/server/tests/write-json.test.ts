@@ -13,7 +13,7 @@ test.before(() => {
     .post('/*', async (res: HttpResponse) => {
       writeJson(res, reply)
     })
-    .listen(port, token => {
+    .listen(port, (token: any) => {
       listenSocket = token
       if (!token) {
         console.log(`Start up server failed on`, port)

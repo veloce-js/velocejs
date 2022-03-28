@@ -23,7 +23,7 @@ test(`Testing the readJsonAsync method`, async (t) => {
       t.deepEqual(result, payload)
       writeJson(res, reply)
     })
-    .listen(port, token => {
+    .listen(port, (token: any) => {
       listenSocket = token
       if (!token) {
         console.log(`Start up server failed on`, port)

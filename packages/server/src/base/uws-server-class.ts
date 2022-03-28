@@ -1,6 +1,7 @@
 // We now make it class to create the complete server
 import { AppOptions, TemplatedApp } from 'uWebSockets.js'
 import { createApp, shutdownServer, getPort } from './create-app'
+import { serveStatic } from './serve-static'
 
 export interface UwsEndPointHandler {
   path: string
@@ -18,7 +19,9 @@ export default class UwsServer {
   }
 
   // this doesn't do anything just for overwrite
-  public onStart() {}
+  public onStart() {
+    console.info(`Server started on ${this.portNum}`)
+  }
 
   // the core method
   public run(handlers: UwsEndPointHandler[]): any {
@@ -28,18 +31,24 @@ export default class UwsServer {
       throw new Error(`You must have at least 1 handler!`)
     }
     handlers.forEach(handler => {
-      app[handler.path] = handler.handler
+      // provide a shorthand options
+      if (handler.handler === 'static') {
+        app[handler.path] = serveStatic
+      } else {
+        app[handler.path] = handler.handler
+      }
     })
 
     app.listen(this.portNum as number, (token: any): void => {
       if (token) {
         this.token = token
+        this.onStart()
       } else {
         throw new Error(`Server could not start!`)
       }
     })
   }
-  
+
   // gracefully shutdown the server
   public shutdown(): void {
     shutdownServer(this.token)

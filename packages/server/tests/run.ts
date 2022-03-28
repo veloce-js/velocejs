@@ -49,7 +49,7 @@ createServer()
       res.end('Hello')
     }
   })
-  .listen(0, async (token) => {
+  .listen(0, async (token: any) => {
     if (token) {
       connectedSocket = token
       port = getPort(token)
