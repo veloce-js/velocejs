@@ -7,7 +7,7 @@ import { serveStatic } from './base/serve-static'
 import { rateLimit } from './base/rate-limit'
 import { handleUpload, writeBufferToFile } from './base/handle-upload'
 // extended
-import { UwsServer } from './base/uws-server-class'
+import { UwsServer, UwsEndPointHandler } from './base/uws-server-class'
 
 
 // default export
@@ -23,6 +23,7 @@ export {
   rateLimit,
   handleUpload,
   writeBufferToFile,
-  // extended 
-  UwsServer
+  // extended
+  UwsServer,
+  UwsEndPointHandler
 }

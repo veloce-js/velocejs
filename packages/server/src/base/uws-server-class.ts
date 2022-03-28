@@ -25,7 +25,7 @@ export class UwsServer {
   }
 
   // the core method
-  public run(handlers: UwsEndPointHandler[]): any {
+  public run(handlers: UwsEndPointHandler[]): void {
     const app: TemplatedApp = createApp(this.opts)
 
     if (!handlers.length) {

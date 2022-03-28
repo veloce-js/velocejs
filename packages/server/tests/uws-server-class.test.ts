@@ -17,6 +17,11 @@ test.after(() => {
 test(`Should able to create the server and handle request`, async t => {
   // t.plan()
   const msg = `Hello`
+
+  app.onStart = () => {
+    console.info(`Try to overload the onStart method`)
+  }
+
   // we run it without assign a port
   app.run([{
     type: 'any',

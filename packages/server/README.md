@@ -6,15 +6,15 @@ The core is using [uWebSocket.js]() with several additional helpers methods
 
 The following example using Typescript
 
-### createServer(opt?: AppOptions): TemplatedApp
+### createApp(opt?: AppOptions): TemplatedApp
 ### shutdownServer(token: any)
 
 ```ts
-import { createServer, shutdownServer } from '@velocejs/server'
+import { createApp, shutdownServer } from '@velocejs/server'
 const port = 9001
 let connectedSocket
 
-createServer()
+createApp()
   .get('/*', (res: HttpResponse) => {
     res.end('Hello')
   })
@@ -43,10 +43,10 @@ If you pass the following object, then it will create a `SSLApp`
 You can let server to decided which port number to use (very handy when you need to run multiple instance per CPU)
 
 ```ts
-import { createServer, getPort } from '@velocejs/server'
+import { createApp, getPort } from '@velocejs/server'
 const port = 0
 
-createServer()
+createApp()
   .any('/*', (res: HttpResponse) => {
     res.end('Hello')
   })
@@ -62,7 +62,7 @@ createServer()
 Read the JSON from response
 
 ```ts
-createServer()
+createApp()
   .post('/*', async (res: HttpResponse) => {
     const json = await readJsonAsync(res)
     // do your thing with your json
@@ -81,14 +81,87 @@ createServer()
 It's not a good idea to use the node server to serve up static file, instead your should use your actual webserver (i.e. Nginx) we will provide you with working example how to combine it, but if you really need to, there here it is for you to use.
 
 ```ts
-createServer()
+createApp()
   .get('/assets/*', serveStatic('/path/to/assets'))
   .listen(port, token => {
     console.log("running")
   })
 ```
 
-**MORE TO COME** 
+### UwsServer
+
+This is an all-in-one solution to create Uws server  
+
+```ts
+import { UwsServer, HttpResponse } from '@velocejs/server'
+
+const app: UwsServer = new UwsServer()
+// by default we randomly assign a port, see below for more info
+app.run([
+  {
+    type: 'any',
+    path: '/*',
+    handler: (res: HttpResponse) => {
+      res.end(`Hello`)
+    }
+  }
+])
+```
+
+Next will be all available public methods
+
+#### UwsServer.onStart(): void
+
+By default you will get a `console.info` once the server start up. You can overwrite it by overload this method
+
+```ts
+app.onStart = () => console.info(`My own message`)
+```
+
+#### UwsServer.run(handlers: UwsEndPointHandler[]): void
+
+This is the main method to handle the create server, apply end point
+and start up of the server.
+
+The `UwsEndPointHandler` interface has this signature:
+
+```ts
+interface UwsEndPointHandler {
+  type: string
+  path: string
+  handler: any
+}
+```
+
+available options are `any`, `get`, `post`, `put`, `delete` and `ws` (websocket)
+
+#### UwsServer.shutdown(): void
+
+To gracefully shutdown the server
+
+```ts
+app.shutdown()
+```
+
+#### UwsServer.getPortNum(): number
+
+By default the server will randomly assign an unused port, you could
+overwrite it by using the node environment variable `PORT` like so
+
+Assume that you have put everything in a file call `server.js`
+
+```sh
+$ PORT=3456 node ./server.js
+```
+
+Or if you just stick with the randomly port, you can use this method
+to retrieve the port number.
+
+```ts
+const port = app.getPortNum()
+```
+
+**MORE TO COME**
 
 
 ---
