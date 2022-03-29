@@ -2,7 +2,7 @@
 
 // import uWS from 'uWebSockets.js'
 import {
-  createServer,
+  createApp,
   shutdownServer,
   getPort,
   handleUpload,
@@ -21,7 +21,7 @@ let serverUrl: string
 // const fileName = 'test.txt'
 const outFile = join(__dirname, 'fixtures', 'tmp', 'test.txt')
 
-createServer()
+createApp()
   .any('/*', async (res: HttpResponse, req: HttpRequest) => {
     const url = req.getUrl()
 
