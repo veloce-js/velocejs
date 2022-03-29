@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UwsServer = void 0;
 const create_app_1 = require("./create-app");
-const serve_static_1 = require("./serve-static");
+// for validation @TODO apply via the param decorator
+// const availbleRoutes = [`any`, `get`, `post`, `put`, `options` ,`del`, `patch`, `head`, `connect`, `trace`, `ws`]
+// main
 class UwsServer {
     constructor(opts) {
         this.opts = opts;
@@ -11,7 +13,7 @@ class UwsServer {
     }
     // overwrite the port number via the start up env
     get portNum() {
-        return process.env.PORT || this.port;
+        return process.env.PORT ? parseInt(process.env.PORT) : this.port;
     }
     // this doesn't do anything just for overwrite
     onStart() {
@@ -25,15 +27,8 @@ class UwsServer {
         }
         handlers.forEach(o => {
             const { type, path, handler } = o;
-            // provide a shorthand options
-            if (handler === 'static') {
-                // Reflect.apply( app[type], null, [path, serveStatic] )
-                // if we use the above call signature, we get a internal field out of bound error
-                app[type](path, serve_static_1.serveStatic);
-            }
-            else {
-                app[type](path, handler);
-            }
+            // @BUG if we use Reflect.apply here, uws throw a string out of bound error
+            app[type](path, handler);
         });
         app.listen(this.portNum, (token) => {
             if (token) {
@@ -47,11 +42,16 @@ class UwsServer {
     }
     // gracefully shutdown the server
     shutdown() {
-        (0, create_app_1.shutdownServer)(this.token);
+        if (this.token) {
+            (0, create_app_1.shutdownServer)(this.token);
+        }
+        else {
+            throw new Error(`No token to be found, can not gracefully shutdown`);
+        }
     }
     // get the port number if it's randomly assign port
     getPortNum() {
-        return (0, create_app_1.getPort)(this.token);
+        return this.token ? (0, create_app_1.getPort)(this.token) : -1;
     }
 }
 exports.UwsServer = UwsServer;

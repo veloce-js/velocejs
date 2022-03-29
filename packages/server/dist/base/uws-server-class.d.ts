@@ -1,9 +1,5 @@
 import { AppOptions } from 'uWebSockets.js';
-export interface UwsEndPointHandler {
-    type: string;
-    path: string;
-    handler: any;
-}
+import { UwsEndPointHandler } from './interfaces';
 export declare class UwsServer {
     private opts?;
     port: number;

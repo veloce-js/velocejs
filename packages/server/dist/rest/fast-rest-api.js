@@ -1,3 +1,4 @@
+"use strict";
 // this will allow you to create a series of REST API in no time
 /*
 import {

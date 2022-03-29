@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UwsServer = exports.writeBufferToFile = exports.handleUpload = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createApp = void 0;
+exports.UwsServer = exports.bodyParser = exports.writeBufferToFile = exports.onDataHandler = exports.uploadHandler = exports.handleUpload = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createApp = void 0;
 const tslib_1 = require("tslib");
 // Main entry point
 const uWebSockets_js_1 = tslib_1.__importDefault(require("uWebSockets.js"));
@@ -18,7 +18,11 @@ const rate_limit_1 = require("./base/rate-limit");
 Object.defineProperty(exports, "rateLimit", { enumerable: true, get: function () { return rate_limit_1.rateLimit; } });
 const handle_upload_1 = require("./base/handle-upload");
 Object.defineProperty(exports, "handleUpload", { enumerable: true, get: function () { return handle_upload_1.handleUpload; } });
+Object.defineProperty(exports, "uploadHandler", { enumerable: true, get: function () { return handle_upload_1.uploadHandler; } });
+Object.defineProperty(exports, "onDataHandler", { enumerable: true, get: function () { return handle_upload_1.onDataHandler; } });
 Object.defineProperty(exports, "writeBufferToFile", { enumerable: true, get: function () { return handle_upload_1.writeBufferToFile; } });
+const body_parser_1 = require("./base/body-parser");
+Object.defineProperty(exports, "bodyParser", { enumerable: true, get: function () { return body_parser_1.bodyParser; } });
 // extended
 const uws_server_class_1 = require("./base/uws-server-class");
 Object.defineProperty(exports, "UwsServer", { enumerable: true, get: function () { return uws_server_class_1.UwsServer; } });
