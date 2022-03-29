@@ -14,22 +14,3 @@ export function shutdownServer(listenSocket: any): void {
 export function getPort(token: any): number {
   return uWS.us_socket_local_port(token)
 }
-
-// all in one quick method to generate the server
-export interface HandlersMap {
-  type: string,
-  path: string,
-  handler: (args: Array<any>) => void
-}
-/* @TODO
-export function fastcreateServer(opt?: AppOptions, handlers?: Array<HandlersMap>, port?: number) {
-  if (!handlers.length) {
-    throw new Error(`You must specify at least 1 handler`)
-  }
-  const app = createServer(opt)
-  handlers.forEach((path, handler) => {
-    app[type](path, handler)
-  })
-
-}
-*/

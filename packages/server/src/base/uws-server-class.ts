@@ -2,16 +2,13 @@
 import { AppOptions, TemplatedApp } from 'uWebSockets.js'
 import { createApp, shutdownServer, getPort } from './create-app'
 import { serveStatic } from './serve-static'
+import { UwsEndPointHandler } from './interfaces'
 
-export interface UwsEndPointHandler {
-  type: string
-  path: string
-  handler: any
-}
-
+// main
 export class UwsServer {
   port: number = 0
   private token: any = null
+
 
   constructor(private opts?: AppOptions) {}
   // overwrite the port number via the start up env
