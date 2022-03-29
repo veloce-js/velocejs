@@ -27,11 +27,19 @@ export type RequestBody = {
   url: string
   method: string
   headers: any
-  query?: any
+  query: any,
+  payload?: any 
 }
 
 // parse inputs
-export async function bodyParser(req: HttpRequest) {
+export async function bodyParser(req: HttpRequest): Promise<RequestBody> {
+  let headers = {}
+  req.forEach((key: string, value: string) => {
+    headers[key] = value
+  })
+  const url = req.getUrl()
+  const query = req.getQuery()
+  const method = req.getMethod()
 
-
+  return { url, method, query, headers }
 }

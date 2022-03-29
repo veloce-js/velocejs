@@ -6,9 +6,9 @@ import { writeJson } from './base/write-json'
 import { serveStatic } from './base/serve-static'
 import { rateLimit } from './base/rate-limit'
 import { handleUpload, writeBufferToFile } from './base/handle-upload'
+import { bodyParser } from './base/body-parser'
 // extended
 import { UwsServer, UwsEndPointHandler } from './base/uws-server-class'
-
 
 // default export
 export default uWS
@@ -23,6 +23,7 @@ export {
   rateLimit,
   handleUpload,
   writeBufferToFile,
+  bodyParser,
   // extended
   UwsServer,
   UwsEndPointHandler

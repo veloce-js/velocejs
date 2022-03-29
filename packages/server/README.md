@@ -133,7 +133,7 @@ interface UwsEndPointHandler {
 }
 ```
 
-available options are `any`, `get`, `post`, `put`, `delete` and `ws` (websocket)
+available options are `any`, `get`, `post`, `put`, `options` ,`del`, `patch`, `head`, `connect`, `trace` and `ws` (websocket)
 
 #### UwsServer.shutdown(): void
 
