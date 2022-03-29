@@ -28,9 +28,14 @@ export function uploadHandler(
   })
 }
 // we take the onData callback further for re-use in the body parser method
-export function onDataHandler(res: HttpResponse, bufferHandler: (b: Buffer) => void) {
+export function onDataHandler(res: HttpResponse, bufferHandler: (b: Buffer | any) => void) {
   let data: any
   res.onData((chunk: ArrayBuffer, isLast: boolean) => {
+    /*
+    if (chunk.byteLength === 0 && isLast) { // nothing
+      bufferHandler(null)
+    }
+    */
     let _chunk = Buffer.from(chunk)
     data = data ? Buffer.concat([data, _chunk]) : Buffer.concat([_chunk])
     if (isLast) {

@@ -29,7 +29,19 @@ export type RespondBody = {
   method: string
   headers: any
   query: any,
+  params: any,
   payload?: any
+}
+
+// the actual function to take the query apart
+export function parseQuery(query: string): any {
+  const params = new URLSearchParams(query)
+  const result = {}
+  for (let pair of params.entries()) {
+   result[ pair[0] ] = pair[1]
+  }
+
+  return result
 }
 
 // parse inputs
@@ -41,8 +53,9 @@ export async function bodyParser(res: HttpResponse, req: HttpRequest): Promise<R
   const url = req.getUrl()
   const query = req.getQuery()
   const method = req.getMethod()
+  const params = parseQuery(query)
   // package it up
-  const body: RespondBody = { url, method, query, headers }
+  const body: RespondBody = { url, method, query, headers, params }
 
   // we should only call this when the header is not GET?
   return new Promise(resolver => {

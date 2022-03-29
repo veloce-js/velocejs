@@ -12,6 +12,11 @@ app.run([
     type: 'get',
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
+
+      res.onAborted(() => {
+        console.log(`Aborted? GET`)
+      })
+
       const body = await bodyParser(res, req)
       console.log(body)
 
@@ -22,8 +27,13 @@ app.run([
     type: 'post',
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
+
+      res.onAborted(() => {
+        console.log(`Aborted? POST`)
+      })
+
       const body = await bodyParser(res, req)
-      console.log(body)
+      console.log(body, body.payload.toString())
 
       res.end('post')
     }
@@ -32,6 +42,11 @@ app.run([
     type: 'any',
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
+
+      res.onAborted(() => {
+        console.log(`Aborted? ANY`)
+      })
+
       const body = await bodyParser(res, req)
       console.log(body)
 
@@ -39,11 +54,3 @@ app.run([
     }
   }
 ])
-
-setTimeout(async () => {
-  const res = await Fetch(`http://localhost:${process.env.PORT}/hello`)
-  const text = await res.text()
-
-  console.log(text)
-
-}, 500)
