@@ -5,7 +5,7 @@ import { join } from 'path'
 // import FormData from 'form-data'
 import rimraf from 'rimraf'
 
-import { sendFile } from './fixtures/send-file'
+import { sendFile } from '../dev/client'
 import {
   createApp,
   shutdownServer,
