@@ -5,7 +5,7 @@ import { readJsonAsync } from './base/read-json-async'
 import { writeJson } from './base/write-json'
 import { serveStatic } from './base/serve-static'
 import { rateLimit } from './base/rate-limit'
-import { handleUpload, writeBufferToFile } from './base/handle-upload'
+import { handleUpload, uploadHandler, onDataHandler, writeBufferToFile } from './base/handle-upload'
 import { bodyParser } from './base/body-parser'
 // extended
 import { UwsServer, UwsEndPointHandler } from './base/uws-server-class'
@@ -22,6 +22,8 @@ export {
   serveStatic,
   rateLimit,
   handleUpload,
+  uploadHandler,
+  onDataHandler,
   writeBufferToFile,
   bodyParser,
   // extended

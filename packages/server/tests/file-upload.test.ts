@@ -9,7 +9,7 @@ import { sendFile } from './fixtures/send-file'
 import {
   createApp,
   shutdownServer,
-  handleUpload,
+  uploadHandler,
   writeBufferToFile
 } from '../src'
 import { HttpResponse } from 'uWebSockets.js'
@@ -24,7 +24,7 @@ test.before(()=>{
   createApp()
     .post('/upload', async (res: HttpResponse) => {
 
-      handleUpload(
+      uploadHandler(
         res,
         buffer => {
           writeBufferToFile(buffer, outFile)

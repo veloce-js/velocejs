@@ -20,7 +20,8 @@ export interface HttpRequest {
     setYield(yield: boolean) : HttpRequest;
 }
 */
-import { HttpRequest } from 'uWebSockets.js'
+import { HttpResponse, HttpRequest } from 'uWebSockets.js'
+import { onDataHandler } from './handle-upload'
 
 // Typing the result object
 export type RequestBody = {
@@ -28,11 +29,11 @@ export type RequestBody = {
   method: string
   headers: any
   query: any,
-  payload?: any 
+  payload?: any
 }
 
 // parse inputs
-export async function bodyParser(req: HttpRequest): Promise<RequestBody> {
+export async function bodyParser(res: HttpResponse, req: HttpRequest): Promise<RequestBody> {
   let headers = {}
   req.forEach((key: string, value: string) => {
     headers[key] = value
@@ -40,6 +41,15 @@ export async function bodyParser(req: HttpRequest): Promise<RequestBody> {
   const url = req.getUrl()
   const query = req.getQuery()
   const method = req.getMethod()
+  // package it up
+  const body: RequestBody = { url, method, query, headers }
 
-  return { url, method, query, headers }
+  // we should only call this when the header is not GET? 
+  return new Promise(resolver => {
+    onDataHandler(res, buffer => {
+      body.payload = buffer
+      resolver(body)
+    })
+  })
+
 }
