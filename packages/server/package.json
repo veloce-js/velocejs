@@ -15,7 +15,7 @@
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
     "build:esr": "esbuild src/index.ts --platform=node --outfile=dist/index.js",
-    "test:srv": "PORT=9002 ts -- ./dev/param.ts",
+    "test:srv": "PORT=9010 pnpm ts -- ./dev/server.ts",
     "clean": "node ./clean.js",
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",

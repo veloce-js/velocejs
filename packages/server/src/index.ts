@@ -8,7 +8,8 @@ import { rateLimit } from './base/rate-limit'
 import { handleUpload, uploadHandler, onDataHandler, writeBufferToFile } from './base/handle-upload'
 import { bodyParser } from './base/body-parser'
 // extended
-import { UwsServer, UwsEndPointHandler } from './base/uws-server-class'
+import { UwsServer } from './base/uws-server-class'
+import { UwsEndPointHandler } from './base/interfaces'
 
 // default export
 export default uWS

@@ -18,3 +18,9 @@ export const sendFile = (url: string, file: string): Promise<any> => {
     body: blob
   })
 }
+
+export const request = async (url: string) => {
+  const res = await fetch(url)
+
+  return await res.text()
+}

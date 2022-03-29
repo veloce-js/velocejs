@@ -12,7 +12,7 @@ export class UwsServer {
   constructor(private opts?: AppOptions) {}
   // overwrite the port number via the start up env
   private get portNum() {
-    return process.env.PORT || this.port
+    return process.env.PORT ? parseInt(process.env.PORT) : this.port
   }
 
   // this doesn't do anything just for overwrite
@@ -33,7 +33,7 @@ export class UwsServer {
       app[type](path, handler)
     })
 
-    app.listen(this.portNum as number, (token: any): void => {
+    app.listen(this.portNum, (token: any): void => {
       if (token) {
         this.token = token
         this.onStart()
@@ -53,8 +53,8 @@ export class UwsServer {
   }
 
   // get the port number if it's randomly assign port
-  public getPortNum(): number | boolean {
-    return this.token ? getPort(this.token) : false
+  public getPortNum(): number {
+    return this.token ? getPort(this.token) : -1
   }
 
 }

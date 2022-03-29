@@ -30,9 +30,9 @@ test(`Should able to create the server and handle request`, async t => {
       res.end(msg)
     }
   }])
-  const port: number | boolean = app.getPortNum()
+  const port: number = app.getPortNum()
 
-  t.true(port && port > 0)
+  t.true(port > 0)
 
   const url = `http://localhost:${port}`
   const response = await Fetch(url)

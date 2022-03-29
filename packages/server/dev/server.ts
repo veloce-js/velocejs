@@ -1,19 +1,17 @@
 // for developing the bodyParser
-import { UwsServer, bodyParser } from '../src'
+import {
+  UwsServer,
+  bodyParser
+} from '../src'
 import { HttpRequest, HttpResponse } from 'uWebSockets.js'
-
+import Fetch from 'node-fetch'
 const app: UwsServer = new UwsServer()
 
 app.run([
   {
     type: 'get',
-    path: '/',
-    handler: 'static'
-  },
-  {
-    type: 'get',
     path: '/*',
-    handler: async function(res: HttpResponse, req: HttpRequest) {
+    handler: async (res: HttpResponse, req: HttpRequest) => {
       const body = await bodyParser(res, req)
       console.log(body)
 
@@ -23,7 +21,7 @@ app.run([
   {
     type: 'post',
     path: '/*',
-    handler: async function(res: HttpResponse, req: HttpRequest) {
+    handler: async (res: HttpResponse, req: HttpRequest) => {
       const body = await bodyParser(res, req)
       console.log(body)
 
@@ -33,7 +31,7 @@ app.run([
   {
     type: 'any',
     path: '/*',
-    handler: async function(res: HttpResponse, req: HttpRequest) {
+    handler: async (res: HttpResponse, req: HttpRequest) => {
       const body = await bodyParser(res, req)
       console.log(body)
 
@@ -41,3 +39,11 @@ app.run([
     }
   }
 ])
+
+setTimeout(async () => {
+  const res = await Fetch(`http://localhost:${process.env.PORT}/hello`)
+  const text = await res.text()
+
+  console.log(text)
+
+}, 500)
