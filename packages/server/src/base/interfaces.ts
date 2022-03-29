@@ -23,5 +23,5 @@ export function fastcreateServer(opt?: AppOptions, handlers?: Array<HandlersInf>
 export interface UwsEndPointHandler {
   type: string
   path: string
-  handler: (...args: Array<any>) => void | string
+  handler: (...args: Array<any>) => void
 }

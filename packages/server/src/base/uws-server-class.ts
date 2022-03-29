@@ -1,7 +1,6 @@
 // We now make it class to create the complete server
 import { AppOptions, TemplatedApp } from 'uWebSockets.js'
 import { createApp, shutdownServer, getPort } from './create-app'
-import { serveStatic } from './serve-static'
 import { UwsEndPointHandler } from './interfaces'
 
 // main
@@ -30,14 +29,8 @@ export class UwsServer {
     }
     handlers.forEach(o => {
       const { type, path, handler } = o
-      // provide a shorthand options
-      if (handler === 'static') {
-        // Reflect.apply( app[type], null, [path, serveStatic] )
-        // if we use the above call signature, we get a internal field out of bound error
-        app[type](path, serveStatic)
-      } else {
-        app[type](path, handler)
-      }
+      // @BUG if we use Reflect.apply here, uws throw a string out of bound error
+      app[type](path, handler)
     })
 
     app.listen(this.portNum as number, (token: any): void => {
@@ -52,12 +45,16 @@ export class UwsServer {
 
   // gracefully shutdown the server
   public shutdown(): void {
-    shutdownServer(this.token)
+    if (this.token) {
+      shutdownServer(this.token)
+    } else {
+      throw new Error(`No token to be found, can not gracefully shutdown`)
+    }
   }
 
   // get the port number if it's randomly assign port
-  public getPortNum(): number {
-    return getPort(this.token)
+  public getPortNum(): number | boolean {
+    return this.token ? getPort(this.token) : false
   }
 
 }
