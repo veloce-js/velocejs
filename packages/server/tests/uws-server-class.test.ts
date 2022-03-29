@@ -1,6 +1,6 @@
 import test from 'ava'
-import { UwsServer } from '../src/'
-import { HttpResponse } from 'uWebSockets.js'
+import { UwsServer, bodyParser } from '../src/'
+import { HttpResponse, HttpRequest } from 'uWebSockets.js'
 import Fetch from 'node-fetch'
 
 let app: UwsServer = null
@@ -15,7 +15,8 @@ test.after(() => {
 
 
 test(`Should able to create the server and handle request`, async t => {
-  // t.plan()
+  t.plan(3)
+
   const msg = `Hello`
 
   app.onStart = () => {
@@ -26,7 +27,11 @@ test(`Should able to create the server and handle request`, async t => {
   app.run([{
     type: 'any',
     path: '/*',
-    handler: (res: HttpResponse) => {
+    handler: async (res: HttpResponse, req: HttpRequest) => {
+
+      const result = await bodyParser(res, req)
+      t.is(result.method, 'get')
+
       res.end(msg)
     }
   }])

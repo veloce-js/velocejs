@@ -2,6 +2,8 @@
 import { AppOptions, TemplatedApp } from 'uWebSockets.js'
 import { createApp, shutdownServer, getPort } from './create-app'
 import { UwsEndPointHandler } from './interfaces'
+// for validation @TODO apply via the param decorator
+// const availbleRoutes = [`any`, `get`, `post`, `put`, `options` ,`del`, `patch`, `head`, `connect`, `trace`, `ws`]
 
 // main
 export class UwsServer {

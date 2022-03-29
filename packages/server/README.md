@@ -78,7 +78,7 @@ createApp()
 
 ### async serveStatic(path: string | Array<string>): void
 
-It's not a good idea to use the node server to serve up static file, instead your should use your actual webserver (i.e. Nginx) we will provide you with working example how to combine it, but if you really need to, there here it is for you to use.
+It's not a good idea to use the node server to serve up static file, instead your should use your actual webserver (i.e. Nginx) we will provide you with working example how to combine it, but if you really need to, here it is for you to use.
 
 ```ts
 createApp()
@@ -88,9 +88,12 @@ createApp()
   })
 ```
 
-### UwsServer
+All you have to do is the provide the url, and where your files are. And `serveStatic` takes care of the rest.
 
-This is an all-in-one solution to create Uws server  
+
+### UwsServer (Class)
+
+This is an all-in-one solution to create the (UWS) server  
 
 ```ts
 import { UwsServer, HttpResponse } from '@velocejs/server'
@@ -118,10 +121,11 @@ By default you will get a `console.info` once the server start up. You can overw
 app.onStart = () => console.info(`My own message`)
 ```
 
+Please note, you have to overload this before you call `app.run`
+
 #### UwsServer.run(handlers: UwsEndPointHandler[]): void
 
-This is the main method to handle the create server, apply end point
-and start up of the server.
+This is the main method to create the server, apply end points (routes) and bind the server to port.
 
 The `UwsEndPointHandler` interface has this signature:
 
@@ -133,7 +137,7 @@ interface UwsEndPointHandler {
 }
 ```
 
-available options are `any`, `get`, `post`, `put`, `options` ,`del`, `patch`, `head`, `connect`, `trace` and `ws` (websocket)
+available `type` options are `any`, `get`, `post`, `put`, `options` ,`del`, `patch`, `head`, `connect`, `trace` and `ws` (websocket)
 
 #### UwsServer.shutdown(): void
 

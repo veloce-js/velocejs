@@ -45,7 +45,16 @@ export function parseQuery(query: string): any {
 }
 
 // parse inputs
-export async function bodyParser(res: HttpResponse, req: HttpRequest): Promise<RespondBody> {
+export async function bodyParser(
+  res: HttpResponse,
+  req: HttpRequest,
+  onAborted?: () => void
+): Promise<RespondBody> {
+  // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
+  res.onAborted(() => {
+    onAborted ? Reflect.apply(onAborted, null, []) : console.info('ABORTED')
+  }) // try to see if we overload this and what will happen
+
   const headers = {}
   req.forEach((key: string, value: string) => {
     headers[key] = value

@@ -33,3 +33,27 @@ const baseDecorator = (type: string): any => {
     }
   }
 }
+
+
+
+export const validateRoutes = (availableRoutes: Array<string>) => {
+
+  function print(target: Object, propertyKey: string, parameterIndex: number) {
+    console.log(`Decorating param ${parameterIndex} from ${propertyKey}`);
+  }
+
+  return (target: any, memberName: string) => {
+    let currentValue: any = target[memberName]
+
+    Object.defineProperty(target, memberName, {
+      set: (newValue: any) => {
+        if (!availableRoutes.includes(newValue)) {
+
+          return
+        }
+        currentValue = newValue
+      },
+      get: () => currentValue
+    })
+  }
+}
