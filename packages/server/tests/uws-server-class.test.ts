@@ -13,7 +13,6 @@ test.after(() => {
   app.shutdown()
 })
 
-
 test(`Should able to create the server and handle request`, async t => {
   t.plan(3)
 
@@ -44,5 +43,15 @@ test(`Should able to create the server and handle request`, async t => {
   const txt = await response.text()
 
   t.is(txt, msg)
+
+})
+
+test(`Should throw error if the route is not in the support list`, t => {
+  const app1 = new UwsServer()
+  const error = t.throws(() => {
+    app1.run([{type: 'delete', path: '/delete', handler: () => {}}])
+  }, {instanceOf: Error})
+
+  t.truthy(error.message.indexOf('not support'))
 
 })

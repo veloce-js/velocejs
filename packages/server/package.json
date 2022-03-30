@@ -26,6 +26,7 @@
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "UNLICENSED",
   "dependencies": {
+    "debug": "^4.3.4",
     "mime-types": "^2.1.35",
     "tslib": "^2.3.1",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.6.0"

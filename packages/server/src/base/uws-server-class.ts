@@ -9,7 +9,7 @@ import { UwsEndPointHandler } from './interfaces'
 export class UwsServer {
   port: number = 0
   private token: any = null
-
+  private allowRoutes = ['any', 'get', 'post', 'put', 'options' ,'del', 'patch', 'head', 'connect', 'trace', 'ws']
 
   constructor(private opts?: AppOptions) {}
   // overwrite the port number via the start up env
@@ -29,10 +29,15 @@ export class UwsServer {
     if (!handlers.length) {
       throw new Error(`You must have at least 1 handler!`)
     }
+    
     handlers.forEach(o => {
       const { type, path, handler } = o
       // @BUG if we use Reflect.apply here, uws throw a string out of bound error
-      app[type](path, handler)
+      if (this.allowRoutes.includes(type)) {
+        app[type](path, handler)
+      } else {
+        throw new Error(`Route ${type} is not supported!`)
+      }
     })
 
     app.listen(this.portNum, (token: any): void => {
