@@ -1,9 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UwsServer = void 0;
+const tslib_1 = require("tslib");
 const create_app_1 = require("./create-app");
-// for validation @TODO apply via the param decorator
-// const availbleRoutes = [`any`, `get`, `post`, `put`, `options` ,`del`, `patch`, `head`, `connect`, `trace`, `ws`]
+const constants_1 = require("./constants");
+const debug_1 = tslib_1.__importDefault(require("debug"));
+// construct the debug fn
+const debugFn = (0, debug_1.default)(`velocejs:server:uws-server-class`);
 // main
 class UwsServer {
     constructor(opts) {
@@ -17,7 +20,7 @@ class UwsServer {
     }
     // this doesn't do anything just for overwrite
     onStart() {
-        console.info(`Server started on ${this.portNum}`);
+        debugFn(`Server started on ${this.portNum}`);
     }
     // the core method
     run(handlers) {
@@ -28,7 +31,12 @@ class UwsServer {
         handlers.forEach(o => {
             const { type, path, handler } = o;
             // @BUG if we use Reflect.apply here, uws throw a string out of bound error
-            app[type](path, handler);
+            if (constants_1.SUPPORT_REST_ROUTES.includes(type)) {
+                app[type](path, handler);
+            }
+            else {
+                throw new Error(`Route ${type} is not supported!`);
+            }
         });
         app.listen(this.portNum, (token) => {
             if (token) {
@@ -42,12 +50,7 @@ class UwsServer {
     }
     // gracefully shutdown the server
     shutdown() {
-        if (this.token) {
-            (0, create_app_1.shutdownServer)(this.token);
-        }
-        else {
-            throw new Error(`No token to be found, can not gracefully shutdown`);
-        }
+        (0, create_app_1.shutdownServer)(this.token);
     }
     // get the port number if it's randomly assign port
     getPortNum() {
