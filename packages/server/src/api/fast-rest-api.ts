@@ -6,6 +6,23 @@ import {
 
 } from './decodecorators'
 */
+
+function GET(path: string) {
+
+  return (target: any, memberName: string, propertyDescriptor: PropertyDescriptor) => {
+    console.log(target)
+    console.log(memberName)
+    console.log(propertyDescriptor)
+
+    const me = this as FastRestApi
+
+    console.log(me)
+
+    return propertyDescriptor
+  }
+}
+
+
 import { UwsRouteHandler } from '../base/interfaces'
 
 export class FastRestApi {
@@ -21,6 +38,12 @@ export class FastRestApi {
   // this will get pass to the UwsServer.run method
   public expose() {
     return this.routes
+  }
+
+
+  @GET('/some-func')
+  public someFunc() {
+    
   }
 
 }
