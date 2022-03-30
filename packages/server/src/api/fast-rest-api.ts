@@ -7,43 +7,39 @@ import {
 } from './decodecorators'
 */
 
-function GET(path: string) {
+export function GET(path: string, self: any) {
 
   return (target: any, memberName: string, propertyDescriptor: PropertyDescriptor) => {
-    console.log(target)
-    console.log(memberName)
-    console.log(propertyDescriptor)
 
-    const me = this as FastRestApi
+    const fn = propertyDescriptor.value
+    propertyDescriptor.value = () => {
+      self.routes.push({
+        type: 'get',
+        path: path,
+        handler: fn
+      })
 
-    console.log(me)
-
+      return {
+        type: 'get',
+        path: path,
+        handler: fn
+      }
+    }
     return propertyDescriptor
   }
 }
-
 
 import { UwsRouteHandler } from '../base/interfaces'
 
 export class FastRestApi {
   // this will store all the routes with path: string --> handler: (res, req) => void interface
-  private routes: Array<UwsRouteHandler> = []
-
-  // setter for routes
-  set addRoute(route: UwsRouteHandler) {
-    this.routes.push(route)
-  }
-
-  // this will be the main method to call when use
-  // this will get pass to the UwsServer.run method
-  public expose() {
-    return this.routes
-  }
-
-
-  @GET('/some-func')
-  public someFunc() {
-    
+  static routes: Array<UwsRouteHandler> = []
+  // it looks like unnecessary but we might want to do something with
+  // the array so we do it like this here
+  public expose(): /*Array<UwsRouteHandler>*/ void {
+    for (let name in FastRestApi.routes) {
+      console.log(name)
+    }
   }
 
 }

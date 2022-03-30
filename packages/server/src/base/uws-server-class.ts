@@ -2,7 +2,7 @@
 import { AppOptions, TemplatedApp } from 'uWebSockets.js'
 import { createApp, shutdownServer, getPort } from './create-app'
 import { UwsRouteHandler } from './interfaces'
-import { SUPPORT_ROUTES } from './constants'
+import { SUPPORT_REST_ROUTES } from './constants'
 import debug from 'debug'
 // construct the debug fn
 const debugFn = debug(`velocejs:server:uws-server-class`)
@@ -34,7 +34,7 @@ export class UwsServer {
     handlers.forEach(o => {
       const { type, path, handler } = o
       // @BUG if we use Reflect.apply here, uws throw a string out of bound error
-      if (SUPPORT_ROUTES.includes(type)) {
+      if (SUPPORT_REST_ROUTES.includes(type)) {
         app[type](path, handler)
       } else {
         throw new Error(`Route ${type} is not supported!`)
