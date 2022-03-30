@@ -4,7 +4,7 @@ The core is using [uWebSocket.js]() with several additional helpers methods
 
 ## How to
 
-The following example using Typescript
+The following examples using Typescript
 
 ### createApp(opt?: AppOptions): TemplatedApp
 ### shutdownServer(token: any)

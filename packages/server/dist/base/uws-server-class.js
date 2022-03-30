@@ -18,6 +18,9 @@ class UwsServer {
     get portNum() {
         return process.env.PORT ? parseInt(process.env.PORT) : this.port;
     }
+    set portNum(port) {
+        this.port = port;
+    }
     // this doesn't do anything just for overwrite
     onStart() {
         debugFn(`Server started on ${this.portNum}`);
