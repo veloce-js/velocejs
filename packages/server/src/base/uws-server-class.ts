@@ -9,13 +9,17 @@ const debugFn = debug(`velocejs:server:uws-server-class`)
 
 // main
 export class UwsServer {
-  port: number = 0
+  private port: number = 0
   private token: any = null
 
   constructor(private opts?: AppOptions) {}
   // overwrite the port number via the start up env
-  private get portNum() {
+  public get portNum() {
     return process.env.PORT ? parseInt(process.env.PORT) : this.port
+  }
+
+  public set portNum(port: number) {
+    this.port = port
   }
 
   // this doesn't do anything just for overwrite

@@ -147,10 +147,13 @@ To gracefully shutdown the server
 app.shutdown()
 ```
 
-#### UwsServer.getPortNum(): number
+#### UwsServer.getPortNum(): number AND set portNum(port: number)
 
 By default the server will randomly assign an unused port, you could
-overwrite it by using the node environment variable `PORT` like so
+overwrite it by:
+
+1. `portNum` setter
+2. using the node environment variable `PORT` (this will have higher priority)
 
 Assume that you have put everything in a file call `server.js`
 
@@ -158,7 +161,7 @@ Assume that you have put everything in a file call `server.js`
 $ PORT=3456 node ./server.js
 ```
 
-Or if you just stick with the randomly port, you can use this method
+Or if you just **stick with the randomly port**, you can use this method
 to retrieve the port number.
 
 ```ts
