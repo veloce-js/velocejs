@@ -7,6 +7,6 @@ import { rateLimit } from './base/rate-limit';
 import { handleUpload, uploadHandler, onDataHandler, writeBufferToFile } from './base/handle-upload';
 import { bodyParser } from './base/body-parser';
 import { UwsServer } from './base/uws-server-class';
-import { UwsEndPointHandler } from './base/interfaces';
+import { UwsRouteHandler } from './base/interfaces';
 export default uWS;
-export { createApp, shutdownServer, getPort, readJsonAsync, writeJson, serveStatic, rateLimit, handleUpload, uploadHandler, onDataHandler, writeBufferToFile, bodyParser, UwsServer, UwsEndPointHandler };
+export { createApp, shutdownServer, getPort, readJsonAsync, writeJson, serveStatic, rateLimit, handleUpload, uploadHandler, onDataHandler, writeBufferToFile, bodyParser, UwsServer, UwsRouteHandler };

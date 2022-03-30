@@ -123,14 +123,14 @@ app.onStart = () => console.info(`My own message`)
 
 Please note, you have to overload this before you call `app.run`
 
-#### UwsServer.run(handlers: UwsEndPointHandler[]): void
+#### UwsServer.run(handlers: UwsRouteHandler[]): void
 
 This is the main method to create the server, apply end points (routes) and bind the server to port.
 
-The `UwsEndPointHandler` interface has this signature:
+The `UwsRouteHandler` interface has this signature:
 
 ```ts
-interface UwsEndPointHandler {
+interface UwsRouteHandler {
   type: string
   path: string
   handler: any

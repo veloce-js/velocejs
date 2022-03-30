@@ -1,5 +1,5 @@
 import { AppOptions } from 'uWebSockets.js';
-import { UwsEndPointHandler } from './interfaces';
+import { UwsRouteHandler } from './interfaces';
 export declare class UwsServer {
     private opts?;
     port: number;
@@ -7,7 +7,7 @@ export declare class UwsServer {
     constructor(opts?: AppOptions | undefined);
     private get portNum();
     onStart(): void;
-    run(handlers: UwsEndPointHandler[]): void;
+    run(handlers: UwsRouteHandler[]): void;
     shutdown(): void;
     getPortNum(): number;
 }

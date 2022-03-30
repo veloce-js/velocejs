@@ -20,7 +20,7 @@ export function fastcreateServer(opt?: AppOptions, handlers?: Array<HandlersInf>
 }
 */
 
-export interface UwsEndPointHandler {
+export interface UwsRouteHandler {
   type: string
   path: string
   handler: (...args: Array<any>) => void

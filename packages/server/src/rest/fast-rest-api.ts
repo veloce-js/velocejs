@@ -5,23 +5,22 @@ import {
   POST,
 
 } from './decodecorators'
-
-
+*/
+import { UwsRouteHandler } from '../base/interfaces'
 
 export class FastRestApi {
   // this will store all the routes with path: string --> handler: (res, req) => void interface
-  private routes: any = {}
+  private routes: Array<UwsRouteHandler> = []
 
   // setter for routes
-  set createRoute() {
-
+  set addRoute(route: UwsRouteHandler) {
+    this.routes.push(route)
   }
 
   // this will be the main method to call when use
   // this will get pass to the UwsServer.run method
   public expose() {
-
+    return this.routes
   }
 
 }
-*/
