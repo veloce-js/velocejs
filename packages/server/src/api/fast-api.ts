@@ -2,7 +2,7 @@
 
 import { UwsRouteSetup } from '../base/interfaces'
 import { UwsServer } from '../base/uws-server-class'
-import { RouteMetaInfo } from './decorators'
+import { RouteMetaInfo } from './type'
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {

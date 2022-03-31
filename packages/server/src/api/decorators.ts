@@ -3,12 +3,8 @@ import "reflect-metadata"
 
 // The key to id the meta info
 const routeKey = Symbol("FastApiRouteKey")
-// just to type the damn thing to stop the warning
-export type RouteMetaInfo = {
-  propertyName: string
-  path: string
-  type: string
-}
+import { RouteMetaInfo } from './type'
+import { FastApi } from './fast-api'
 
 // Factory method to create factory method
 function routeDecoratorFactory(routeType: string): any {
@@ -18,8 +14,8 @@ function routeDecoratorFactory(routeType: string): any {
     return (target: any, propertyName: string) => {
       // all it does it to record all this meta info and we can re-use it later
       const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
-      const payload: RouteMetaInfo = { propertyName, path, type: routeType }
-      existingRoutes.push(payload)
+      const meta: RouteMetaInfo = { propertyName, path, type: routeType }
+      existingRoutes.push(meta)
       // console.log('existingRoutes', existingRoutes)
       Reflect.defineMetadata(routeKey, existingRoutes, target)
     }
@@ -29,8 +25,8 @@ function routeDecoratorFactory(routeType: string): any {
 // this will not get expose as we only use this internally
 // This must be run on the overload method in the sub-class
 // otherwise the meta data becomes empty
-export function EXTRACT_META_INFO(
-  target: FastRestApi,
+export function PREPARE_META_INFO(
+  target: FastApi,
   _: string, // propertyName is unused, just placeholder it
   descriptor: TypedPropertyDescriptor<(meta: RouteMetaInfo[]) => void>
 ) {

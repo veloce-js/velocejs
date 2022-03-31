@@ -1,33 +1,21 @@
 // Main entry point
 import uWS from 'uWebSockets.js'
-import { createApp, shutdownServer, getPort } from './base/create-app'
-import { readJsonAsync } from './base/read-json-async'
-import { writeJson } from './base/write-json'
-import { serveStatic } from './base/serve-static'
-import { rateLimit } from './base/rate-limit'
-import { handleUpload, uploadHandler, onDataHandler, writeBufferToFile } from './base/handle-upload'
-import { bodyParser } from './base/body-parser'
+export { createApp, shutdownServer, getPort } from './base/create-app'
+export { readJsonAsync } from './base/read-json-async'
+export { writeJson } from './base/write-json'
+export { serveStatic } from './base/serve-static'
+export { rateLimit } from './base/rate-limit'
+export { handleUpload, uploadHandler, onDataHandler, writeBufferToFile } from './base/handle-upload'
+export { bodyParser } from './base/body-parser'
 // extended
-import { UwsServer } from './base/uws-server-class'
-import { UwsRouteSetup } from './base/interfaces'
+export { UwsServer } from './base/uws-server-class'
+export { UwsRouteSetup } from './base/interfaces'
+// fast api
+export { FastApi } from './api/fast-api'
+export {
+  ANY, GET, POST, PUT, OPTIONS, DEL, PATCH, HEAD, PREPARE_META_INFO
+} from './api/decorators'
 
 // default export
 export default uWS
 // named
-export {
-  createApp,
-  shutdownServer,
-  getPort,
-  readJsonAsync,
-  writeJson,
-  serveStatic,
-  rateLimit,
-  handleUpload,
-  uploadHandler,
-  onDataHandler,
-  writeBufferToFile,
-  bodyParser,
-  // extended
-  UwsServer,
-  UwsRouteSetup
-}
