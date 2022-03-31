@@ -1,6 +1,7 @@
 // Testing the FastApi
 import test from 'ava'
 import { FastApi, GET, ABORTED, PREPARE, UwsServer } from '../src'
+import { UwsRespondBody } from '../src/api/type'
 import Fetch from 'node-fetch'
 
 const msg1 = `doing the route handling thing`
@@ -16,12 +17,23 @@ class MyApi extends FastApi {
   @ABORTED('get', '/some-where')
   myFuncOnAborted() {
     console.log(`Just log something`)
+  } */
+
+  // here we handle the result ourself
+  @GET('/custom-handler')
+  myCustomFunc(params: UwsRespondBody): void {
+    
   }
-  */
+
+
+  @POST('/some-where')
+  myPostFunc(params: UwsRespondBody) {
+
+  }
 
   @PREPARE
-  anything(...args: any[]) {
-    Reflect.apply(super.run, this, args)
+  anything() {
+    Reflect.apply(super.run, this, [])
   }
 }
 

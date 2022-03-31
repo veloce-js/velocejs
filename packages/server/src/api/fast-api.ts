@@ -10,10 +10,12 @@ export class FastApi {
 
   constructor(private uwsInstance: UwsServer) {}
 
+  // wrapper for the UwsServer create server method
   private createServer(routes: UwsRouteSetup[]) {
     this.uwsInstance.run(routes)
   }
 
+  // transform the string name to actual method
   private mapMethodToHandler(propertyName: string, onAbortedHandler?: string): UwsRouteHandler {
     const fn = this[propertyName]
 
@@ -30,15 +32,16 @@ export class FastApi {
       const payload: UwsParsedResult = Object.assign(result, extra)
 
       const reply = Reflect.apply(fn, this, [ payload ])
-      // @TODO how to deal with different headers? 
-      // output
-      res.end(reply)
+
+      // if the method return a result then we will handle it
+      // otherwise we assume the dev handle it in their method
+      if (reply) {
+        res.end(reply)
+      }
     }
   }
 
-  // it looks like unnecessary but we might want to do something with
-  // the array so we do it like this here
-
+  // Mapping all the string name to method and supply to UwsServer run method
   public run(meta: RouteMetaInfo[]): void {
     this.createServer(
       meta.map(m => {
@@ -52,4 +55,21 @@ export class FastApi {
       })
     )
   }
+
+  // @TODO couple factory method for easier to use with UwsServer
+  /*
+  private createSetHeader(res: HttpResponse) {
+
+    return () => {
+      res.writeHeader()
+    }
+  }
+
+  private createSetStatus(res: HttpResponse) {
+
+    return () => {
+      res.writeStatus()
+    }
+  }
+  */
 }
