@@ -22,22 +22,16 @@ export interface HttpRequest {
 */
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
 import { onDataHandler } from './handle-upload'
+import { RespondBody } from './interfaces'
+import debug from 'debug'
+const debugFn = debug('velocejs:server:body-parser')
 
-// Typing the result object
-export type RespondBody = {
-  url: string
-  method: string
-  headers: any
-  query: any,
-  params: any,
-  payload?: any
-}
 
 // the actual function to take the query apart
 export function parseQuery(query: string): any {
   const params = new URLSearchParams(query)
   const result = {}
-  for (let pair of params.entries()) {
+  for (const pair of params.entries()) {
    result[ pair[0] ] = pair[1]
   }
 
@@ -52,7 +46,7 @@ export async function bodyParser(
 ): Promise<RespondBody> {
   // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
   res.onAborted(() => {
-    onAborted ? Reflect.apply(onAborted, null, []) : console.info('ABORTED')
+    onAborted ? Reflect.apply(onAborted, null, []) : debugFn('ABORTED')
   }) // try to see if we overload this and what will happen
 
   const headers = {}

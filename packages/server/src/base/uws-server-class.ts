@@ -1,7 +1,7 @@
 // We now make it class to create the complete server
 import { AppOptions, TemplatedApp, us_listen_socket } from 'uWebSockets.js'
 import { createApp, shutdownServer, getPort } from './create-app'
-import { UwsRouteHandler } from './interfaces'
+import { UwsRouteSetup } from './interfaces'
 import { SUPPORT_REST_ROUTES } from './constants'
 import debug from 'debug'
 // construct the debug fn
@@ -11,7 +11,7 @@ const debugFn = debug(`velocejs:server:uws-server-class`)
 export class UwsServer {
   private port = 0
   private token: us_listen_socket
-  
+
   constructor(private opts?: AppOptions) {}
   // overwrite the port number via the start up env
   public get portNum() {
@@ -24,11 +24,14 @@ export class UwsServer {
 
   // this doesn't do anything just for overwrite
   public onStart() {
-    debugFn(`Server started on ${this.portNum}`)
+    const portNum = this.portNum || this.getPortNum()
+    const s = this.opts ? 's' : ''
+
+    debugFn(`Server started on http${s}://localhost:${portNum}`)
   }
 
   // the core method
-  public run(handlers: UwsRouteHandler[]): void {
+  public run(handlers: UwsRouteSetup[]): void {
     const app: TemplatedApp = createApp(this.opts)
 
     if (!handlers.length) {

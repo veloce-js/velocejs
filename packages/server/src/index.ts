@@ -9,7 +9,7 @@ import { handleUpload, uploadHandler, onDataHandler, writeBufferToFile } from '.
 import { bodyParser } from './base/body-parser'
 // extended
 import { UwsServer } from './base/uws-server-class'
-import { UwsRouteHandler } from './base/interfaces'
+import { UwsRouteSetup } from './base/interfaces'
 
 // default export
 export default uWS
@@ -29,5 +29,5 @@ export {
   bodyParser,
   // extended
   UwsServer,
-  UwsRouteHandler
+  UwsRouteSetup
 }

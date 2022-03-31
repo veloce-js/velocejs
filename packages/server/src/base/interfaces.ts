@@ -1,27 +1,31 @@
 // group all the interface(s) here for easier re-use
 
-// all in one quick method to generate the server
-/*
-export interface HandlersInf {
-  type: string,
-  path: string,
-  handler: (args: Array<any>) => void
-} */
-/* @TODO
-export function fastcreateServer(opt?: AppOptions, handlers?: Array<HandlersInf>, port?: number) {
-  if (!handlers.length) {
-    throw new Error(`You must specify at least 1 handler`)
-  }
-  const app = createServer(opt)
-  handlers.forEach((path, handler) => {
-    app[type](path, handler)
-  })
+import { HttpResponse, HttpRequest } from 'uWebSockets.js'
 
-}
-*/
+export type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => void
 
-export interface UwsRouteHandler {
+export interface UwsRouteSetup {
   type: string
   path: string
-  handler: (...args: Array<any>) => void
+  handler: UwsRouteHandler
+}
+// string to string object with unknown properties 
+export type StringPairObj = {
+  [key: string]: string
+}
+
+// Typing the result object
+export type RespondBody = {
+  url: string
+  method: string
+  query: string,
+  headers: StringPairObj
+  params: any,
+  payload?: any
+}
+// this interface is for the result pass to the fast-api callback
+// we pass the raw res and req back for other things that need to get done
+export interface ParsedResult extends RespondBody {
+  res: HttpResponse,
+  req: HttpRequest
 }

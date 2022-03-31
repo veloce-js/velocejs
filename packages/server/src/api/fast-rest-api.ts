@@ -1,6 +1,6 @@
 // this will allow you to create a series of REST API in no time
 import "reflect-metadata"
-import { UwsRouteHandler } from '../base/interfaces'
+import { UwsRouteSetup } from '../base/interfaces'
 import { UwsServer } from '../base/uws-server-class'
 // The key to id the meta info
 const routeKey = Symbol("FastApiRouteKey")
@@ -69,7 +69,7 @@ export class FastRestApi {
 
   constructor(private uwsInstance: UwsServer) {}
 
-  private createServer(routes: UwsRouteHandler[]) {
+  private createServer(routes: UwsRouteSetup[]) {
     this.uwsInstance.run(routes)
   }
 
@@ -77,7 +77,7 @@ export class FastRestApi {
     const fn = this[propertyName]
 
     console.log(fn.toString())
-    
+
     return fn
   }
 
