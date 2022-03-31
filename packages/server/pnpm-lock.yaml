@@ -16,6 +16,7 @@ specifiers:
   fs-extra: ^10.0.1
   mime-types: ^2.1.35
   node-fetch: ^3.2.3
+  reflect-metadata: ^0.1.13
   rimraf: ^3.0.2
   tslib: ^2.3.1
   uWebSockets.js: github:uNetworking/uWebSockets.js#v20.6.0
@@ -23,6 +24,7 @@ specifiers:
 dependencies:
   debug: 4.3.4
   mime-types: 2.1.35
+  reflect-metadata: 0.1.13
   tslib: 2.3.1
   uWebSockets.js: github.com/uNetworking/uWebSockets.js/a58e810e47a23696410f6073c8c905dc38f75da5
 
@@ -1694,6 +1696,10 @@ packages:
     dependencies:
       picomatch: 2.3.1
     dev: true
+
+  /reflect-metadata/0.1.13:
+    resolution: {integrity: sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==}
+    dev: false
 
   /regexpp/3.2.0:
     resolution: {integrity: sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==}
