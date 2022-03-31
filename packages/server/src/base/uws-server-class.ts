@@ -10,7 +10,7 @@ const debugFn = debug(`velocejs:server:uws-server-class`)
 // main
 export class UwsServer {
   private port = 0
-  private token: us_listen_socket
+  private token: us_listen_socket = ''
 
   constructor(private opts?: AppOptions) {}
   // overwrite the port number via the start up env

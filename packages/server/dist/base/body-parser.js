@@ -3,11 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.bodyParser = exports.parseQuery = void 0;
 const tslib_1 = require("tslib");
 const handle_upload_1 = require("./handle-upload");
+const debug_1 = tslib_1.__importDefault(require("debug"));
+const debugFn = (0, debug_1.default)('velocejs:server:body-parser');
 // the actual function to take the query apart
 function parseQuery(query) {
     const params = new URLSearchParams(query);
     const result = {};
-    for (let pair of params.entries()) {
+    for (const pair of params.entries()) {
         result[pair[0]] = pair[1];
     }
     return result;
@@ -18,7 +20,7 @@ function bodyParser(res, req, onAborted) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
         res.onAborted(() => {
-            onAborted ? Reflect.apply(onAborted, null, []) : console.info('ABORTED');
+            onAborted ? Reflect.apply(onAborted, null, []) : debugFn('ABORTED');
         }); // try to see if we overload this and what will happen
         const headers = {};
         req.forEach((key, value) => {

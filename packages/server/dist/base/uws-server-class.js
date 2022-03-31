@@ -12,7 +12,7 @@ class UwsServer {
     constructor(opts) {
         this.opts = opts;
         this.port = 0;
-        this.token = null;
+        this.token = '';
     }
     // overwrite the port number via the start up env
     get portNum() {
@@ -23,7 +23,9 @@ class UwsServer {
     }
     // this doesn't do anything just for overwrite
     onStart() {
-        debugFn(`Server started on ${this.portNum}`);
+        const portNum = this.portNum || this.getPortNum();
+        const s = this.opts ? 's' : '';
+        debugFn(`Server started on http${s}://localhost:${portNum}`);
     }
     // the core method
     run(handlers) {
@@ -35,6 +37,7 @@ class UwsServer {
             const { type, path, handler } = o;
             // @BUG if we use Reflect.apply here, uws throw a string out of bound error
             if (constants_1.SUPPORT_REST_ROUTES.includes(type)) {
+                debugFn(`Create ${type} route for ${path}`);
                 app[type](path, handler);
             }
             else {
