@@ -22,7 +22,7 @@ export interface HttpRequest {
 */
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
 import { onDataHandler } from './handle-upload'
-import { RespondBody } from './interfaces'
+import { UwsRespondBody } from '../api/type'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser')
 
@@ -43,7 +43,7 @@ export async function bodyParser(
   res: HttpResponse,
   req: HttpRequest,
   onAborted?: () => void
-): Promise<RespondBody> {
+): Promise<UwsRespondBody> {
   // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
   res.onAborted(() => {
     onAborted ? Reflect.apply(onAborted, null, []) : debugFn('ABORTED')
@@ -58,7 +58,7 @@ export async function bodyParser(
   const method = req.getMethod()
   const params = parseQuery(query)
   // package it up
-  const body: RespondBody = { url, method, query, headers, params }
+  const body: UwsRespondBody = { url, method, query, headers, params }
 
   // we should only call this when the header is not GET?
   return new Promise(resolver => {

@@ -13,7 +13,9 @@ export { UwsRouteSetup } from './base/interfaces'
 // fast api
 export { FastApi } from './api/fast-api'
 export {
-  ANY, GET, POST, PUT, OPTIONS, DEL, PATCH, HEAD, PREPARE_META_INFO
+  ANY, GET, POST, PUT, OPTIONS, DEL, PATCH, HEAD,
+  PREPARE,
+  ABORTED
 } from './api/decorators'
 
 // default export
