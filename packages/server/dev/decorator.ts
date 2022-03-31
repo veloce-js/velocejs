@@ -2,37 +2,10 @@
 
 // import { GET, FastRestApi } from './api/fast-rest-api'
 
-// const app = new FastRestApi()
+import { GET, FastRestApi, EXTRACT_META_INFO } from '../src/api/fast-rest-api'
+import { UwsServer } from '../src/base/uws-server-class'
 
-import "reflect-metadata"
-
-const routeKey = Symbol("routeKey")
-
-function GET(path: string) {
-
-  return (target: any, propertyName: string, descriptor: TypedPropertyDescriptor<Function>) => {
-
-    const existingRoutes = Reflect.getOwnMetadata(routeKey, target, -1) || []
-    // const fn = descriptor.value
-    const payload = { propertyName, path, type: 'GET' }
-
-    existingRoutes.push(payload)
-
-    Reflect.defineMetadata(routeKey, existingRoutes, target, -1)
-  }
-}
-
-
-function EXTRACT(target: any, propertyName: string, descriptor: TypedPropertyDescriptor<Function>) {
-  const fn = descriptor.value
-  descriptor.value = function(...args: any[]) {
-    const meta = Reflect.getOwnMetadata(routeKey, target, -1)
-    return fn.apply(this, [meta])
-  }
-}
-
-
-class MyApi {
+class MyApi extends FastRestApi {
 
   // constructor(private api: FastRestApi) {}
 
@@ -47,17 +20,13 @@ class MyApi {
     console.log(`this is the other func for other route`)
   }
 
-  @EXTRACT
-  expose(list?: any[]) {
-    console.log(`Call me and hopefully got something`, list)
-    const self = this
-    list.forEach(meta => {
-      Reflect.apply(self[meta.propertyName], self, [])
-    })
+  @EXTRACT_META_INFO
+  anything(...args: any[]) {
+    Reflect.apply(super.run, this, args)
   }
 }
 
+const app = new UwsServer()
+const api = new MyApi(app)
 
-const api = new MyApi()
-
-api.expose()
+api.anything()

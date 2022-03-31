@@ -17,6 +17,7 @@
     "build:esr": "esbuild src/index.ts --platform=node --outfile=dist/index.js",
     "test:srv": "PORT=9010 pnpm ts -- ./dev/server.ts",
     "test:client": "PORT=9010 pnpm ts -- ./dev/client.ts",
+    "test:api": "DEBUG=velocejs* pnpm ts -- ./dev/decorator.ts",
     "clean": "node ./clean.js",
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",

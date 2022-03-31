@@ -21,14 +21,16 @@ function routeDecoratorFactory(routeType: string): any {
       const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
       const payload: RouteMetaInfo = { propertyName, path, type: routeType }
       existingRoutes.push(payload)
-
+      // console.log('existingRoutes', existingRoutes)
       Reflect.defineMetadata(routeKey, existingRoutes, target)
     }
   }
 }
 
 // this will not get expose as we only use this internally
-function EXTRACT_META_INFO(
+// This must be run on the overload method in the sub-class
+// otherwise the meta data becomes empty
+export function EXTRACT_META_INFO(
   target: FastRestApi,
   _: string, // propertyName is unused, just placeholder it
   descriptor: TypedPropertyDescriptor<(meta: RouteMetaInfo[]) => void>
@@ -40,7 +42,7 @@ function EXTRACT_META_INFO(
     if (!fn) {
       throw new Error(`Fn is undefined!`)
     }
-
+    // console.log('meta', meta)
     return Reflect.apply(fn, this, [meta])
   }
 }
@@ -71,12 +73,25 @@ export class FastRestApi {
     this.uwsInstance.run(routes)
   }
 
-  // it looks like unnecessary but we might want to do something with
-  // the array so we do it like this here
-  @EXTRACT_META_INFO
-  public run(meta: RouteMetaInfo[]): void {
+  private mapMethodToHandler(propertyName: string): any {
+    const fn = this[propertyName]
 
-    console.log('check meta info', meta)
+    console.log(fn.toString())
+    
+    return fn
   }
 
+  // it looks like unnecessary but we might want to do something with
+  // the array so we do it like this here
+
+  public run(meta: RouteMetaInfo[]): void {
+    this.createServer(
+      meta.map(m => {
+        const { path, type, propertyName } = m
+        const handler = this.mapMethodToHandler(propertyName)
+
+        return { type, path, handler }
+      })
+    )
+  }
 }
