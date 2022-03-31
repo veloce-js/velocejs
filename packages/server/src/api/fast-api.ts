@@ -59,13 +59,9 @@ export const HEAD = routeDecoratorFactory('head')
 // export const CONNECT = routeDecoratorFactory('connect')
 // export const TRACE = routeDecoratorFactory('trace')
 
-
-
-
-
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
-export class FastRestApi {
+export class FastApi {
 
   constructor(private uwsInstance: UwsServer) {}
 

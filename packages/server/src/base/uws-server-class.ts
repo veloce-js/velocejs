@@ -42,6 +42,7 @@ export class UwsServer {
       const { type, path, handler } = o
       // @BUG if we use Reflect.apply here, uws throw a string out of bound error
       if (SUPPORT_REST_ROUTES.includes(type)) {
+        debugFn(`Create ${type} route for ${path}`)
         app[type](path, handler)
       } else {
         throw new Error(`Route ${type} is not supported!`)
