@@ -1,26 +1,26 @@
-// testing the decorator
+// @ts-nocheck
 
-// import { GET, FastRestApi } from './api/fast-rest-api'
+import { FastApi, GET, ABORTED, PREPARE, UwsServer } from '../src'
 
-import { GET, FastRestApi, EXTRACT_META_INFO } from '../src/api/fast-rest-api'
-import { UwsServer } from '../src/base/uws-server-class'
-
-class MyApi extends FastRestApi {
-
-  // constructor(private api: FastRestApi) {}
+class MyApi extends FastApi {
 
   @GET('/some-where')
   myFunc() {
     console.log(`doing the route handling thing`)
+    return `Doing the route handling thing`
   }
-
+  @ABORTED('get', '/some-where')
+  myFuncOnAborted() {
+    console.log(`Just log something`)
+  }
 
   @GET('/some-where-else')
   myOtherFunc() {
     console.log(`this is the other func for other route`)
+    return `this is the other func for other route`
   }
 
-  @EXTRACT_META_INFO
+  @PREPARE
   anything(...args: any[]) {
     Reflect.apply(super.run, this, args)
   }
