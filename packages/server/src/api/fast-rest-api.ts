@@ -31,17 +31,17 @@ function routeDecoratorFactory(routeType: string): any {
 function EXTRACT_META_INFO(
   target: FastRestApi,
   _: string, // propertyName is unused, just placeholder it
-  descriptor: TypedPropertyDescriptor<(newUwsInstance: UwsServer, meta: RouteMetaInfo[]) => void>
+  descriptor: TypedPropertyDescriptor<(meta: RouteMetaInfo[]) => void>
 ) {
   const fn = descriptor.value
 
-  descriptor.value = function(app: UwsServer) {
+  descriptor.value = function() {
     const meta = Reflect.getOwnMetadata(routeKey, target)
     if (!fn) {
       throw new Error(`Fn is undefined!`)
     }
 
-    return Reflect.apply(fn, this, [app, meta])
+    return Reflect.apply(fn, this, [meta])
   }
 }
 // making the decorators
@@ -64,14 +64,17 @@ export const HEAD = routeDecoratorFactory('head')
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastRestApi {
-  private uwsInstance: UwsServer
 
+  constructor(private uwsInstance: UwsServer) {}
 
+  private createServer(routes: UwsRouteHandler[]) {
+    this.uwsInstance.run(routes)
+  }
 
   // it looks like unnecessary but we might want to do something with
   // the array so we do it like this here
   @EXTRACT_META_INFO
-  public run(newUwsInstance: UwsServer, meta: RouteMetaInfo[]): void {
+  public run(meta: RouteMetaInfo[]): void {
 
     console.log('check meta info', meta)
   }
