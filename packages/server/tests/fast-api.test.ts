@@ -1,12 +1,12 @@
 // Testing the FastApi
 import test from 'ava'
-import { FastApi, GET, ABORTED, PREPARE, UwsServer } from '../src'
-import { UwsRespondBody } from '../src/api/type'
+import { FastApi, GET, POST, ABORTED, PREPARE, UwsServer, UwsParsedResult } from '../src'
+
 import Fetch from 'node-fetch'
 
 const msg1 = `doing the route handling thing`
+const msg2 = `Here is my own message`
 
-// @ts-nocheck
 class MyApi extends FastApi {
 
   @GET('/some-where')
@@ -21,13 +21,15 @@ class MyApi extends FastApi {
 
   // here we handle the result ourself
   @GET('/custom-handler')
-  myCustomFunc(params: UwsRespondBody): void {
-    
+  myCustomFunc(params: UwsParsedResult): void {
+    const { res } = params
+
+    res.end(msg2)
   }
 
 
   @POST('/some-where')
-  myPostFunc(params: UwsRespondBody) {
+  myPostFunc(params: UwsParsedResult) {
 
   }
 
@@ -47,6 +49,8 @@ test.before(() => {
   app.portNum = port
 
   api = new MyApi(app)
+  // start up
+  api.anything()
 })
 
 test.after(() => {
@@ -55,11 +59,20 @@ test.after(() => {
 
 test(`Testing the class extends from FastApi`, async (t) => {
   t.plan(1)
-  // start up
-  api.anything()
 
   const response = await Fetch(`http://localhost:${port}/some-where`)
   const text = await response.text()
 
   t.is(text, msg1)
 })
+
+test(`Should able to respond their own custom method`, async (t) => {
+  t.plan(1)
+
+  const response = await Fetch(`http://localhost:${port}/custom-handler`)
+  const text = await response.text()
+
+  t.is(text, msg2)
+})
+
+test.todo(`Testing the post method handler`)

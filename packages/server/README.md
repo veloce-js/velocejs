@@ -2,7 +2,7 @@
 
 The core is using [uWebSocket.js]() with several additional helpers methods
 
-## How to
+## How to (Lower level code to DIY)
 
 The following examples using Typescript
 
@@ -24,7 +24,6 @@ createApp()
       console.log(`Server is running ${port}`)
     }
   })
-
 // now some time later if you need to gracefully shutdown your server
 shutdownServer(connectedSocket)
 ```
@@ -38,13 +37,23 @@ If you pass the following object, then it will create a `SSLApp`
 }
 ```
 
+You can also specify a host when you call the `listen` method
+
+```ts
+createApp()
+  // ... add route handerls
+  .listen('0.0.0.0', 3456, token => {
+    // the rest of your code
+  })
+```
+
 #### Automatically determine port number
 
-You can let server to decided which port number to use (very handy when you need to run multiple instance per CPU)
+You can let the server to decided which port number to use (very handy when you need to run multiple instance per CPU)
 
 ```ts
 import { createApp, getPort } from '@velocejs/server'
-const port = 0
+const port = 0 // <-- here
 
 createApp()
   .any('/*', (res: HttpResponse) => {
@@ -78,7 +87,9 @@ createApp()
 
 ### async serveStatic(path: string | Array<string>): void
 
-It's not a good idea to use the node server to serve up static file, instead your should use your actual webserver (i.e. Nginx) we will provide you with working example how to combine it, but if you really need to, here it is for you to use.
+It's not a good idea to use the node server to serve up static file,
+instead your should use your actual webserver (i.e. Nginx)
+but if you really need to, here it is for you to use.
 
 ```ts
 createApp()
@@ -90,8 +101,11 @@ createApp()
 
 All you have to do is the provide the url, and where your files are. And `serveStatic` takes care of the rest.
 
+## Higher level wrapper
 
-### UwsServer (Class)
+This section will explain how to use the higher level code to construct your server
+
+### (Class) UwsServer
 
 This is an all-in-one solution to create the (UWS) server  
 
@@ -115,7 +129,10 @@ Next will be all available public methods
 
 #### UwsServer.onStart(): void
 
-By default you will get a `console.info` once the server start up. You can overwrite it by overload this method
+By default there is no output, if you pass `DEBUG=velocejs:server:uws-server-class` in your startup script
+then you will able to see a start-up message.
+
+Or you can overwrite it by overload this method
 
 ```ts
 app.onStart = () => console.info(`My own message`)
@@ -147,7 +164,7 @@ To gracefully shutdown the server
 app.shutdown()
 ```
 
-#### UwsServer.getPortNum(): number AND set portNum(port: number)
+#### getPortNum(): number AND set portNum(port: number)
 
 By default the server will randomly assign an unused port, you could
 overwrite it by:
@@ -168,8 +185,29 @@ to retrieve the port number.
 const port = app.getPortNum()
 ```
 
-**MORE TO COME**
+#### hostName setter and getter
 
+You can also specify a host name, default is `localhost`.
+You can two ways to overwrite this:
+
+1. `hostName` setter
+2. using the node environment variable `HOST` (this will have higher priority)
+
+Assume that you have put everything in a file call `server-with-hostname.js`
+
+```sh
+$ HOST=0.0.0.0 node ./server-with-hostname.js
+```
+
+### (Class) FastApi
+
+As the name imply, this class let you build up your API in no time!
+
+**Documentation coming soon**
+
+---
+
+**MORE TO COME**
 
 ---
 

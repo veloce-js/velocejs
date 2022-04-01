@@ -9,7 +9,6 @@ export { handleUpload, uploadHandler, onDataHandler, writeBufferToFile } from '.
 export { bodyParser } from './base/body-parser'
 // extended
 export { UwsServer } from './base/uws-server-class'
-export { UwsRouteSetup } from './base/interfaces'
 // fast api
 export { FastApi } from './api/fast-api'
 export {
@@ -17,6 +16,19 @@ export {
   PREPARE,
   ABORTED
 } from './api/decorators'
+// export all the interfaces
+export {
+  UwsRouteHandler,
+  UwsRouteSetup,
+  UwsParsedResult,
+} from './base/interfaces'
+// export the types
+export {
+  RouteMetaInfo,
+  MetaDecorator,
+  StringPairObj,
+  UwsRespondBody,
+} from './api/type'
 
 // default export
 export default uWS
