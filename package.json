@@ -14,7 +14,8 @@
     "test:setup": "pnpm -C ./packages/setup test",
     "server:dev": "pnpm -C ./packages/server dev",
     "push": "git push origin main && git push gh main",
-    "clean": "rm -rf node_modules **/*/node_modules"
+    "clean": "rm -rf node_modules **/*/node_modules",
+    "build:server": "pnpm -C ./packages/server build:tsc"
   },
   "repository": {
     "type": "git",

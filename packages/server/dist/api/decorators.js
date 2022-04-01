@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ABORTED = exports.HEAD = exports.PATCH = exports.DEL = exports.OPTIONS = exports.PUT = exports.POST = exports.GET = exports.ANY = exports.PREPARE = void 0;
+exports.TEST_META = exports.ABORTED = exports.HEAD = exports.PATCH = exports.DEL = exports.OPTIONS = exports.PUT = exports.POST = exports.GET = exports.ANY = exports.PREPARE = void 0;
 // all decorators are here
 require("reflect-metadata");
 // The key to id the meta info
@@ -24,6 +24,7 @@ function routeDecoratorFactory(routeType) {
 function PREPARE(target, _, // propertyName is unused, just placeholder it
 descriptor) {
     const fn = descriptor.value;
+    // console.log(descriptor)
     descriptor.value = function () {
         const meta = Reflect.getOwnMetadata(routeKey, target);
         if (!fn) {
@@ -62,3 +63,8 @@ function ABORTED(type, path) {
     };
 }
 exports.ABORTED = ABORTED;
+// experiemental
+function TEST_META(...args) {
+    console.log(args);
+}
+exports.TEST_META = TEST_META;

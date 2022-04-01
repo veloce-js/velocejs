@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import { RouteMetaInfo, MetaDecorator } from './type';
 import { FastApi } from './fast-api';
 export declare function PREPARE(target: FastApi, _: string, // propertyName is unused, just placeholder it
@@ -12,3 +12,4 @@ export declare const DEL: MetaDecorator;
 export declare const PATCH: MetaDecorator;
 export declare const HEAD: MetaDecorator;
 export declare function ABORTED(type: string, path: string): (target: FastApi, propertyName: string) => void;
+export declare function TEST_META(...args: any[]): void;
