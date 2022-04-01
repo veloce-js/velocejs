@@ -22,13 +22,13 @@ export interface HttpRequest {
 */
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
 import { onDataHandler } from './handle-upload'
-import { UwsRespondBody } from '../api/type'
+import { UwsRespondBody, StringPairObj } from '../api/type'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser')
 
 
 // the actual function to take the query apart
-export function parseQuery(query: string): any {
+export function parseQuery(query: string): StringPairObj {
   const params = new URLSearchParams(query)
   const result = {}
   for (const pair of params.entries()) {
@@ -36,6 +36,13 @@ export function parseQuery(query: string): any {
   }
 
   return result
+}
+
+// check if the header 'Content-Type' is a json
+function isJson(headers: StringPairObj): boolean {
+  const contentType = headers['content-type']
+
+  return contentType ? contentType.indexOf('json') > -1 : false
 }
 
 // parse inputs
@@ -46,12 +53,12 @@ export async function bodyParser(
 ): Promise<UwsRespondBody> {
   // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
   res.onAborted(() => {
-    onAborted ? Reflect.apply(onAborted, null, []) : debugFn('ABORTED')
-  }) // try to see if we overload this and what will happen
-
+    onAborted ? Reflect.apply(onAborted, null, [res]) : debugFn('ABORTED')
+  })
+  // process the header
   const headers = {}
   req.forEach((key: string, value: string) => {
-    headers[key] = value
+    headers[key.toLowerCase()] = value
   })
   const url = req.getUrl()
   const query = req.getQuery()
@@ -64,6 +71,9 @@ export async function bodyParser(
   return new Promise(resolver => {
     onDataHandler(res, buffer => {
       body.payload = buffer
+      if (isJson(headers)) {
+        body.json = JSON.parse(buffer.toString())
+      }
       resolver(body)
     })
   })

@@ -22,4 +22,5 @@ export type UwsRespondBody = {
   headers: StringPairObj
   params: any,
   payload?: any
+  json?: any 
 }

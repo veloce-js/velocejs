@@ -15,10 +15,11 @@ class MyApi extends FastApi {
   }
   /*
   @ABORTED('get', '/some-where')
-  myFuncOnAborted() {
+  myFuncOnAborted(res) {
     console.log(`Just log something`)
-  } */
-
+  }
+  */
+  
   // here we handle the result ourself
   @GET('/custom-handler')
   myCustomFunc(params: UwsParsedResult): void {
@@ -30,10 +31,15 @@ class MyApi extends FastApi {
 
   @POST('/submit')
   myPostFunc(params: UwsParsedResult) {
-    const json = JSON.parse(params.payload.toString())
+    // const json = JSON.parse(params.payload.toString())
+    // 0.3.1 test the parsed json return
+    const { json } = params
 
     return `${json.name} is doing ${json.value}`
   }
+
+
+
 
   @PREPARE
   anything(...args: any[]) {
