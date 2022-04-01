@@ -5,6 +5,7 @@ import { UwsRouteSetup, UwsRouteHandler, UwsParsedResult } from '../base/interfa
 import { UwsServer } from '../base/uws-server-class'
 import { RouteMetaInfo } from './type'
 import { bodyParser } from '../base/body-parser'
+import { serveStatic } from '../base/serve-static'
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
@@ -47,6 +48,14 @@ export class FastApi {
     this.createServer(
       meta.map(m => {
         const { path, type, propertyName, onAbortedHandler } = m
+        // this is a serve static
+        if (type === 'static') {
+          return {
+            path,
+            type: 'get',
+            handler: serveStatic(m.dir)
+          }
+        }
         const handler = this.mapMethodToHandler(propertyName, onAbortedHandler)
         return {
           type,
