@@ -1,4 +1,4 @@
-// this will allow you to create a series of REST API in no time
+// this will allow you to create a series of API in no time
 import 'reflect-metadata'
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
 import { UwsRouteSetup, UwsRouteHandler, UwsParsedResult } from '../base/interfaces'
@@ -51,8 +51,8 @@ export class FastApi {
         // this is a serve static
         if (type === 'static') {
           return {
-            path,
             type: 'get',
+            path: Reflect.apply(this[propertyName], this, []),
             handler: serveStatic(m.dir)
           }
         }

@@ -73,12 +73,12 @@ export function ABORTED(type: string, path: string) {
   }
 }
 // special decorator to create a serveStatic method
-export function SERVE_STATIC(path: string, dir: string) {
+export function SERVE_STATIC(path: string) {
 
   return (target: FastApi, propertyName: string) => {
     // all it does it to record all this meta info and we can re-use it later
     const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
-    const meta: RouteMetaInfo = { propertyName, path, dir, type: 'static' }
+    const meta: RouteMetaInfo = { propertyName, path, type: 'static' }
     existingRoutes.push(meta)
     // console.log('existingRoutes', existingRoutes)
     Reflect.defineMetadata(routeKey, existingRoutes, target)
