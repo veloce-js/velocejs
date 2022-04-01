@@ -34,8 +34,8 @@ class MyApi extends FastApi {
   }
 
   @PREPARE
-  anything() {
-    Reflect.apply(super.run, this, [])
+  anything(...args: any[]) {
+    Reflect.apply(super.run, this, args)
   }
 }
 

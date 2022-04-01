@@ -1,10 +1,9 @@
 // all decorators are here
-import "reflect-metadata"
-
-// The key to id the meta info
-const routeKey = Symbol("FastApiRouteKey")
+import 'reflect-metadata'
 import { RouteMetaInfo, MetaDecorator } from './type'
 import { FastApi } from './fast-api'
+// The key to id the meta info
+const routeKey = Symbol("FastApiRouteKey")
 
 // Factory method to create factory method
 function routeDecoratorFactory(routeType: string): MetaDecorator {
@@ -31,13 +30,14 @@ export function PREPARE(
   descriptor: TypedPropertyDescriptor<(meta: RouteMetaInfo[]) => void>
 ): void {
   const fn = descriptor.value
-
+  // console.log(descriptor)
   descriptor.value = function() {
     const meta = Reflect.getOwnMetadata(routeKey, target)
     if (!fn) {
       throw new Error(`Fn is undefined!`)
     }
     // console.log('meta', meta)
+
     return Reflect.apply(fn, this, [meta])
   }
 }
@@ -71,4 +71,10 @@ export function ABORTED(type: string, path: string) {
     })
     Reflect.defineMetadata(routeKey, existingRoutes, target)
   }
+}
+
+// experiemental
+
+export function TEST_META(...args: any[]) {
+  console.log(args)
 }

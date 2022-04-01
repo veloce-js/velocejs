@@ -1,6 +1,15 @@
 // @ts-nocheck
 
-import { FastApi, GET, ABORTED, PREPARE, UwsServer } from '../src'
+import {
+  FastApi,
+  GET,
+  POST,
+  ABORTED,
+  PREPARE,
+  UwsServer,
+  UwsParsedResult,
+  RouteMetaInfo
+} from '../src'
 
 class MyApi extends FastApi {
 
@@ -14,14 +23,15 @@ class MyApi extends FastApi {
     console.log(`Just log something`)
   }
 
-  @GET('/some-where-else')
-  myOtherFunc() {
-    console.log(`this is the other func for other route`)
+  @POST('/some-where-else')
+  myOtherFunc(params: UwsParsedResult) {
+    console.log(`this is the other func for other route`, params)
+
     return `this is the other func for other route`
   }
 
   @PREPARE
-  anything(...args: any[]) {
+  anything(...args: RouteMetaInfo[]) {
     Reflect.apply(super.run, this, args)
   }
 }

@@ -1,4 +1,5 @@
 // this will allow you to create a series of REST API in no time
+import 'reflect-metadata'
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
 import { UwsRouteSetup, UwsRouteHandler, UwsParsedResult } from '../base/interfaces'
 import { UwsServer } from '../base/uws-server-class'
@@ -7,8 +8,8 @@ import { bodyParser } from '../base/body-parser'
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
-
-  constructor(private uwsInstance: UwsServer) {}
+  // store the UWS server instance as protected
+  constructor(protected uwsInstance: UwsServer) {}
 
   // wrapper for the UwsServer create server method
   private createServer(routes: UwsRouteSetup[]) {
