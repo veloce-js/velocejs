@@ -23,6 +23,7 @@ export interface HttpRequest {
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
 import { onDataHandler } from './handle-upload'
 import { UwsRespondBody, StringPairObj } from '../api/type'
+import { CONTENT_TYPE, DEFAULT_POST_HEADER, FILE_POST_HEADER } from './constants'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser')
 
@@ -39,11 +40,16 @@ export function parseQuery(query: string): StringPairObj {
 }
 
 // check if the header 'Content-Type' is a json
-function isJson(headers: StringPairObj): boolean {
-  const contentType = headers['content-type']
+const isJson = (headers: StringPairObj): boolean => {
+  const contentType = headers[CONTENT_TYPE]
 
   return contentType ? contentType.indexOf('json') > -1 : false
 }
+
+// check if it's regular post form
+const isForm = (headers: StringPairObj): boolean => headers[CONTENT_TYPE] === DEFAULT_POST_HEADER
+// check if it's a file upload form
+const isFile = (headers: StringPairObj): boolean => headers[CONTENT_TYPE] === FILE_POST_HEADER
 
 // parse inputs
 export async function bodyParser(
@@ -63,7 +69,10 @@ export async function bodyParser(
   const url = req.getUrl()
   const query = req.getQuery()
   const method = req.getMethod()
-  const params = parseQuery(query)
+  let params = {}
+  if (method === 'get') {
+    params = parseQuery(query)
+  }
   // package it up
   const body: UwsRespondBody = { url, method, query, headers, params }
 
@@ -71,8 +80,17 @@ export async function bodyParser(
   return new Promise(resolver => {
     onDataHandler(res, buffer => {
       body.payload = buffer
-      if (isJson(headers)) {
-        body.json = JSON.parse(buffer.toString())
+      switch (true) {
+        case isJson(headers):
+          body.json = JSON.parse(buffer.toString())
+          break;
+        case isForm(headers):
+          body.params = parseQuery(buffer.toString())
+          break;
+        case isFile(headers):
+          // @TODO
+          break;
+        default:
       }
       resolver(body)
     })

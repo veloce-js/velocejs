@@ -2,26 +2,58 @@
 import 'reflect-metadata'
 import { RouteMetaInfo, MetaDecorator } from './type'
 import { FastApi } from './fast-api'
+import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '../base/constants'
+
 // The key to id the meta info
 const routeKey = Symbol("FastApiRouteKey")
+
+// this is the inner decorator factory method
+function innerDecoratorFactory(type: string, path: string, routeType?: string) {
+  // this is the actual api facing the class method
+  return (target: FastApi, propertyName: string) => {
+    // all it does it to record all this meta info and we can re-use it later
+    const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
+    const meta: RouteMetaInfo = { propertyName, path, type: '' }
+    switch (type) {
+      case RAW_TYPE:
+        meta.type = RAW_TYPE
+        meta.route = routeType
+        break
+      case STATIC_TYPE:
+        meta.type = STATIC_TYPE
+        meta.route = STATIC_ROUTE
+        break
+      default:
+        meta.type = type
+    }
+    existingRoutes.push(meta)
+    // console.log('existingRoutes', existingRoutes)
+    Reflect.defineMetadata(routeKey, existingRoutes, target)
+  }
+}
+
 
 // Factory method to create factory method
 function routeDecoratorFactory(routeType: string): MetaDecorator {
 
   return function(path: string) {
 
-    return (target: FastApi, propertyName: string) => {
-      // all it does it to record all this meta info and we can re-use it later
-      const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
-      const meta: RouteMetaInfo = { propertyName, path, type: routeType }
-      existingRoutes.push(meta)
-      // console.log('existingRoutes', existingRoutes)
-      Reflect.defineMetadata(routeKey, existingRoutes, target)
-    }
+    return innerDecoratorFactory(routeType, path)
   }
 }
 
-// this will not get expose as we only use this internally
+// allow dev to define a raw handler - we don't do any processing
+export function RAW(route: string, path: string) {
+
+  return innerDecoratorFactory(RAW_TYPE, path, route)
+}
+
+// special decorator to create a serveStatic method
+export function SERVE_STATIC(path: string) {
+
+  return innerDecoratorFactory(STATIC_TYPE, path)
+}
+
 // This must be run on the overload method in the sub-class
 // otherwise the meta data becomes empty
 export function PREPARE(
@@ -34,9 +66,8 @@ export function PREPARE(
   descriptor.value = function() {
     const meta = Reflect.getOwnMetadata(routeKey, target)
     if (!fn) {
-      throw new Error(`Fn is undefined!`)
+      throw new Error(`Class method is undefined!`)
     }
-    // console.log('meta', meta)
 
     return Reflect.apply(fn, this, [meta])
   }
@@ -72,22 +103,8 @@ export function ABORTED(type: string, path: string) {
     Reflect.defineMetadata(routeKey, existingRoutes, target)
   }
 }
-// special decorator to create a serveStatic method
-export function SERVE_STATIC(path: string) {
 
-  return (target: FastApi, propertyName: string) => {
-    // all it does it to record all this meta info and we can re-use it later
-    const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
-    const meta: RouteMetaInfo = { propertyName, path, type: 'static' }
-    existingRoutes.push(meta)
-    // console.log('existingRoutes', existingRoutes)
-    Reflect.defineMetadata(routeKey, existingRoutes, target)
-  }
-}
-
-
-// experiemental
-
+// just for testing
 export function TEST_META(...args: any[]) {
   console.log(args)
 }

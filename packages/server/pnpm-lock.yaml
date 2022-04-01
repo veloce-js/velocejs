@@ -9,6 +9,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.16.0
   '@typescript-eslint/parser': ^5.16.0
   ava: ^4.1.0
+  busboy: ^1.5.0
   debug: ^4.3.4
   esbuild: ^0.14.27
   esbuild-register: ^3.3.2
@@ -23,6 +24,7 @@ specifiers:
   uWebSockets.js: github:uNetworking/uWebSockets.js#v20.6.0
 
 dependencies:
+  busboy: 1.5.0
   debug: 4.3.4
   mime-types: 2.1.35
   reflect-metadata: 0.1.13
@@ -449,6 +451,13 @@ packages:
     dependencies:
       fill-range: 7.0.1
     dev: true
+
+  /busboy/1.5.0:
+    resolution: {integrity: sha512-bTXFtUV/DkvfwzHD7yjAkRK5/F3RuF2Ab/qWvf5plbHZMSCea8mxOdqMj8tG1PoSNj/Qi0cb3IoRPEj6qXAGgw==}
+    engines: {node: '>=10.16.0'}
+    dependencies:
+      streamsearch: 1.1.0
+    dev: false
 
   /callsites/3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
@@ -1834,6 +1843,11 @@ packages:
     dependencies:
       escape-string-regexp: 2.0.0
     dev: true
+
+  /streamsearch/1.1.0:
+    resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
+    engines: {node: '>=10.0.0'}
+    dev: false
 
   /string-width/4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}

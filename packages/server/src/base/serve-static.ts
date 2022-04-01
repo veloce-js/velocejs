@@ -3,6 +3,7 @@ import mime from 'mime-types'
 import fs from 'fs'
 import path from 'path'
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
+import { DEFAULT_FILE } from './constants'
 import debug from 'debug'
 
 const debugFn = debug('velocejs:server:serve-static')
@@ -20,7 +21,13 @@ export function serveStatic(assetDir: string | string[]) {
       debugFn(`Serve static aborted`)
     })
 
-    const url = req.getUrl()
+    let url = req.getUrl()
+
+    // @TODO how to configure a default file to serve up
+    if (url === '/') {
+      url = DEFAULT_FILE
+    }
+    debugFn(url)
     const file = dirs
       .filter(dir => fs.existsSync(path.join(dir, url)))
       .map(dir => fs.readFileSync(path.join(dir, url)))

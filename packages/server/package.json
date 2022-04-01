@@ -18,6 +18,7 @@
     "test:srv": "PORT=9010 pnpm ts -- ./dev/server.ts",
     "test:client": "PORT=9010 pnpm ts -- ./dev/client.ts",
     "test:api": "DEBUG=velocejs* pnpm ts -- ./dev/decorator.ts",
+    "run:example:form": "DEBUG=velocejs:server:* pnpm ts -- ./examples/form/index.ts",
     "clean": "node ./clean.js",
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",
@@ -27,6 +28,7 @@
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "UNLICENSED",
   "dependencies": {
+    "busboy": "^1.5.0",
     "debug": "^4.3.4",
     "mime-types": "^2.1.35",
     "reflect-metadata": "^0.1.13",

@@ -6,6 +6,7 @@ import { UwsServer } from '../base/uws-server-class'
 import { RouteMetaInfo } from './type'
 import { bodyParser } from '../base/body-parser'
 import { serveStatic } from '../base/serve-static'
+import { STATIC_TYPE, STATIC_ROUTE } from '../base/constants'
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
@@ -49,14 +50,16 @@ export class FastApi {
       meta.map(m => {
         const { path, type, propertyName, onAbortedHandler } = m
         // this is a serve static
-        if (type === 'static') {
+        if (type === STATIC_TYPE) {
           return {
-            type: 'get',
-            path: Reflect.apply(this[propertyName], this, []),
-            handler: serveStatic(m.dir)
+            path,
+            type: STATIC_ROUTE,
+            // the method the dev defined just return the path to the files
+            handler: serveStatic(Reflect.apply(this[propertyName], this, []))
           }
         }
         const handler = this.mapMethodToHandler(propertyName, onAbortedHandler)
+
         return {
           type,
           path,

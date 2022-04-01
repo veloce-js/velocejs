@@ -14,7 +14,8 @@ export { FastApi } from './api/fast-api'
 export {
   ANY, GET, POST, PUT, OPTIONS, DEL, PATCH, HEAD,
   PREPARE,
-  ABORTED
+  ABORTED,
+  SERVE_STATIC
 } from './api/decorators'
 // export all the interfaces
 export {
