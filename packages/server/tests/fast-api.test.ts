@@ -28,9 +28,11 @@ class MyApi extends FastApi {
   }
 
 
-  @POST('/some-where')
+  @POST('/submit')
   myPostFunc(params: UwsParsedResult) {
+    const json = JSON.parse(params.payload.toString())
 
+    return `${json.name} is doing ${json.value}`
   }
 
   @PREPARE
@@ -42,6 +44,7 @@ class MyApi extends FastApi {
 let api: MyApi
 let app: UwsServer
 const port = 30331
+const hostname = `http://localhost:${port}`
 
 test.before(() => {
   app = new UwsServer()
@@ -60,7 +63,7 @@ test.after(() => {
 test(`Testing the class extends from FastApi`, async (t) => {
   t.plan(1)
 
-  const response = await Fetch(`http://localhost:${port}/some-where`)
+  const response = await Fetch(`${hostname}/some-where`)
   const text = await response.text()
 
   t.is(text, msg1)
@@ -69,10 +72,29 @@ test(`Testing the class extends from FastApi`, async (t) => {
 test(`Should able to respond their own custom method`, async (t) => {
   t.plan(1)
 
-  const response = await Fetch(`http://localhost:${port}/custom-handler`)
+  const response = await Fetch(`${hostname}/custom-handler`)
   const text = await response.text()
 
   t.is(text, msg2)
 })
 
-test.todo(`Testing the post method handler`)
+
+test(`Testing the post method handler`, async (t) => {
+
+  t.plan(1)
+
+  const todo = {name: 'John', value: 'something'}
+
+  return Fetch(`${hostname}/submit`, {
+    method: 'POST',
+    body: JSON.stringify(todo),
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(res => res.text())
+  .then(text => {
+
+    t.is(text, `John is doing something`)
+  })
+
+
+})
