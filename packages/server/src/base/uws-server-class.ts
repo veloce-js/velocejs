@@ -36,17 +36,17 @@ export class UwsServer {
     this.host = host
   }
 
-  // this doesn't do anything just for overwrite
+  // this doesn't do anything just for overwrite or display a debug message 
   public onStart() {
     const portNum = this.portNum || this.getPortNum()
     const s = this.opts ? 's' : ''
     const proto = `http${s}://`
-    const hostName = proto + this.hostName || `${proto}localhost`
+    const hostName = this.hostName ? proto + this.hostName : `${proto}localhost`
 
     debugFn(`Server started on ${hostName}:${portNum}`)
   }
 
-  // the core method
+  // to init, bind handlers and then start up the UWS Server
   public run(handlers: UwsRouteSetup[]): void {
     const app: TemplatedApp = createApp(this.opts)
 
@@ -78,7 +78,7 @@ export class UwsServer {
         throw new Error(`Server could not start!`)
       }
     }
-    const params: any[] = [this.portNum, cb]
+    const params: Array<RecognizedString | number | ((listenSocket: us_listen_socket) => void)> = [this.portNum, cb]
     if (this.host) {
       params.unshift(this.host)
     }
