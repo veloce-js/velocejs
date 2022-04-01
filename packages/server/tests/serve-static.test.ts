@@ -23,10 +23,15 @@ test.after(() => {
 })
 
 test(`Test the serveStatic function`, async (t) => {
-  t.plan(1)
+  t.plan(2)
   const port = app.getPortNum()
   const url = `http://localhost:${port}`
   const response = await Fetch(`${url}/README.md`)
 
   t.is(response.status, 200)
+
+  const response1 = await Fetch(`${url}/not-here.jpg`)
+
+  t.is(response1.status, 404)
+
 })

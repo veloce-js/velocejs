@@ -2,8 +2,10 @@
 import mime from 'mime-types'
 import fs from 'fs'
 import path from 'path'
-
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
+import debug from 'debug'
+
+const debugFn = debug('velocejs:server:serve-static')
 
 /**
  * serve static files from assetDir
@@ -13,11 +15,16 @@ export function serveStatic(assetDir: string | string[]) {
   const dirs = Array.isArray(assetDir) ? assetDir : [assetDir]
 
   return function(res: HttpResponse, req: HttpRequest) {
+    // we need to provide a onAbortedHandler here
+    res.onAborted(() => {
+      debugFn(`Serve static aborted`)
+    })
+
     const url = req.getUrl()
     const file = dirs
       .filter(dir => fs.existsSync(path.join(dir, url)))
       .map(dir => fs.readFileSync(path.join(dir, url)))
-      
+
     if (file.length) {
       const mimeType = mime.lookup(url) || 'application/octet-stream'
       // console.log(mimeType, url)
@@ -27,6 +34,7 @@ export function serveStatic(assetDir: string | string[]) {
     } else {
       // @TODO
       res.writeStatus('404')
+      res.end()
     }
   }
 }
