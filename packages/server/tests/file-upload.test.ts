@@ -31,7 +31,6 @@ test.before(()=>{
         },
         () => console.log(`Server aborted!`)
       )
-
       res.end('OK')
     })
     .listen(port, (token: any) => {

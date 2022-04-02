@@ -1,24 +1,50 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TEST_META = exports.ABORTED = exports.HEAD = exports.PATCH = exports.DEL = exports.OPTIONS = exports.PUT = exports.POST = exports.GET = exports.ANY = exports.PREPARE = void 0;
 // all decorators are here
 require("reflect-metadata");
+const constants_1 = require("../base/constants");
 // The key to id the meta info
 const routeKey = Symbol("FastApiRouteKey");
+// this is the inner decorator factory method
+function innerDecoratorFactory(type, path, routeType) {
+    // this is the actual api facing the class method
+    return (target, propertyName) => {
+        // all it does it to record all this meta info and we can re-use it later
+        const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || [];
+        const meta = { propertyName, path, type: '' };
+        switch (type) {
+            case constants_1.RAW_TYPE:
+                meta.type = constants_1.RAW_TYPE;
+                meta.route = routeType;
+                break;
+            case constants_1.STATIC_TYPE:
+                meta.type = constants_1.STATIC_TYPE;
+                meta.route = constants_1.STATIC_ROUTE;
+                break;
+            default:
+                meta.type = type;
+        }
+        existingRoutes.push(meta);
+        // console.log('existingRoutes', existingRoutes)
+        Reflect.defineMetadata(routeKey, existingRoutes, target);
+    };
+}
 // Factory method to create factory method
 function routeDecoratorFactory(routeType) {
     return function (path) {
-        return (target, propertyName) => {
-            // all it does it to record all this meta info and we can re-use it later
-            const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || [];
-            const meta = { propertyName, path, type: routeType };
-            existingRoutes.push(meta);
-            // console.log('existingRoutes', existingRoutes)
-            Reflect.defineMetadata(routeKey, existingRoutes, target);
-        };
+        return innerDecoratorFactory(routeType, path);
     };
 }
-// this will not get expose as we only use this internally
+// allow dev to define a raw handler - we don't do any processing
+function RAW(route, path) {
+    return innerDecoratorFactory(constants_1.RAW_TYPE, path, route);
+}
+exports.RAW = RAW;
+// special decorator to create a serveStatic method
+function SERVE_STATIC(path) {
+    return innerDecoratorFactory(constants_1.STATIC_TYPE, path);
+}
+exports.SERVE_STATIC = SERVE_STATIC;
 // This must be run on the overload method in the sub-class
 // otherwise the meta data becomes empty
 function PREPARE(target, _, // propertyName is unused, just placeholder it
@@ -28,9 +54,8 @@ descriptor) {
     descriptor.value = function () {
         const meta = Reflect.getOwnMetadata(routeKey, target);
         if (!fn) {
-            throw new Error(`Fn is undefined!`);
+            throw new Error(`Class method is undefined!`);
         }
-        // console.log('meta', meta)
         return Reflect.apply(fn, this, [meta]);
     };
 }
@@ -63,8 +88,9 @@ function ABORTED(type, path) {
     };
 }
 exports.ABORTED = ABORTED;
-// experiemental
-function TEST_META(...args) {
-    console.log(args);
+// just for testing
+/*
+export function TEST_META(...args: any[]) {
+  console.log(args)
 }
-exports.TEST_META = TEST_META;
+*/

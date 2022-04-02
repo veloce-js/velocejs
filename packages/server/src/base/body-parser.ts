@@ -76,11 +76,11 @@ function parseMultipart(headers: StringPairObj, body: Buffer): any {
 
 
 // check if the header 'Content-Type' is a json
-const isJson = (headers: StringPairObj): boolean => headers[CONTENT_TYPE].indexOf('json') > -1
+const isJson = (headers: StringPairObj): boolean => headers[CONTENT_TYPE] !== undefined && headers[CONTENT_TYPE].indexOf('json') > -1
 // check if it's regular post form
-const isForm = (headers: StringPairObj): boolean => headers[CONTENT_TYPE] === DEFAULT_POST_HEADER
+const isForm = (headers: StringPairObj): boolean => headers[CONTENT_TYPE] !== undefined && headers[CONTENT_TYPE] === DEFAULT_POST_HEADER
 // check if it's a file upload form
-const isFile = (headers: StringPairObj): boolean => headers[CONTENT_TYPE].indexOf(FILE_POST_HEADER) > -1
+const isFile = (headers: StringPairObj): boolean => headers[CONTENT_TYPE] !== undefined && headers[CONTENT_TYPE].indexOf(FILE_POST_HEADER) > -1
 
 // parse inputs
 export async function bodyParser(

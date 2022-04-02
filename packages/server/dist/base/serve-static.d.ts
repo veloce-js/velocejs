@@ -1,5 +1,5 @@
-import { HttpResponse, HttpRequest } from 'uWebSockets.js';
+import { HttpResponse, HttpRequest } from '../types';
 /**
  * serve static files from assetDir
  */
-export declare function serveStatic(assetDir: string): (res: HttpResponse, req: HttpRequest) => void;
+export declare function serveStatic(assetDir: string | string[]): (res: HttpResponse, req: HttpRequest) => void;

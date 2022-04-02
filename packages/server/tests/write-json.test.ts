@@ -10,7 +10,7 @@ const reply = {OK: true}
 let listenSocket: any = null
 test.before(() => {
   createApp()
-    .post('/*', async (res: HttpResponse) => {
+    .post('/*', (res: HttpResponse) => {
       writeJson(res, reply)
     })
     .listen(port, (token: any) => {

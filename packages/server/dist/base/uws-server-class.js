@@ -1,12 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UwsServer = void 0;
 const tslib_1 = require("tslib");
 const create_app_1 = require("./create-app");
 const constants_1 = require("./constants");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 // construct the debug fn
-const debugFn = (0, debug_1.default)(`velocejs:server:uws-server-class`);
+const debugFn = debug_1.default(`velocejs:server:uws-server-class`);
 // main
 class UwsServer {
     constructor(opts) {
@@ -14,6 +13,9 @@ class UwsServer {
         this.port = 0;
         this.host = '';
         this.token = '';
+        this.onStartFn = (url) => {
+            debugFn(`Server started at ${url}`);
+        };
     }
     // overwrite the port number via the start up env
     get portNum() {
@@ -34,17 +36,20 @@ class UwsServer {
     set hostName(host) {
         this.host = host;
     }
-    // this doesn't do anything just for overwrite or display a debug message 
-    onStart() {
+    set onStart(cb) {
+        this.onStartFn = cb;
+    }
+    // this doesn't do anything just for overwrite or display a debug message
+    onStartCb() {
         const portNum = this.portNum || this.getPortNum();
         const s = this.opts ? 's' : '';
         const proto = `http${s}://`;
         const hostName = this.hostName ? proto + this.hostName : `${proto}localhost`;
-        debugFn(`Server started on ${hostName}:${portNum}`);
+        this.onStartFn(`${hostName}:${portNum}`);
     }
     // to init, bind handlers and then start up the UWS Server
     run(handlers) {
-        const app = (0, create_app_1.createApp)(this.opts);
+        const app = create_app_1.createApp(this.opts);
         if (!handlers.length) {
             throw new Error(`You must have at least 1 handler!`);
         }
@@ -67,7 +72,7 @@ class UwsServer {
         const cb = (token) => {
             if (token) {
                 this.token = token;
-                this.onStart();
+                this.onStartCb();
             }
             else {
                 throw new Error(`Server could not start!`);
@@ -81,11 +86,11 @@ class UwsServer {
     }
     // gracefully shutdown the server
     shutdown() {
-        (0, create_app_1.shutdownServer)(this.token);
+        create_app_1.shutdownServer(this.token);
     }
     // get the port number if it's randomly assign port
     getPortNum() {
-        return this.token ? (0, create_app_1.getPort)(this.token) : -1;
+        return this.token ? create_app_1.getPort(this.token) : -1;
     }
 }
 exports.UwsServer = UwsServer;

@@ -1,7 +1,8 @@
 // Testing the FastApi
 import test from 'ava'
 import { HttpResponse } from 'uWebSockets.js'
-import { FastApi, GET, POST, RAW, ABORTED, PREPARE, UwsServer, UwsParsedResult } from '../src'
+import { FastApi, GET, POST, RAW, ABORTED, PREPARE, UwsServer } from '../src'
+import { UwsParsedResult } from '../src/types'
 
 import Fetch from 'node-fetch'
 

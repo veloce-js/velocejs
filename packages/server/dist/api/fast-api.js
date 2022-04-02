@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FastApi = void 0;
 const tslib_1 = require("tslib");
-// this will allow you to create a series of REST API in no time
+// this will allow you to create a series of API in no time
 require("reflect-metadata");
 const body_parser_1 = require("../base/body-parser");
+const serve_static_1 = require("../base/serve-static");
+const constants_1 = require("../base/constants");
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 class FastApi {
@@ -27,7 +28,7 @@ class FastApi {
                 });
             }
             // process input
-            const result = yield (0, body_parser_1.bodyParser)(res, req);
+            const result = yield body_parser_1.bodyParser(res, req);
             const extra = { res, req };
             const payload = Object.assign(result, extra);
             const reply = Reflect.apply(fn, this, [payload]);
@@ -42,12 +43,27 @@ class FastApi {
     run(meta) {
         this.createServer(meta.map(m => {
             const { path, type, propertyName, onAbortedHandler } = m;
-            const handler = this.mapMethodToHandler(propertyName, onAbortedHandler);
-            return {
-                type,
-                path,
-                handler
-            };
+            switch (type) {
+                case constants_1.STATIC_TYPE:
+                    return {
+                        path,
+                        type: constants_1.STATIC_ROUTE,
+                        // the method the dev defined just return the path to the files
+                        handler: serve_static_1.serveStatic(Reflect.apply(this[propertyName], this, []))
+                    };
+                case constants_1.RAW_TYPE:
+                    return {
+                        path,
+                        type: m.route,
+                        handler: this[propertyName] // pass it straight through
+                    };
+                default:
+                    return {
+                        type,
+                        path,
+                        handler: this.mapMethodToHandler(propertyName, onAbortedHandler)
+                    };
+            }
         }));
     }
 }

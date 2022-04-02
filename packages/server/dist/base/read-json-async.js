@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readJsonAsync = void 0;
 const tslib_1 = require("tslib");
 /**
  * Just to help get rip of that stupid TS warning
