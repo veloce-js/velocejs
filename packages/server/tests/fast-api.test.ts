@@ -1,11 +1,14 @@
 // Testing the FastApi
 import test from 'ava'
-import { FastApi, GET, POST, ABORTED, PREPARE, UwsServer, UwsParsedResult } from '../src'
+import { HttpResponse } from 'uWebSockets.js'
+import { FastApi, GET, POST, RAW, ABORTED, PREPARE, UwsServer, UwsParsedResult } from '../src'
 
 import Fetch from 'node-fetch'
 
 const msg1 = `doing the route handling thing`
 const msg2 = `Here is my own message`
+const msg3 = `Hello this is completely raw handler`
+
 
 class MyApi extends FastApi {
 
@@ -19,7 +22,7 @@ class MyApi extends FastApi {
     console.log(`Just log something`)
   }
   */
-  
+
   // here we handle the result ourself
   @GET('/custom-handler')
   myCustomFunc(params: UwsParsedResult): void {
@@ -39,6 +42,11 @@ class MyApi extends FastApi {
   }
 
 
+  @RAW('any', '/fall-back-route')
+  myFallbackRoute(res: HttpResponse) {
+
+    res.end(msg3)
+  }
 
 
   @PREPARE
@@ -75,7 +83,7 @@ test(`Testing the class extends from FastApi`, async (t) => {
   t.is(text, msg1)
 })
 
-test(`Should able to respond their own custom method`, async (t) => {
+test(`Should able to respond with their own custom method`, async (t) => {
   t.plan(1)
 
   const response = await Fetch(`${hostname}/custom-handler`)
@@ -86,9 +94,7 @@ test(`Should able to respond their own custom method`, async (t) => {
 
 
 test(`Testing the post method handler`, async (t) => {
-
   t.plan(1)
-
   const todo = {name: 'John', value: 'something'}
 
   return Fetch(`${hostname}/submit`, {
@@ -98,9 +104,16 @@ test(`Testing the post method handler`, async (t) => {
   })
   .then(res => res.text())
   .then(text => {
-
     t.is(text, `John is doing something`)
   })
+})
 
+test(`Test the RAW decorator`, async (t) => {
+  t.plan(1)
+
+  const response = await Fetch(`${hostname}/fall-back-route`, { method: 'PUT'})
+  const text = await response.text()
+
+  t.is(text, msg3)
 
 })
