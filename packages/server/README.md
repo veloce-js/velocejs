@@ -99,7 +99,8 @@ createApp()
   })
 ```
 
-All you have to do is the provide the url, and where your files are. And `serveStatic` takes care of the rest.
+All you have to do is the provide the `url`, and where your files are (you can pass array of directories), 
+and `serveStatic` takes care of the rest.
 
 ## Higher level wrapper
 

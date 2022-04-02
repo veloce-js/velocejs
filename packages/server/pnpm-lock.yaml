@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@ava/typescript': ^3.0.1
+  '@types/busboy': ^1.5.0
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
@@ -33,6 +34,7 @@ dependencies:
 
 devDependencies:
   '@ava/typescript': 3.0.1
+  '@types/busboy': 1.5.0
   '@types/debug': 4.1.7
   '@types/fs-extra': 9.0.13
   '@types/mime-types': 2.1.1
@@ -109,6 +111,12 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
+    dev: true
+
+  /@types/busboy/1.5.0:
+    resolution: {integrity: sha512-ncOOhwmyFDW76c/Tuvv9MA9VGYUCn8blzyWmzYELcNGDb0WXWLSmFi7hJq25YdRBYJrmMBB5jZZwUjlJe9HCjQ==}
+    dependencies:
+      '@types/node': 17.0.22
     dev: true
 
   /@types/debug/4.1.7:
