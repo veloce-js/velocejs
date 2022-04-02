@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ABORTED = exports.HEAD = exports.PATCH = exports.DEL = exports.OPTIONS = exports.PUT = exports.POST = exports.GET = exports.ANY = exports.PREPARE = exports.SERVE_STATIC = exports.RAW = void 0;
 // all decorators are here
 require("reflect-metadata");
 const constants_1 = require("../base/constants");

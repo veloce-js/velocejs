@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FastApi = void 0;
 const tslib_1 = require("tslib");
 // this will allow you to create a series of API in no time
 require("reflect-metadata");
@@ -28,7 +29,7 @@ class FastApi {
                 });
             }
             // process input
-            const result = yield body_parser_1.bodyParser(res, req);
+            const result = yield (0, body_parser_1.bodyParser)(res, req);
             const extra = { res, req };
             const payload = Object.assign(result, extra);
             const reply = Reflect.apply(fn, this, [payload]);
@@ -49,7 +50,7 @@ class FastApi {
                         path,
                         type: constants_1.STATIC_ROUTE,
                         // the method the dev defined just return the path to the files
-                        handler: serve_static_1.serveStatic(Reflect.apply(this[propertyName], this, []))
+                        handler: (0, serve_static_1.serveStatic)(Reflect.apply(this[propertyName], this, []))
                     };
                 case constants_1.RAW_TYPE:
                     return {

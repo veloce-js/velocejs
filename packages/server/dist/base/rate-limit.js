@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.rateLimit = void 0;
 // this is from the examples/RateLimit.js
 function rateLimit(limit, interval) {
     let now = 0;

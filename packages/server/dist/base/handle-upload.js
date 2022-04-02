@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.writeBufferToFile = exports.onDataHandler = exports.uploadHandler = exports.handleUpload = void 0;
 const tslib_1 = require("tslib");
 // return the upload Data
 const fs_1 = tslib_1.__importDefault(require("fs"));

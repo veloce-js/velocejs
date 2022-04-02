@@ -7,9 +7,11 @@ export declare class UwsServer {
     private token;
     private onStartFn;
     constructor(opts?: AppOptions | undefined);
-    portNum: number;
-    hostName: RecognizedString;
-    onStart: (url: string) => void;
+    get portNum(): number;
+    set portNum(port: number);
+    get hostName(): RecognizedString;
+    set hostName(host: RecognizedString);
+    set onStart(cb: (url: string) => void);
     onStartCb(): void;
     run(handlers: UwsRouteSetup[]): void;
     private listen;

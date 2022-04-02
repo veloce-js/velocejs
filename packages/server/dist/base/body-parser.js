@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.bodyParser = exports.getHeaders = exports.parseQuery = void 0;
 const tslib_1 = require("tslib");
 const handle_upload_1 = require("./handle-upload");
 const constants_1 = require("./constants");
 const parse_multipart_data_1 = require("parse-multipart-data");
 const debug_1 = tslib_1.__importDefault(require("debug"));
-const debugFn = debug_1.default('velocejs:server:body-parser');
+const debugFn = (0, debug_1.default)('velocejs:server:body-parser');
 // the actual function to take the query apart
 function parseQuery(query) {
     const params = new URLSearchParams(query);
@@ -27,10 +28,10 @@ function getHeaders(req) {
 exports.getHeaders = getHeaders;
 // all-in-one to parse and post process the multipart-formdata input
 function parseMultipart(headers, body) {
-    const boundary = parse_multipart_data_1.getBoundary(headers[constants_1.CONTENT_TYPE]);
+    const boundary = (0, parse_multipart_data_1.getBoundary)(headers[constants_1.CONTENT_TYPE]);
     if (boundary) {
         console.log('boundary', boundary);
-        const params = parse_multipart_data_1.parse(body, boundary);
+        const params = (0, parse_multipart_data_1.parse)(body, boundary);
         if (Array.isArray(params) && params.length) {
             return params.map(param => {
                 if (!param.data && param.name && param.data) {
@@ -73,7 +74,7 @@ function bodyParser(res, req, onAborted) {
         const body = { url, method, query, headers, params };
         // we should only call this when the header is not GET?
         return new Promise(resolver => {
-            handle_upload_1.onDataHandler(res, buffer => {
+            (0, handle_upload_1.onDataHandler)(res, buffer => {
                 body.payload = buffer;
                 switch (true) {
                     case isJson(headers):

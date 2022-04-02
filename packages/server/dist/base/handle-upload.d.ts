@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { HttpResponse, HttpRequest } from '../types';
 export declare function handleUpload(res: HttpResponse, req: HttpRequest, dir: string, filename?: string): Promise<any>;
 export declare function uploadHandler(res: HttpResponse, bufferHandler: (b: Buffer) => void, onAbortedHandler?: () => void): void;

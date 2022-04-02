@@ -25,7 +25,7 @@
       "node"
     ],
     "lib": [
-      "ES6",
+      "esnext",
       "DOM"
     ]
   },

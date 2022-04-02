@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UwsServer = void 0;
 const tslib_1 = require("tslib");
 const create_app_1 = require("./create-app");
 const constants_1 = require("./constants");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 // construct the debug fn
-const debugFn = debug_1.default(`velocejs:server:uws-server-class`);
+const debugFn = (0, debug_1.default)(`velocejs:server:uws-server-class`);
 // main
 class UwsServer {
     constructor(opts) {
@@ -49,7 +50,7 @@ class UwsServer {
     }
     // to init, bind handlers and then start up the UWS Server
     run(handlers) {
-        const app = create_app_1.createApp(this.opts);
+        const app = (0, create_app_1.createApp)(this.opts);
         if (!handlers.length) {
             throw new Error(`You must have at least 1 handler!`);
         }
@@ -86,11 +87,11 @@ class UwsServer {
     }
     // gracefully shutdown the server
     shutdown() {
-        create_app_1.shutdownServer(this.token);
+        (0, create_app_1.shutdownServer)(this.token);
     }
     // get the port number if it's randomly assign port
     getPortNum() {
-        return this.token ? create_app_1.getPort(this.token) : -1;
+        return this.token ? (0, create_app_1.getPort)(this.token) : -1;
     }
 }
 exports.UwsServer = UwsServer;
