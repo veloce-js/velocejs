@@ -24,6 +24,7 @@ import { HttpResponse, HttpRequest } from '../types'
 import { onDataHandler } from './handle-upload'
 import { UwsRespondBody, StringPairObj } from '../api/type'
 import { CONTENT_TYPE, DEFAULT_POST_HEADER, FILE_POST_HEADER } from './constants'
+import { parse, getBoundary } from 'parse-multipart-data'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser')
 
@@ -38,7 +39,7 @@ export function parseQuery(query: string): StringPairObj {
 
   return result
 }
-
+// return all the headers
 export function getHeaders(req: HttpRequest) {
   const headers = {}
   req.forEach((key: string, value: string) => {
@@ -47,6 +48,32 @@ export function getHeaders(req: HttpRequest) {
 
   return headers
 }
+
+// all-in-one to parse and post process the multipart-formdata input
+function parseMultipart(headers: StringPairObj, body: Buffer): any {
+  const boundary = getBoundary(headers[CONTENT_TYPE])
+  if (boundary) {
+    console.log('boundary', boundary)
+    const params = parse(body, boundary as string)
+    if (Array.isArray(params) && params.length) {
+      return params.map(param => {
+        if (!param.data && param.name && param.data) {
+          // repack this to adhere the web form format
+          return {
+            name: param.name,
+            // although we know its buffer just in case
+            value: Buffer.from(param.data).toString()
+          }
+        }
+
+        return param // this will be the field with the data
+      })
+    }
+  }
+
+  return {}
+}
+
 
 // check if the header 'Content-Type' is a json
 const isJson = (headers: StringPairObj): boolean => headers[CONTENT_TYPE].indexOf('json') > -1
@@ -89,12 +116,11 @@ export async function bodyParser(
           body.params = parseQuery(buffer.toString())
           break;
         case isFile(headers):
-          // @TODO
+          body.params = parseMultipart(headers, buffer)
           break;
         default:
       }
       resolver(body)
     })
   })
-
 }
