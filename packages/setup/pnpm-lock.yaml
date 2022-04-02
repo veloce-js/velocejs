@@ -1,22 +1,22 @@
 lockfileVersion: 5.3
 
 specifiers:
-  eslint: ^8.11.0
+  eslint: ^8.12.0
   eslint-config-airbnb: ^19.0.4
   fs-extra: ^10.0.1
   glob: ^7.2.0
-  minimist: ^1.2.5
+  minimist: ^1.2.6
   plop: ^3.0.5
 
 dependencies:
   fs-extra: 10.0.1
   glob: 7.2.0
-  minimist: 1.2.5
+  minimist: 1.2.6
   plop: 3.0.5
 
 devDependencies:
-  eslint: 8.11.0
-  eslint-config-airbnb: 19.0.4_eslint@8.11.0
+  eslint: 8.12.0
+  eslint-config-airbnb: 19.0.4_eslint@8.12.0
 
 packages:
 
@@ -473,7 +473,7 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /eslint-config-airbnb-base/15.0.0_eslint@8.11.0:
+  /eslint-config-airbnb-base/15.0.0_eslint@8.12.0:
     resolution: {integrity: sha512-xaX3z4ZZIcFLvh2oUNvcX5oEofXda7giYmuplVxoOg5A7EXJMrUyqRgR+mhDhPK8LZ4PttFOBvCYDbX3sUoUig==}
     engines: {node: ^10.12.0 || >=12.0.0}
     peerDependencies:
@@ -481,13 +481,13 @@ packages:
       eslint-plugin-import: ^2.25.2
     dependencies:
       confusing-browser-globals: 1.0.11
-      eslint: 8.11.0
+      eslint: 8.12.0
       object.assign: 4.1.2
       object.entries: 1.1.5
       semver: 6.3.0
     dev: true
 
-  /eslint-config-airbnb/19.0.4_eslint@8.11.0:
+  /eslint-config-airbnb/19.0.4_eslint@8.12.0:
     resolution: {integrity: sha512-T75QYQVQX57jiNgpF9r1KegMICE94VYwoFQyMGhrvc+lB8YF2E/M/PYDaQe1AJcWaEgqLE+ErXV1Og/+6Vyzew==}
     engines: {node: ^10.12.0 || ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -497,8 +497,8 @@ packages:
       eslint-plugin-react: ^7.28.0
       eslint-plugin-react-hooks: ^4.3.0
     dependencies:
-      eslint: 8.11.0
-      eslint-config-airbnb-base: 15.0.0_eslint@8.11.0
+      eslint: 8.12.0
+      eslint-config-airbnb-base: 15.0.0_eslint@8.12.0
       object.assign: 4.1.2
       object.entries: 1.1.5
     dev: true
@@ -511,13 +511,13 @@ packages:
       estraverse: 5.3.0
     dev: true
 
-  /eslint-utils/3.0.0_eslint@8.11.0:
+  /eslint-utils/3.0.0_eslint@8.12.0:
     resolution: {integrity: sha512-uuQC43IGctw68pJA1RgbQS8/NP7rch6Cwd4j3ZBtgo4/8Flj4eGE7ZYSZRN3iq5pVUv6GPdW5Z1RFleo84uLDA==}
     engines: {node: ^10.0.0 || ^12.0.0 || >= 14.0.0}
     peerDependencies:
       eslint: '>=5'
     dependencies:
-      eslint: 8.11.0
+      eslint: 8.12.0
       eslint-visitor-keys: 2.1.0
     dev: true
 
@@ -531,8 +531,8 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
 
-  /eslint/8.11.0:
-    resolution: {integrity: sha512-/KRpd9mIRg2raGxHRGwW9ZywYNAClZrHjdueHcrVDuO3a6bj83eoTirCCk0M0yPwOjWYKHwRVRid+xK4F/GHgA==}
+  /eslint/8.12.0:
+    resolution: {integrity: sha512-it1oBL9alZg1S8UycLm5YDMAkIhtH6FtAzuZs6YvoGVldWjbS08BkAdb/ymP9LlAyq8koANu32U7Ib/w+UNh8Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     hasBin: true
     dependencies:
@@ -545,7 +545,7 @@ packages:
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.1.1
-      eslint-utils: 3.0.0_eslint@8.11.0
+      eslint-utils: 3.0.0_eslint@8.12.0
       eslint-visitor-keys: 3.3.0
       espree: 9.3.1
       esquery: 1.4.0
@@ -847,7 +847,7 @@ packages:
     engines: {node: '>=0.4.7'}
     hasBin: true
     dependencies:
-      minimist: 1.2.5
+      minimist: 1.2.6
       neo-async: 2.6.2
       source-map: 0.6.1
       wordwrap: 1.0.0
@@ -1265,8 +1265,8 @@ packages:
     dependencies:
       brace-expansion: 1.1.11
 
-  /minimist/1.2.5:
-    resolution: {integrity: sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==}
+  /minimist/1.2.6:
+    resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
     dev: false
 
   /mkdirp/1.0.4:
@@ -1522,7 +1522,7 @@ packages:
       chalk: 5.0.1
       interpret: 2.2.0
       liftoff: 4.0.0
-      minimist: 1.2.5
+      minimist: 1.2.6
       node-plop: 0.30.0
       ora: 6.1.0
       v8flags: 4.0.0

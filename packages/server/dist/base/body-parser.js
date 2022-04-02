@@ -48,11 +48,11 @@ function parseMultipart(headers, body) {
     return {};
 }
 // check if the header 'Content-Type' is a json
-const isJson = (headers) => headers[constants_1.CONTENT_TYPE].indexOf('json') > -1;
+const isJson = (headers) => headers[constants_1.CONTENT_TYPE] !== undefined && headers[constants_1.CONTENT_TYPE].indexOf('json') > -1;
 // check if it's regular post form
-const isForm = (headers) => headers[constants_1.CONTENT_TYPE] === constants_1.DEFAULT_POST_HEADER;
+const isForm = (headers) => headers[constants_1.CONTENT_TYPE] !== undefined && headers[constants_1.CONTENT_TYPE] === constants_1.DEFAULT_POST_HEADER;
 // check if it's a file upload form
-const isFile = (headers) => headers[constants_1.CONTENT_TYPE].indexOf(constants_1.FILE_POST_HEADER) > -1;
+const isFile = (headers) => headers[constants_1.CONTENT_TYPE] !== undefined && headers[constants_1.CONTENT_TYPE].indexOf(constants_1.FILE_POST_HEADER) > -1;
 // parse inputs
 function bodyParser(res, req, onAborted) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {

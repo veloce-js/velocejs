@@ -8,7 +8,7 @@ export type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => void
 export interface UwsRouteSetup {
   type: string
   path: string
-  handler: unknown //UwsRouteHandler
+  handler: UwsRouteHandler
 }
 
 // this interface is for the result pass to the fast-api callback
