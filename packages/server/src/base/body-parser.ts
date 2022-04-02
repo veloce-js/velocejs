@@ -39,17 +39,21 @@ export function parseQuery(query: string): StringPairObj {
   return result
 }
 
-// check if the header 'Content-Type' is a json
-const isJson = (headers: StringPairObj): boolean => {
-  const contentType = headers[CONTENT_TYPE]
+export function getHeaders(req: HttpRequest) {
+  const headers = {}
+  req.forEach((key: string, value: string) => {
+    headers[key.toLowerCase()] = value
+  })
 
-  return contentType ? contentType.indexOf('json') > -1 : false
+  return headers
 }
 
+// check if the header 'Content-Type' is a json
+const isJson = (headers: StringPairObj): boolean => headers[CONTENT_TYPE].indexOf('json') > -1
 // check if it's regular post form
 const isForm = (headers: StringPairObj): boolean => headers[CONTENT_TYPE] === DEFAULT_POST_HEADER
 // check if it's a file upload form
-const isFile = (headers: StringPairObj): boolean => headers[CONTENT_TYPE] === FILE_POST_HEADER
+const isFile = (headers: StringPairObj): boolean => headers[CONTENT_TYPE].indexOf(FILE_POST_HEADER) > -1
 
 // parse inputs
 export async function bodyParser(
@@ -62,10 +66,7 @@ export async function bodyParser(
     onAborted ? Reflect.apply(onAborted, null, [res]) : debugFn('ABORTED')
   })
   // process the header
-  const headers = {}
-  req.forEach((key: string, value: string) => {
-    headers[key.toLowerCase()] = value
-  })
+  const headers = getHeaders(req)
   const url = req.getUrl()
   const query = req.getQuery()
   const method = req.getMethod()

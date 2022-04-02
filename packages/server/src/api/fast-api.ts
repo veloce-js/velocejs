@@ -1,6 +1,6 @@
 // this will allow you to create a series of API in no time
 import 'reflect-metadata'
-import { HttpResponse, HttpRequest } from 'uWebSockets.js'
+import { HttpResponse, HttpRequest } from '../types'
 import { UwsRouteSetup, UwsRouteHandler, UwsParsedResult } from '../base/interfaces'
 import { UwsServer } from '../base/uws-server-class'
 import { RouteMetaInfo } from './type'

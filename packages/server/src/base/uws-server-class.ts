@@ -12,6 +12,9 @@ export class UwsServer {
   private port = 0
   private host: RecognizedString = ''
   private token: us_listen_socket = ''
+  private onStartFn = (url: string): void => {
+    debugFn(`Server started at ${url}`)
+  }
 
   constructor(private opts?: AppOptions) {}
   // overwrite the port number via the start up env
@@ -36,14 +39,18 @@ export class UwsServer {
     this.host = host
   }
 
+  public set onStart(cb: (url: string) => void) {
+    this.onStartFn = cb
+  }
+
   // this doesn't do anything just for overwrite or display a debug message
-  public onStart() {
+  public onStartCb() {
     const portNum = this.portNum || this.getPortNum()
     const s = this.opts ? 's' : ''
     const proto = `http${s}://`
     const hostName = this.hostName ? proto + this.hostName : `${proto}localhost`
 
-    debugFn(`Server started on ${hostName}:${portNum}`)
+    this.onStartFn(`${hostName}:${portNum}`)
   }
 
   // to init, bind handlers and then start up the UWS Server
@@ -73,7 +80,7 @@ export class UwsServer {
     const cb = (token: us_listen_socket): void => {
       if (token) {
         this.token = token
-        this.onStart()
+        this.onStartCb()
       } else {
         throw new Error(`Server could not start!`)
       }
