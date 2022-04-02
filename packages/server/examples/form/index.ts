@@ -4,6 +4,7 @@ import {
   FastApi,
   UwsParsedResult,
   POST,
+  RAW,
   PREPARE,
   SERVE_STATIC,
 } from '../../src'
@@ -13,8 +14,8 @@ import open from 'open'
 
 class MyFormExample extends FastApi {
 
-  @POST('/submit')
-  submitHandler(params: UwsParsedResult) {
+  @RAW('post', '/submit')
+  submitHandler() {
 
     console.log(params.payload.toString())
 

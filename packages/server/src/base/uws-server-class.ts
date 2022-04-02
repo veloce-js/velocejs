@@ -1,5 +1,5 @@
 // We now make it class to create the complete server
-import { AppOptions, TemplatedApp, RecognizedString, us_listen_socket } from 'uWebSockets.js'
+import { AppOptions, TemplatedApp, RecognizedString, us_listen_socket } from '../types'
 import { createApp, shutdownServer, getPort } from './create-app'
 import { UwsRouteSetup } from './interfaces'
 import { SUPPORT_REST_ROUTES } from './constants'
@@ -36,7 +36,7 @@ export class UwsServer {
     this.host = host
   }
 
-  // this doesn't do anything just for overwrite or display a debug message 
+  // this doesn't do anything just for overwrite or display a debug message
   public onStart() {
     const portNum = this.portNum || this.getPortNum()
     const s = this.opts ? 's' : ''

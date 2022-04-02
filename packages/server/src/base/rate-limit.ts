@@ -1,4 +1,4 @@
-import { WebSocket } from 'uWebSockets.js'
+import { WebSocket } from '../types'
 
 // this is from the examples/RateLimit.js
 export function rateLimit(limit: number, interval: number): (ws: WebSocket) => boolean | void {

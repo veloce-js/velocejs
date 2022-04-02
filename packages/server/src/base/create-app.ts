@@ -1,5 +1,5 @@
 // simple create the uWebsocket.js app
-import { AppOptions, TemplatedApp } from 'uWebSockets.js'
+import { AppOptions, TemplatedApp } from '../types'
 import uWS from 'uWebSockets.js'
 
 // create the app

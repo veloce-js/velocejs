@@ -2,7 +2,7 @@
 import mime from 'mime-types'
 import fs from 'fs'
 import path from 'path'
-import { HttpResponse, HttpRequest } from 'uWebSockets.js'
+import { HttpResponse, HttpRequest } from '../types'
 import { DEFAULT_FILE } from './constants'
 import debug from 'debug'
 

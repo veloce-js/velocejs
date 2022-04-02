@@ -1,6 +1,6 @@
 // group all the interface(s) here for easier re-use
 
-import { HttpResponse, HttpRequest } from 'uWebSockets.js'
+import { HttpResponse, HttpRequest } from 'uWebSockets.js' // if we reference to ../types then become a circular reference
 import { UwsRespondBody } from '../api/type'
 
 export type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => void

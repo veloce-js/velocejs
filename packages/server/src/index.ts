@@ -18,19 +18,7 @@ export {
   ABORTED,
   SERVE_STATIC
 } from './api/decorators'
-// export all the interfaces
-export {
-  UwsRouteHandler,
-  UwsRouteSetup,
-  UwsParsedResult,
-} from './base/interfaces'
-// export the types
-export {
-  RouteMetaInfo,
-  MetaDecorator,
-  StringPairObj,
-  UwsRespondBody,
-} from './api/type'
+
 
 // default export
 export default uWS

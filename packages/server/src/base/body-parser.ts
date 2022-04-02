@@ -20,7 +20,7 @@ export interface HttpRequest {
     setYield(yield: boolean) : HttpRequest;
 }
 */
-import { HttpResponse, HttpRequest } from 'uWebSockets.js'
+import { HttpResponse, HttpRequest } from '../types'
 import { onDataHandler } from './handle-upload'
 import { UwsRespondBody, StringPairObj } from '../api/type'
 import { CONTENT_TYPE, DEFAULT_POST_HEADER, FILE_POST_HEADER } from './constants'

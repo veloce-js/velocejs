@@ -1,5 +1,5 @@
 // simple wrapper to serve up JSON
-import { HttpResponse } from 'uWebSockets.js'
+import { HttpResponse } from '../types'
 
 // just write the header and encode the JSON to string
 export const writeJson = (res: HttpResponse, jsonObj: any): void => {

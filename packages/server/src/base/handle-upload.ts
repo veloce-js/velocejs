@@ -1,6 +1,6 @@
 // return the upload Data
 import fs from 'fs'
-import { HttpResponse, HttpRequest } from 'uWebSockets.js'
+import { HttpResponse, HttpRequest } from '../types'
 
 // @TODO this should be a higher level method that will take the
 // req mime-type handle the buffer then write to disk
