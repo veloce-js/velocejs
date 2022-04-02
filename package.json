@@ -30,6 +30,7 @@
   "homepage": "https://github.com/veloce-js/main#readme",
   "devDependencies": {
     "fs-extra": "^10.0.1",
+    "lodash-es": "^4.17.21",
     "plop": "^3.0.5",
     "vuepress": "^1.9.7"
   },
