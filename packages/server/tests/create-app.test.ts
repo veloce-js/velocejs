@@ -1,6 +1,6 @@
 import test from 'ava'
 import { createApp, shutdownServer } from '../src'
-import { TemplatedApp, HttpResponse } from 'uWebSockets.js'
+import { TemplatedApp, HttpResponse } from '../src/types'
 import Fetch from 'node-fetch'
 
 let app: TemplatedApp

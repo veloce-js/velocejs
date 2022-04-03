@@ -1,7 +1,7 @@
 import test from 'ava'
-import { createApp, shutdownServer, readJsonAsync, writeJson } from '../src/index'
+import { createApp, shutdownServer, readJsonAsync, writeJson } from '../src'
 import Fetch from 'node-fetch'
-import { HttpResponse } from 'uWebSockets.js'
+import { HttpResponse } from '../src/types'
 
 const port = 9002
 const payload = {data: [1,2,3]}
