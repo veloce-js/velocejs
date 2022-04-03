@@ -16,6 +16,7 @@
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",
     "ts-node": "ts-node",
+    "ts-swc": "node ./swc.js",
     "clean:dist": "rimraf ./dist",
     "prepublishOnly": "pnpm clean:dist && pnpm build:tsc && pnpm test"
   },

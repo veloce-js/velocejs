@@ -2,7 +2,11 @@
   "jsc": {
     "parser": {
       "syntax": "typescript",
-      "tsx": false
+      "decorators": true
+    },
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true
     },
     "target": "es2022",
     "loose": false,
@@ -10,10 +14,5 @@
       "compress": false,
       "mangle": false
     }
-  },
-  "module": {
-    "type": "es6"
-  },
-  "minify": false,
-  "isModule": true
+  }
 }
