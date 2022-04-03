@@ -29,6 +29,9 @@
   },
   "homepage": "https://velocejs.com",
   "devDependencies": {
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.163",
+    "esbuild": "^0.14.30",
     "esbuild-register": "^3.3.2",
     "fs-extra": "^10.0.1",
     "lodash": "^4.17.21",
