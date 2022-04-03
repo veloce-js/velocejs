@@ -19,68 +19,68 @@ module.exports = function(plop) {
     prompts: [
       {
         type: 'input',
-        name: 'directoryName',
-        message: 'Directory name',
-        validate: (value) => !(/^[\w\s]{1,}$/.test(value)) || 'No space in directory name!'
+        name: 'projectName',
+        message: 'Project name',
+        transform: camelCase
       },
       {
         type: 'confirm',
         name: 'sameAsDirectoryName',
-        message: 'Use directory name as project name',
+        message: 'Use project name as directory name',
         default: false
       },
       {
         type: 'input',
-        name: 'projectName',
-        message: 'Project name',
+        name: 'directoryName',
+        message: 'Directory name (No space allow)',
+        validate: (value) => !(/^[\w\s]{1,}$/.test(value)),
         when: function(answers) {
+
           return !answers.sameAsDirectoryName
         },
         default: function(answers) {
-          return camelCase(answers.directoryName)
+
+          return camelCase(answers.projectName)
         }
       },
       // just use the root package.json to fill out the blanks
     ],
-    actions: [
-      // copy
-      function(answer) {
-        const { directoryName } = answer
-        const dir = join(root, 'packages', directoryName)
-
-        return dir
-
-        if (fs.existsSync( dir )) {
-          // keep it consistence, we don't necessary to return as Promise here
-          return Promise.resolve(`Directory ${dir} already exist! Aborted`)
-        } else {
-          const src = join(root, '.plop', 'packages')
-          const filter = (file) => file !== 'package.json.tpl'
-
-          return fs.copy(src, dir, { filter })
-            .then(() => `New package ${name} created`)
-            .catch(() => `Fail to create ${name}`)
-        }
-      },
-      // update package.json
+    actions:
       function(answers) {
+        return [
+          // copy
+          function(answer) {
+            const { directoryName, projectName } = answer
+            const dir = join(root, 'packages', directoryName)
+            if (fs.existsSync( dir )) {
+              // keep it consistence, we don't necessary to return as Promise here
+              return Promise.resolve(`Directory ${dir} already exist! Aborted`)
+            } else {
+              const src = join(root, '.plop', 'packages')
+              const filter = (file) => !(file.indexOf('package.json.tpl') > -1)
 
-        return [{
-          type: 'add',
-          template: join(root, '.plop', 'packages', 'package.json.tpl'),
-          path: join(root, 'packages', answers.directoryName, 'package.json'),
-          transform: function(file) {
-            console.log(file)
-            /*
-              name
-              author
-              license
-            */
-            return file
-          }
+              return fs.copy(src, dir, { filter })
+                .then(() => `New package ${camelCase(projectName)} created in packages/${directoryName}`)
+                .catch(() => `Fail to create ${directoryName}`)
+            }
+          },
+          // update package.json
+          {
+            type: 'add',
+            template: join(root, '.plop', 'packages', 'package.json.tpl'),
+            path: join(root, 'packages', answers.directoryName, 'package.json'),
+            transform: function(file) {
+              const json = fs.readJsonSync(file)
+              json.name = [rootPkgJson.name, camelCase(answers.projectName)].join('/')
+              json.author = rootPkgJson.author
+              json.license = rootPkgJson.license
+              json.homepage = rootPkgJson.homepage
+
+              return JSON.stringify(json, null, 2)
+            }
         }]
       }
-    ]
+
   })
 
 

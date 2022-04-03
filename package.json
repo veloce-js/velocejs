@@ -1,5 +1,5 @@
 {
-  "name": "velocejs",
+  "name": "@velocejs",
   "version": "0.0.1",
   "description": "Veloce mono repo",
   "main": "index.js",
@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/veloce-js/main/issues"
   },
-  "homepage": "https://github.com/veloce-js/main#readme",
+  "homepage": "https://velocejs.com",
   "devDependencies": {
     "fs-extra": "^10.0.1",
     "lodash": "^4.17.21",
