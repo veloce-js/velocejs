@@ -1,7 +1,7 @@
 // all decorators are here
 import 'reflect-metadata'
-import { RouteMetaInfo, MetaDecorator } from '@velocejs/server/types'
-import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/constants'
+import { RouteMetaInfo, MetaDecorator } from '@velocejs/server/dist/types'
+import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/dist/constants'
 import { routeKey } from './routekey'
 
 

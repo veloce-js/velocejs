@@ -25,7 +25,7 @@ module.exports = function(plop) {
       },
       {
         type: 'confirm',
-        name: 'sameAsDirectoryName',
+        name: 'sameAsProjectName',
         message: 'Use project name as directory name',
         default: false
       },
@@ -36,7 +36,7 @@ module.exports = function(plop) {
         validate: (value) => !(/^[\w\s]{1,}$/.test(value)),
         when: function(answers) {
 
-          return !answers.sameAsDirectoryName
+          return !answers.sameAsProjectName
         },
         default: function(answers) {
 
@@ -50,8 +50,11 @@ module.exports = function(plop) {
         return [
           // copy
           function(answer) {
-            const { directoryName, projectName } = answer
-            const dir = join(root, 'packages', directoryName)
+            const { directoryName, projectName, sameAsProjectName } = answer
+            const directory = sameAsProjectName ? projectName : directoryName
+            // console.log(directory)
+            const dir = join(root, 'packages', directory )
+            // console.log(dir)
             if (fs.existsSync( dir )) {
               // keep it consistence, we don't necessary to return as Promise here
               return Promise.resolve(`Directory ${dir} already exist! Aborted`)
@@ -60,15 +63,15 @@ module.exports = function(plop) {
               const filter = (file) => !(file.indexOf('package.json.tpl') > -1)
 
               return fs.copy(src, dir, { filter })
-                .then(() => `New package ${camelCase(projectName)} created in packages/${directoryName}`)
-                .catch(() => `Fail to create ${directoryName}`)
+                .then(() => `New package ${camelCase(projectName)} created in packages/${directory}`)
+                .catch(() => `Fail to create ${directory}`)
             }
           },
           // update package.json
           {
             type: 'add',
             template: join(root, '.plop', 'packages', 'package.json.tpl'),
-            path: join(root, 'packages', answers.directoryName, 'package.json'),
+            path: join(root, 'packages', answers.sameAsProjectName ? answers.projectName : answers.directoryName, 'package.json'),
             transform: function(file) {
               const json = fs.readJsonSync(file)
               json.name = [rootPkgJson.name, camelCase(answers.projectName)].join('/')
