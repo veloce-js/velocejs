@@ -56,4 +56,4 @@ export {
   MetaDecorator,
   StringPairObj,
   UwsRespondBody,
-} from './api/type'
+} from './base/type'
