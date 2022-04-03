@@ -1,4 +1,5 @@
 // fast api
+import 'reflect-metadata'
 export { FastApi } from './server/fast-api'
 export {
   RAW,
@@ -6,4 +7,4 @@ export {
   PREPARE,
   ABORTED,
   SERVE_STATIC
-} from './server/decorators'
+} from './server/decorators/index'

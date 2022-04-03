@@ -1,5 +1,5 @@
 // all decorators are here
-import 'reflect-metadata'
+
 import { RouteMetaInfo, MetaDecorator } from '@velocejs/server/dist/types'
 import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/dist/constants'
 import { routeKey } from './routekey'
@@ -70,6 +70,8 @@ export function PREPARE(
     return Reflect.apply(fn, this, [meta])
   }
 }
+// alias to PREPARE
+export const MAIN = PREPARE
 // making the decorators
 export const ANY = routeDecoratorFactory('any')
 export const GET = routeDecoratorFactory('get')
