@@ -3,7 +3,7 @@ import mime from 'mime-types'
 import fs from 'fs'
 import path from 'path'
 import { HttpResponse, HttpRequest } from '../types'
-import { DEFAULT_FILE } from './constants'
+import { DEFAULT_FILE } from '../constants'
 import debug from 'debug'
 
 const debugFn = debug('velocejs:server:serve-static')
@@ -12,8 +12,7 @@ const debugFn = debug('velocejs:server:serve-static')
  * serve static files from assetDir
  */
 export function serveStatic(assetDir: string | string[]) {
-
-  const dirs = Array.isArray(assetDir) ? assetDir : [assetDir]
+  const dirs: string[] = Array.isArray(assetDir) ? assetDir : [assetDir]
 
   return function(res: HttpResponse, req: HttpRequest) {
     // we need to provide a onAbortedHandler here
