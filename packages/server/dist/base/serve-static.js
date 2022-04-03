@@ -6,7 +6,7 @@ const tslib_1 = require("tslib");
 const mime_types_1 = tslib_1.__importDefault(require("mime-types"));
 const fs_1 = tslib_1.__importDefault(require("fs"));
 const path_1 = tslib_1.__importDefault(require("path"));
-const constants_1 = require("./constants");
+const constants_1 = require("../constants");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)('velocejs:server:serve-static');
 /**

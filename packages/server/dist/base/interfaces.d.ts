@@ -1,5 +1,5 @@
 import { HttpResponse, HttpRequest } from 'uWebSockets.js';
-import { UwsRespondBody } from '../api/type';
+import { UwsRespondBody } from '../types';
 export declare type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => void;
 export interface UwsRouteSetup {
     type: string;

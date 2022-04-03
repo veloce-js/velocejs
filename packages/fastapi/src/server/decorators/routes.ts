@@ -1,7 +1,6 @@
 // all decorators are here
 import 'reflect-metadata'
 import { RouteMetaInfo, MetaDecorator } from '@velocejs/server/types'
-import { FastApi } from '../fast-api'
 import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/constants'
 import { routeKey } from './routekey'
 
@@ -9,7 +8,7 @@ import { routeKey } from './routekey'
 // this is the inner decorator factory method
 function innerDecoratorFactory(type: string, path: string, routeType?: string) {
   // this is the actual api facing the class method
-  return (target: FastApi, propertyName: string) => {
+  return (target: any, propertyName: string) => {
     // all it does it to record all this meta info and we can re-use it later
     const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
     const meta: RouteMetaInfo = { propertyName, path, type: '' }
@@ -56,7 +55,7 @@ export function SERVE_STATIC(path: string) {
 // This must be run on the overload method in the sub-class
 // otherwise the meta data becomes empty
 export function PREPARE(
-  target: FastApi,
+  target: any,
   _: string, // propertyName is unused, just placeholder it
   descriptor: TypedPropertyDescriptor<(meta: RouteMetaInfo[]) => void>
 ): void {
@@ -88,7 +87,7 @@ export const HEAD = routeDecoratorFactory('head')
 export function ABORTED(type: string, path: string) {
 
   return (
-    target: FastApi,
+    target: any,
     propertyName: string
     // descriptor: TypedPropertyDescriptor<(meta: RouteMetaInfo[]) => void>
   ): void => {

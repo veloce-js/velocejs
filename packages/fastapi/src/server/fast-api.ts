@@ -1,12 +1,23 @@
 // this will allow you to create a series of API in no time
 import 'reflect-metadata'
-import { HttpResponse, HttpRequest } from '../types'
-import { UwsRouteSetup, UwsRouteHandler, UwsParsedResult } from '../base/interfaces'
-import { UwsServer } from '../base/uws-server-class'
-import { RouteMetaInfo } from './type'
-import { bodyParser } from '../base/body-parser'
-import { serveStatic } from '../base/serve-static'
-import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '../base/constants'
+import {
+  UwsServer,
+  bodyParser,
+  serveStatic
+} from '@velocejs/server'
+import {
+  HttpResponse,
+  HttpRequest,
+  RouteMetaInfo,
+  UwsRouteSetup,
+  UwsRouteHandler,
+  UwsParsedResult
+} from '@velocejs/server/types'
+import {
+  STATIC_TYPE,
+  STATIC_ROUTE,
+  RAW_TYPE
+} from '@velocejs/server/constants'
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {

@@ -2,7 +2,7 @@
 // group all the Types Interfaces export here
 // everything from the uWebSocket.js
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SERVE_STATIC = exports.ABORTED = exports.PREPARE = exports.HEAD = exports.PATCH = exports.DEL = exports.OPTIONS = exports.PUT = exports.POST = exports.GET = exports.ANY = exports.RAW = exports.FastApi = exports.UwsServer = exports.getHeaders = exports.parseQuery = exports.bodyParser = exports.writeBufferToFile = exports.onDataHandler = exports.uploadHandler = exports.handleUpload = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createApp = void 0;
+exports.UwsServer = exports.getHeaders = exports.parseQuery = exports.bodyParser = exports.writeBufferToFile = exports.onDataHandler = exports.uploadHandler = exports.handleUpload = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createApp = void 0;
 const tslib_1 = require("tslib");
 // Main entry point
 const uWebSockets_js_1 = tslib_1.__importDefault(require("uWebSockets.js"));
@@ -28,24 +28,8 @@ Object.defineProperty(exports, "bodyParser", { enumerable: true, get: function (
 Object.defineProperty(exports, "parseQuery", { enumerable: true, get: function () { return body_parser_1.parseQuery; } });
 Object.defineProperty(exports, "getHeaders", { enumerable: true, get: function () { return body_parser_1.getHeaders; } });
 // extended
-var uws_server_class_1 = require("./base/uws-server-class");
+var uws_server_class_1 = require("./uws-server-class");
 Object.defineProperty(exports, "UwsServer", { enumerable: true, get: function () { return uws_server_class_1.UwsServer; } });
-// fast api
-var fast_api_1 = require("./api/fast-api");
-Object.defineProperty(exports, "FastApi", { enumerable: true, get: function () { return fast_api_1.FastApi; } });
-var decorators_1 = require("./api/decorators");
-Object.defineProperty(exports, "RAW", { enumerable: true, get: function () { return decorators_1.RAW; } });
-Object.defineProperty(exports, "ANY", { enumerable: true, get: function () { return decorators_1.ANY; } });
-Object.defineProperty(exports, "GET", { enumerable: true, get: function () { return decorators_1.GET; } });
-Object.defineProperty(exports, "POST", { enumerable: true, get: function () { return decorators_1.POST; } });
-Object.defineProperty(exports, "PUT", { enumerable: true, get: function () { return decorators_1.PUT; } });
-Object.defineProperty(exports, "OPTIONS", { enumerable: true, get: function () { return decorators_1.OPTIONS; } });
-Object.defineProperty(exports, "DEL", { enumerable: true, get: function () { return decorators_1.DEL; } });
-Object.defineProperty(exports, "PATCH", { enumerable: true, get: function () { return decorators_1.PATCH; } });
-Object.defineProperty(exports, "HEAD", { enumerable: true, get: function () { return decorators_1.HEAD; } });
-Object.defineProperty(exports, "PREPARE", { enumerable: true, get: function () { return decorators_1.PREPARE; } });
-Object.defineProperty(exports, "ABORTED", { enumerable: true, get: function () { return decorators_1.ABORTED; } });
-Object.defineProperty(exports, "SERVE_STATIC", { enumerable: true, get: function () { return decorators_1.SERVE_STATIC; } });
 // default export
 exports.default = uWebSockets_js_1.default;
 // named

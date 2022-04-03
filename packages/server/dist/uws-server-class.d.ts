@@ -1,5 +1,5 @@
-import { AppOptions, RecognizedString } from '../types';
-import { UwsRouteSetup } from './interfaces';
+import { AppOptions, RecognizedString } from './types';
+import { UwsRouteSetup } from './base/interfaces';
 export declare class UwsServer {
     private opts?;
     private port;
