@@ -2,13 +2,13 @@ lockfileVersion: 5.3
 
 specifiers:
   fs-extra: ^10.0.1
-  lodash-es: ^4.17.21
+  lodash: ^4.17.21
   plop: ^3.0.5
   vuepress: ^1.9.7
 
 devDependencies:
   fs-extra: 10.0.1
-  lodash-es: 4.17.21
+  lodash: 4.17.21
   plop: 3.0.5
   vuepress: 1.9.7
 
@@ -5863,10 +5863,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       p-locate: 4.1.0
-    dev: true
-
-  /lodash-es/4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: true
 
   /lodash._reinterpolate/3.0.0:

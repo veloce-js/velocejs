@@ -1,5 +1,6 @@
 const fs = require('fs-extra')
 const { join } = require('path')
+const { camelCase } = require('lodash-es')
 const root = __dirname
 /**
 Tools for:
@@ -15,12 +16,13 @@ module.exports = function(plop) {
     prompts: [
       {
         type: 'input',
-        name: 'name',
-        description: 'Directory name'
+        name: 'directoryName',
+        description: 'Directory name',
+        validate: (value) => !(/^[\w\s]{1,}$/.test(value))
       },
       {
         type: 'confirm',
-        name: 'sameAsName',
+        name: 'sameAsDirectoryName',
         description: 'Use directory name as project name',
         default: false
       },
@@ -29,10 +31,10 @@ module.exports = function(plop) {
         name: 'projectName',
         description: 'Project name',
         when: function(answers) {
-          console.log(answers)
+          return !answers.sameAsProjectName
         },
         default: function(answers) {
-          
+
         }
       }
     ],
