@@ -1,11 +1,10 @@
 // all decorators are here
 import 'reflect-metadata'
 import { RouteMetaInfo, MetaDecorator } from './type'
-import { FastApi } from './fast-api'
+import { FastApi } from '../fast-api'
 import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '../base/constants'
 
-// The key to id the meta info
-const routeKey = Symbol("FastApiRouteKey")
+
 
 // this is the inner decorator factory method
 function innerDecoratorFactory(type: string, path: string, routeType?: string) {

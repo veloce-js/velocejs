@@ -1,5 +1,5 @@
-// really should put all the data into one constants
-
+// This is move to src root level for export as well
+// as this will be share between different packages 
 export const SUPPORT_REST_ROUTES = ['any', 'get', 'post', 'put', 'options' ,'del', 'patch', 'head', 'connect', 'trace']
 // , 'ws' has a different signature
 // also it's not part of the REST spec therefore we don't include them here
