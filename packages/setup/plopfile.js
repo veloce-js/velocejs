@@ -45,7 +45,10 @@ export default function(
 
   plop.setActionType('copyVeloceConfig', function(answers) {
 
-    return fs.copy(join(tplDir, 'veloce.config.tpl.js'), join(destDir, answers.name, 'veloce.config.js'))
+    return fs.copy(
+      join(tplDir, 'veloce.config.tpl.js'),
+      join(destDir, answers.name, 'veloce.config.js')
+    )
   })
 
   plop.setActionType('justEndMessage', function() {
@@ -54,7 +57,7 @@ export default function(
   })
 
   // create the generator
-  // @TODO add more framework support next 
+  // @TODO add more framework support next
   plop.setGenerator('base', {
     description: 'Hello world',
     prompts: [{
