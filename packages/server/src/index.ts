@@ -12,16 +12,6 @@ export { handleUpload, uploadHandler, onDataHandler, writeBufferToFile } from '.
 export { bodyParser, parseQuery, getHeaders } from './base/body-parser'
 // extended
 export { UwsServer } from './base/uws-server-class'
-// fast api
-export { FastApi } from './api/fast-api'
-export {
-  RAW,
-  ANY, GET, POST, PUT, OPTIONS, DEL, PATCH, HEAD,
-  PREPARE,
-  ABORTED,
-  SERVE_STATIC
-} from './api/decorators'
-
 
 // default export
 export default uWS
