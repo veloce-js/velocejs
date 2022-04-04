@@ -1,7 +1,7 @@
 {
-  "name": "@velocejs/fastapi",
+  "name": "@velocejs/reflectapi",
   "version": "0.0.0",
-  "description": "Built on top of @velocejs/server to let you build your API in no time",
+  "description": "Use ts-morph to take apart the AST for Validation decorator",
   "main": "dist/index.js",
   "module": "dist/index.ts",
   "typings": "dist/types.d.ts",
@@ -14,20 +14,13 @@
     "build:tsc": "tsc -p tsconfig.json",
     "ts:check": "tsc -noEmit",
     "docs": "typedoc --entryPoints src/main.ts",
-    "ts": "node -r esbuild-register",
-    "ts-node": "ts-node",
-    "ts-swc": "node ./swc.js",
+    "ts": "ts-node",
     "clean:dist": "rimraf ./dist",
     "prepublishOnly": "pnpm clean:dist && pnpm build:tsc && pnpm test"
   },
-  "author": "Joel Chu <joelchu@foxmail.com>",
+  "author": "NEWBRAN LTD & TO1SOURCE",
   "license": "ISC",
   "dependencies": {
-    "@velocejs/server": "workspace:^0.5.0",
-    "debug": "^4.3.4",
-    "mime-types": "^2.1.35",
-    "parse-multipart-data": "^1.2.1",
-    "reflect-metadata": "^0.1.13",
     "ts-morph": "^14.0.0"
   },
   "devDependencies": {

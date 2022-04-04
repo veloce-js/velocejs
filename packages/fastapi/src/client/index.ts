@@ -1,6 +1,8 @@
 // just test the thing
 import 'reflect-metadata'
+import { Validator } from '../server/decorators/validator'
 
+/*
 function logParamTypes(target : any, key : string) {
 
   var t = Reflect.getMetadata("design:type", target, key);
@@ -19,12 +21,13 @@ function logParamTypes(target : any, key : string) {
   })
 
 }
+*/
 
 //
 
 class Foo {
 
-  @logParamTypes
+  @Validator()
   someFunc(
     params1: string,
     params2: number,
