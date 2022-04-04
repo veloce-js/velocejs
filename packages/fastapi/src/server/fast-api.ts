@@ -1,5 +1,4 @@
 // this will allow you to create a series of API in no time
-import 'reflect-metadata'
 import {
   UwsServer,
   bodyParser,
@@ -12,17 +11,23 @@ import {
   UwsRouteSetup,
   UwsRouteHandler,
   UwsParsedResult
-} from '@velocejs/server/types'
+} from '@velocejs/server/dist/types'
 import {
   STATIC_TYPE,
   STATIC_ROUTE,
   RAW_TYPE
-} from '@velocejs/server/constants'
+} from '@velocejs/server/dist/constants'
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
+
   // store the UWS server instance as protected
   constructor(protected uwsInstance: UwsServer) {}
+  
+  // using a setter to trigger series of things to do with the validation map
+  private set validationMap(validationMap: Array<any>) {
+    console.log(validationMap)
+  }
 
   // wrapper for the UwsServer create server method
   private createServer(routes: UwsRouteSetup[]) {
@@ -44,9 +49,7 @@ export class FastApi {
       const result = await bodyParser(res, req)
       const extra = { res, req }
       const payload: UwsParsedResult = Object.assign(result, extra)
-
       const reply = Reflect.apply(fn, this, [ payload ])
-
       // if the method return a result then we will handle it
       // otherwise we assume the dev handle it in their method
       if (reply) {
@@ -56,7 +59,10 @@ export class FastApi {
   }
 
   // Mapping all the string name to method and supply to UwsServer run method
-  public run(meta: RouteMetaInfo[]): void {
+  public run(meta: RouteMetaInfo[], validation?: Array<any>): void {
+    // do things with the validation
+    this.validationMap = validation
+    // run the server
     this.createServer(
       meta.map(m => {
         const { path, type, propertyName, onAbortedHandler } = m
@@ -83,6 +89,7 @@ export class FastApi {
         }
       })
     )
+
   }
 
   // @TODO couple factory method for easier to use with UwsServer

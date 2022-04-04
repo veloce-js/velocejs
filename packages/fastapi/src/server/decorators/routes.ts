@@ -2,7 +2,7 @@
 
 import { RouteMetaInfo, MetaDecorator } from '@velocejs/server/dist/types'
 import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/dist/constants'
-import { routeKey } from './routekey'
+import { routeKey, argsKey } from './routekey'
 
 
 // this is the inner decorator factory method
@@ -41,20 +41,20 @@ function routeDecoratorFactory(routeType: string): MetaDecorator {
 }
 
 // allow dev to define a raw handler - we don't do any processing
-export function RAW(route: string, path: string) {
+export function Raw(route: string, path: string) {
 
   return innerDecoratorFactory(RAW_TYPE, path, route)
 }
 
 // special decorator to create a serveStatic method
-export function SERVE_STATIC(path: string) {
+export function ServeStatic(path: string) {
 
   return innerDecoratorFactory(STATIC_TYPE, path)
 }
 
 // This must be run on the overload method in the sub-class
 // otherwise the meta data becomes empty
-export function PREPARE(
+export function Prepare(
   target: any,
   _: string, // propertyName is unused, just placeholder it
   descriptor: TypedPropertyDescriptor<(meta: RouteMetaInfo[]) => void>
@@ -66,27 +66,28 @@ export function PREPARE(
     if (!fn) {
       throw new Error(`Class method is undefined!`)
     }
-
-    return Reflect.apply(fn, this, [meta])
+    const validation = Reflect.getOwnMetadata(argsKey, target)
+    
+    return Reflect.apply(fn, this, [meta, validation])
   }
 }
 // alias to PREPARE
-export const MAIN = PREPARE
+export const Main = Prepare
 // making the decorators
-export const ANY = routeDecoratorFactory('any')
-export const GET = routeDecoratorFactory('get')
-export const POST = routeDecoratorFactory('post')
-export const PUT = routeDecoratorFactory('put')
-export const OPTIONS = routeDecoratorFactory('options')
-export const DEL = routeDecoratorFactory('del')
-export const PATCH = routeDecoratorFactory('patch')
-export const HEAD = routeDecoratorFactory('head')
+export const Any = routeDecoratorFactory('any')
+export const Get = routeDecoratorFactory('get')
+export const Post = routeDecoratorFactory('post')
+export const Put = routeDecoratorFactory('put')
+export const Options = routeDecoratorFactory('options')
+export const Del = routeDecoratorFactory('del')
+export const Patch = routeDecoratorFactory('patch')
+export const Head = routeDecoratorFactory('head')
 // TBC what these two for
 // export const CONNECT = routeDecoratorFactory('connect')
 // export const TRACE = routeDecoratorFactory('trace')
 
 // this decorator is going to pass as the onAbort handler
-export function ABORTED(type: string, path: string) {
+export function Aborted(type: string, path: string) {
 
   return (
     target: any,
@@ -103,10 +104,3 @@ export function ABORTED(type: string, path: string) {
     Reflect.defineMetadata(routeKey, existingRoutes, target)
   }
 }
-
-// just for testing
-/*
-export function TEST_META(...args: any[]) {
-  console.log(args)
-}
-*/
