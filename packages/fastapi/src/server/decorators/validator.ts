@@ -1,9 +1,8 @@
 // the new Validator decorator
 // import 'reflect-metadata'
 import { argsKey } from './routekey'
-
+import { ValidationEntry } from '../../types'
 /*
-
 @Validator([
   {
     name: 'paramName',
@@ -11,12 +10,9 @@ import { argsKey } from './routekey'
 
     ]
   },
-  
 ])
-
-
 */
-export function Validator(argMap: Array<any>) {
+export function Validator(argMap: Array<ValidationEntry>) {
 
   return (target: any, propertyName: string /*, descriptor: any */): void => {
     // using the reflect-metadata built-in key
