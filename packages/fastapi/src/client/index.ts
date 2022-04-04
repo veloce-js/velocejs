@@ -2,12 +2,21 @@
 import 'reflect-metadata'
 
 function logParamTypes(target : any, key : string) {
+
+  var t = Reflect.getMetadata("design:type", target, key);
+
+  console.log(`--> ${key} type: ${t.name}`)
+
   var types = Reflect.getMetadata("design:paramtypes", target, key)
 
-  console.log('types', types)
+  // console.log('types', types)
 
-  var s = types.map(a => a.name).join()
-  console.log(`${key} param types: ${s}`)
+  // var s = types.map(a => a.name).join()
+
+  // console.log(`${key} param types: ${s}`)
+  types.forEach(type => {
+    console.log(type.toString())
+  })
 
 }
 
