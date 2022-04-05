@@ -81,9 +81,14 @@ module.exports = function(plop) {
 
               return JSON.stringify(json, null, 2)
             }
-        }]
-      }
-
+        },
+        {
+          type: 'add',
+          template: join(root, '.plop', 'packages', 'README.tpl'),
+          path: join(root, 'packages', answers.sameAsProjectName ? answers.projectName : answers.directoryName, 'README.md')
+        }
+      ]
+    }
   })
 
 
