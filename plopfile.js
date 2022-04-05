@@ -47,6 +47,10 @@ module.exports = function(plop) {
     ],
     actions:
       function(answers) {
+        // prepare some vars
+        const projectRoot = join(root, 'packages', answers.sameAsProjectName ? answers.projectName : answers.directoryName)
+        const tmplRoot = join(root, '.plop', 'packages')
+
         return [
           // copy
           function(answer) {
@@ -60,7 +64,7 @@ module.exports = function(plop) {
               return Promise.resolve(`Directory ${dir} already exist! Aborted`)
             } else {
               const src = join(root, '.plop', 'packages')
-              const filter = (file) => !(file.indexOf('package.json.tpl') > -1)
+              const filter = (file) => !(file.indexOf('package.json.tpl') > -1) && !(file.indexOf('README.tpl') > -1)
 
               return fs.copy(src, dir, { filter })
                 .then(() => `New package ${camelCase(projectName)} created in packages/${directory}`)
@@ -70,26 +74,21 @@ module.exports = function(plop) {
           // update package.json
           {
             type: 'add',
-            template: join(root, '.plop', 'packages', 'package.json.tpl'),
-            path: join(root, 'packages', answers.sameAsProjectName ? answers.projectName : answers.directoryName, 'package.json'),
-            transform: function(file) {
-              const json = fs.readJsonSync(file)
-              json.name = [rootPkgJson.name, camelCase(answers.projectName)].join('/')
-              json.author = rootPkgJson.author
-              json.license = rootPkgJson.license
-              json.homepage = rootPkgJson.homepage
-
-              return JSON.stringify(json, null, 2)
-            }
-        },
-        {
-          type: 'add',
-          template: join(root, '.plop', 'packages', 'README.tpl'),
-          path: join(root, 'packages', answers.sameAsProjectName ? answers.projectName : answers.directoryName, 'README.md')
-        }
-      ]
-    }
+            templateFile: join(tmplRoot, 'package.json.tpl'),
+            path: join(projectRoot, 'package.json'),
+            data: {
+              name: [rootPkgJson.name, camelCase(answers.projectName)].join('/'),
+              author: rootPkgJson.author,
+              license: rootPkgJson.license,
+              homepage: rootPkgJson.homepage
+            },
+          },
+          {
+            type: 'add',
+            templateFile: join(tmplRoot, 'README.tpl'),
+            path: join(projectRoot, 'README.md')
+          }
+        ]
+      }
   })
-
-
 }
