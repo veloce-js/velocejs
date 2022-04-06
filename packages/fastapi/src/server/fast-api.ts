@@ -3,7 +3,7 @@ import {
   UwsServer,
   bodyParser,
   serveStatic
-} from '@velocejs/server'
+} from '@velocejs/server/src' // point to the source ts
 import {
   HttpResponse,
   HttpRequest,
@@ -11,7 +11,7 @@ import {
   UwsRouteSetup,
   UwsRouteHandler,
   UwsParsedResult
-} from '@velocejs/server/dist/types'
+} from '@velocejs/server/src/types' // point to the source ts 
 import {
   STATIC_TYPE,
   STATIC_ROUTE,
