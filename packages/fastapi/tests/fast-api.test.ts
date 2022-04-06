@@ -1,8 +1,8 @@
 // Testing the FastApi
 import test from 'ava'
-import { HttpResponse } from 'uWebSockets.js'
-import { FastApi, Get, Post, Raw, Aborted, Prepare, UwsServer } from '../src'
-import { UwsParsedResult } from '../src/types'
+import { UwsServer } from '@velocejs/server'
+import { HttpResponse,  UwsParsedResult } from '@velocejs/server/dist/types'
+import { FastApi, Get, Post, Raw, Aborted, Main } from '../dist'
 
 import Fetch from 'node-fetch'
 
@@ -13,7 +13,7 @@ const msg3 = `Hello this is completely raw handler`
 
 class MyApi extends FastApi {
 
-  @GET('/some-where')
+  @Get('/some-where')
   myFunc() {
     return msg1
   }
@@ -25,7 +25,7 @@ class MyApi extends FastApi {
   */
 
   // here we handle the result ourself
-  @GET('/custom-handler')
+  @Get('/custom-handler')
   myCustomFunc(params: UwsParsedResult): void {
     const { res } = params
 
@@ -33,7 +33,7 @@ class MyApi extends FastApi {
   }
 
 
-  @POST('/submit')
+  @Post('/submit')
   myPostFunc(params: UwsParsedResult) {
     // const json = JSON.parse(params.payload.toString())
     // 0.3.1 test the parsed json return
@@ -43,14 +43,14 @@ class MyApi extends FastApi {
   }
 
 
-  @RAW('any', '/fall-back-route')
+  @Raw('any', '/fall-back-route')
   myFallbackRoute(res: HttpResponse) {
 
     res.end(msg3)
   }
 
 
-  @PREPARE
+  @Main
   anything(...args: any[]) {
     Reflect.apply(super.run, this, args)
   }

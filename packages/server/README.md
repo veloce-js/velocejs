@@ -1,13 +1,19 @@
-# @veloce/server
+# @velocejs/server
 
-The core is using [uWebSocket.js]() with several additional helpers methods
+The package is built on top of [uWebSocket.js](https://github:uNetworking/uWebSockets.js). 
 
-## How to (Lower level code to DIY)
+## Installation
 
-The following examples using Typescript
+```sh
+$ npm i @velocejs/server
+```
 
-### createApp(opt?: AppOptions): TemplatedApp
-### shutdownServer(token: any)
+## How to
+
+All the examples using Typscript. We will start from the
+lower level code.
+
+### createApp(opt?: AppOptions): TemplatedApp AND shutdownServer(token: any)
 
 ```ts
 import { createApp, shutdownServer } from '@velocejs/server'
@@ -27,7 +33,7 @@ createApp()
 // now some time later if you need to gracefully shutdown your server
 shutdownServer(connectedSocket)
 ```
-If you pass the following object, then it will create a `SSLApp`
+If you pass the following configuration object, then it will create a `SSLApp`
 
 ```js
 {
@@ -49,7 +55,8 @@ createApp()
 
 #### Automatically determine port number
 
-You can let the server to decided which port number to use (very handy when you need to run multiple instance per CPU)
+You can let the server to decided which port number to use (very handy when you need to run multiple instance per CPU).
+All you have to do is to set the startup port to 0.
 
 ```ts
 import { createApp, getPort } from '@velocejs/server'
@@ -65,15 +72,17 @@ createApp()
   })
 ```
 
-### async readJsonAsync(res: HttpResponse): Promise<any>
-### writeJson(res: HttpResponse, json: any): void
+### async readJsonAsync(res: HttpResponse): Promise&lt;any&gt; and writeJson(res: HttpResponse, json: any): void
 
-Read the JSON from response
+Extract the JSON from the request using `readJsonAsync` and serve up your JSON using `writeJsonAsync` (It creates all the appropriate headers for you)
 
 ```ts
+// store the token for use later  
+let listenSocket: us_listen_socket = null
+// create app
 createApp()
   .post('/*', async (res: HttpResponse) => {
-    const json = await readJsonAsync(res)
+    const json: object = await readJsonAsync(res)
     // do your thing with your json
     writeJson(res, {OK: true})
   })
@@ -85,21 +94,19 @@ createApp()
   })
 ```
 
-### async serveStatic(path: string | Array<string>): void
+### async serveStatic(path: string | Array&lt;string&gt;): void
 
-It's not a good idea to use the node server to serve up static file,
-instead your should use your actual webserver (i.e. Nginx)
-but if you really need to, here it is for you to use.
+Serve up your static assets or your actual rendered HTML page etc.
 
 ```ts
-createApp()
+const app = createApp()
   .get('/assets/*', serveStatic('/path/to/assets'))
   .listen(port, token => {
     console.log("running")
   })
 ```
 
-All you have to do is the provide the `url`, and where your files are (you can pass array of directories), 
+All you have to do is the provide the `url`, and where your files are (you can pass array of directories),
 and `serveStatic` takes care of the rest.
 
 ## Higher level wrapper
@@ -111,7 +118,7 @@ This section will explain how to use the higher level code to construct your ser
 This is an all-in-one solution to create the (UWS) server  
 
 ```ts
-import { UwsServer, HttpResponse } from '@velocejs/server'
+import { UwsServer } from '@velocejs/server'
 
 const app: UwsServer = new UwsServer()
 // by default we randomly assign a port, see below for more info
@@ -133,7 +140,7 @@ Next will be all available public methods
 By default there is no output, if you pass `DEBUG=velocejs:server:uws-server-class` in your startup script
 then you will able to see a start-up message.
 
-Or you can overwrite it by overload this method
+Or you can overwrite it by using `onStart` setter:
 
 ```ts
 app.onStart = () => console.info(`My own message`)
@@ -155,7 +162,10 @@ interface UwsRouteSetup {
 }
 ```
 
-available `type` options are `any`, `get`, `post`, `put`, `options` ,`del`, `patch`, `head`, `connect`, `trace` and `ws` (websocket)
+available `type` options are `any`, `get`, `post`, `put`, `options` ,`del`, `patch`, `head`, `connect`, `trace`
+and `ws` (websocket)
+
+- `ws` is coming soon.
 
 #### UwsServer.shutdown(): void
 
@@ -202,13 +212,7 @@ $ HOST=0.0.0.0 node ./server-with-hostname.js
 
 ### (Class) FastApi
 
-As the name imply, this class let you build up your API in no time!
-
-**Documentation coming soon**
-
----
-
-**MORE TO COME**
+This project has moved to it's npm on it's own. Coming soon.
 
 ---
 

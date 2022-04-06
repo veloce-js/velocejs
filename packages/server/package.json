@@ -6,7 +6,9 @@
   "module": "dist/index.ts",
   "typings": "dist/types.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "index.d.ts"
   ],
   "scripts": {
     "test:ava": "ava",
@@ -24,7 +26,10 @@
     "ts": "node -r esbuild-register",
     "clean:dist": "rimraf ./dist",
     "build": "pnpm clean:dist && pnpm build:tsc",
-    "prepublishOnly": "pnpm build && pnpm test"
+    "prepublishOnly": "pnpm build && pnpm test",
+    "patch": "npm version patch",
+    "minor": "npm version minor",
+    "major": "npm version major"
   },
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "UNLICENSED",
