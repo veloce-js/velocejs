@@ -4,9 +4,11 @@
   "description": "Built on top of @velocejs/server to let you build your API in no time",
   "main": "dist/index.js",
   "module": "dist/index.ts",
-  "typings": "dist/types.d.ts",
+  "types": "dist/types.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "index.d.ts"
   ],
   "scripts": {
     "test:ava": "ava",
@@ -25,7 +27,7 @@
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "ISC",
   "dependencies": {
-    "@velocejs/server": "workspace:^0.5.0",
+    "@velocejs/server": "workspace:^0.5.1",
     "debug": "^4.3.4",
     "mime-types": "^2.1.35",
     "parse-multipart-data": "^1.2.1",
