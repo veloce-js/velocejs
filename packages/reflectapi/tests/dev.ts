@@ -1,16 +1,25 @@
 // not a ava test for dev only
 import 'reflect-metadata'
-import { extractNode } from '../src/capture'
+// import { extractNode } from '../src/capture'
 
 function Validator(config?: object) {
 
   return (source: any, propertyName: string, descriptor: any) => {
+
+    const paramtypes = Reflect.getOwnMetadata('design:paramtypes', source)
+
+    console.log('paramtypes', paramtypes)
+
+    console.log('descriptor', descriptor)
+
     const code = descriptor.value.toString()
-    extractNode(code, propertyName)
+
+    console.log('original source', code)
+    // extractNode(code, propertyName)
   }
 }
 
-
+// @PROBLEM - when the source code pass to ts-morph its already been transpire into Js instead of TS
 class SomeClass {
 
   // to make it as messy as possible

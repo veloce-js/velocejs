@@ -16,6 +16,11 @@ SourceFile (root)
 function getTree(node: any/* SourceFile */, astMap: any) {
 
   console.log(node.getKindName())
+  /*
+  const functions = node.getFunctions()
+
+  console.log(functions)
+  */
 
   node.forEachChild( (childNode: any) => {
     console.log('--->', childNode.getKindName())
@@ -31,10 +36,15 @@ function getTree(node: any/* SourceFile */, astMap: any) {
           console.log(arg.getType())
         })
         */
+
+
         astMap = getTree(childNode, astMap)
         break
       case 'CallExpression':
         const espNode = childNode.getExpression()
+
+
+
         /* return empty
         const typeArgs = childNode.getTypeArguments()
         console.log('typeArgs', typeArgs)
@@ -101,7 +111,7 @@ let indent = 0;
 function printTree(node) {
     console.log(new Array(indent + 1).join(' ') + node.getKindName());
     indent++;
-    node.forEachChild(printTree);
+    node.forEachChild(printTree)
     indent--;
 }
 
@@ -114,11 +124,14 @@ export function extractNode(code: string, fileName: string) {
     code
   )
 
+  console.log('source', code)
+
+/*
   sourceFile.forEachChild( (childNode: any) => {
     travel(childNode)
   })
+*/
 
-  /*
   printTree(sourceFile)
 
   console.log('-------------------------------------------------------------')
@@ -126,5 +139,5 @@ export function extractNode(code: string, fileName: string) {
   const astMap = getTree(sourceFile, {})
 
   console.log(astMap)
-  */
+
 }

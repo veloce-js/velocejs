@@ -1,8 +1,8 @@
 // default export
 export {
-  RAW,
-  ANY, GET, POST, PUT, OPTIONS, DEL, PATCH, HEAD,
-  PREPARE, MAIN, 
-  ABORTED,
-  SERVE_STATIC
+  Raw,
+  Any, Get, Post, Put, Options, Del, Patch, Head,
+  Prepare, Main,
+  Aborted,
+  ServeStatic,
 } from './routes'

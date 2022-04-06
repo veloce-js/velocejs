@@ -5,7 +5,7 @@ import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/dist/const
 import { routeKey, argsKey } from './routekey'
 
 
-// this is the inner decorator factory method
+// The inner decorator factory method
 function innerDecoratorFactory(type: string, path: string, routeType?: string) {
   // this is the actual api facing the class method
   return (target: any, propertyName: string) => {
@@ -67,7 +67,7 @@ export function Prepare(
       throw new Error(`Class method is undefined!`)
     }
     const validation = Reflect.getOwnMetadata(argsKey, target)
-    
+
     return Reflect.apply(fn, this, [meta, validation])
   }
 }

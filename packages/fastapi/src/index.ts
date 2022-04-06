@@ -2,9 +2,9 @@
 import 'reflect-metadata'
 export { FastApi } from './server/fast-api'
 export {
-  RAW,
-  ANY, GET, POST, PUT, OPTIONS, DEL, PATCH, HEAD,
-  PREPARE,
-  ABORTED,
-  SERVE_STATIC
+  Raw,
+  Any, Get, Post, Put, Options, Del, Patch, Head,
+  Prepare, Main,
+  Aborted,
+  ServeStatic,
 } from './server/decorators/index'
