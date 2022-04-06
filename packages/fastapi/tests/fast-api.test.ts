@@ -1,7 +1,7 @@
 // Testing the FastApi
 import test from 'ava'
-import { UwsServer } from '@velocejs/server'
-import { HttpResponse,  UwsParsedResult } from '@velocejs/server/dist/types'
+import { UwsServer } from '@velocejs/server/src'
+import { HttpResponse,  UwsParsedResult } from '@velocejs/server/src/types'
 import { FastApi, Get, Post, Raw, Aborted, Main } from '../dist'
 
 import Fetch from 'node-fetch'
@@ -10,19 +10,16 @@ const msg1 = `doing the route handling thing`
 const msg2 = `Here is my own message`
 const msg3 = `Hello this is completely raw handler`
 
-
 class MyApi extends FastApi {
 
   @Get('/some-where')
   myFunc() {
     return msg1
   }
-  /*
-  @ABORTED('get', '/some-where')
+  @Aborted('get', '/some-where')
   myFuncOnAborted(res) {
     console.log(`Just log something`)
   }
-  */
 
   // here we handle the result ourself
   @Get('/custom-handler')
