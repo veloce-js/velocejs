@@ -9,7 +9,8 @@
     "dist"
   ],
   "scripts": {
-    "test": "ava",
+    "test:ava": "ava",
+    "test": "pnpm build && pnpm test:ava",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
     "ts:check": "tsc -noEmit",
@@ -17,7 +18,10 @@
     "ts": "node -r esbuild-register",
     "clean:dist": "rimraf ./dist",
     "build": "pnpm clean:dist && pnpm build:tsc",
-    "prepublishOnly": "pnpm build && pnpm test"
+    "prepublishOnly": "pnpm build && pnpm test",
+    "patch": "npm version patch",
+    "minor": "npm version minor",
+    "major": "npm version major"
   },
   "author": "{{author}}",
   "license": "{{license}}",

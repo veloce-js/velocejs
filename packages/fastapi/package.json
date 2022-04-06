@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/fastapi",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Built on top of @velocejs/server to let you build your API in no time",
   "main": "dist/index.js",
   "module": "dist/index.ts",
@@ -22,7 +22,10 @@
     "ts-node": "ts-node",
     "ts-swc": "node ./swc.js",
     "clean:dist": "rimraf ./dist",
-    "prepublishOnly": "pnpm clean:dist && pnpm build:tsc && pnpm test"
+    "prepublishOnly": "pnpm clean:dist && pnpm build:tsc && pnpm test",
+    "patch": "npm version patch",
+    "minor": "npm version minor",
+    "major": "npm version major"
   },
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "ISC",
