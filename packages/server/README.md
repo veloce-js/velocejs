@@ -1,6 +1,6 @@
 # @velocejs/server
 
-The package is built on top of [uWebSocket.js](https://github:uNetworking/uWebSockets.js). 
+The package is built on top of [uWebSocket.js](https://github:uNetworking/uWebSockets.js).
 
 ## Installation
 
@@ -162,10 +162,7 @@ interface UwsRouteSetup {
 }
 ```
 
-available `type` options are `any`, `get`, `post`, `put`, `options` ,`del`, `patch`, `head`, `connect`, `trace`
-and `ws` (websocket)
-
-- `ws` is coming soon.
+available `type` options are `any`, `get`, `post`, `put`, `options` ,`del`, `patch`, `head`, `connect`, `trace`.
 
 #### UwsServer.shutdown(): void
 
