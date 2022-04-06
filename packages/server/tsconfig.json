@@ -22,7 +22,8 @@
     "sourceMap": false,
     "outDir": "./dist",
     "types": [
-      "node"
+      "node",
+      "./src/types.d.ts"
     ],
     "lib": [
       "esnext",

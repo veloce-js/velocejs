@@ -1,7 +1,8 @@
 // We now make it class to create the complete server
 import { AppOptions, TemplatedApp, RecognizedString, us_listen_socket } from './types'
-import { createApp, shutdownServer, getPort } from './base/create-app'
 import { UwsRouteSetup } from './base/interfaces'
+
+import { createApp, shutdownServer, getPort } from './base/create-app'
 import { SUPPORT_REST_ROUTES } from './constants'
 import debug from 'debug'
 // construct the debug fn

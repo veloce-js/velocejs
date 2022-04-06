@@ -4,7 +4,7 @@
   "description": "Server core using uWebsocket.js with additional helpers",
   "main": "dist/index.js",
   "module": "dist/index.ts",
-  "typings": "dist/types.d.ts",
+  "types": "dist/types.d.ts",
   "files": [
     "dist",
     "src",
