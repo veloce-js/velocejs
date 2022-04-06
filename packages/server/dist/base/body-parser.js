@@ -77,41 +77,39 @@ const isForm = (headers) => headers[constants_1.CONTENT_TYPE] !== undefined && h
 // check if it's a file upload form
 const isFile = (headers) => headers[constants_1.CONTENT_TYPE] !== undefined && headers[constants_1.CONTENT_TYPE].indexOf(constants_1.FILE_POST_HEADER) > -1;
 // parse inputs
-function bodyParser(res, req, onAborted) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
-        res.onAborted(() => {
-            onAborted ? Reflect.apply(onAborted, null, [res]) : debugFn('ABORTED');
-        });
-        // process the header
-        const headers = getHeaders(req);
-        const url = req.getUrl();
-        const query = req.getQuery();
-        const method = req.getMethod();
-        let params = {};
-        if (method === 'get') {
-            params = parseQuery(query);
-        }
-        // package it up
-        const body = { url, method, query, headers, params };
-        // we should only call this when the header is not GET?
-        return new Promise(resolver => {
-            (0, handle_upload_1.onDataHandler)(res, buffer => {
-                body.payload = buffer;
-                switch (true) {
-                    case isJson(headers):
-                        body.json = JSON.parse(buffer.toString());
-                        break;
-                    case isForm(headers):
-                        body.params = parseQuery(buffer.toString());
-                        break;
-                    case isFile(headers):
-                        body.params = parseMultipart(headers, buffer);
-                        break;
-                    default:
-                }
-                resolver(body);
-            });
+async function bodyParser(res, req, onAborted) {
+    // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
+    res.onAborted(() => {
+        onAborted ? Reflect.apply(onAborted, null, [res]) : debugFn('ABORTED');
+    });
+    // process the header
+    const headers = getHeaders(req);
+    const url = req.getUrl();
+    const query = req.getQuery();
+    const method = req.getMethod();
+    let params = {};
+    if (method === 'get') {
+        params = parseQuery(query);
+    }
+    // package it up
+    const body = { url, method, query, headers, params };
+    // we should only call this when the header is not GET?
+    return new Promise(resolver => {
+        (0, handle_upload_1.onDataHandler)(res, buffer => {
+            body.payload = buffer;
+            switch (true) {
+                case isJson(headers):
+                    body.json = JSON.parse(buffer.toString());
+                    break;
+                case isForm(headers):
+                    body.params = parseQuery(buffer.toString());
+                    break;
+                case isFile(headers):
+                    body.params = parseMultipart(headers, buffer);
+                    break;
+                default:
+            }
+            resolver(body);
         });
     });
 }

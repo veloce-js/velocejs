@@ -9,7 +9,9 @@
     "dist"
   ],
   "scripts": {
-    "test": "ava",
+    "test:ava": "ava",
+    "test": "pnpm build && pnpm test:ava",
+    "build": "pnpm clean:dist && pnpm build:tsc",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
     "ts:check": "tsc -noEmit",
@@ -39,6 +41,7 @@
     "esbuild": "^0.14.30",
     "esbuild-register": "^3.3.2",
     "eslint": "^8.12.0",
+    "node-fetch": "^3.2.3",
     "rimraf": "^3.0.2",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3"

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readJsonAsync = void 0;
-const tslib_1 = require("tslib");
 /**
  * Just to help get rip of that stupid TS warning
  * @param {array} args anything (mostly string)
@@ -13,41 +12,39 @@ function bconcat(args, str) {
     return str ? b.toString() : b;
 }
 // Reading buffer from response and return the json object
-function readJsonAsync(res) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolver, rejecter) => {
-            let buffer;
-            res.onData((ab, isLast) => {
-                let chunk = Buffer.from(ab);
-                if (isLast) {
-                    let json;
-                    if (buffer) {
-                        try {
-                            json = JSON.parse(bconcat([buffer, chunk], true)); // Buffer to string
-                        }
-                        catch (e) {
-                            res.close(); // Do we need to call close here?
-                            return rejecter(e);
-                        }
-                        return resolver(json);
+async function readJsonAsync(res) {
+    return new Promise((resolver, rejecter) => {
+        let buffer;
+        res.onData((ab, isLast) => {
+            let chunk = Buffer.from(ab);
+            if (isLast) {
+                let json;
+                if (buffer) {
+                    try {
+                        json = JSON.parse(bconcat([buffer, chunk], true)); // Buffer to string
                     }
-                    else {
-                        try {
-                            json = JSON.parse(chunk.toString());
-                        }
-                        catch (e) {
-                            res.close();
-                            return rejecter(e);
-                        }
+                    catch (e) {
+                        res.close(); // Do we need to call close here?
+                        return rejecter(e);
                     }
                     return resolver(json);
                 }
                 else {
-                    buffer = buffer ? bconcat([buffer, chunk]) : bconcat([chunk]);
+                    try {
+                        json = JSON.parse(chunk.toString());
+                    }
+                    catch (e) {
+                        res.close();
+                        return rejecter(e);
+                    }
                 }
-            });
-            res.onAborted(rejecter);
-        }); // end promise
-    });
+                return resolver(json);
+            }
+            else {
+                buffer = buffer ? bconcat([buffer, chunk]) : bconcat([chunk]);
+            }
+        });
+        res.onAborted(rejecter);
+    }); // end promise
 }
 exports.readJsonAsync = readJsonAsync;

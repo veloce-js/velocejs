@@ -23,12 +23,13 @@ export class FastApi {
 
   // store the UWS server instance as protected
   constructor(protected uwsInstance: UwsServer) {}
-  
+
   // using a setter to trigger series of things to do with the validation map
+  /*
   private set validationMap(validationMap: Array<any>) {
     console.log(validationMap)
   }
-
+  */
   // wrapper for the UwsServer create server method
   private createServer(routes: UwsRouteSetup[]) {
     this.uwsInstance.run(routes)
@@ -59,9 +60,9 @@ export class FastApi {
   }
 
   // Mapping all the string name to method and supply to UwsServer run method
-  public run(meta: RouteMetaInfo[], validation?: Array<any>): void {
+  public run(meta: RouteMetaInfo[] /*, validation?: Array<any> */): void {
     // do things with the validation
-    this.validationMap = validation
+    // this.validationMap = validation
     // run the server
     this.createServer(
       meta.map(m => {
@@ -89,7 +90,6 @@ export class FastApi {
         }
       })
     )
-
   }
 
   // @TODO couple factory method for easier to use with UwsServer

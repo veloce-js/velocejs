@@ -9,14 +9,15 @@ const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)(`velocejs:server:uws-server-class`);
 // main
 class UwsServer {
+    opts;
+    port = 0;
+    host = '';
+    token = '';
+    onStartFn = (url) => {
+        debugFn(`Server started at ${url}`);
+    };
     constructor(opts) {
         this.opts = opts;
-        this.port = 0;
-        this.host = '';
-        this.token = '';
-        this.onStartFn = (url) => {
-            debugFn(`Server started at ${url}`);
-        };
     }
     // overwrite the port number via the start up env
     get portNum() {

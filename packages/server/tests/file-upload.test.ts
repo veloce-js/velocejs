@@ -11,8 +11,8 @@ import {
   shutdownServer,
   uploadHandler,
   writeBufferToFile
-} from '../src'
-import { HttpResponse } from 'uWebSockets.js'
+} from '../dist'
+import { HttpResponse } from '../dist/types'
 
 let listenSocket: any = null
 

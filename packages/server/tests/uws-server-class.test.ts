@@ -1,6 +1,6 @@
 import test from 'ava'
-import { UwsServer, bodyParser } from '../src'
-import { HttpResponse, HttpRequest } from '../src/types'
+import { UwsServer, bodyParser } from '../dist'
+import { HttpResponse, HttpRequest } from '../dist/types'
 import Fetch from 'node-fetch'
 
 let app: UwsServer = null

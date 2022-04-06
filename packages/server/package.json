@@ -9,7 +9,8 @@
     "dist"
   ],
   "scripts": {
-    "test": "ava",
+    "test:ava": "ava",
+    "test": "pnpm build && pnpm test:ava",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
     "build:esr": "esbuild src/index.ts --platform=node --outfile=dist/index.js",

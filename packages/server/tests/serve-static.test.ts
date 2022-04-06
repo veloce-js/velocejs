@@ -1,6 +1,6 @@
 // testing the serveStatic
 import test from 'ava'
-import { UwsServer, serveStatic } from '../src'
+import { UwsServer, serveStatic } from '../dist'
 import Fetch from 'node-fetch'
 import { join } from 'path'
 

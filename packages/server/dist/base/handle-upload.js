@@ -6,10 +6,8 @@ const tslib_1 = require("tslib");
 const fs_1 = tslib_1.__importDefault(require("fs"));
 // @TODO this should be a higher level method that will take the
 // req mime-type handle the buffer then write to disk
-function handleUpload(res, req, dir, filename) {
-    return tslib_1.__awaiter(this, void 0, void 0, function* () {
-        console.log(res, req, dir, filename);
-    });
+async function handleUpload(res, req, dir, filename) {
+    console.log(res, req, dir, filename);
 }
 exports.handleUpload = handleUpload;
 // get the upload buffer from response
