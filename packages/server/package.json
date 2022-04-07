@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/server",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Server core using uWebsocket.js with additional helpers",
   "main": "dist/index.js",
   "module": "dist/index.ts",
@@ -10,6 +10,7 @@
     "src",
     "index.d.ts"
   ],
+  "homepage": "https://velocejs.com",
   "scripts": {
     "test:ava": "ava",
     "test": "pnpm build && pnpm test:ava",

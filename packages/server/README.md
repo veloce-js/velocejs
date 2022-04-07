@@ -109,6 +109,51 @@ const app = createApp()
 All you have to do is the provide the `url`, and where your files are (you can pass array of directories),
 and `serveStatic` takes care of the rest.
 
+### async bodyParser(res: HttpResponse, req: HttpRequest, onAborted?: () => void): Promise&lt;UwsRespondBody&gt;
+
+This will help you to parse the request input, and put into easier to use format.
+
+```ts
+const app = createApp()
+  .get('/*', async (res: HttpResponse, req: HttpRequest) => {
+    const result: UwsRespondBody = await bodyParser(
+      res,
+      req,
+      /* optional */ () => console.log(`something wrong`)
+    )
+    // do your thing with the result  
+  })
+  .listen(port, token => {
+    console.log("running")
+  })
+```
+
+The `result` is a `UwsRespondBody` type object with this signature:
+
+```ts
+type UwsRespondBody = {
+ url: string
+ method: string
+ query: string,
+ headers: StringPairObj
+ params: any,
+ payload?: any
+ json?: any
+}
+```
+
+Here are the detail:
+
+- url - the full url got called
+- method - how it was called (i.e. GET, POST etc)
+- query - the full query string (i.e. ?a=1&b=2)
+- headers - all the headers from this request
+- params - if the call is a GET, then you will get result parsed from the query (i.e. {a: 1, b: 2}) if its a POST then you get all the field in one object
+- payload - if you have file with this request, this is where you will find your `file: Buffer`
+- json - if you post a JSON to the route, here is where you will find it
+
+**@TODO** provide examples
+
 ## Higher level wrapper
 
 This section will explain how to use the higher level code to construct your server
@@ -127,11 +172,18 @@ app.run([
     type: 'any',
     path: '/*',
     handler: (res: HttpResponse) => {
+      res.onAborted(() => {
+        console.log(`server aborted`)
+      })
       res.end(`Hello`)
     }
   }
 ])
 ```
+
+Please note the `res.onAborted` if you don't provide one, and when something wrong happen with the server, the server will simply crash. If you provide one, then even the handler throw error, the server will keep on running.
+
+---
 
 Next will be all available public methods
 
