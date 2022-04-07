@@ -11,7 +11,7 @@ import {
 
 import { HttpResponse, HttpRequest } from 'uWebSockets.js'
 // import Fetch from 'node-fetch'
-import { sendFile } from './fixtures/send-file'
+import { sendFile } from './send-file'
 import { join } from 'path'
 import rimraf from 'rimraf'
 

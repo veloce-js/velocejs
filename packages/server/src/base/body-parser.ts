@@ -1,26 +1,4 @@
-// parse the input
-/*
-An HttpRequest is stack allocated and only accessible during the callback invocation.
-export interface HttpRequest {
-    // Returns the lowercased header value or empty string. //
-    getHeader(lowerCaseKey: RecognizedString) : string;
-    // Returns the parsed parameter at index. Corresponds to route. //
-    getParameter(index: number) : string;
-    // Returns the URL including initial /slash //
-    getUrl() : string;
-    // Returns the HTTP method, useful for "any" routes. //
-    getMethod() : string;
-    // Returns the raw querystring (the part of URL after ? sign) or empty string. //
-    getQuery() : string;
-    // Returns a decoded query parameter value or empty string. //
-    getQuery(key: string) : string;
-    // Loops over all headers. //
-    forEach(cb: (key: string, value: string) => void) : void;
-    // Setting yield to true is to say that this route handler did not handle the route, causing the router to continue looking for a matching route handler, or fail. //
-    setYield(yield: boolean) : HttpRequest;
-}
-*/
-
+// parse the input into easier to use format
 import { onDataHandler } from './handle-upload'
 import { parse, getBoundary } from 'parse-multipart-data'
 
@@ -54,27 +32,26 @@ export function getHeaders(req: HttpRequest) {
 function parseMultipart(headers: StringPairObj, body: Buffer): any {
   const boundary = getBoundary(headers[CONTENT_TYPE])
   if (boundary) {
-    console.log('boundary', boundary)
+    debugFn('boundary', boundary)
     const params = parse(body, boundary as string)
     if (Array.isArray(params) && params.length) {
+
       return params.map(param => {
-        if (!param.data && param.name && param.data) {
-          // repack this to adhere the web form format
+        if (param.name && param.data) {
           return {
-            name: param.name,
-            // although we know its buffer just in case
-            value: Buffer.from(param.data).toString()
+            [ param.name ]: Buffer.from(param.data).toString()
           }
         }
 
         return param // this will be the field with the data
       })
+      // repack it as key value pair
+      .reduce((a, b) => Object.assign(a, b))
     }
   }
 
   return {}
 }
-
 
 // check if the header 'Content-Type' is a json
 const isJson = (headers: StringPairObj): boolean => headers[CONTENT_TYPE] !== undefined && headers[CONTENT_TYPE].indexOf('json') > -1
@@ -111,7 +88,7 @@ export async function bodyParser(
       body.payload = buffer
       switch (true) {
         case isJson(headers):
-          body.json = JSON.parse(buffer.toString())
+          body.params = JSON.parse(buffer.toString())
           break;
         case isForm(headers):
           body.params = parseQuery(buffer.toString())

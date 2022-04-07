@@ -136,9 +136,8 @@ type UwsRespondBody = {
  method: string
  query: string,
  headers: StringPairObj
- params: any,
- payload?: any
- json?: any
+ params: any
+ payload?: Buffer
 }
 ```
 
@@ -148,9 +147,8 @@ Here are the detail:
 - method - how it was called (i.e. GET, POST etc)
 - query - the full query string (i.e. ?a=1&b=2)
 - headers - all the headers from this request
-- params - if the call is a GET, then you will get result parsed from the query (i.e. {a: 1, b: 2}) if its a POST then you get all the field in one object
-- payload - if you have file with this request, this is where you will find your `file: Buffer`
-- json - if you post a JSON to the route, here is where you will find it
+- params - if the call is a GET, then you will get result parsed from the query (i.e. {a: 1, b: 2}) if its a POST then you get all the field in one object; if you POST a json then the result json will be in this params
+- payload - this is the raw buffer received 
 
 **@TODO** provide examples
 
