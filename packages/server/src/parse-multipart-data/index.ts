@@ -104,6 +104,9 @@ export function getBoundary(header: string): string {
 }
 
 function process(part: Part): Input {
+
+  // console.log('part', part)
+
   // will transform this object:
   // { header: 'Content-Disposition: form-data; name="uploads[]"; filename="A.txt"',
   // info: 'Content-Type: text/plain',
@@ -125,26 +128,27 @@ function process(part: Part): Input {
     return o
   }
   const header = part.header.split(';')
-
   const filenameData = header[2]
   let input = {}
   if (filenameData) {
     input = obj(filenameData)
     const contentType = part.info.split(':')[1].trim()
+
     Object.defineProperty(input, 'type', {
       value: contentType,
       writable: true,
       enumerable: true,
       configurable: true
     })
-  } else {
-    Object.defineProperty(input, 'name', {
-      value: header[1].split('=')[1].replace(/"/g, ''),
-      writable: true,
-      enumerable: true,
-      configurable: true
-    })
   }
+  // should always process the name
+  Object.defineProperty(input, 'name', {
+    value: header[1].split('=')[1].replace(/"/g, ''),
+    writable: true,
+    enumerable: true,
+    configurable: true
+  })
+
 
   Object.defineProperty(input, 'data', {
     value: Buffer.from(part.part),
