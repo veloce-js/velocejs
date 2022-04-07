@@ -1,43 +1,46 @@
 // form
 import {
   UwsServer,
-  FastApi,
-  POST,
-  RAW,
-  PREPARE,
-  SERVE_STATIC,
   getHeaders,
-  getBoundary,
   bodyParser
-} from '../../src'
+} from '@velocejs/server'
 import {
   //UwsParsedResult,
   HttpRequest,
   HttpResponse,
-} from '../../src/types'
+} from '@velocejs/server/src/types'
 import { join } from 'path'
+import {
+  FastApi,
+  ServeStatic,
+  // Post,
+  Raw,
+  Prepare,
+} from '../../src'
 
 // we just the random port so just use open to open the page
 import open from 'open'
 
 class MyFormExample extends FastApi {
 
-  @RAW('post', '/submit')
+  @Raw('post', '/submit')
   async submitHandler(res: HttpResponse, req: HttpRequest): void {
 
     const result = await bodyParser(res, req)
+
+    // const result = getHeaders(req)
 
     console.log(result)
 
     res.end('got it see console')
   }
 
-  @SERVE_STATIC('/*')
+  @ServeStatic('/*')
   staticHandler(): string {
     return join(__dirname, 'httpdocs')
   }
 
-  @PREPARE
+  @Prepare
   startUp(...args: any[]) {
     Reflect.apply(super.run, this, args)
   }

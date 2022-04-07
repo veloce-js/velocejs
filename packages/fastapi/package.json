@@ -20,6 +20,7 @@
     "ts:check": "tsc -noEmit",
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",
+    "test:form": "pnpm ts -- ./examples/form/index.ts",
     "ts-node": "ts-node",
     "clean:dist": "rimraf ./dist",
     "prepublishOnly": "pnpm prepare:types && pnpm build && pnpm test",
@@ -46,6 +47,7 @@
     "esbuild-register": "^3.3.2",
     "eslint": "^8.12.0",
     "node-fetch": "^3.2.3",
+    "open": "^8.4.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3"
