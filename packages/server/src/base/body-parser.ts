@@ -81,14 +81,15 @@ function processFileArray(params: Array<any>): any {
                // from https://stackoverflow.com/questions/57379778/typescript-type-for-reduce
                .reduce<Record<string, any>>((a , b): any => {
                  switch (true) {
-                  case (a.name === undefined):
+                  case (isEmptyObj(a)):
                     return { [b.name]: b.value } // init
                   case (a[b.name] !== undefined):
-                    return {
-                      [a.name]: toArr(a.value).concat(toArr(b.value))
-                    }
+                    // console.log('concat here')
+                    return Object.assign(a , {
+                      [b.name]: toArr(a[b.name]).concat(toArr(b.value))
+                    })
                   default:
-                    return Object.assign({[a.name]: a.value}, {[b.name]: b.value})
+                    return Object.assign(a, {[b.name]: b.value})
                  }
                }, {})
 }
@@ -110,6 +111,11 @@ function processTextArray(params: Array<any>): any {
   )
   .reduce<Record<string, any>>((a, b) => Object.assign(a, b), {})
 }
+
+// check if the object is empty for the init run
+const isEmptyObj = (obj: any): boolean => (
+  obj && Object.keys(obj).length === 0 && obj.constructor === Object
+)
 
 // check if the header 'Content-Type' is a json
 const isJson = (headers: StringPairObj): boolean => (

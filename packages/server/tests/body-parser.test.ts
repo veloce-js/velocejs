@@ -29,14 +29,23 @@ test(`It should able to parse the array of files`, t => {
   t.truthy(result[0].name)
 })
 
-test.only(`Unit test the processFileArray method`, t => {
+test(`processFileArray should have the name field`, t => {
   const result1 = processParams(data1)
+  const name = 'fileKey'
+  t.truthy(result1[name].filename)
+})
+
+test(`processFileArray should able to merge files into array with same name key`, t => {
   const result2 = processParams(data2)
+  // const result3 = processParams(data3)
+  t.true(result2.fileData.length === 2)
+})
+
+test(`processFileArray should able to return different keys of array when encounter different array like key names`, t => {
+
   const result3 = processParams(data3)
 
-  console.log(result2)
-  // console.log(result3)
-
-  t.truthy(result1.fileKey.filename)
-
+  t.true(result3.file1.length === 1)
+  t.true(result3.file2.length === 2)
+  t.truthy(result3.input3)
 })
