@@ -3,7 +3,7 @@ import {
   UwsServer,
   getHeaders,
   bodyParser
-} from '@velocejs/server'
+} from '@velocejs/server/src'
 import {
   //UwsParsedResult,
   HttpRequest,
@@ -30,7 +30,7 @@ class MyFormExample extends FastApi {
 
     // const result = getHeaders(req)
 
-    console.log(result)
+    console.log('result', result)
 
     res.end('got it see console')
   }

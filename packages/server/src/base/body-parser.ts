@@ -1,15 +1,18 @@
 // parse the input into easier to use format
 import { onDataHandler } from './handle-upload'
-import { parse, getBoundary } from 'parse-multipart-data'
-
-import { HttpResponse, HttpRequest, UwsRespondBody, StringPairObj } from '../types'
+import { parse, getBoundary } from '../parse-multipart-data'
+import {
+  HttpResponse,
+  HttpRequest,
+  UwsRespondBody,
+  StringPairObj
+} from '../types'
 import {
   CONTENT_TYPE,
   DEFAULT_POST_HEADER,
   FILE_POST_HEADER,
   // BOUNDARY
 } from '../constants'
-
 import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser')
 
@@ -34,32 +37,78 @@ export function getHeaders(req: HttpRequest) {
 }
 
 // all-in-one to parse and post process the multipart-formdata input
-function parseMultipart(headers: StringPairObj, body: Buffer): any {
+export function parseMultipart(headers: StringPairObj, body: Buffer): any {
   const boundary = getBoundary(headers[CONTENT_TYPE])
   if (boundary) {
-    debugFn('boundary', boundary)
     const params = parse(body, boundary as string)
-
-    return params
-    /*
     if (Array.isArray(params) && params.length) {
-
-      return params.map(param => {
-        if (param.name && param.data) {
-          return {
-            [ param.name ]: Buffer.from(param.data).toString()
-          }
-        }
-
-        return param // this will be the field with the data
-      })
-      // repack it as key value pair
-      .reduce((a, b) => Object.assign(a, b))
+      return processParams(params)
     }
-    */
   }
 
   return {}
+}
+
+// export this for unit test
+export function processParams(params: Array<any>): any {
+
+  return Object.assign(
+    processFileArray(params),
+    processTextArray(params)
+  )
+}
+// wrapper method
+function toArr(value: any): Array<any> {
+  return Array.isArray(value) ? value : [value]
+}
+// see if its array like name such as data[]
+// we just discard whatever is inside, because its pointless to have this stupid name
+function takeApartName(name: string): Array<string | boolean> {
+  return (name.indexOf('[') > -1) ? [ name.split('[')[0], true ]
+                                  : [ name, false ] // return a tuple
+}
+// break it out from above for clearity
+function processFileArray(params: Array<any>): any {
+  return params.filter(param => param.filename && param.type)
+               .map(param => {
+                 const { name, type, filename, data } = param
+                 const [ strName, arr ] = takeApartName(name)
+                 const content = { type, filename, data }
+                 const value = arr ? [ content ] : content
+
+                 return { name: strName as string, value }
+               })
+               // from https://stackoverflow.com/questions/57379778/typescript-type-for-reduce
+               .reduce<Record<string, any>>((a , b): any => {
+                 switch (true) {
+                  case (a.name === undefined):
+                    return { [b.name]: b.value } // init
+                  case (a[b.name] !== undefined):
+                    return {
+                      [a.name]: toArr(a.value).concat(toArr(b.value))
+                    }
+                  default:
+                    return Object.assign({[a.name]: a.value}, {[b.name]: b.value})
+                 }
+               }, {})
+}
+
+function toBuffer(data: any): Buffer {
+
+  return Buffer.isBuffer(data) ? data : Buffer.from(data)
+}
+
+// when the result is simple text then we parse it to string not buffer
+function processTextArray(params: Array<any>): any {
+
+  return params
+    .filter(param => !param.filename && !param.type)
+    .map(param => (
+      // @TODO how to use the type info to return as number or other data type
+      { [param.name as string] : toBuffer(param.data).toString() }
+    )
+  )
+  .reduce<Record<string, any>>((a, b) => Object.assign(a, b), {})
 }
 
 // check if the header 'Content-Type' is a json
