@@ -16,7 +16,8 @@
     "push": "git push origin main && git push gh main",
     "clean": "rm -rf node_modules **/*/node_modules",
     "build:server": "pnpm -C ./packages/server build:tsc",
-    "plop": "plop"
+    "plop": "plop",
+    "update:pkg": "node ./update-devs.js"
   },
   "repository": {
     "type": "git",
@@ -34,6 +35,7 @@
     "esbuild": "^0.14.30",
     "esbuild-register": "^3.3.2",
     "fs-extra": "^10.0.1",
+    "glob": "^7.2.0",
     "lodash": "^4.17.21",
     "plop": "^3.0.5",
     "vuepress": "^1.9.7"
