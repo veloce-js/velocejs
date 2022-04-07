@@ -10,8 +10,9 @@ import {
   RouteMetaInfo,
   UwsRouteSetup,
   UwsRouteHandler,
-  UwsParsedResult
-} from '@velocejs/server/src/types' // point to the source ts 
+  // UwsParsedResult,// <-- this is no longer in use
+  UwsRespondBody
+} from '@velocejs/server/src/types' // point to the source ts
 import {
   STATIC_TYPE,
   STATIC_ROUTE,
@@ -20,9 +21,26 @@ import {
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
-
+  protected payload: UwsRespondBody | undefined
+  protected res: HttpResponse | undefined
+  protected req: HttpRequest | undefined
   // store the UWS server instance as protected
   constructor(protected uwsInstance: UwsServer) {}
+
+  // When we call the user provided method, we will pass them the payload.params pass instead of
+  // the whole payload, and we keep them in a temporary place, and destroy it once the call is over
+  private setTemp(payload: UwsRespondBody, res: HttpResponse, req: HttpRequest) {
+    this.payload = payload
+    this.res = res
+    this.req = req
+  }
+
+  // call this after the call finish
+  private unsetTemp() {
+    this.res = undefined
+    this.req = undefined
+    this.payload = undefined
+  }
 
   // using a setter to trigger series of things to do with the validation map
   /*
@@ -48,14 +66,26 @@ export class FastApi {
       }
       // process input
       const result = await bodyParser(res, req)
-      const extra = { res, req }
-      const payload: UwsParsedResult = Object.assign(result, extra)
-      const reply = Reflect.apply(fn, this, [ payload ])
+
+      this.setTemp(result, res, req)
+      // this is a bit tricky if there is a json result
+      // then it will be the first argument
+      const { params, json } = result
+      const args = new Array(json ? json : params)
+      // @TODO apply the valdiator here
+      // if there is an error then it will be the second parameter
+      
+      const reply = Reflect.apply(fn, this, args)
       // if the method return a result then we will handle it
       // otherwise we assume the dev handle it in their method
       if (reply) {
         res.end(reply)
       }
+      // now we destroy the temp stuff
+      // we wrap this in a set timeout is a node.js thing to create a nextTick effect
+      setTimeout(() => {
+        this.unsetTemp()
+      }, 0)
     }
   }
 
