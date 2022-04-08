@@ -26,9 +26,6 @@
   "author": "NEWBRAN LTD &amp; TO1SOURCE",
   "license": "ISC",
   "homepage": "https://velocejs.com",
-  "dependencies": {
-
-  },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
     "@types/node": "^17.0.23",
@@ -39,7 +36,8 @@
     "esbuild-register": "^3.3.2",
     "eslint": "^8.12.0",
     "rimraf": "^3.0.2",
-    "typescript": "^4.6.3"
+    "typescript": "^4.6.3",
+    "vue": "^3.2.31"
   },
   "ava": {
     "verbose": true,
