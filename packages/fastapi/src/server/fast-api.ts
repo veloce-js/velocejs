@@ -7,12 +7,14 @@ import {
 import {
   HttpResponse,
   HttpRequest,
-  RouteMetaInfo,
   UwsRouteSetup,
   UwsRouteHandler,
   // UwsParsedResult,// <-- this is no longer in use
   UwsRespondBody
 } from '@velocejs/server/src/types' // point to the source ts
+import {
+  RouteMetaInfo
+} from '../types'
 import {
   STATIC_TYPE,
   STATIC_ROUTE,
@@ -24,6 +26,10 @@ export class FastApi {
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
   protected req: HttpRequest | undefined
+  // this will be storing the write queue
+  protected headerQueue: Array<{key: string, value: string}> = []
+  protected statusQueue = ''
+  
   // store the UWS server instance as protected
   constructor(protected uwsInstance: UwsServer) {}
 
@@ -70,11 +76,10 @@ export class FastApi {
       this.setTemp(result, res, req)
       // this is a bit tricky if there is a json result
       // then it will be the first argument
-      const { params, json } = result
-      const args = new Array(json ? json : params)
+      const { params } = result
+      const args = [ params ]
       // @TODO apply the valdiator here
       // if there is an error then it will be the second parameter
-      
       const reply = Reflect.apply(fn, this, args)
       // if the method return a result then we will handle it
       // otherwise we assume the dev handle it in their method
@@ -122,8 +127,16 @@ export class FastApi {
     )
   }
 
+  /**
+    Using the corking feature to write everything in one go
+
+    res.cork(() => {
+      res.writeStatus("200 OK").writeHeader("Some", "Value").write("Hello world!");
+    });
+  **/
+
+
   // @TODO couple factory method for easier to use with UwsServer
-  /*
   private createSetHeader(res: HttpResponse) {
 
     return (key: string, value: string) => {
@@ -133,9 +146,8 @@ export class FastApi {
 
   private createSetStatus(res: HttpResponse) {
 
-    return () => {
-      res.writeStatus()
+    return (status: string | number) => {
+      res.writeStatus(status as string)
     }
   }
-  */
 }
