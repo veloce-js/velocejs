@@ -2,7 +2,8 @@
 import {
   UwsServer,
   bodyParser,
-  serveStatic
+  serveStatic,
+  lookupStatus
 } from '@velocejs/server/src' // point to the source ts
 import {
   HttpResponse,
@@ -19,7 +20,10 @@ import {
   STATIC_TYPE,
   STATIC_ROUTE,
   RAW_TYPE
-} from '@velocejs/server/dist/constants'
+} from '@velocejs/server/src/constants'
+import {
+  C200
+} from '@velocejs/server/src/status'
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
@@ -28,7 +32,7 @@ export class FastApi {
   protected req: HttpRequest | undefined
   // this will be storing the write queue
   protected headerQueue: Array<{key: string, value: string}> = []
-  protected statusCode = ''
+  protected statusCode = C200
 
   // store the UWS server instance as protected
   constructor(protected uwsInstance: UwsServer) {}
@@ -73,6 +77,8 @@ export class FastApi {
       // process input
       const result = await bodyParser(res, req)
 
+      console.log('bodyParser', result)
+
       this.setTemp(result, res, req)
       // this is a bit tricky if there is a json result
       // then it will be the first argument
@@ -81,16 +87,18 @@ export class FastApi {
       // @TODO apply the valdiator here
       // if there is an error then it will be the second parameter
       const reply = Reflect.apply(fn, this, args)
-      // if the method return a result then we will handle it
-      // otherwise we assume the dev handle it in their method
-      if (reply) {
-        res.end(reply)
-      }
       // now we destroy the temp stuff
       // we wrap this in a set timeout is a node.js thing to create a nextTick effect
       setTimeout(() => {
         this.unsetTemp()
       }, 0)
+      // if the method return a result then we will handle it
+      // otherwise we assume the dev handle it in their method
+      if (reply) {
+        // res.cork(() => {
+          res.end(reply)
+        // })
+      }
     }
   }
 
@@ -135,19 +143,23 @@ export class FastApi {
     });
   **/
 
-
   // @TODO couple factory method for easier to use with UwsServer
-  private createSetHeader(res: HttpResponse) {
+  protected writeHeader(key: string, value: string): void {
+    this.headerQueue.push({ key, value })
+  }
 
-    return (key: string, value: string) => {
-      res.writeHeader()
+  protected writeStatus(status: string | number): void {
+    const _status = lookupStatus(status)
+    if (!_status) {
+      throw new Error(`${status} is not a correct HTTP response code`)
     }
   }
 
-  private createSetStatus(res: HttpResponse) {
-
-    return (status: string | number) => {
-      res.writeStatus(status as string)
-    }
+  protected end(payload: any): void {
+    this.res?.cork(() => {
+      const res = this.res?.writeStatus(this.statusCode)
+      this.headerQueue.forEach(header => res?.writeHeader(header.key, header.value))
+      this.res?.end(payload)
+    })
   }
 }

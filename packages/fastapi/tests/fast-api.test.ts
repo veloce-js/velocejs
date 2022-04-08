@@ -17,7 +17,7 @@ class MyApi extends FastApi {
     return msg1
   }
   @Aborted('get', '/some-where')
-  myFuncOnAborted(res) {
+  myFuncOnAborted() {
     console.log(`Just log something`)
   }
 
@@ -91,7 +91,7 @@ test(`Should able to respond with their own custom method`, async (t) => {
 })
 
 
-test(`Testing the post method handler`, async (t) => {
+test.only(`Testing the post method handler`, async (t) => {
   t.plan(1)
   const todo = {name: 'John', value: 'something'}
 
