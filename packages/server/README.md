@@ -143,14 +143,59 @@ type UwsRespondBody = {
 
 Here are the detail:
 
-- url - the full url got called
-- method - how it was called (i.e. GET, POST etc)
-- query - the full query string (i.e. ?a=1&b=2)
-- headers - all the headers from this request
-- params - if the call is a GET, then you will get result parsed from the query (i.e. {a: 1, b: 2}) if its a POST then you get all the field in one object; if you POST a json then the result json will be in this params
-- payload - this is the raw buffer received 
+- `url` - the full url got called
+- `method` - how it was called (i.e. GET, POST etc)
+- `query` - the full query string (i.e. ?a=1&b=2)
+- `headers` - all the headers from this request
+- `params` - if the call is a GET, then you will get result parsed from the query (i.e. {a: 1, b: 2}) if its a POST then you get all the field in one object; if you POST a json then the result json will be in this params
+- `payload` - this is the raw buffer received
 
-**@TODO** provide examples
+### Body Parser further explain
+
+It doesn't just process your POST form or GET url parameters. It also handles files upload at the same time.
+
+For example, you have a form with `multipart/form-data` header (default for HTML file form)
+with the the follow name / value pair
+
+```
+  name: John Doe
+  email: john@doe.com
+  file[]: avatar.jpg
+  file[]: avatar-alternative.png
+```
+
+This example form setup has two text fields, and multiple files upload field.
+Once it got to the server and processed `bodyParser`:
+
+```ts
+// server setup etc
+  .post('/setup-user', async (res: HttpResponse, req: HttpRequest): void => {
+    const result = await bodyParser(res, req, () => console.error(`Server aborted!`))
+    // now inside your params you will get the following data
+    // THIS IS FAKE CODE!!!! DON'T COPY AND PASTED!!!! //
+    result.params = {
+      name: 'John Doe',
+      email: 'john@doe.com',
+      file: [
+        {
+          type: 'image/jpeg',
+          filename: 'avatar.jpg',
+          data: <Buffer>
+        },
+        {
+          type: 'image/png',
+          filename: 'avatar-alternative.png',
+          data: <Buffer>
+        },
+      ]
+
+    }
+    res.end('OK')
+  })
+```
+
+Now you can take that input and do what you want with it. Please note, we don't store that uploaded file anywhere
+so you have to deal with it yourself.
 
 ## Higher level wrapper
 
@@ -236,8 +281,7 @@ Assume that you have put everything in a file call `server.js`
 $ PORT=3456 node ./server.js
 ```
 
-Or if you just **stick with the randomly port**, you can use this method
-to retrieve the port number.
+Or if you just **stick with the randomly port**, you can use this method to retrieve the port number.
 
 ```ts
 const port = app.getPortNum()
@@ -246,7 +290,7 @@ const port = app.getPortNum()
 #### hostName setter and getter
 
 You can also specify a host name, default is `localhost`.
-You can two ways to overwrite this:
+There are two ways to overwrite this:
 
 1. `hostName` setter
 2. using the node environment variable `HOST` (this will have higher priority)
@@ -257,9 +301,11 @@ Assume that you have put everything in a file call `server-with-hostname.js`
 $ HOST=0.0.0.0 node ./server-with-hostname.js
 ```
 
-### (Class) FastApi
+---
 
-This project has moved to it's npm on it's own. Coming soon.
+## (Class) FastApi
+
+This project has moved to it's npm. Coming soon.
 
 ---
 

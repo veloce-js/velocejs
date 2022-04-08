@@ -52,8 +52,7 @@ export {
 } from './base/interfaces'
 // export the types
 export {
-  RouteMetaInfo,
-  MetaDecorator,
   StringPairObj,
   UwsRespondBody,
+  UwsBodyParserFileEntry,
 } from './base/type'
