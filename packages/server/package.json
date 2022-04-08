@@ -28,7 +28,9 @@
     "ts": "node -r esbuild-register",
     "clean:dist": "rimraf ./dist",
     "build": "pnpm clean:dist && pnpm build:tsc && pnpm prepare:types",
+    "update:version": "node ../../update-devs.js server",
     "prepublishOnly": "pnpm build && pnpm test",
+    "postpublish": "pnpm update:version",
     "patch": "npm version patch",
     "minor": "npm version minor",
     "major": "npm version major"

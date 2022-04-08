@@ -25,7 +25,7 @@ glob(join(pkgsDir, '**!(node_modules)', 'package.json'), function(err, files) {
   const targetPkgJson = fs.readJsonSync(targetPkg)
   const { version } = targetPkgJson
 
-  console.log('Update to', version)
+  console.log('Update to', pkgName, version)
   const updateVersion = `workspace:^${version}`
 
   Promise.all(
