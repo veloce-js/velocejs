@@ -10,8 +10,7 @@ import {
 import {
   CONTENT_TYPE,
   DEFAULT_POST_HEADER,
-  FILE_POST_HEADER,
-  // BOUNDARY
+  FILE_POST_HEADER
 } from '../constants'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser')

@@ -4,17 +4,6 @@
 export type StringPairObj = {
   [key: string]: string
 }
-
-export type RouteMetaInfo = {
-  propertyName: string
-  path: string
-  type: string
-  onAbortedHandler?: string
-  [key: string]: any // so we can store more info if we need to
-}
-
-export type MetaDecorator = (path: string) => (target: any, propertyName: string) => void
-
 // Typing the result object
 export type UwsRespondBody = {
   url: string
@@ -23,4 +12,10 @@ export type UwsRespondBody = {
   headers: StringPairObj
   params: any,
   payload?: any
+}
+// this is the key values from the bodyParser
+export type UwsBodyParserFileEntry = {
+  type: string
+  filename: string
+  data: Buffer
 }
