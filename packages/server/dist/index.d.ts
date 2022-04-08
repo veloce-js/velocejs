@@ -7,4 +7,5 @@ export { rateLimit } from './base/rate-limit';
 export { handleUpload, uploadHandler, onDataHandler, writeBufferToFile } from './base/handle-upload';
 export { bodyParser, parseQuery, getHeaders } from './base/body-parser';
 export { UwsServer } from './uws-server-class';
+export { lookupStatus } from './status';
 export default uWS;

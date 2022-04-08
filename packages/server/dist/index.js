@@ -2,7 +2,7 @@
 // group all the Types Interfaces export here
 // everything from the uWebSocket.js
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UwsServer = exports.getHeaders = exports.parseQuery = exports.bodyParser = exports.writeBufferToFile = exports.onDataHandler = exports.uploadHandler = exports.handleUpload = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createApp = void 0;
+exports.lookupStatus = exports.UwsServer = exports.getHeaders = exports.parseQuery = exports.bodyParser = exports.writeBufferToFile = exports.onDataHandler = exports.uploadHandler = exports.handleUpload = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createApp = void 0;
 const tslib_1 = require("tslib");
 // Main entry point
 const uWebSockets_js_1 = tslib_1.__importDefault(require("uWebSockets.js"));
@@ -30,6 +30,8 @@ Object.defineProperty(exports, "getHeaders", { enumerable: true, get: function (
 // extended
 var uws_server_class_1 = require("./uws-server-class");
 Object.defineProperty(exports, "UwsServer", { enumerable: true, get: function () { return uws_server_class_1.UwsServer; } });
+var status_1 = require("./status");
+Object.defineProperty(exports, "lookupStatus", { enumerable: true, get: function () { return status_1.lookupStatus; } });
 // default export
 exports.default = uWebSockets_js_1.default;
 // named

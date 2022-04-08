@@ -28,8 +28,8 @@ export class FastApi {
   protected req: HttpRequest | undefined
   // this will be storing the write queue
   protected headerQueue: Array<{key: string, value: string}> = []
-  protected statusQueue = ''
-  
+  protected statusCode = ''
+
   // store the UWS server instance as protected
   constructor(protected uwsInstance: UwsServer) {}
 

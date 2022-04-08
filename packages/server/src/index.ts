@@ -25,7 +25,7 @@ export {
 } from './base/body-parser'
 // extended
 export { UwsServer } from './uws-server-class'
-
+export { lookupStatus } from './status'
 // default export
 export default uWS
 // named
