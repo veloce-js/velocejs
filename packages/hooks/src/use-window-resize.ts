@@ -2,7 +2,7 @@
  * This factory method will return several properties and methods
  *
  */
-export function useWindowResizeFactory(ref) {
+export function useWindowResizeFactory(ref: any): object {
   const width = ref(window.innerWidth)
   const height = ref(window.innerHeight)
   const handleResize = (): void => {
