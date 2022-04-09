@@ -5,7 +5,7 @@ import { HttpResponse } from '../dist/types'
 
 const port = 9002
 const payload = {data: [1,2,3]}
-const reply = {OK: true}
+const reply = {OK: true, l: 0}
 
 let listenSocket: any = null
 // clean up otherwise ava throw error
@@ -14,13 +14,16 @@ test.after(() => {
 })
 
 test(`Testing the readJsonAsync method`, async (t) => {
-  t.plan(1)
+  t.plan(2)
 
   createApp()
     .post('/*', async (res: HttpResponse) => {
       const result = await readJsonAsync(res)
       // test (1)
       t.deepEqual(result, payload)
+
+      reply.l = payload.data.length
+
       writeJson(res, reply)
     })
     .listen(port, (token: any) => {
@@ -33,5 +36,8 @@ test(`Testing the readJsonAsync method`, async (t) => {
     method: 'post',
     body: JSON.stringify(payload),
     headers: {'Content-Type': 'application/json'}
-  })
+  }).then(res => res.json())
+    .then(json => {
+      t.is(json.l , 3)
+    })
 })
