@@ -2,12 +2,7 @@
 import test from 'ava'
 import { UwsServer } from '@velocejs/server/src'
 import Fetch from 'node-fetch'
-import { MyApi } from './fixtures/my-api'
-
-const msg1 = `doing the route handling thing`
-const msg2 = `Here is my own message`
-const msg3 = `Hello this is completely raw handler`
-
+import { MyApi, msg1, msg2, msg3 } from './fixtures/my-api'
 
 let api: MyApi
 let app: UwsServer
@@ -46,20 +41,19 @@ test(`Should able to respond with their own custom method`, async (t) => {
 })
 
 
-test.only(`Testing the post method handler`, async (t) => {
+test(`Testing the post method handler`, async (t) => {
   t.plan(1)
   const todo = {name: 'John', value: 'something'}
   const endpoint = `${hostname}/submit`
 
-  console.log('calling', endpoint)
   await Fetch(endpoint, {
     method: 'POST',
     body: JSON.stringify(todo),
     headers: { 'Content-Type': 'application/json' }
   })
-  .then(res => res.text())
+  .then(res => res.json())
   .then(text => {
-    t.is(text, `John is doing something`)
+    t.deepEqual(text, {msg: `John is doing something`})
   })
 
 })

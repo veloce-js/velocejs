@@ -3,7 +3,9 @@ import {
   UwsServer,
   bodyParser,
   serveStatic,
-  lookupStatus
+  lookupStatus,
+  getCorkWriter,
+  writeJson
 } from '@velocejs/server/src' // point to the source ts
 import {
   HttpResponse,
@@ -19,7 +21,8 @@ import {
 import {
   STATIC_TYPE,
   STATIC_ROUTE,
-  RAW_TYPE
+  RAW_TYPE,
+  IS_OTHER
 } from '@velocejs/server/src/constants'
 import {
   C200
@@ -39,7 +42,7 @@ export class FastApi {
 
   // When we call the user provided method, we will pass them the payload.params pass instead of
   // the whole payload, and we keep them in a temporary place, and destroy it once the call is over
-  private setTemp(payload: UwsRespondBody, res: HttpResponse, req: HttpRequest) {
+  private setTemp(payload: UwsRespondBody, res: HttpResponse /*, req?: HttpRequest */) {
     this.payload = payload
     this.res = res
     // this.req = req
@@ -67,10 +70,9 @@ export class FastApi {
 
   // transform the string name to actual method
   private mapMethodToHandler(propertyName: string, onAbortedHandler?: string): UwsRouteHandler {
-    const fn = this[propertyName]
+    const handler = this[propertyName]
 
     return async (res: HttpResponse, req: HttpRequest) => {
-      console.log('GOT CALLED')
       const args1: Array<any> = [res, req]
       // add onAbortedHandler
       if (onAbortedHandler) {
@@ -78,28 +80,37 @@ export class FastApi {
       }
       // process input
       const result = await Reflect.apply(bodyParser, null, args1)
-      console.log('bodyParser', result)
-
-      this.setTemp(result, res, req)
       // this is a bit tricky if there is a json result
       // then it will be the first argument
-      const { params } = result
+      const { params, type } = result
       const args2 = [ params ]
+      this.setTemp(result, res)
       // @TODO apply the valdiator here
       // if there is an error then it will be the second parameter
-      const reply = await Reflect.apply(fn, this, args2)
+      let reply
+      try {
+        reply = await Reflect.apply(handler, this, args2)
+      } catch (e) {
+        console.log(`ERROR with`, propertyName, e)
+        res.close()
+      } finally {
+        setTimeout(() => {
+          this.unsetTemp()
+        }, 0)
+      }
       // now we destroy the temp stuff
       // we wrap this in a set timeout is a node.js thing to create a nextTick effect
       // if the method return a result then we will handle it
       // otherwise we assume the dev handle it in their method
       if (reply) {
-        // res.cork(() => {
-          res.end(reply)
-        // })
+        switch (type) {
+          case IS_OTHER:
+            getCorkWriter(res)(reply+'')
+            break
+          default:
+            writeJson(res, reply)
+        }
       }
-      // setTimeout(() => {
-      this.unsetTemp()
-      // }, 0)
     }
   }
 
@@ -134,11 +145,15 @@ export class FastApi {
         }
       })
     )
-    
+
     return new Promise((resolver) => {
       this.uwsInstance.onStart = resolver
       this.uwsInstance.start()
     })
+  }
+
+  public shutdown() {
+    this.uwsInstance.shutdown()
   }
 
   /**

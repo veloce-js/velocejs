@@ -3,6 +3,10 @@
 import { HttpResponse,  UwsParsedResult } from '@velocejs/server/src/types'
 import { FastApi, Get, Post, Raw, Aborted, Main } from '../../src'
 
+export const msg1 = `doing the route handling thing`
+export const msg2 = `Here is my own message`
+export const msg3 = `Hello this is completely raw handler`
+
 export class MyApi extends FastApi {
 
   @Get('/some-where')
@@ -16,20 +20,16 @@ export class MyApi extends FastApi {
 
   // here we handle the result ourself
   @Get('/custom-handler')
-  myCustomFunc(params: UwsParsedResult): void {
-    const { res } = params
+  myCustomFunc( /* params: UwsParsedResult */ ): void {
 
-    res.end(msg2)
+    this.res.end(msg2)
   }
 
 
   @Post('/submit')
-  myPostFunc(result: UwsParsedResult) {
-    // const json = JSON.parse(params.payload.toString())
-    // 0.3.1 test the parsed json return
-    const { params } = result
-
-    return `${params.name} is doing ${params.value}`
+  myPostFunc(params: UwsParsedResult) {
+    // console.log('hanlder got call with', params)
+    return {msg: `${params.name} is doing ${params.value}`}
   }
 
 
