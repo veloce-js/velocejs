@@ -12,6 +12,7 @@ export const RAW_TYPE = 'raw'
 export const CONTENT_TYPE = 'content-type'
 export const DEFAULT_POST_HEADER = 'application/x-www-form-urlencoded'
 export const FILE_POST_HEADER = 'multipart/form-data'
+export const JSON_HEADER = 'application/json'
 
 export const BOUNDARY = 'boundary'
 
