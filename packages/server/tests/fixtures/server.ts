@@ -10,7 +10,7 @@ import {
 } from '../../'
 
 const app = new UwsServer()
-
+app.autoStart = false
 app.run([
   {
     type: 'any',

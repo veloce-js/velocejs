@@ -1,7 +1,10 @@
-import { AppOptions, RecognizedString } from './types';
+import { AppOptions, TemplatedApp, RecognizedString } from './types';
 import { UwsRouteSetup } from './base/interfaces';
 export declare class UwsServer {
     private opts?;
+    autoStart: boolean;
+    running: boolean;
+    protected app: TemplatedApp | undefined;
     private port;
     private host;
     private token;
@@ -15,6 +18,7 @@ export declare class UwsServer {
     onStartCb(): void;
     run(handlers: UwsRouteSetup[]): void;
     private listen;
+    start(): void;
     shutdown(): void;
     getPortNum(): number;
 }

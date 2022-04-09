@@ -10,6 +10,10 @@ const debugFn = (0, debug_1.default)(`velocejs:server:uws-server-class`);
 // main
 class UwsServer {
     opts;
+    autoStart = true;
+    running = false;
+    // privates
+    app;
     port = 0;
     host = '';
     token = '';
@@ -67,13 +71,19 @@ class UwsServer {
             }
         });
         // run it
-        this.listen(app);
+        if (this.autoStart) {
+            this.listen(app);
+        }
+        else {
+            this.app = app;
+        }
     }
     // Taking the app.listen out because there are more options to deal with now
     listen(app) {
         const cb = (token) => {
             if (token) {
                 this.token = token;
+                this.running = true;
                 this.onStartCb();
             }
             else {
@@ -86,9 +96,16 @@ class UwsServer {
         }
         Reflect.apply(app.listen, app, params);
     }
+    // manually start the server
+    start() {
+        if (!this.running) {
+            this.listen(this.app);
+        }
+    }
     // gracefully shutdown the server
     shutdown() {
         (0, create_app_1.shutdownServer)(this.token);
+        this.running = false;
     }
     // get the port number if it's randomly assign port
     getPortNum() {
