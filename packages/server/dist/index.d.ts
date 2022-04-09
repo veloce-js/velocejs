@@ -1,7 +1,7 @@
 import uWS from 'uWebSockets.js';
 export { createApp, shutdownServer, getPort } from './base/create-app';
 export { readJsonAsync } from './base/read-json-async';
-export { writeJson } from './base/write-json';
+export { writeJson, getCorkWriter } from './base/write-json';
 export { serveStatic } from './base/serve-static';
 export { rateLimit } from './base/rate-limit';
 export { handleUpload, uploadHandler, onDataHandler, writeBufferToFile } from './base/handle-upload';

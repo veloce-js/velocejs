@@ -125,15 +125,19 @@ async function bodyParser(res, req, onAborted) {
             body.payload = buffer;
             switch (true) {
                 case isJson(headers):
+                    body.type = constants_1.IS_JSON;
                     body.params = JSON.parse(buffer.toString());
                     break;
                 case isForm(headers):
+                    body.type = constants_1.IS_FORM;
                     body.params = parseQuery(buffer.toString());
                     break;
                 case isFile(headers):
+                    body.type = constants_1.IS_MULTI;
                     body.params = parseMultipart(headers, buffer);
                     break;
                 default:
+                    body.type = constants_1.IS_OTHER;
             }
             resolver(body);
         });

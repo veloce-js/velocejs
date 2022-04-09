@@ -25,12 +25,7 @@ exports.uploadHandler = uploadHandler;
 function onDataHandler(res, bufferHandler) {
     let data;
     res.onData((chunk, isLast) => {
-        /*
-        if (chunk.byteLength === 0 && isLast) { // nothing
-          bufferHandler(null)
-        }
-        */
-        let _chunk = Buffer.from(chunk);
+        const _chunk = Buffer.from(chunk);
         data = data ? Buffer.concat([data, _chunk]) : Buffer.concat([_chunk]);
         if (isLast) {
             bufferHandler(data);

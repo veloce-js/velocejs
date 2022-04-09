@@ -2,7 +2,7 @@
 // group all the Types Interfaces export here
 // everything from the uWebSocket.js
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lookupStatus = exports.UwsServer = exports.getHeaders = exports.parseQuery = exports.bodyParser = exports.writeBufferToFile = exports.onDataHandler = exports.uploadHandler = exports.handleUpload = exports.rateLimit = exports.serveStatic = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createApp = void 0;
+exports.lookupStatus = exports.UwsServer = exports.getHeaders = exports.parseQuery = exports.bodyParser = exports.writeBufferToFile = exports.onDataHandler = exports.uploadHandler = exports.handleUpload = exports.rateLimit = exports.serveStatic = exports.getCorkWriter = exports.writeJson = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createApp = void 0;
 const tslib_1 = require("tslib");
 // Main entry point
 const uWebSockets_js_1 = tslib_1.__importDefault(require("uWebSockets.js"));
@@ -14,6 +14,7 @@ var read_json_async_1 = require("./base/read-json-async");
 Object.defineProperty(exports, "readJsonAsync", { enumerable: true, get: function () { return read_json_async_1.readJsonAsync; } });
 var write_json_1 = require("./base/write-json");
 Object.defineProperty(exports, "writeJson", { enumerable: true, get: function () { return write_json_1.writeJson; } });
+Object.defineProperty(exports, "getCorkWriter", { enumerable: true, get: function () { return write_json_1.getCorkWriter; } });
 var serve_static_1 = require("./base/serve-static");
 Object.defineProperty(exports, "serveStatic", { enumerable: true, get: function () { return serve_static_1.serveStatic; } });
 var rate_limit_1 = require("./base/rate-limit");
@@ -32,6 +33,8 @@ var uws_server_class_1 = require("./uws-server-class");
 Object.defineProperty(exports, "UwsServer", { enumerable: true, get: function () { return uws_server_class_1.UwsServer; } });
 var status_1 = require("./status");
 Object.defineProperty(exports, "lookupStatus", { enumerable: true, get: function () { return status_1.lookupStatus; } });
+// @TODO streaming
+// @TODO ws
 // default export
 exports.default = uWebSockets_js_1.default;
 // named

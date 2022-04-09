@@ -7,8 +7,9 @@ export declare type UwsRespondBody = {
     method: string;
     query: string;
     headers: StringPairObj;
-    params: any;
-    payload?: any;
+    params: object;
+    type?: string;
+    payload?: Buffer;
 };
 export declare type UwsBodyParserFileEntry = {
     type: string;
