@@ -3,9 +3,8 @@ import mime from 'mime-types'
 import fs from 'fs'
 import path from 'path'
 import { HttpResponse, HttpRequest } from '../types'
-import { DEFAULT_FILE } from '../constants'
+import { DEFAULT_FILE } from './base/constants'
 import debug from 'debug'
-
 const debugFn = debug('velocejs:server:serve-static')
 
 /**

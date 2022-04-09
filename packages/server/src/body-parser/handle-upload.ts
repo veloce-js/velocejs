@@ -1,6 +1,6 @@
 // return the upload Data
 import fs from 'fs'
-import { HttpResponse, HttpRequest } from '../types'
+import { HttpResponse, HttpRequest } from '../base/types'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser:handle-upload')
 // @TODO this should be a higher level method that will take the
@@ -38,22 +38,4 @@ export function onDataHandler(res: HttpResponse, bufferHandler: (b: Buffer | any
       bufferHandler(data)
     }
   })
-}
-
-// writing the Buffer to a file
-export function writeBufferToFile(buffer: Buffer, path: string, permission=0o666): boolean {
-  let fileDescriptor
-  try {
-    fileDescriptor = fs.openSync(path, 'w', permission)
-  } catch (e) {
-    fs.chmodSync(path, permission)
-    fileDescriptor = fs.openSync(path, 'w', permission)
-  }
-
-  if (fileDescriptor) {
-    fs.writeSync(fileDescriptor, buffer, 0, buffer.length, 0)
-    fs.closeSync(fileDescriptor)
-    return true
-  }
-  return false
 }

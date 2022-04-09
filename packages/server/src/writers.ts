@@ -1,9 +1,9 @@
 // from write-json and change the interface to be the same
 import { contentType } from 'mime-types'
 import fs from 'fs-extra'
-import { HttpResponse, StringPairObj, RecognizedString } from '../types'
-import { CONTENT_TYPE, JSON_HEADER, DEFAULT_MIME_TYPE } from '../constants'
-import { C200, lookupStatus } from '../status'
+import { HttpResponse, StringPairObj, RecognizedString } from './base/types'
+import { CONTENT_TYPE, JSON_HEADER, DEFAULT_MIME_TYPE } from './base/constants'
+import { C200, lookupStatus } from './base/status'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:writers')
 

@@ -1,5 +1,5 @@
 // This is based on the example from uWebsocket.js using Promise instead of callbacks
-import { HttpResponse } from '../types'
+import { HttpResponse } from './base/types'
 /**
  * Just to help get rip of that stupid TS warning
  * @param {array} args anything (mostly string)
@@ -16,7 +16,7 @@ export async function readJsonAsync(res: HttpResponse):  Promise<any> {
   return new Promise((resolver: (value: unknown) => void, rejecter: (reason?: any) => void) => {
     let buffer: any
     res.onData((ab: any, isLast: boolean) => {
-      let chunk = Buffer.from(ab)
+      const chunk = Buffer.from(ab)
       if (isLast) {
         let json: string
         if (buffer) {
