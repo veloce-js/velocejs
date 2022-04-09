@@ -18,11 +18,33 @@ export class UwsServer {
   private port = 0
   private host: RecognizedString = ''
   private token: us_listen_socket = ''
+
+  constructor(private opts?: AppOptions) {}
+  
+  // stock start function
   private onStartFn = (url: string): void => {
     debugFn(`Server started at ${url}`)
   }
 
-  constructor(private opts?: AppOptions) {}
+  // Taking the app.listen out because there are more options to deal with now
+  private listen(app: TemplatedApp): void {
+    const cb = (token: us_listen_socket): void => {
+      if (token) {
+        this.token = token
+        this.running = true
+        this.onStartCb()
+      } else {
+        throw new Error(`Server could not start!`)
+      }
+    }
+    const params: Array<RecognizedString | number | ((listenSocket: us_listen_socket) => void)> = [this.portNum, cb]
+    if (this.host) {
+      params.unshift(this.host)
+    }
+
+    Reflect.apply(app.listen, app, params)
+  }
+
   // overwrite the port number via the start up env
   public get portNum() {
     const p = process.env.PORT
@@ -85,32 +107,13 @@ export class UwsServer {
     }
   }
 
-  // Taking the app.listen out because there are more options to deal with now
-  private listen(app: TemplatedApp): void {
-    const cb = (token: us_listen_socket): void => {
-      if (token) {
-        this.token = token
-        this.running = true
-        this.onStartCb()
-      } else {
-        throw new Error(`Server could not start!`)
-      }
-    }
-    const params: Array<RecognizedString | number | ((listenSocket: us_listen_socket) => void)> = [this.portNum, cb]
-    if (this.host) {
-      params.unshift(this.host)
-    }
-
-    Reflect.apply(app.listen, app, params)
-  }
-
   // manually start the server
-  public start() {
+  public start(): void {
     if (!this.running) {
       this.listen(this.app as TemplatedApp)
     }
   }
-  
+
   // gracefully shutdown the server
   public shutdown(): void {
     shutdownServer(this.token)

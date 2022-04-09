@@ -2,6 +2,14 @@
 import test from 'ava'
 import app from './fixtures/server'
 
+test.before(() => {
+  app.start()
+})
+
+test.after(() => {
+  app.shutdown()
+})
+
 
 test('Testing the GET url param', t => {
 

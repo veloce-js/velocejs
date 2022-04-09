@@ -17,11 +17,30 @@ class UwsServer {
     port = 0;
     host = '';
     token = '';
+    constructor(opts) {
+        this.opts = opts;
+    }
+    // stock start function
     onStartFn = (url) => {
         debugFn(`Server started at ${url}`);
     };
-    constructor(opts) {
-        this.opts = opts;
+    // Taking the app.listen out because there are more options to deal with now
+    listen(app) {
+        const cb = (token) => {
+            if (token) {
+                this.token = token;
+                this.running = true;
+                this.onStartCb();
+            }
+            else {
+                throw new Error(`Server could not start!`);
+            }
+        };
+        const params = [this.portNum, cb];
+        if (this.host) {
+            params.unshift(this.host);
+        }
+        Reflect.apply(app.listen, app, params);
     }
     // overwrite the port number via the start up env
     get portNum() {
@@ -77,24 +96,6 @@ class UwsServer {
         else {
             this.app = app;
         }
-    }
-    // Taking the app.listen out because there are more options to deal with now
-    listen(app) {
-        const cb = (token) => {
-            if (token) {
-                this.token = token;
-                this.running = true;
-                this.onStartCb();
-            }
-            else {
-                throw new Error(`Server could not start!`);
-            }
-        };
-        const params = [this.portNum, cb];
-        if (this.host) {
-            params.unshift(this.host);
-        }
-        Reflect.apply(app.listen, app, params);
     }
     // manually start the server
     start() {
