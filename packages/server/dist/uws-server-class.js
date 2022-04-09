@@ -105,8 +105,10 @@ class UwsServer {
     }
     // gracefully shutdown the server
     shutdown() {
-        (0, create_app_1.shutdownServer)(this.token);
-        this.running = false;
+        if (this.running) {
+            (0, create_app_1.shutdownServer)(this.token);
+            this.running = false;
+        }
     }
     // get the port number if it's randomly assign port
     getPortNum() {

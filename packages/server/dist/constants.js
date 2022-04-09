@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.IS_OTHER = exports.IS_JSON = exports.IS_MULTI = exports.IS_FORM = exports.BOUNDARY = exports.JSON_HEADER = exports.FILE_POST_HEADER = exports.DEFAULT_POST_HEADER = exports.CONTENT_TYPE = exports.RAW_TYPE = exports.DEFAULT_FILE = exports.STATIC_ROUTE = exports.STATIC_TYPE = exports.SUPPORT_REST_ROUTES = void 0;
+exports.IS_OTHER = exports.IS_JSON = exports.IS_MULTI = exports.IS_FORM = exports.BOUNDARY = exports.JSON_HEADER = exports.FILE_POST_HEADER = exports.DEFAULT_FORM_HEADER = exports.CONTENT_TYPE = exports.RAW_TYPE = exports.DEFAULT_FILE = exports.STATIC_ROUTE = exports.STATIC_TYPE = exports.SUPPORT_REST_ROUTES = void 0;
 // This is move to src root level for export as well
 // as this will be share between different packages
 exports.SUPPORT_REST_ROUTES = ['any', 'get', 'post', 'put', 'options', 'del', 'patch', 'head', 'connect', 'trace'];
@@ -11,7 +11,7 @@ exports.STATIC_ROUTE = 'get';
 exports.DEFAULT_FILE = 'index.html';
 exports.RAW_TYPE = 'raw';
 exports.CONTENT_TYPE = 'content-type';
-exports.DEFAULT_POST_HEADER = 'application/x-www-form-urlencoded';
+exports.DEFAULT_FORM_HEADER = 'application/x-www-form-urlencoded';
 exports.FILE_POST_HEADER = 'multipart/form-data';
 exports.JSON_HEADER = 'application/json';
 exports.BOUNDARY = 'boundary';

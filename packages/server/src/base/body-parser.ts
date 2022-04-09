@@ -9,7 +9,7 @@ import {
 } from '../types'
 import {
   CONTENT_TYPE,
-  DEFAULT_POST_HEADER,
+  DEFAULT_FORM_HEADER,
   FILE_POST_HEADER,
   IS_FORM,
   IS_JSON,
@@ -40,7 +40,7 @@ export function getHeaders(req: HttpRequest) {
 }
 
 // all-in-one to parse and post process the multipart-formdata input
-export function parseMultipart(headers: StringPairObj, body: Buffer): any {
+export function parseMultipart(headers: StringPairObj, body: Buffer): object {
   const boundary = getBoundary(headers[CONTENT_TYPE])
   if (boundary) {
     const params = parse(body, boundary as string)
@@ -126,7 +126,7 @@ const isJson = (headers: StringPairObj): boolean => (
 )
 // check if it's regular post form
 const isForm = (headers: StringPairObj): boolean => (
-  headers[CONTENT_TYPE] !== undefined && headers[CONTENT_TYPE] === DEFAULT_POST_HEADER
+  headers[CONTENT_TYPE] !== undefined && headers[CONTENT_TYPE].indexOf(DEFAULT_FORM_HEADER) > -1
 )
 // check if it's a file upload form
 const isFile = (headers: StringPairObj): boolean => (
@@ -146,7 +146,7 @@ export async function bodyParser(
   res.onAborted(() => {
     onAborted ? Reflect.apply(onAborted, null, [res]) : debugFn('ABORTED')
   })
-  
+
   // process the header
   const headers = getHeaders(req)
   const url = req.getUrl()
