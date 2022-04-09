@@ -1,7 +1,9 @@
 import test from 'ava'
 import { createApp, shutdownServer, readJsonAsync, writeJson } from '../dist'
-import Fetch from 'node-fetch'
+// import Fetch from 'node-fetch'
 import { HttpResponse } from '../dist/types'
+
+import { sendJson } from './fixtures/send-json'
 
 const port = 9002
 const payload = {data: [1,2,3]}
@@ -33,12 +35,9 @@ test(`Testing the readJsonAsync method`, async (t) => {
       }
     })
 
-  // request   
-  await Fetch(`http://localhost:${port}`, {
-    method: 'post',
-    body: JSON.stringify(payload),
-    headers: {'Content-Type': 'application/json'}
-  }).then(res => res.json())
+  // request
+  await sendJson(`http://localhost:${port}`, payload)
+    .then(res => res.json())
     .then(json => {
       t.is(json.l , 3)
     })

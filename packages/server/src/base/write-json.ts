@@ -20,7 +20,7 @@ export const getCorkWriter = (res: HttpResponse): ((payload: string, headers?: S
     // then we fill it with 200 OK by default, it's hard to check
     const _status = status ? lookupStatus(status) : C200
     debugFn(`status: ${status}`)
-    
+
     res.cork(() => {
       res.writeStatus(_status as string)
       if (headers) {

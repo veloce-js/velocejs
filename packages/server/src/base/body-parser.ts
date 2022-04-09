@@ -142,9 +142,11 @@ export async function bodyParser(
   onAborted?: () => void
 ): Promise<UwsRespondBody> {
   // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
+
   res.onAborted(() => {
     onAborted ? Reflect.apply(onAborted, null, [res]) : debugFn('ABORTED')
   })
+  
   // process the header
   const headers = getHeaders(req)
   const url = req.getUrl()

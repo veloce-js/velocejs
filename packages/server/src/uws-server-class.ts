@@ -20,7 +20,7 @@ export class UwsServer {
   private token: us_listen_socket = ''
 
   constructor(private opts?: AppOptions) {}
-  
+
   // stock start function
   private onStartFn = (url: string): void => {
     debugFn(`Server started at ${url}`)
@@ -116,8 +116,10 @@ export class UwsServer {
 
   // gracefully shutdown the server
   public shutdown(): void {
-    shutdownServer(this.token)
-    this.running = false
+    if (this.running) {
+      shutdownServer(this.token)
+      this.running = false
+    }
   }
 
   // get the port number if it's randomly assign port
