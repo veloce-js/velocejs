@@ -10,6 +10,11 @@ const debugFn = debug(`velocejs:server:uws-server-class`)
 
 // main
 export class UwsServer {
+  public autoStart = true
+  public running = false
+  // privates
+  protected app: TemplatedApp | undefined
+
   private port = 0
   private host: RecognizedString = ''
   private token: us_listen_socket = ''
@@ -56,7 +61,7 @@ export class UwsServer {
 
   // to init, bind handlers and then start up the UWS Server
   public run(handlers: UwsRouteSetup[]): void {
-    const app: TemplatedApp = createApp(this.opts)
+    const app = createApp(this.opts)
 
     if (!handlers.length) {
       throw new Error(`You must have at least 1 handler!`)
@@ -73,7 +78,11 @@ export class UwsServer {
       }
     })
     // run it
-    this.listen(app)
+    if (this.autoStart) {
+      this.listen(app)
+    } else {
+      this.app = app
+    }
   }
 
   // Taking the app.listen out because there are more options to deal with now
@@ -81,6 +90,7 @@ export class UwsServer {
     const cb = (token: us_listen_socket): void => {
       if (token) {
         this.token = token
+        this.running = true
         this.onStartCb()
       } else {
         throw new Error(`Server could not start!`)
@@ -94,10 +104,17 @@ export class UwsServer {
     Reflect.apply(app.listen, app, params)
   }
 
-
+  // manually start the server
+  public start() {
+    if (!this.running) {
+      this.listen(this.app as TemplatedApp)
+    }
+  }
+  
   // gracefully shutdown the server
   public shutdown(): void {
     shutdownServer(this.token)
+    this.running = false
   }
 
   // get the port number if it's randomly assign port
