@@ -14,3 +14,9 @@ export const DEFAULT_POST_HEADER = 'application/x-www-form-urlencoded'
 export const FILE_POST_HEADER = 'multipart/form-data'
 
 export const BOUNDARY = 'boundary'
+
+// simple input type to determine what is the response should be
+export const IS_FORM = 'form' // could be get could be post or anything with the form-data
+export const IS_MULTI = 'multipart'
+export const IS_JSON = 'json'
+export const IS_OTHER = 'other'

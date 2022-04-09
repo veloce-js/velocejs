@@ -49,10 +49,10 @@ export {
   UwsRouteHandler,
   UwsRouteSetup,
   UwsParsedResult,
-} from './base/interfaces'
+} from './src/base/interfaces'
 // export the types
 export {
   StringPairObj,
   UwsRespondBody,
   UwsBodyParserFileEntry,
-} from './base/type'
+} from './src/base/type'

@@ -10,7 +10,11 @@ import {
 import {
   CONTENT_TYPE,
   DEFAULT_POST_HEADER,
-  FILE_POST_HEADER
+  FILE_POST_HEADER,
+  IS_FORM,
+  IS_JSON,
+  IS_MULTI,
+  IS_OTHER,
 } from '../constants'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser')
@@ -159,15 +163,19 @@ export async function bodyParser(
       body.payload = buffer
       switch (true) {
         case isJson(headers):
+          body.type = IS_JSON
           body.params = JSON.parse(buffer.toString())
           break;
         case isForm(headers):
+          body.type = IS_FORM
           body.params = parseQuery(buffer.toString())
           break;
         case isFile(headers):
+          body.type = IS_MULTI
           body.params = parseMultipart(headers, buffer)
           break;
         default:
+          body.type = IS_OTHER
       }
       resolver(body)
     })

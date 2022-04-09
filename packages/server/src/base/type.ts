@@ -10,8 +10,9 @@ export type UwsRespondBody = {
   method: string
   query: string,
   headers: StringPairObj
-  params: any,
-  payload?: any
+  params: object,
+  type?: string, 
+  payload?: Buffer
 }
 // this is the key values from the bodyParser
 export type UwsBodyParserFileEntry = {

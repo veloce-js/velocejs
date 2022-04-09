@@ -49,3 +49,15 @@ test(`processFileArray should able to return different keys of array when encoun
   t.true(result3.file2.length === 2)
   t.truthy(result3.input3)
 })
+
+test('Testing the GET url param', t => {
+  
+})
+
+test('Testing the POST param', t => {
+
+})
+
+test(`Testing the json`, t => {
+
+})
