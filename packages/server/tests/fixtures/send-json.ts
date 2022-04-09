@@ -8,5 +8,6 @@ export async function sendJson(url: string, payload: object) {
     body: JSON.stringify(payload),
     headers: {'Content-Type': 'application/json'}
   })
-  
+  .then(res => res.json())
+
 }

@@ -2,6 +2,8 @@
 import test from 'ava'
 import fetch from 'node-fetch'
 import app from './fixtures/server'
+import { sendJson } from './fixtures/send-json'
+
 let url = 'http://localhost:'
 
 test.before(() => {
@@ -23,9 +25,11 @@ test('Testing the GET url param', async (t) => {
   t.deepEqual(json, { a: '1', b: '2', c: '3' })
 })
 
-test(`Testing the json`, async (t) => {
+test(`Testing the POST json`, async (t) => {
+  const payload = {hello: 'world'}
+  const json = await sendJson(`${url}/some-json-end-point`, payload)
 
-  
+  t.deepEqual(json, payload)
 
 })
 

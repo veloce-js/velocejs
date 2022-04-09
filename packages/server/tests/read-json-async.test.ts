@@ -37,7 +37,6 @@ test(`Testing the readJsonAsync method`, async (t) => {
 
   // request
   await sendJson(`http://localhost:${port}`, payload)
-    .then(res => res.json())
     .then(json => {
       t.is(json.l , 3)
     })
