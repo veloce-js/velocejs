@@ -42,14 +42,14 @@ export class FastApi {
   private setTemp(payload: UwsRespondBody, res: HttpResponse, req: HttpRequest) {
     this.payload = payload
     this.res = res
-    this.req = req
+    // this.req = req
   }
 
   // call this after the call finish
   private unsetTemp() {
     this.res = undefined
-    this.req = undefined
     this.payload = undefined
+    // this.req = undefined
   }
 
   // using a setter to trigger series of things to do with the validation map
@@ -60,6 +60,8 @@ export class FastApi {
   */
   // wrapper for the UwsServer create server method
   private createServer(routes: UwsRouteSetup[]) {
+    // set the autoStart to false
+    this.uwsInstance.autoStart = false
     this.uwsInstance.run(routes)
   }
 
@@ -68,30 +70,26 @@ export class FastApi {
     const fn = this[propertyName]
 
     return async (res: HttpResponse, req: HttpRequest) => {
+      console.log('GOT CALLED')
+      const args1: Array<any> = [res, req]
       // add onAbortedHandler
       if (onAbortedHandler) {
-        res.onAborted(() => {
-          Reflect.apply(this[onAbortedHandler], this, [])
-        })
+        args1.push(this[onAbortedHandler])
       }
       // process input
-      const result = await bodyParser(res, req)
-
+      const result = await Reflect.apply(bodyParser, null, args1)
       console.log('bodyParser', result)
 
       this.setTemp(result, res, req)
       // this is a bit tricky if there is a json result
       // then it will be the first argument
       const { params } = result
-      const args = [ params ]
+      const args2 = [ params ]
       // @TODO apply the valdiator here
       // if there is an error then it will be the second parameter
-      const reply = Reflect.apply(fn, this, args)
+      const reply = await Reflect.apply(fn, this, args2)
       // now we destroy the temp stuff
       // we wrap this in a set timeout is a node.js thing to create a nextTick effect
-      setTimeout(() => {
-        this.unsetTemp()
-      }, 0)
       // if the method return a result then we will handle it
       // otherwise we assume the dev handle it in their method
       if (reply) {
@@ -99,11 +97,14 @@ export class FastApi {
           res.end(reply)
         // })
       }
+      // setTimeout(() => {
+      this.unsetTemp()
+      // }, 0)
     }
   }
 
   // Mapping all the string name to method and supply to UwsServer run method
-  public run(meta: RouteMetaInfo[] /*, validation?: Array<any> */): void {
+  public run(meta: RouteMetaInfo[] /*, validation?: Array<any> */): Promise<string> {
     // do things with the validation
     // this.validationMap = validation
     // run the server
@@ -133,6 +134,11 @@ export class FastApi {
         }
       })
     )
+    
+    return new Promise((resolver) => {
+      this.uwsInstance.onStart = resolver
+      this.uwsInstance.start()
+    })
   }
 
   /**
@@ -153,6 +159,7 @@ export class FastApi {
     if (!_status) {
       throw new Error(`${status} is not a correct HTTP response code`)
     }
+    this.statusCode = _status as string
   }
 
   protected end(payload: any): void {
