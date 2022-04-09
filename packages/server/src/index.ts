@@ -9,7 +9,7 @@ export {
   getPort
 } from './base/create-app'
 export { readJsonAsync } from './base/read-json-async'
-export { writeJson, getCorkWriter } from './base/write-json'
+// export { writeJson, getCorkWriter } from './base/write-json'
 export { serveStatic } from './base/serve-static'
 export { rateLimit } from './base/rate-limit'
 export {
@@ -23,6 +23,11 @@ export {
   parseQuery,
   getHeaders
 } from './base/body-parser'
+export {
+  getMime,
+  getWriter,
+  jsonWriter
+} from './base/writers'
 // extended
 export { UwsServer } from './uws-server-class'
 export { lookupStatus } from './status'

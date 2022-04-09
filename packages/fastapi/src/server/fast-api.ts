@@ -152,18 +152,6 @@ export class FastApi {
     })
   }
 
-  public shutdown() {
-    this.uwsInstance.shutdown()
-  }
-
-  /**
-    Using the corking feature to write everything in one go
-
-    res.cork(() => {
-      res.writeStatus("200 OK").writeHeader("Some", "Value").write("Hello world!");
-    });
-  **/
-
   // @TODO couple factory method for easier to use with UwsServer
   protected writeHeader(key: string, value: string): void {
     this.headerQueue.push({ key, value })

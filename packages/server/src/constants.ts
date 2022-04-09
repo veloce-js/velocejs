@@ -13,6 +13,8 @@ export const CONTENT_TYPE = 'content-type'
 export const DEFAULT_FORM_HEADER = 'application/x-www-form-urlencoded'
 export const FILE_POST_HEADER = 'multipart/form-data'
 export const JSON_HEADER = 'application/json'
+// mostly are just some text anyway so default to html content type 
+export const DEFAULT_MIME_TYPE = 'text/html; charset=utf-8'
 
 export const BOUNDARY = 'boundary'
 
