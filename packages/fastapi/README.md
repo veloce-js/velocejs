@@ -1,10 +1,7 @@
 # Fast Api
 
-This is built on top of our [@velocejs/server]() package, to let you build
+This is built on top of our [@velocejs/server]() package that let you build
 your API in no time.
-
-
-
 
 ## Installation
 
@@ -19,3 +16,7 @@ $ npm i @velocejs/fastapi
 
 
 ```
+
+---
+
+Joel Chu (c) 2022

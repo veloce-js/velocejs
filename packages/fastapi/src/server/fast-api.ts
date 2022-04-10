@@ -130,7 +130,6 @@ export class FastApi {
           this.unsetTemp()
         }, 0)
       }
-
     }
   }
 

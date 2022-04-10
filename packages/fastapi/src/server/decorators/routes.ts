@@ -1,6 +1,6 @@
 // all decorators are here
-import { RouteMetaInfo, MetaDecorator } from '@velocejs/server/src/types'
-import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/dist/constants'
+import { RouteMetaInfo, MetaDecorator } from '../../types'
+import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/src/base/constants'
 import { routeKey, argsKey } from './routekey'
 
 
