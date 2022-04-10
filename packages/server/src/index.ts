@@ -7,30 +7,31 @@ export {
   createApp,
   shutdownServer,
   getPort
-} from './base/create-app'
-export { readJsonAsync } from './base/read-json-async'
+} from './create-app'
+export { readJsonAsync } from './read-json-async'
 // export { writeJson, getCorkWriter } from './base/write-json'
-export { serveStatic } from './base/serve-static'
-export { rateLimit } from './base/rate-limit'
+export { serveStatic } from './serve-static'
+export { rateLimit } from './rate-limit'
 export {
   handleUpload,
   uploadHandler,
-  onDataHandler,
-  writeBufferToFile
-} from './base/handle-upload'
+  onDataHandler
+} from './body-parser/handle-upload'
 export {
   bodyParser,
-  parseQuery,
   getHeaders
-} from './base/body-parser'
+} from './body-parser'
 export {
-  getMime,
   getWriter,
   jsonWriter
-} from './base/writers'
+} from './writers'
+export {
+  lookup,
+  getContentType
+} from './base/mime'
 // extended
 export { UwsServer } from './uws-server-class'
-export { lookupStatus } from './status'
+export { lookupStatus } from './base/status'
 // @TODO streaming
 
 // @TODO ws

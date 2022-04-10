@@ -4,6 +4,8 @@ import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser:handle-upload')
 // @TODO this should be a higher level method that will take the
 // req mime-type handle the buffer then write to disk
+// This is for building dedicated file upload API
+// what we should do is to use streaming file on write 
 export async function handleUpload(
   res: HttpResponse,
   req: HttpRequest,

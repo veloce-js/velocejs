@@ -1,8 +1,8 @@
 // testing the bodyParser
 import test from 'ava'
-import { parse } from '../src/parse-multipart-data'
+import { parse } from '../src/body-parser/parse-multipart-data'
 // import { parse } from 'parse-multipart-data'
-import { processParams } from '../src/base/body-parser'
+import { processParams } from '../src/body-parser/body-parser'
 // single file
 import {
   body as body1,
