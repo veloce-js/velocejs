@@ -1,9 +1,11 @@
 // server static methods
-import mime from 'mime-types'
+
 import fs from 'fs'
 import path from 'path'
-import { HttpResponse, HttpRequest } from '../types'
-import { DEFAULT_FILE } from './base/constants'
+import { HttpResponse, HttpRequest } from './types'
+import { DEFAULT_FILE, CONTENT_TYPE } from './base/constants'
+import { getWriter, write404 } from './writers'
+import { lookup } from './base/mime'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:serve-static')
 
@@ -18,10 +20,7 @@ export function serveStatic(assetDir: string | string[]) {
     res.onAborted(() => {
       debugFn(`Serve static aborted`)
     })
-
     let url = req.getUrl()
-
-    // @TODO how to configure a default file to serve up
     if (url === '/') {
       url = DEFAULT_FILE
     }
@@ -31,15 +30,11 @@ export function serveStatic(assetDir: string | string[]) {
       .map(dir => fs.readFileSync(path.join(dir, url)))
 
     if (file.length) {
-      const mimeType = mime.lookup(url) || 'application/octet-stream'
-      // console.log(mimeType, url)
-      res.writeHeader('Content-Type', mimeType)
-      // first come first serve
-      res.end(file[0])
+      const mimeType = lookup(url)
+      const writer = getWriter(res)
+      writer(file[0], {[CONTENT_TYPE]: mimeType})
     } else {
-      // @TODO
-      res.writeStatus('404')
-      res.end()
+      write404(res)
     }
   }
 }

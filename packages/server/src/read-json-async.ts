@@ -1,5 +1,5 @@
 // This is based on the example from uWebsocket.js using Promise instead of callbacks
-import { HttpResponse } from './base/types'
+import { HttpResponse } from './types'
 /**
  * Just to help get rip of that stupid TS warning
  * @param {array} args anything (mostly string)

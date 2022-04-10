@@ -1,9 +1,7 @@
 import {
-  HttpResponse,
   HttpRequest,
-  UwsRespondBody,
   StringPairObj
-} from '../base/types'
+} from '../types'
 import {
   CONTENT_TYPE,
   DEFAULT_FORM_HEADER,

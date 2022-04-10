@@ -1,6 +1,5 @@
 // return the upload Data
-import fs from 'fs'
-import { HttpResponse, HttpRequest } from '../base/types'
+import { HttpResponse, HttpRequest } from '../types'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser:handle-upload')
 // @TODO this should be a higher level method that will take the

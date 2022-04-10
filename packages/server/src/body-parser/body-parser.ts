@@ -6,7 +6,7 @@ import {
   HttpRequest,
   UwsRespondBody,
   StringPairObj
-} from '../base/types'
+} from '../types'
 import {
   CONTENT_TYPE,
   IS_FORM,

@@ -1,18 +1,10 @@
 // from write-json and change the interface to be the same
-import { contentType } from 'mime-types'
 import fs from 'fs-extra'
-import { HttpResponse, StringPairObj, RecognizedString } from './base/types'
-import { CONTENT_TYPE, JSON_HEADER, DEFAULT_MIME_TYPE } from './base/constants'
-import { C200, lookupStatus } from './base/status'
+import { HttpResponse, StringPairObj, RecognizedString } from './types'
+import { CONTENT_TYPE, JSON_HEADER } from './base/constants'
+import { C200, C404, lookupStatus } from './base/status'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:writers')
-
-
-// thin wrapper around the mime-type module, provide a default value
-export const getContentType = (content: string): string => (
-  contentType(content) || DEFAULT_MIME_TYPE
-)
-
 
 // just write the header and encode the JSON to string
 export const jsonWriter = (res: HttpResponse): ((jsonObj: object) => void) => {
@@ -27,7 +19,7 @@ export const jsonWriter = (res: HttpResponse): ((jsonObj: object) => void) => {
 
 
 // break this out for re-use
-export const getWriter = (res: HttpResponse): ((payload: string, headers?: StringPairObj) => void) => {
+export const getWriter = (res: HttpResponse) => {
 
   return (payload: RecognizedString, headers?: StringPairObj, status?: number | string) => {
     // this could create a bug - if they pass the wrong status code
@@ -48,6 +40,11 @@ export const getWriter = (res: HttpResponse): ((payload: string, headers?: Strin
   }
 }
 
+export const write404 = (res: HttpResponse): void => {
+  res.cork(() => {
+    res.writeStatus(C404).end()
+  })
+}
 
 // writing the Buffer to a file
 export function writeBufferToFile(buffer: Buffer, path: string, permission=0o666): boolean {
