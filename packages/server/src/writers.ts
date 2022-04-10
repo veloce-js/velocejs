@@ -24,7 +24,7 @@ export const getWriter = (res: HttpResponse): UwsWriter => {
     // this could create a bug - if they pass the wrong status code
     // then we fill it with 200 OK by default, it's hard to check
     const _status = status ? lookupStatus(status) : C200
-    debugFn(`status: ${status}`)
+    debugFn(`status: ${_status}`)
 
     res.cork(() => {
       res.writeStatus(_status as string)

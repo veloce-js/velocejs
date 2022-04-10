@@ -147,7 +147,8 @@ export class FastApi {
               path,
               type: STATIC_ROUTE,
               // the method just return the path to the files
-              handler: serveStatic(Reflect.apply(this[propertyName], this, []))
+              // We change this to be a accessor decorator which a getter
+              handler: serveStatic(this[propertyName])
             }
           case RAW_TYPE:
             return {
@@ -167,6 +168,7 @@ export class FastApi {
 
     return new Promise((resolver) => {
       this.uwsInstance.onStart = resolver
+      // @TODO should give an option to not start the server right the way
       this.uwsInstance.start()
     })
   }

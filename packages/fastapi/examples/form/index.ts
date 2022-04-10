@@ -16,11 +16,14 @@ import {
   // Post,
   Raw,
   Prepare,
+  Rest
 } from '../../src'
 
 // we just the random port so just use open to open the page
+
 import open from 'open'
 
+// @Rest
 class MyFormExample extends FastApi {
 
   @Raw('post', '/submit')
@@ -36,7 +39,7 @@ class MyFormExample extends FastApi {
   }
 
   @ServeStatic('/*')
-  staticHandler(): string {
+  get staticHandler(): string {
     return join(__dirname, 'httpdocs')
   }
 
@@ -51,6 +54,7 @@ const app = new UwsServer()
 const api = new MyFormExample(app)
 // wrap this up on the onStart callback
 app.onStart = (url: string): void => {
+  console.log('server start!', url)
   open(url)
 }
 // run it
