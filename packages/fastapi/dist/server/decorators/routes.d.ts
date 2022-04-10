@@ -1,4 +1,4 @@
-import { RouteMetaInfo, MetaDecorator } from '@velocejs/server/src/types';
+import { RouteMetaInfo, MetaDecorator } from '../../types';
 export declare function Raw(route: string, path: string): (target: any, propertyName: string) => void;
 export declare function ServeStatic(path: string): (target: any, propertyName: string) => void;
 export declare function Prepare(target: any, _: string, // propertyName is unused, just placeholder it

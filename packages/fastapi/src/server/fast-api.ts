@@ -30,13 +30,13 @@ import {
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
-  private written: boolean = false
+  private written = false
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
   protected req: HttpRequest | undefined
   // this will be storing the write queue
-  protected writer: UwsWriter
-  protected jsonWriter: UwsJsonWriter
+  protected writer: UwsWriter = () => { console.log('stupid') }
+  protected jsonWriter: UwsJsonWriter = () => { console.log('stupid') }
 
   // store the UWS server instance as protected
   constructor(protected uwsInstance: UwsServer) {}

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Aborted = exports.Head = exports.Patch = exports.Del = exports.Options = exports.Put = exports.Post = exports.Get = exports.Any = exports.Main = exports.Prepare = exports.ServeStatic = exports.Raw = void 0;
-const constants_1 = require("@velocejs/server/dist/constants");
+const constants_1 = require("@velocejs/server/src/base/constants");
 const routekey_1 = require("./routekey");
 // The inner decorator factory method
 function innerDecoratorFactory(type, path, routeType) {

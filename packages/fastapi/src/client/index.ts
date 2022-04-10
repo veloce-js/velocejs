@@ -1,6 +1,6 @@
 // just test the thing
-import 'reflect-metadata'
-import { Validator } from '../server/decorators/validator'
+// import 'reflect-metadata'
+// import { Validator } from '../server/decorators/validator'
 
 /*
 function logParamTypes(target : any, key : string) {
@@ -24,7 +24,7 @@ function logParamTypes(target : any, key : string) {
 */
 
 //
-
+/*
 class Foo {
 
   @Validator()
@@ -41,3 +41,4 @@ class Foo {
 const bar = new Foo()
 
 bar.someFunc('a', 1)
+*/
