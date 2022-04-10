@@ -7,4 +7,7 @@ export {
   Prepare, Main,
   Aborted,
   ServeStatic,
-} from './server/decorators/index'
+} from './server/rest/routes'
+export {
+  Rest
+} from './server/rest/rest'
