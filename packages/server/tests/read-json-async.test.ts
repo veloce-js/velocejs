@@ -1,5 +1,5 @@
 import test from 'ava'
-import { createApp, shutdownServer, readJsonAsync, writeJson } from '../dist'
+import { createApp, shutdownServer, readJsonAsync, jsonWriter } from '../dist'
 // import Fetch from 'node-fetch'
 import { HttpResponse } from '../dist/types'
 
@@ -23,10 +23,8 @@ test(`Testing the readJsonAsync method`, async (t) => {
       const result = await readJsonAsync(res)
       // test (1)
       t.deepEqual(result, payload)
-
       reply.l = payload.data.length
-
-      writeJson(res, reply)
+      jsonWriter(res)(reply)
     })
     .listen(port, (token: any) => {
       listenSocket = token

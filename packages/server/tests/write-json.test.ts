@@ -1,5 +1,5 @@
 import test from 'ava'
-import { createApp, shutdownServer, writeJson } from '../dist'
+import { createApp, shutdownServer, jsonWriter } from '../dist'
 import Fetch from 'node-fetch'
 import { HttpResponse } from '../dist/types'
 
@@ -11,7 +11,7 @@ let listenSocket: any = null
 test.before(() => {
   createApp()
     .post('/*', (res: HttpResponse) => {
-      writeJson(res, reply)
+      jsonWriter(res)(reply)
     })
     .listen(port, (token: any) => {
       listenSocket = token

@@ -51,7 +51,7 @@ test(`should able to capture the uploaded file and write to dist`, async (t) => 
     join(__dirname, 'fixtures', 'test.txt')
   )
   const result = await response.text()
-  console.log('RESPONSE', result)
+  // console.log('RESPONSE', result)
 
   t.true(fs.existsSync(outFile))
 })

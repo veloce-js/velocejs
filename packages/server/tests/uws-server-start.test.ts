@@ -1,6 +1,6 @@
 // testing the UwsServer start stop methods
 import test from 'ava'
-import { UwsServer, bodyParser, writeJson } from '../dist'
+import { UwsServer, bodyParser, jsonWriter } from '../dist'
 import { HttpResponse, HttpRequest } from '../dist/types'
 import Fetch from 'node-fetch'
 
@@ -13,9 +13,7 @@ test.before(() => {
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
       const result = await bodyParser(res, req)
-
-      // res.end(JSON.stringify(result.params))
-      writeJson(res, result.params)
+      jsonWriter(res)(result.params)
     }
   }])
 })

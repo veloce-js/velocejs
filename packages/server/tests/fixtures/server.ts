@@ -2,7 +2,7 @@
 import {
   bodyParser,
   UwsServer,
-  writeJson
+  jsonWriter
 } from '../../dist'
 import {
   HttpResponse,
@@ -20,7 +20,7 @@ app.run([
       // console.log(`got called`, result)
       const { params } = result
       // we only return the result.params
-      writeJson(res, params)
+      jsonWriter(res)(params)
     }
   }
 ])
