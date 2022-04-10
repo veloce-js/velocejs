@@ -23,7 +23,8 @@ export {
 } from './body-parser'
 export {
   getWriter,
-  jsonWriter
+  jsonWriter,
+  writeBufferToFile
 } from './writers'
 export {
   lookup,

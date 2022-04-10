@@ -17,7 +17,6 @@ export const jsonWriter = (res: HttpResponse): ((jsonObj: object) => void) => {
   }
 }
 
-
 // break this out for re-use
 export const getWriter = (res: HttpResponse) => {
 
