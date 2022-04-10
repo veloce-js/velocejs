@@ -1,4 +1,4 @@
-import { HttpResponse, HttpRequest } from '../types';
+import { HttpResponse, HttpRequest } from './types';
 /**
  * serve static files from assetDir
  */

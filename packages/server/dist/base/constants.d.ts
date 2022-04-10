@@ -7,6 +7,8 @@ export declare const CONTENT_TYPE = "content-type";
 export declare const DEFAULT_FORM_HEADER = "application/x-www-form-urlencoded";
 export declare const FILE_POST_HEADER = "multipart/form-data";
 export declare const JSON_HEADER = "application/json";
+export declare const DEFAULT_MIME_TYPE = "text/html; charset=utf-8";
+export declare const DEFAULT_FILE_TYPE = "application/octet-stream";
 export declare const BOUNDARY = "boundary";
 export declare const IS_FORM = "form";
 export declare const IS_MULTI = "multipart";

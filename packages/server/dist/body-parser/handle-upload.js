@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.writeBufferToFile = exports.onDataHandler = exports.uploadHandler = exports.handleUpload = void 0;
+exports.onDataHandler = exports.uploadHandler = exports.handleUpload = void 0;
 const tslib_1 = require("tslib");
-// return the upload Data
-const fs_1 = tslib_1.__importDefault(require("fs"));
+const debug_1 = tslib_1.__importDefault(require("debug"));
+const debugFn = (0, debug_1.default)('velocejs:server:body-parser:handle-upload');
 // @TODO this should be a higher level method that will take the
 // req mime-type handle the buffer then write to disk
+// This is for building dedicated file upload API
+// what we should do is to use streaming file on write 
 async function handleUpload(res, req, dir, filename) {
     console.log(res, req, dir, filename);
 }
@@ -17,7 +19,7 @@ function uploadHandler(res, bufferHandler, onAbortedHandler) {
     onDataHandler(res, bufferHandler);
     // if we don't attach an onAborted handler then we get complain
     res.onAborted(() => {
-        onAbortedHandler && onAbortedHandler();
+        onAbortedHandler ? onAbortedHandler() : debugFn('uploadHandler onAborted');
     });
 }
 exports.uploadHandler = uploadHandler;
@@ -33,21 +35,3 @@ function onDataHandler(res, bufferHandler) {
     });
 }
 exports.onDataHandler = onDataHandler;
-// writing the Buffer to a file
-function writeBufferToFile(buffer, path, permission = 0o666) {
-    let fileDescriptor;
-    try {
-        fileDescriptor = fs_1.default.openSync(path, 'w', permission);
-    }
-    catch (e) {
-        fs_1.default.chmodSync(path, permission);
-        fileDescriptor = fs_1.default.openSync(path, 'w', permission);
-    }
-    if (fileDescriptor) {
-        fs_1.default.writeSync(fileDescriptor, buffer, 0, buffer.length, 0);
-        fs_1.default.closeSync(fileDescriptor);
-        return true;
-    }
-    return false;
-}
-exports.writeBufferToFile = writeBufferToFile;

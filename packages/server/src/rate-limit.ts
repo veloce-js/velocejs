@@ -1,4 +1,4 @@
-import { WebSocket } from './base/types'
+import { WebSocket } from './types'
 
 // this is from the examples/RateLimit.js
 export function rateLimit(limit: number, interval: number): (ws: WebSocket) => boolean | void {

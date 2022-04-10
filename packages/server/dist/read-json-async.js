@@ -16,7 +16,7 @@ async function readJsonAsync(res) {
     return new Promise((resolver, rejecter) => {
         let buffer;
         res.onData((ab, isLast) => {
-            let chunk = Buffer.from(ab);
+            const chunk = Buffer.from(ab);
             if (isLast) {
                 let json;
                 if (buffer) {

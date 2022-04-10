@@ -2,10 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UwsServer = void 0;
 const tslib_1 = require("tslib");
-const create_app_1 = require("./base/create-app");
-const constants_1 = require("./constants");
+const create_app_1 = require("./create-app");
+const constants_1 = require("./base/constants");
 const debug_1 = tslib_1.__importDefault(require("debug"));
-// construct the debug fn
 const debugFn = (0, debug_1.default)(`velocejs:server:uws-server-class`);
 // main
 class UwsServer {
