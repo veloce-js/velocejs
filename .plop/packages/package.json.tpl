@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "test:ava": "ava",
+    "test:ava": "nyc ava",
     "test": "pnpm build && pnpm test:ava",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
@@ -40,6 +40,7 @@
     "esbuild": "^0.14.30",
     "esbuild-register": "^3.3.2",
     "eslint": "^8.12.0",
+    "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
     "typescript": "^4.6.3"
   },
