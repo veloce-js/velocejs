@@ -3,7 +3,7 @@ import {
   UwsServer,
   bodyParser,
   serveStatic,
-  lookupStatus,
+  // lookupStatus,
   getWriter,
   jsonWriter
 } from '@velocejs/server/src' // point to the source ts
@@ -13,7 +13,9 @@ import {
   UwsRouteSetup,
   UwsRouteHandler,
   // UwsParsedResult,// <-- this is no longer in use
-  UwsRespondBody
+  UwsRespondBody,
+  UwsWriter,
+  UwsJsonWriter
 } from '@velocejs/server/src/types' // point to the source ts
 import {
   RouteMetaInfo
@@ -24,18 +26,17 @@ import {
   RAW_TYPE,
   IS_OTHER
 } from '@velocejs/server/src/base/constants'
-import {
-  C200
-} from '@velocejs/server/src/base/status'
+
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
+  private written: boolean = false
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
   protected req: HttpRequest | undefined
   // this will be storing the write queue
-  protected writer
-  protected jsonWriter
+  protected writer: UwsWriter
+  protected jsonWriter: UwsJsonWriter
 
   // store the UWS server instance as protected
   constructor(protected uwsInstance: UwsServer) {}
@@ -43,12 +44,26 @@ export class FastApi {
   // When we call the user provided method, we will pass them the payload.params pass instead of
   // the whole payload, and we keep them in a temporary place, and destroy it once the call is over
   private setTemp(payload: UwsRespondBody, res: HttpResponse /*, req?: HttpRequest */) {
+    this.written = false
     this.payload = payload
     this.res = res
     // this.req = req
     // create a jsonWriter and a writer
-    this.writer = getWriter(res)
-    this.jsonWriter = jsonWriter(res)
+    // add a guard to prevent accidental double write
+    const _writer = getWriter(res)
+    this.writer = (...args: Array<any>): void => {
+      if (!this.written) {
+        this.written = true
+        Reflect.apply(_writer, null, args)
+      }
+    }
+    const _jsonWriter = jsonWriter(res)
+    this.jsonWriter = (...args: Array<any>): void => {
+      if (!this.written) {
+        this.written = true
+        Reflect.apply(_jsonWriter, null, args)
+      }
+    }
   }
 
   // call this after the call finish
@@ -56,6 +71,7 @@ export class FastApi {
     ['res', 'payload', 'writer', 'jsonWriter'].forEach(fn => {
       this[fn] = undefined
     })
+    this.written = false
   }
 
   // using a setter to trigger series of things to do with the validation map
@@ -93,6 +109,19 @@ export class FastApi {
       let reply
       try {
         reply = await Reflect.apply(handler, this, args2)
+        // now we destroy the temp stuff
+        // we wrap this in a set timeout is a node.js thing to create a nextTick effect
+        // if the method return a result then we will handle it
+        // otherwise we assume the dev handle it in their method
+        if (reply && !this.written) {
+          switch (type) {
+            case IS_OTHER:
+              getWriter(res)(reply)
+              break
+            default:
+              jsonWriter(res)(reply)
+          }
+        }
       } catch (e) {
         console.log(`ERROR with`, propertyName, e)
         res.close()
@@ -101,19 +130,7 @@ export class FastApi {
           this.unsetTemp()
         }, 0)
       }
-      // now we destroy the temp stuff
-      // we wrap this in a set timeout is a node.js thing to create a nextTick effect
-      // if the method return a result then we will handle it
-      // otherwise we assume the dev handle it in their method
-      if (reply) {
-        switch (type) {
-          case IS_OTHER:
-            getWriter(res)(reply)
-            break
-          default:
-            jsonWriter(res)(reply)
-        }
-      }
+
     }
   }
 
@@ -130,7 +147,7 @@ export class FastApi {
             return {
               path,
               type: STATIC_ROUTE,
-              // the method the dev defined just return the path to the files
+              // the method just return the path to the files
               handler: serveStatic(Reflect.apply(this[propertyName], this, []))
             }
           case RAW_TYPE:
