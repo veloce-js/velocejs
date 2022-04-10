@@ -1,24 +1,24 @@
 // from write-json and change the interface to be the same
 import fs from 'fs-extra'
-import { HttpResponse, StringPairObj, RecognizedString } from './types'
+import { HttpResponse, StringPairObj, RecognizedString, UwsWriter, UwsJsonWriter } from './types'
 import { CONTENT_TYPE, JSON_HEADER } from './base/constants'
 import { C200, C404, lookupStatus } from './base/status'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:writers')
 
 // just write the header and encode the JSON to string
-export const jsonWriter = (res: HttpResponse): ((jsonObj: object) => void) => {
+export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
   const writer = getWriter(res)
 
-  return (jsonObj: object): void => {
+  return (jsonObj: object, status?: number | string): void => {
     writer(JSON.stringify(jsonObj), {
       [CONTENT_TYPE]: JSON_HEADER
-    })
+    }, status)
   }
 }
 
 // break this out for re-use
-export const getWriter = (res: HttpResponse) => {
+export const getWriter = (res: HttpResponse): UwsWriter => {
 
   return (payload: RecognizedString, headers?: StringPairObj, status?: number | string) => {
     // this could create a bug - if they pass the wrong status code

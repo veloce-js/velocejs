@@ -56,3 +56,7 @@ export {
   UwsRespondBody,
   UwsBodyParserFileEntry,
 } from './src/base/type'
+
+export type UwsWriter = (payload: RecognizedString, headers?: StringPairObj, status?: number | string) => void
+
+export type UwsJsonWriter = (jsonObj: object, status?: number | string) => void

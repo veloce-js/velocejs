@@ -4,8 +4,8 @@ import {
   bodyParser,
   serveStatic,
   lookupStatus,
-  getCorkWriter,
-  writeJson
+  getWriter,
+  jsonWriter
 } from '@velocejs/server/src' // point to the source ts
 import {
   HttpResponse,
@@ -23,10 +23,10 @@ import {
   STATIC_ROUTE,
   RAW_TYPE,
   IS_OTHER
-} from '@velocejs/server/src/constants'
+} from '@velocejs/server/src/base/constants'
 import {
   C200
-} from '@velocejs/server/src/status'
+} from '@velocejs/server/src/base/status'
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
@@ -34,8 +34,8 @@ export class FastApi {
   protected res: HttpResponse | undefined
   protected req: HttpRequest | undefined
   // this will be storing the write queue
-  protected headerQueue: Array<{key: string, value: string}> = []
-  protected statusCode = C200
+  protected writer
+  protected jsonWriter
 
   // store the UWS server instance as protected
   constructor(protected uwsInstance: UwsServer) {}
@@ -46,13 +46,16 @@ export class FastApi {
     this.payload = payload
     this.res = res
     // this.req = req
+    // create a jsonWriter and a writer
+    this.writer = getWriter(res)
+    this.jsonWriter = jsonWriter(res)
   }
 
   // call this after the call finish
   private unsetTemp() {
-    this.res = undefined
-    this.payload = undefined
-    // this.req = undefined
+    ['res', 'payload', 'writer', 'jsonWriter'].forEach(fn => {
+      this[fn] = undefined
+    })
   }
 
   // using a setter to trigger series of things to do with the validation map
@@ -105,10 +108,10 @@ export class FastApi {
       if (reply) {
         switch (type) {
           case IS_OTHER:
-            getCorkWriter(res)(reply+'')
+            getWriter(res)(reply)
             break
           default:
-            writeJson(res, reply)
+            jsonWriter(res)(reply)
         }
       }
     }
@@ -149,27 +152,6 @@ export class FastApi {
     return new Promise((resolver) => {
       this.uwsInstance.onStart = resolver
       this.uwsInstance.start()
-    })
-  }
-
-  // @TODO couple factory method for easier to use with UwsServer
-  protected writeHeader(key: string, value: string): void {
-    this.headerQueue.push({ key, value })
-  }
-
-  protected writeStatus(status: string | number): void {
-    const _status = lookupStatus(status)
-    if (!_status) {
-      throw new Error(`${status} is not a correct HTTP response code`)
-    }
-    this.statusCode = _status as string
-  }
-
-  protected end(payload: any): void {
-    this.res?.cork(() => {
-      const res = this.res?.writeStatus(this.statusCode)
-      this.headerQueue.forEach(header => res?.writeHeader(header.key, header.value))
-      this.res?.end(payload)
     })
   }
 }

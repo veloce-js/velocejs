@@ -11,7 +11,7 @@ export type UwsRespondBody = {
   query: string,
   headers: StringPairObj
   params: object,
-  type?: string, 
+  type?: string,
   payload?: Buffer
 }
 // this is the key values from the bodyParser

@@ -11,10 +11,10 @@ const debugFn = (0, debug_1.default)('velocejs:server:writers');
 // just write the header and encode the JSON to string
 const jsonWriter = (res) => {
     const writer = (0, exports.getWriter)(res);
-    return (jsonObj) => {
+    return (jsonObj, status) => {
         writer(JSON.stringify(jsonObj), {
             [constants_1.CONTENT_TYPE]: constants_1.JSON_HEADER
-        });
+        }, status);
     };
 };
 exports.jsonWriter = jsonWriter;

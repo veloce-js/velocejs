@@ -1,7 +1,7 @@
 {
   "name": "@velocejs/fastapi",
   "version": "0.0.1",
-  "description": "Built on top of @velocejs/server to let you build your API in no time",
+  "description": "Built on top of @velocejs/server that let you build your API in no time",
   "main": "dist/index.js",
   "module": "dist/index.ts",
   "types": "dist/types.d.ts",
@@ -11,7 +11,7 @@
     "index.d.ts"
   ],
   "scripts": {
-    "test:ava": "ava",
+    "test:ava": "nyc ava",
     "test": "pnpm build && pnpm test:ava",
     "build": "pnpm clean:dist && pnpm build:tsc",
     "prepare:types": "cp ./src/types.d.ts ./index.d.ts",
@@ -47,6 +47,7 @@
     "esbuild-register": "^3.3.2",
     "eslint": "^8.12.0",
     "node-fetch": "^3.2.3",
+    "nyc": "^15.1.0",
     "open": "^8.4.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.7.0",

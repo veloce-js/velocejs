@@ -24,6 +24,7 @@ export {
 export {
   getWriter,
   jsonWriter,
+  write404,
   writeBufferToFile
 } from './writers'
 export {
