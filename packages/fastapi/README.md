@@ -13,7 +13,6 @@ $ npm i @velocejs/fastapi
 
 ```ts
 import {
-  UwsServer ,
   FastApi,
   ServeStatic,
   Rest,
@@ -35,7 +34,7 @@ class MyExample extends FastApi {
   }
 }
 
-const myForm = new MyFormExample(new UwsServer())
+const myForm = new MyFormExample()
 myForm.start()
   .then(url => {
     console.log(`Server started on ${url}`)

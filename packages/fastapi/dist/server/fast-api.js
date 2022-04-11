@@ -15,13 +15,25 @@ class FastApi {
     // this will be storing the write queue
     writer = () => { console.log('stupid'); };
     jsonWriter = () => { console.log('stupid'); };
-    // store the UWS server instance as protected
-    constructor(uwsInstance) {
-        this.uwsInstance = uwsInstance;
+    // store the UWS server instance when init
+    constructor(config) {
+        this.uwsInstance = new src_1.UwsServer(config);
+    }
+    // instead of using a Prepare decorator and ugly call the super.run
+    // we use a class decorator to call this method on init
+    // Dev can do @Rest(config)
+    prepare(routes, validations) {
+        console.log('REST CONFIG', routes, validations);
+        // set the autoStart to false
+        this.uwsInstance.autoStart = false;
+        // @TODO prepare the validation rules before as pass arg
+        this.uwsInstance.run(this.prepareRoutes(routes /*, valdiation */));
     }
     // When we call the user provided method, we will pass them the payload.params pass instead of
     // the whole payload, and we keep them in a temporary place, and destroy it once the call is over
-    setTemp(payload, res /*, req?: HttpRequest */) {
+    setTemp(payload, res
+    /*, req?: HttpRequest */
+    ) {
         this.written = false;
         this.payload = payload;
         this.res = res;
@@ -56,14 +68,10 @@ class FastApi {
       console.log(validationMap)
     }
     */
-    // wrapper for the UwsServer create server method
-    createServer(routes) {
-        // set the autoStart to false
-        this.uwsInstance.autoStart = false;
-        this.uwsInstance.run(routes);
-    }
     // transform the string name to actual method
-    mapMethodToHandler(propertyName, onAbortedHandler) {
+    mapMethodToHandler(propertyName, 
+    /*validationRule */
+    onAbortedHandler) {
         const handler = this[propertyName];
         return async (res, req) => {
             const args1 = [res, req];
@@ -109,11 +117,10 @@ class FastApi {
         };
     }
     // Mapping all the string name to method and supply to UwsServer run method
-    run(meta /*, validation?: Array<any> */) {
-        // do things with the validation
-        // this.validationMap = validation
-        // run the server
-        this.createServer(meta.map(m => {
+    prepareRoutes(meta
+    // validations?: Array<JsonValidationEntry>
+    ) {
+        return meta.map(m => {
             const { path, type, propertyName, onAbortedHandler } = m;
             switch (type) {
                 case constants_1.STATIC_TYPE:
@@ -121,7 +128,8 @@ class FastApi {
                         path,
                         type: constants_1.STATIC_ROUTE,
                         // the method just return the path to the files
-                        handler: (0, src_1.serveStatic)(Reflect.apply(this[propertyName], this, []))
+                        // We change this to be a accessor decorator which a getter
+                        handler: (0, src_1.serveStatic)(this[propertyName])
                     };
                 case constants_1.RAW_TYPE:
                     return {
@@ -136,11 +144,33 @@ class FastApi {
                         handler: this.mapMethodToHandler(propertyName, onAbortedHandler)
                     };
             }
-        }));
-        return new Promise((resolver) => {
+        });
+    }
+    /**
+      We remap some of the methods from UwsServer to here for easier to use
+      const myApp = new MyApi(new UwsServer())
+      myApp.start()
+           .then(serverInfo => {
+             do things with it
+           })
+    **/
+    async start(port, host) {
+        if (port) {
+            this.uwsInstance.portNum = port;
+        }
+        if (host) {
+            this.uwsInstance.hostName = host;
+        }
+        return new Promise((resolver, rejecter) => {
             this.uwsInstance.onStart = resolver;
+            this.uwsInstance.onError = rejecter;
+            // finally start up the server
             this.uwsInstance.start();
         });
+    }
+    // wrapper around the shutdown
+    stop() {
+        this.uwsInstance.shutdown();
     }
 }
 exports.FastApi = FastApi;

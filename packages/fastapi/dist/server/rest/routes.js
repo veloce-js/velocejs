@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Aborted = exports.Head = exports.Patch = exports.Del = exports.Options = exports.Put = exports.Post = exports.Get = exports.Any = exports.Main = exports.Prepare = exports.ServeStatic = exports.Raw = void 0;
+exports.Aborted = exports.Head = exports.Patch = exports.Del = exports.Options = exports.Put = exports.Post = exports.Get = exports.Any = exports.ServeStatic = exports.Raw = void 0;
 const constants_1 = require("@velocejs/server/src/base/constants");
 const routekey_1 = require("./routekey");
 // The inner decorator factory method
@@ -43,24 +43,6 @@ function ServeStatic(path) {
     return innerDecoratorFactory(constants_1.STATIC_TYPE, path);
 }
 exports.ServeStatic = ServeStatic;
-// This must be run on the overload method in the sub-class
-// otherwise the meta data becomes empty
-function Prepare(target, _, // propertyName is unused, just placeholder it
-descriptor) {
-    const fn = descriptor.value;
-    // console.log(descriptor)
-    descriptor.value = function () {
-        const meta = Reflect.getOwnMetadata(routekey_1.routeKey, target);
-        if (!fn) {
-            throw new Error(`Class method is undefined!`);
-        }
-        const validation = Reflect.getOwnMetadata(routekey_1.argsKey, target);
-        return Reflect.apply(fn, this, [meta, validation]);
-    };
-}
-exports.Prepare = Prepare;
-// alias to PREPARE
-exports.Main = Prepare;
 // making the decorators
 exports.Any = routeDecoratorFactory('any');
 exports.Get = routeDecoratorFactory('get');

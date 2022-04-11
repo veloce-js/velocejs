@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/fastapi",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Built on top of @velocejs/server that let you build your API in no time",
   "main": "dist/index.js",
   "module": "dist/index.ts",
@@ -24,7 +24,7 @@
     "test:upload": "DEBUG=velocejs:server:* pnpm ts -- ./examples/upload/index.ts",
     "ts-node": "ts-node",
     "clean:dist": "rimraf ./dist",
-    "prepublishOnly": "pnpm prepare:types && pnpm build && pnpm test",
+    "prepublishOnly": "pnpm prepare:types && pnpm test",
     "patch": "npm version patch",
     "minor": "npm version minor",
     "major": "npm version major"

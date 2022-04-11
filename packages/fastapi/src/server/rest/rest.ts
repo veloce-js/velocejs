@@ -18,6 +18,7 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {
       super(...args)
+      // @ts-ignore: prepare does not exist on Anonymous class (it does on FastApi)
       this.prepare(existingRoutes, validations)
     }
   }
