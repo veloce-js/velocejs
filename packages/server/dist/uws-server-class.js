@@ -13,7 +13,7 @@ class UwsServer {
     running = false;
     // privates
     app;
-    // privates 
+    // privates
     port = 0;
     host = '';
     token = '';
@@ -69,7 +69,7 @@ class UwsServer {
         this.onStartFn = cb;
     }
     // allow to pass a callback when server couldn't start
-    setOnError(cb) {
+    set onError(cb) {
         this.onStartErrorFn = cb;
     }
     // this doesn't do anything just for overwrite or display a debug message

@@ -17,7 +17,7 @@ export declare class UwsServer {
     get hostName(): RecognizedString;
     set hostName(host: RecognizedString);
     set onStart(cb: (url: string) => void);
-    setOnError(cb: () => void): void;
+    set onError(cb: () => void);
     onStartCb(): void;
     run(handlers: UwsRouteSetup[]): void;
     start(): void;
