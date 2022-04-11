@@ -48,6 +48,14 @@ myForm.start()
 
 **Coming soon**
 
+## TODO
+
+- Validation
+- AST to extract type info
+- Contract generator
+- Client
+- Protected route 
+
 ---
 
 Joel Chu (c) 2022

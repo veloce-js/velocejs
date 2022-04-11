@@ -4,7 +4,12 @@
 // try the ts-morph facing the same situation. So we need to find away to
 // parse the file at TS stage to extract the Type info for Validation
 
-export function extractArgs(fnStr: string) {
-  console.log(fnStr)
+// ugly but simple and it works
+export function extractArgs(fnStr: string): Array<string> {
+  // @TODO replace this with a regex 
+  const part1 = fnStr.split('(')
+  const part2 = part1[1].split(')')
+  const part3 = part2[0].split(',')
 
+  return part3.map(t => t.trim()).filter(t => t !== '')
 }

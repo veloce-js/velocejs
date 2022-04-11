@@ -1,13 +1,15 @@
 import {
   FastApi,
-  Post
+  Rest,
+  Post,
+  Get,
 } from '../../src'
 
 @Rest
 class MyExample extends FastApi {
 
   @Post('/submit')
-  submitHandler() {
+  async submitHandler    (a,     c, d) {
     return 'go see the result in console'
   }
 
@@ -21,7 +23,9 @@ const api = new MyExample()
 api.start()
   .then(url => {
     console.log(`server started on ${url}`)
-    open(url)
+    // open(url)
+    api.stop()
+
   })
   .catch(err => {
     console.log(err)

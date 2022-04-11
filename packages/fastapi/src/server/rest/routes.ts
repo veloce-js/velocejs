@@ -1,5 +1,5 @@
 // all decorators are here
-import { RouteMetaInfo } from '../../types'
+import { RouteMetaInfo, DescriptorMeta } from '../../types'
 import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/src/base/constants'
 import { routeKey } from './routekey'
 import { extractArgs } from '../lib/extract'
@@ -7,12 +7,13 @@ import { extractArgs } from '../lib/extract'
 // The inner decorator factory method
 function innerDecoratorFactory(type: string, path: string, routeType?: string) {
   // this is the actual api facing the class method
-  return (target: any, propertyName: string, descriptor: any) => {
-
-    extractArgs(descriptor.value.toString)
+  // @TODO create a type fo a generic class instance
+  return (target: any, propertyName: string, descriptor: DescriptorMeta) => {
+    // this is for apply the input to the method, also for the validation 
+    const argNames = extractArgs(descriptor.value.toString())
     // all it does it to record all this meta info and we can re-use it later
     const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
-    const meta: RouteMetaInfo = { propertyName, path, type: '' }
+    const meta: RouteMetaInfo = { propertyName, path, argNames, type: ''}
     switch (type) {
       case RAW_TYPE:
         meta.type = RAW_TYPE
