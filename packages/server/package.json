@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/server",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "Server core using uWebsocket.js with additional helpers",
   "main": "dist/index.js",
   "module": "dist/index.ts",
@@ -30,7 +30,7 @@
     "clean:dist": "rimraf ./dist",
     "build": "pnpm clean:dist && pnpm build:tsc && pnpm prepare:types",
     "update:version": "node ../../update-devs.js server",
-    "prepublishOnly": "pnpm build && pnpm test",
+    "prepublishOnly": "pnpm build && pnpm test:ava",
     "postpublish": "pnpm update:version",
     "patch": "npm version patch",
     "minor": "npm version minor",
