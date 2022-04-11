@@ -16,13 +16,15 @@ import {
   // UwsParsedResult,// <-- this is no longer in use
   UwsRespondBody,
   UwsWriter,
-  UwsJsonWriter
+  UwsJsonWriter,
+  StringPairObj
 } from '@velocejs/server/src/types' // point to the source ts
 import {
   STATIC_TYPE,
   STATIC_ROUTE,
   RAW_TYPE,
-  IS_OTHER
+  IS_OTHER,
+  CONTENT_TYPE
 } from '@velocejs/server/src/base/constants'
 // our deps
 import {
@@ -35,12 +37,13 @@ import {
 export class FastApi {
   private uwsInstance: UwsServer
   private written = false
+  private headers: Array<StringPairObj> = []
+  private status: number | string = ''
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
   protected req: HttpRequest | undefined
-  // this will be storing the write queue
-  protected writer: UwsWriter = () => { console.log('stupid') }
-  protected jsonWriter: UwsJsonWriter = () => { console.log('stupid') }
+  protected writer: UwsWriter = () => { console.log('placeholder') }
+  protected jsonWriter: UwsJsonWriter = () => { console.log('placeholder') }
   // store the UWS server instance when init
   constructor(config?: AppOptions) {
     this.uwsInstance = new UwsServer(config)
@@ -65,6 +68,8 @@ export class FastApi {
     res: HttpResponse
     /*, req?: HttpRequest */
   ): void {
+    this.headers = []
+    this.status = ''
     this.written = false
     this.payload = payload
     this.res = res
@@ -93,7 +98,27 @@ export class FastApi {
       this[fn] = undefined
     })
     this.written = false
+    this.headers = []
+    this.status = ''
   }
+
+  // if the dev use this to provide an extra header
+  // then we can check if the contentType is already provided
+  // if so then we don't use the default one
+  protected writeHeader(key: string, value: string) {
+    // we keep the structure for faster processing later
+    this.headers.push({ key, value})
+  }
+
+  /*
+  private hasHeaderSet() {
+    return this.headers.map(header => {
+      if (header[CONTENT_TYPE]) {
+
+      }
+    })
+  }
+  */
 
   // using a setter to trigger series of things to do with the validation map
   /*
@@ -124,7 +149,7 @@ export class FastApi {
       this.setTemp(result, res)
       // @TODO apply the valdiator here
       // if there is an error then it will be the second parameter
-      let reply
+      let reply = ''
       try {
         reply = await Reflect.apply(handler, this, args2)
         // now we destroy the temp stuff
@@ -132,6 +157,8 @@ export class FastApi {
         // if the method return a result then we will handle it
         // otherwise we assume the dev handle it in their method
         if (reply && !this.written) {
+          // need to check the headers first
+
           switch (type) {
             case IS_OTHER:
               getWriter(res)(reply)
