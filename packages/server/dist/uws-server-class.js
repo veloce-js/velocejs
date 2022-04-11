@@ -13,6 +13,7 @@ class UwsServer {
     running = false;
     // privates
     app;
+    // privates 
     port = 0;
     host = '';
     token = '';
@@ -23,6 +24,9 @@ class UwsServer {
     onStartFn = (url) => {
         debugFn(`Server started at ${url}`);
     };
+    onStartErrorFn = () => {
+        throw new Error(`Server could not start!`);
+    };
     // Taking the app.listen out because there are more options to deal with now
     listen(app) {
         const cb = (token) => {
@@ -32,7 +36,7 @@ class UwsServer {
                 this.onStartCb();
             }
             else {
-                throw new Error(`Server could not start!`);
+                this.onStartErrorFn();
             }
         };
         const params = [this.portNum, cb];
@@ -60,8 +64,13 @@ class UwsServer {
     set hostName(host) {
         this.host = host;
     }
+    // set a custom on start callback
     set onStart(cb) {
         this.onStartFn = cb;
+    }
+    // allow to pass a callback when server couldn't start
+    setOnError(cb) {
+        this.onStartErrorFn = cb;
     }
     // this doesn't do anything just for overwrite or display a debug message
     onStartCb() {

@@ -10,12 +10,14 @@ export declare class UwsServer {
     private token;
     constructor(opts?: AppOptions | undefined);
     private onStartFn;
+    private onStartErrorFn;
     private listen;
     get portNum(): number;
     set portNum(port: number);
     get hostName(): RecognizedString;
     set hostName(host: RecognizedString);
     set onStart(cb: (url: string) => void);
+    setOnError(cb: () => void): void;
     onStartCb(): void;
     run(handlers: UwsRouteSetup[]): void;
     start(): void;
