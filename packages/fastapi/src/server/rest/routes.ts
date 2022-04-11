@@ -1,13 +1,15 @@
 // all decorators are here
-import { RouteMetaInfo, MetaDecorator } from '../../types'
+import { RouteMetaInfo } from '../../types'
 import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/src/base/constants'
-import { routeKey, argsKey } from './routekey'
-
+import { routeKey } from './routekey'
+import { extractArgs } from '../lib/extract'
 
 // The inner decorator factory method
 function innerDecoratorFactory(type: string, path: string, routeType?: string) {
   // this is the actual api facing the class method
-  return (target: any, propertyName: string) => {
+  return (target: any, propertyName: string, descriptor: any) => {
+
+    extractArgs(descriptor.value.toString)
     // all it does it to record all this meta info and we can re-use it later
     const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
     const meta: RouteMetaInfo = { propertyName, path, type: '' }
@@ -29,16 +31,6 @@ function innerDecoratorFactory(type: string, path: string, routeType?: string) {
   }
 }
 
-
-// Factory method to create factory method
-function routeDecoratorFactory(routeType: string): MetaDecorator {
-
-  return function(path: string) {
-
-    return innerDecoratorFactory(routeType, path)
-  }
-}
-
 // allow dev to define a raw handler - we don't do any processing
 export function Raw(route: string, path: string) {
 
@@ -46,11 +38,20 @@ export function Raw(route: string, path: string) {
 }
 
 // special decorator to create a serveStatic method
+// Accessor Decorator
 export function ServeStatic(path: string) {
 
   return innerDecoratorFactory(STATIC_TYPE, path)
 }
 
+// Factory method to create factory method
+function routeDecoratorFactory(routeType: string) {
+  // give it a name for easy debug
+  return (path: string) => {
+
+    return innerDecoratorFactory(routeType, path)
+  }
+}
 // making the decorators
 export const Any = routeDecoratorFactory('any')
 export const Get = routeDecoratorFactory('get')
