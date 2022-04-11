@@ -6,17 +6,19 @@
   Here we will try to apply the Decorator at the Class level
   and see if we could do it with just init the new class and everything should run
 */
+import { routeKey, argsKey } from './routekey'
 
-import { routeKey } from './routekey'
-
-export function Rest(config?: object | boolean) {
-
-  return function RestClassDecorator<T extends { new (...args: any[]): {} }>(ctr: T) {
-
-    const existingRoutes = Reflect.getOwnMetadata(routeKey, ctr.prototype) || []
-    // We are able to get the exisitng routes here
-    console.log('existingRoutes', existingRoutes)
-    
-    Reflect.apply(ctr.prototype.prepare, ctr.prototype, [existingRoutes, config])
+export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
+  const existingRoutes = Reflect.getOwnMetadata(routeKey, constructor.prototype) || []
+  const validations = Reflect.getOwnMetadata(argsKey, constructor.prototype) || []
+  // from https://stackoverflow.com/questions/51124979/typescript-calling-class-methods-inside-constructor-decorator
+  // But this will create a Typescript error `method prepare does not exist on Anonymous class`
+  // another way to get around with the properties not able to bind to the constructor.protoype
+  // https://stackoverflow.com/questions/48599889/typescript-adding-methods-with-decorator-type-does-not-exist
+  return class extends constructor {
+    constructor(...args: any[]) {
+      super(...args)
+      this.prepare(existingRoutes, validations)
+    }
   }
 }
