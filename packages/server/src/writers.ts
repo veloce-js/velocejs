@@ -10,7 +10,7 @@ const debugFn = debug('velocejs:server:writers')
 export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
   const writer = getWriter(res)
 
-  return (jsonObj: object, status?: number | string): void => {
+  return (jsonObj: object, status?: number): void => {
     writer(JSON.stringify(jsonObj), {
       [CONTENT_TYPE]: JSON_HEADER
     }, status)
@@ -20,7 +20,7 @@ export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
 // break this out for re-use
 export const getWriter = (res: HttpResponse): UwsWriter => {
 
-  return (payload: RecognizedString, headers?: StringPairObj, status?: number | string) => {
+  return (payload: RecognizedString, headers?: StringPairObj, status?: number) => {
     // this could create a bug - if they pass the wrong status code
     // then we fill it with 200 OK by default, it's hard to check
     const _status = status ? lookupStatus(status) : C200

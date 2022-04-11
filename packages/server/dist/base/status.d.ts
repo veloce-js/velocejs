@@ -120,4 +120,4 @@ export declare const STATUS_MAP: {
     C510: string;
     C511: string;
 };
-export declare function lookupStatus(status: number | string): boolean | string;
+export declare function lookupStatus(status: number): string;

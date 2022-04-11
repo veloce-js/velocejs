@@ -60,6 +60,6 @@ export {
 // import { RecognizedString } from 'uWebSockets.js'
 // import { StringPairObj } from './src/base/type'
 
-export type UwsWriter = (payload: RecognizedString, headers?: StringPairObj, status?: number | string) => void
+export type UwsWriter = (payload: RecognizedString, headers?: StringPairObj, status?: number) => void
 
-export type UwsJsonWriter = (jsonObj: object | RecognizedString, status?: number | string) => void
+export type UwsJsonWriter = (jsonObj: object | RecognizedString, status?: number) => void

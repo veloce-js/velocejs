@@ -137,7 +137,6 @@ exports.STATUS_MAP = {
 // look up the code by the number
 function lookupStatus(status) {
     const key = `C${status}`;
-    const value = exports.STATUS_MAP[key];
-    return value ? value : false;
+    return exports.STATUS_MAP[key];
 }
 exports.lookupStatus = lookupStatus;
