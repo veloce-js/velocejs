@@ -8,6 +8,7 @@ import {
   jsonWriter
 } from '@velocejs/server/src' // point to the source ts
 import {
+  AppOptions,
   HttpResponse,
   HttpRequest,
   UwsRouteSetup,
@@ -32,6 +33,7 @@ import {
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
+  private uwsInstance: UwsServer
   private written = false
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
@@ -40,7 +42,9 @@ export class FastApi {
   protected writer: UwsWriter = () => { console.log('stupid') }
   protected jsonWriter: UwsJsonWriter = () => { console.log('stupid') }
   // store the UWS server instance when init
-  constructor(protected uwsInstance: UwsServer) {}
+  constructor(config?: AppOptions) {
+    this.uwsInstance = new UwsServer(config)
+  }
   // instead of using a Prepare decorator and ugly call the super.run
   // we use a class decorator to call this method on init
   // Dev can do @Rest(config)

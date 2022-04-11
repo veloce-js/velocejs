@@ -1,25 +1,21 @@
 // Testing the FastApi
 import test from 'ava'
-import { UwsServer } from '@velocejs/server/src'
+
 import Fetch from 'node-fetch'
 import { MyApi, msg1, msg2, msg3 } from './fixtures/my-api'
 
 let api: MyApi
-let app: UwsServer
 const port = 30331
 const hostname = `http://localhost:${port}`
 
 test.before(async () => {
-  app = new UwsServer()
-  // set the port number here
-  app.portNum = port
-  api = new MyApi(app)
+  api = new MyApi()
   // start up
-  await api.anything()
+  await api.start(port)
 })
 
 test.after(() => {
-  app.shutdown()
+  api.stop()
 })
 
 test(`Testing the class extends from FastApi`, async (t) => {
@@ -40,7 +36,6 @@ test(`Should able to respond with their own custom method`, async (t) => {
   t.is(text, msg2)
 })
 
-
 test(`Testing the post method handler`, async (t) => {
   t.plan(1)
   const todo = {name: 'John', value: 'something'}
@@ -55,7 +50,6 @@ test(`Testing the post method handler`, async (t) => {
   .then(text => {
     t.deepEqual(text, {msg: `John is doing something`})
   })
-
 })
 
 test(`Test the RAW decorator`, async (t) => {
@@ -65,5 +59,4 @@ test(`Test the RAW decorator`, async (t) => {
   const text = await response.text()
 
   t.is(text, msg3)
-
 })
