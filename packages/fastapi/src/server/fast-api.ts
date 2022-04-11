@@ -18,14 +18,16 @@ import {
   UwsJsonWriter
 } from '@velocejs/server/src/types' // point to the source ts
 import {
-  RouteMetaInfo
-} from '../types'
-import {
   STATIC_TYPE,
   STATIC_ROUTE,
   RAW_TYPE,
   IS_OTHER
 } from '@velocejs/server/src/base/constants'
+// our deps
+import {
+  RouteMetaInfo,
+  JsonValidationEntry
+} from '../types'
 
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
@@ -37,13 +39,28 @@ export class FastApi {
   // this will be storing the write queue
   protected writer: UwsWriter = () => { console.log('stupid') }
   protected jsonWriter: UwsJsonWriter = () => { console.log('stupid') }
-
-  // store the UWS server instance as protected
+  // store the UWS server instance when init
   constructor(protected uwsInstance: UwsServer) {}
-
+  // instead of using a Prepare decorator and ugly call the super.run
+  // we use a class decorator to call this method on init
+  // Dev can do @Rest(config)
+  private prepare(
+    routes: Array<RouteMetaInfo>,
+    validations?: Array<JsonValidationEntry>
+  ):void {
+    console.log('REST CONFIG', routes, validations)
+    // set the autoStart to false
+    this.uwsInstance.autoStart = false
+    // @TODO prepare the validation rules before as pass arg
+    this.uwsInstance.run(this.prepareRoutes(routes /*, valdiation */))
+  }
   // When we call the user provided method, we will pass them the payload.params pass instead of
   // the whole payload, and we keep them in a temporary place, and destroy it once the call is over
-  private setTemp(payload: UwsRespondBody, res: HttpResponse /*, req?: HttpRequest */) {
+  private setTemp(
+    payload: UwsRespondBody,
+    res: HttpResponse
+    /*, req?: HttpRequest */
+  ): void {
     this.written = false
     this.payload = payload
     this.res = res
@@ -80,19 +97,16 @@ export class FastApi {
     console.log(validationMap)
   }
   */
-  // wrapper for the UwsServer create server method
-  private createServer(routes: UwsRouteSetup[]) {
-    // set the autoStart to false
-    this.uwsInstance.autoStart = false
-    this.uwsInstance.run(routes)
-  }
 
   // transform the string name to actual method
-  private mapMethodToHandler(propertyName: string, onAbortedHandler?: string): UwsRouteHandler {
+  private mapMethodToHandler(
+    propertyName: string,
+    /*validationRule */
+    onAbortedHandler?: string): UwsRouteHandler {
     const handler = this[propertyName]
 
     return async (res: HttpResponse, req: HttpRequest) => {
-      const args1: Array<any> = [res, req]
+      const args1: Array<HttpResponse | HttpRequest | (() => void)> = [res, req]
       // add onAbortedHandler
       if (onAbortedHandler) {
         args1.push(this[onAbortedHandler])
@@ -134,12 +148,12 @@ export class FastApi {
   }
 
   // Mapping all the string name to method and supply to UwsServer run method
-  public run(meta: RouteMetaInfo[] /*, validation?: Array<any> */): Promise<string> {
-    // do things with the validation
-    // this.validationMap = validation
-    // run the server
-    this.createServer(
-      meta.map(m => {
+  private prepareRoutes(
+    meta: RouteMetaInfo[]
+    // validations?: Array<JsonValidationEntry>
+  ): Array<UwsRouteSetup> {
+
+    return meta.map(m => {
         const { path, type, propertyName, onAbortedHandler } = m
         switch (type) {
           case STATIC_TYPE:
@@ -164,12 +178,34 @@ export class FastApi {
             }
         }
       })
-    )
+  }
+  /**
+    We remap some of the methods from UwsServer to here for easier to use
 
-    return new Promise((resolver) => {
+    const myApp = new MyApi(new UwsServer())
+
+    myApp.start()
+         .then(serverInfo => {
+           do things with it
+         })
+  **/
+  public async start(port?: number, host?: string): Promise<string> {
+    if (port) {
+      this.uwsInstance.portNum = port
+    }
+    if (host) {
+      this.uwsInstance.hostName = host
+    }
+
+    return new Promise((resolver, rejecter) => {
       this.uwsInstance.onStart = resolver
-      // @TODO should give an option to not start the server right the way
+      this.uwsInstance.onError = rejecter
+      // finally start up the server
       this.uwsInstance.start()
     })
+  }
+  // wrapper around the shutdown
+  public stop(): void {
+    this.uwsInstance.shutdown()
   }
 }

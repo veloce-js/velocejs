@@ -9,12 +9,14 @@
 
 import { routeKey } from './routekey'
 
-export function Rest<T extends { new (...args: any[]): {} }>(ctr: T) {
+export function Rest(config?: object | boolean) {
 
-  const existingRoutes = Reflect.getOwnMetadata(routeKey, ctr.prototype) || []
+  return function RestClassDecorator<T extends { new (...args: any[]): {} }>(ctr: T) {
 
-  console.log('existingRoutes', existingRoutes)
-
-  // ctr.prototype.id = Math.random();
-  // ctr.prototype.created = new Date().toLocaleString("es-ES");
+    const existingRoutes = Reflect.getOwnMetadata(routeKey, ctr.prototype) || []
+    // We are able to get the exisitng routes here
+    console.log('existingRoutes', existingRoutes)
+    
+    Reflect.apply(ctr.prototype.prepare, ctr.prototype, [existingRoutes, config])
+  }
 }

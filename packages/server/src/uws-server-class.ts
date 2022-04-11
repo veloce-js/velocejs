@@ -12,7 +12,7 @@ export class UwsServer {
   public running = false
   // privates
   protected app: TemplatedApp | undefined
-
+  // privates 
   private port = 0
   private host: RecognizedString = ''
   private token: us_listen_socket = ''
@@ -24,6 +24,10 @@ export class UwsServer {
     debugFn(`Server started at ${url}`)
   }
 
+  private onStartErrorFn = (): void => {
+    throw new Error(`Server could not start!`)
+  }
+
   // Taking the app.listen out because there are more options to deal with now
   private listen(app: TemplatedApp): void {
     const cb = (token: us_listen_socket): void => {
@@ -32,7 +36,7 @@ export class UwsServer {
         this.running = true
         this.onStartCb()
       } else {
-        throw new Error(`Server could not start!`)
+        this.onStartErrorFn()
       }
     }
     const params: Array<RecognizedString | number | ((listenSocket: us_listen_socket) => void)> = [this.portNum, cb]
@@ -64,9 +68,13 @@ export class UwsServer {
   public set hostName(host: RecognizedString) {
     this.host = host
   }
-
+  // set a custom on start callback
   public set onStart(cb: (url: string) => void) {
     this.onStartFn = cb
+  }
+  // allow to pass a callback when server couldn't start
+  public setOnError(cb: () => void){
+    this.onStartErrorFn = cb
   }
 
   // this doesn't do anything just for overwrite or display a debug message

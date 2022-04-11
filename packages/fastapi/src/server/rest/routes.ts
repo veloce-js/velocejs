@@ -51,27 +51,6 @@ export function ServeStatic(path: string) {
   return innerDecoratorFactory(STATIC_TYPE, path)
 }
 
-// This must be run on the overload method in the sub-class
-// otherwise the meta data becomes empty
-export function Prepare(
-  target: any,
-  _: string, // propertyName is unused, just placeholder it
-  descriptor: TypedPropertyDescriptor<(meta: RouteMetaInfo[]) => void>
-): void {
-  const fn = descriptor.value
-  // console.log(descriptor)
-  descriptor.value = function() {
-    const meta = Reflect.getOwnMetadata(routeKey, target)
-    if (!fn) {
-      throw new Error(`Class method is undefined!`)
-    }
-    const validation = Reflect.getOwnMetadata(argsKey, target)
-
-    return Reflect.apply(fn, this, [meta, validation])
-  }
-}
-// alias to PREPARE
-export const Main = Prepare
 // making the decorators
 export const Any = routeDecoratorFactory('any')
 export const Get = routeDecoratorFactory('get')

@@ -15,7 +15,7 @@ import {
   ServeStatic,
   // Post,
   Raw,
-  Prepare,
+  //  Prepare,
   Rest
 } from '../../src'
 
@@ -23,7 +23,7 @@ import {
 
 import open from 'open'
 
-// @Rest
+@Rest()
 class MyFormExample extends FastApi {
 
   @Raw('post', '/submit')
@@ -41,11 +41,6 @@ class MyFormExample extends FastApi {
   @ServeStatic('/*')
   get staticHandler(): string {
     return join(__dirname, 'httpdocs')
-  }
-
-  @Prepare
-  startUp(...args: any[]) {
-    Reflect.apply(super.run, this, args)
   }
 
 }
