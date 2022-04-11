@@ -181,9 +181,7 @@ export class FastApi {
   }
   /**
     We remap some of the methods from UwsServer to here for easier to use
-
     const myApp = new MyApi(new UwsServer())
-
     myApp.start()
          .then(serverInfo => {
            do things with it

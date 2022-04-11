@@ -12,7 +12,7 @@ export class UwsServer {
   public running = false
   // privates
   protected app: TemplatedApp | undefined
-  // privates 
+  // privates
   private port = 0
   private host: RecognizedString = ''
   private token: us_listen_socket = ''
@@ -73,7 +73,7 @@ export class UwsServer {
     this.onStartFn = cb
   }
   // allow to pass a callback when server couldn't start
-  public setOnError(cb: () => void){
+  public set onError(cb: () => void){
     this.onStartErrorFn = cb
   }
 
