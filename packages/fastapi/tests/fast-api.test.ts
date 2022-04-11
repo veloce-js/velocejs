@@ -22,6 +22,9 @@ test(`Testing the class extends from FastApi`, async (t) => {
   t.plan(1)
 
   const response = await Fetch(`${hostname}/some-where`)
+
+  console.log('HEADERS',  response.headers)
+
   const text = await response.text()
 
   t.is(text, msg1)

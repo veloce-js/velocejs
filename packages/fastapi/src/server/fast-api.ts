@@ -13,11 +13,11 @@ import {
   HttpRequest,
   UwsRouteSetup,
   UwsRouteHandler,
-  // UwsParsedResult,// <-- this is no longer in use
   UwsRespondBody,
   UwsWriter,
   UwsJsonWriter,
-  StringPairObj
+  StringPairObj,
+  RecognizedString
 } from '@velocejs/server/src/types' // point to the source ts
 import {
   STATIC_TYPE,
@@ -32,18 +32,19 @@ import {
   JsonValidationEntry
 } from '../types'
 const placeholder = -1
+const placeholderFn = () => { console.log('placeholder') }
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
   private uwsInstance: UwsServer
   private written = false
   private headers: Array<StringPairObj> = []
-  private status: number | string = placeholder
+  private status: number = placeholder
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
   protected req: HttpRequest | undefined
-  protected writer: UwsWriter = () => { console.log('placeholder') }
-  protected jsonWriter: UwsJsonWriter = () => { console.log('placeholder') }
+  protected writer: UwsWriter = placeholderFn
+  protected jsonWriter: UwsJsonWriter = () => placeholderFn
   // store the UWS server instance when init
   constructor(config?: AppOptions) {
     this.uwsInstance = new UwsServer(config)
@@ -118,27 +119,15 @@ export class FastApi {
       // this is a bit tricky if there is a json result
       // then it will be the first argument
       const { params, type } = result
-      const args2 = this.applyArgs(args, params)
       this.setTemp(result, res)
+      const args2 = this.applyArgs(args, params)
       // @TODO apply the valdiator here
-      // if there is an error then it will be the second parameter
+      // if there is an error then it won't get call
       let reply = ''
       try {
         reply = await Reflect.apply(handler, this, args2)
-        // now we destroy the temp stuff
-        // we wrap this in a set timeout is a node.js thing to create a nextTick effect
-        // if the method return a result then we will handle it
-        // otherwise we assume the dev handle it in their method
         if (reply && !this.written) {
-          // need to check the headers first
-
-          switch (type) {
-            case IS_OTHER:
-              getWriter(res)(reply)
-              break
-            default:
-              jsonWriter(res)(reply)
-          }
+          this.write(type, reply)
         }
       } catch (e) {
         console.log(`ERROR with`, propertyName, e)
@@ -150,7 +139,7 @@ export class FastApi {
       }
     }
   }
-  
+
   // take the argument list and the input to create the correct arguments
   private applyArgs(args: Array<string>, params: object): Array<any> {
     return args.map(arg => params[arg])
@@ -197,6 +186,17 @@ export class FastApi {
     this.status = placeholder
   }
 
+  // write to the client
+  private write(type: string, payload: RecognizedString | object): void {
+    switch (type) {
+      case IS_OTHER:
+          this.writer(payload)
+        break
+      default:
+          this.jsonWriter(payload)
+    }
+  }
+
   // if the dev use this to provide an extra header
   // then we can check if the contentType is already provided
   // if so then we don't use the default one
@@ -205,12 +205,14 @@ export class FastApi {
     this.headers.push({ key, value })
   }
 
-  protected writeStatus(status: string | number) {
+  protected writeStatus(status: number) {
     const s = lookupStatus(status)
     if (s) {
-      this.status = s as string
+      this.status = s
     }
   }
+
+
 
   /*
   private hasHeaderSet() {

@@ -1,6 +1,6 @@
 // setup a dummy API for test
 
-import { HttpResponse,  UwsParsedResult } from '@velocejs/server/src/types'
+import { HttpResponse } from '@velocejs/server/src/types'
 import { FastApi, Get, Post, Raw, Aborted, Rest } from '../../src'
 
 export const msg1 = `doing the route handling thing`
@@ -27,9 +27,9 @@ export class MyApi extends FastApi {
   }
 
   @Post('/submit')
-  myPostFunc(params: UwsParsedResult) {
+  myPostFunc(name: string, value: string) {
     // console.log('hanlder got call with', params)
-    return {msg: `${params.name} is doing ${params.value}`}
+    return {msg: `${name} is doing ${value}`}
   }
 
   @Raw('any', '/fall-back-route')

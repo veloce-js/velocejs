@@ -133,9 +133,8 @@ export const STATUS_MAP = {
 }
 
 // look up the code by the number
-export function lookupStatus(status: number | string): boolean | string {
+export function lookupStatus(status: number): string {
   const key = `C${status}`
-  const value = STATUS_MAP[key]
-  
-  return value ? value : false
+
+  return STATUS_MAP[key]
 }
