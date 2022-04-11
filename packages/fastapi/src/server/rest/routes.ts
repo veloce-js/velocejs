@@ -9,11 +9,8 @@ function innerDecoratorFactory(type: string, path: string, routeType?: string) {
   // this is the actual api facing the class method
   // @TODO create a type fo a generic class instance
   return (target: any, propertyName: string, descriptor: DescriptorMeta) => {
-    // this is for apply the input to the method, also for the validation 
-    const argNames = extractArgs(descriptor.value.toString())
-    // all it does it to record all this meta info and we can re-use it later
     const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
-    const meta: RouteMetaInfo = { propertyName, path, argNames, type: ''}
+    const meta: RouteMetaInfo = { propertyName, path, type: ''}
     switch (type) {
       case RAW_TYPE:
         meta.type = RAW_TYPE
@@ -24,6 +21,7 @@ function innerDecoratorFactory(type: string, path: string, routeType?: string) {
         meta.route = STATIC_ROUTE
         break
       default:
+        meta.args = extractArgs(descriptor.value.toString())
         meta.type = type
     }
     existingRoutes.push(meta)

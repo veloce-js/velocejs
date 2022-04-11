@@ -1,10 +1,10 @@
 // Using the swc/core to parse the TS file into AST
 // and we extract the method's argument along with their type
 // for validation
-import swc from '@swc/core'
+import * as swc from '@swc/core'
 import fs from 'fs-extra'
 
-// wrap the swc 
+// wrap the swc
 export async function astParser(infile: string, outdir?: string) {
 
   return fs.readFile(infile)
@@ -16,15 +16,21 @@ export async function astParser(infile: string, outdir?: string) {
                   comments: false,
                   script: true,
                   target: "es5",
+                  decorators: true,
                   // Input source code are treated as module by default
                   // isModule: false,
                 })
-                .then((module) => {
-                  console.log(module.type) // file type
-                  console.log(module.body) // AST
-
-                  return module.body
-                })
+                .then((module) => (
+                  // we only interested in the Class
+                  // and what its define within
+                  module.body.filter(body => body.type === 'ClassDeclaration')
+                ))
+                .then(processArgs)
             })
+}
 
+// break this out from above to processing the arguments
+function processArgs(classBody: object) {
+  console.dir(classBody, { depth: null })
+  return classBody
 }

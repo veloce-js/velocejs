@@ -9,7 +9,7 @@ import {
 class MyExample extends FastApi {
 
   @Post('/submit')
-  async submitHandler    (a,     c, d) {
+  async submitHandler    (a: string, c: number, d: any[]) {
     return 'go see the result in console'
   }
 
