@@ -33,6 +33,7 @@
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "ISC",
   "dependencies": {
+    "@swc/core": "^1.2.163",
     "@velocejs/server": "workspace:^0.6.6",
     "debug": "^4.3.4",
     "mime-types": "^2.1.35",

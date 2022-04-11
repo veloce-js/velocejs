@@ -9,6 +9,9 @@
 import { routeKey, argsKey } from './routekey'
 
 export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
+  // this solve the path problem for where the actual script we want to run the parser on
+  // console.log(process.argv[1])
+  
   const existingRoutes = Reflect.getOwnMetadata(routeKey, constructor.prototype) || []
   const validations = Reflect.getOwnMetadata(argsKey, constructor.prototype) || []
   // from https://stackoverflow.com/questions/51124979/typescript-calling-class-methods-inside-constructor-decorator
