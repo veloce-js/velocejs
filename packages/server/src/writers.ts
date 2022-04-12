@@ -10,7 +10,7 @@ const debugFn = debug('velocejs:server:writers')
 export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
   const writer = getWriter(res)
 
-  return (jsonObj: object, status?: number): void => {
+  return (jsonObj: RecognizedString | object, status?: number): void => {
     writer(JSON.stringify(jsonObj), {
       [CONTENT_TYPE]: JSON_HEADER
     }, status)

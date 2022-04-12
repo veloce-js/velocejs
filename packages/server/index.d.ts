@@ -57,8 +57,8 @@ export {
   UwsBodyParserFileEntry,
 } from './src/base/type'
 
-// import { RecognizedString } from 'uWebSockets.js'
-// import { StringPairObj } from './src/src/base/type'
+import { RecognizedString } from 'uWebSockets.js'
+import { StringPairObj } from './src/base/type'
 
 export type UwsWriter = (payload: RecognizedString, headers?: StringPairObj, status?: number) => void
 
