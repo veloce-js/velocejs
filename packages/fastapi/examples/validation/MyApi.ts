@@ -18,7 +18,9 @@ export class MyApi extends FastApi {
     return { userId }
   }
 
-  @Validate()
+  @Validate([
+    {rules: {min: 8, max: 15}}
+  ])
   @Post('/login')
   public login(username: string, password: string) {
 
@@ -26,6 +28,8 @@ export class MyApi extends FastApi {
 
     return { username, timestamp: Date.now()}
   }
+
+  @Validate()
 
 
 }

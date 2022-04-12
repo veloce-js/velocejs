@@ -15,14 +15,12 @@ export type DescriptorMeta = {
   enumerable: boolean
   configurable: boolean
 }
+// we might add more options in the future
+export type RouteOptions = {
+  protected?: boolean
+}
+
 //////////////////////// JSON SCHEMA VALIDATION RULES ////////////////////////
-
-/*
-TYPE - null boolean object array string or number (also can be integer)
-ENUM - Array<any>
-
-*/
-
 
 export declare type StringValidateRules = {
   maxLength?: number // (less than or equal to)

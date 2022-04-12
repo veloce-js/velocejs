@@ -1,12 +1,15 @@
 // all decorators are here
-import { RouteMetaInfo, DescriptorMeta } from '../../types'
+import {
+  RouteMetaInfo,
+  DescriptorMeta,
+  // RouteOptions next when develop protected route  
+} from '../../types'
 import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/src/base/constants'
 import { routeKey } from './keys'
 import { extractArgs } from '../lib/extract'
 
 // The inner decorator factory method
 function innerDecoratorFactory(type: string, path: string, routeType?: string) {
-
   // this is the actual api facing the class method
   // @TODO create a type fo a generic class instance
   return (target: any, propertyName: string, descriptor: DescriptorMeta) => {
@@ -48,9 +51,9 @@ export function ServeStatic(path: string) {
 // Factory method to create factory method
 function routeDecoratorFactory(routeType: string) {
   // give it a name for easy debug
-  return (path: string) => {
+  return (path: string /*, opts?: RouteOptions*/) => {
 
-    return innerDecoratorFactory(routeType, path)
+    return innerDecoratorFactory(routeType, path /*, opts */)
   }
 }
 // making the decorators

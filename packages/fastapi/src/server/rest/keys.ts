@@ -1,7 +1,7 @@
 // The key to id the meta info
 export const routeKey = Symbol("FastApiRouteKey")
 // put the abort method in it's own array, because it will never be async method
-// and it tooks too much work to resolve them together 
+// and it tooks too much work to resolve them together
 export const abortFnKey = Symbol('FastApiAbortFnKey')
 // for extracting argument names
 export const argsKey = Symbol("FastApiArgsKey")
