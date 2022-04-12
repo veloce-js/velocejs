@@ -1,12 +1,12 @@
 // create an example of just about every possible scenario
 
 import {
-  FastApi
+  FastApi,
   Rest,
   Get,
   Post,
-
-} from '../../src/server/fast-api'
+  Validate,
+} from '../../src'
 
 @Rest
 export class MyApi extends FastApi {
@@ -18,6 +18,7 @@ export class MyApi extends FastApi {
     return { userId }
   }
 
+  @Validate()
   @Post('/login')
   public login(username: string, password: string) {
 
@@ -26,5 +27,5 @@ export class MyApi extends FastApi {
     return { username, timestamp: Date.now()}
   }
 
-  
+
 }

@@ -3,13 +3,16 @@ import {
   Rest,
   Post,
   Get,
+  Validate
 } from '../../src'
 
 @Rest
 class MyExample extends FastApi {
 
+
   @Post('/submit')
-  async submitHandler    (a: string, c: number, d: any[]) {
+  @Validate()
+  async submitHandler(a: string, c: number, d: any[]) {
     return 'go see the result in console'
   }
 

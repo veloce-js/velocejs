@@ -31,7 +31,7 @@ export async function astParser(infile: string): Promise<object> {
 
 // break this out from above to processing the arguments
 function processArgs(classBody: object) {
-  console.dir(classBody, { depth: null })
+  // console.dir(classBody, { depth: null })
   console.timeEnd('ast')
   return classBody
 }

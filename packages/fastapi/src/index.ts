@@ -10,6 +10,9 @@ export {
 export {
   Rest
 } from './server/rest/rest'
+export {
+  Validate
+} from './server/rest/validator'
 // re-export the bodyParser for the Raw method
 export {
   bodyParser,

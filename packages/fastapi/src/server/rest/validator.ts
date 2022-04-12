@@ -3,10 +3,13 @@
 import { astKey, validationKey } from './keys'
 import { astParser } from '../lib/ts-ast-parser'
 
-export function Validate(options: Array<any>) {
-  console.log(options)
+export function Validate(options?: Array<any>) {
+  console.log('Validate', options)
 
   return async (target: any, propertyName: string) => {
+
+    console.log('propertyName', propertyName)
+    
     const astMap = Reflect.getOwnMetadata(astKey, target)
     if (!astMap) {
       const map = await astParser(process.argv[1])
