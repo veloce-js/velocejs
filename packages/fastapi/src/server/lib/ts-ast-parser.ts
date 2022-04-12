@@ -5,8 +5,8 @@ import * as swc from '@swc/core'
 import fs from 'fs-extra'
 
 // wrap the swc
-export async function astParser(infile: string, outdir?: string) {
-
+export async function astParser(infile: string): Promise<object> {
+  console.time('ast')
   return fs.readFile(infile)
             .then((code: Buffer) => code.toString())
             .then(async (code: string) => {
@@ -32,5 +32,6 @@ export async function astParser(infile: string, outdir?: string) {
 // break this out from above to processing the arguments
 function processArgs(classBody: object) {
   console.dir(classBody, { depth: null })
+  console.timeEnd('ast')
   return classBody
 }

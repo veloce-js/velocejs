@@ -21,7 +21,7 @@ export class MyApi extends FastApi {
 
   // here we handle the result ourself
   @Get('/custom-handler')
-  myCustomFunc( /* params: UwsParsedResult */ ): void {
+  myCustomFunc(): void {
 
     this.res.end(msg2)
   }

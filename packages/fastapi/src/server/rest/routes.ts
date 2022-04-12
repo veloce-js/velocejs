@@ -1,7 +1,7 @@
 // all decorators are here
 import { RouteMetaInfo, DescriptorMeta } from '../../types'
 import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/src/base/constants'
-import { routeKey } from './routekey'
+import { routeKey } from './keys'
 import { extractArgs } from '../lib/extract'
 
 // The inner decorator factory method

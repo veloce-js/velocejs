@@ -1,6 +1,22 @@
 // Validator Decorator
+// import { DescriptorMeta } from '../../types'
+import { astKey, validationKey } from './keys'
+import { astParser } from '../lib/ts-ast-parser'
 
-
-export function Validator(options: Array<any>): void {
+export function Validate(options: Array<any>) {
   console.log(options)
+
+  return async (target: any, propertyName: string) => {
+    const astMap = Reflect.getOwnMetadata(astKey, target)
+    if (!astMap) {
+      const map = await astParser(process.argv[1])
+      Reflect.defineMetadata(astKey, map, target)
+    }
+    // @TODO should the dev input also get validated?
+    const existingMap = Reflect.getOwnMetadata(validationKey, target) || {}
+    if (!existingMap[propertyName]) {
+      existingMap[propertyName] = options
+    }
+    Reflect.defineMetadata(validationKey, existingMap, target)
+  }
 }

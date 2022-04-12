@@ -215,16 +215,6 @@ export class FastApi {
     this.status = status
   }
 
-  /*
-  private hasHeaderSet() {
-    return this.headers.map(header => {
-      if (header[CONTENT_TYPE]) {
-
-      }
-    })
-  }
-  */
-
   // using a setter to trigger series of things to do with the validation map
   /*
   private set validationMap(validationMap: Array<any>) {
@@ -233,18 +223,9 @@ export class FastApi {
   */
 
 
-
-
-
-
   /**
-    We remap some of the methods from UwsServer to here for easier to use
-    const myApp = new MyApi(new UwsServer())
-    myApp.start()
-         .then(serverInfo => {
-           do things with it
-         })
-  **/
+   * We remap some of the methods from UwsServer to here for easier to use
+   */
   public async start(port?: number, host?: string): Promise<string> {
     if (port) {
       this.uwsInstance.portNum = port
