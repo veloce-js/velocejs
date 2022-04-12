@@ -11,15 +11,15 @@ import {
 @Rest
 export class MyApi extends FastApi {
 
-  @Get('/some-getter')
-  public someGetter(userId?: number) {
+  @Get('/post')
+  public post(userId?: number) {
     // then we do our things with the userId
 
     return { userId }
   }
 
   @Validate([
-    {rules: {min: 8, max: 15}}
+    {rules: { min: 8, max: 15 }}
   ])
   @Post('/login')
   public login(username: string, password: string) {
@@ -30,6 +30,14 @@ export class MyApi extends FastApi {
   }
 
   @Validate()
+  @Post('/publish')
+  public publish(content: string, title: string, userId?: number | string) {
 
+    console.log(content, userId)
+
+    return { OK: true }
+  }
+
+  
 
 }

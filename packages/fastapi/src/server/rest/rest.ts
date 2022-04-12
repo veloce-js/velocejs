@@ -6,11 +6,18 @@
   Here we will try to apply the Decorator at the Class level
   and see if we could do it with just init the new class and everything should run
 */
-import { routeKey, argsKey } from './keys'
+import { astKey, routeKey, argsKey } from './keys'
+import { astParser } from '../lib/ts-ast-parser'
 
 export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
   // this solve the path problem for where the actual script we want to run the parser on
   // console.log(process.argv[1])
+
+  const astMap = Reflect.getOwnMetadata(astKey, target)
+  if (!astMap) {
+    const map = await astParser(process.argv[1])
+    Reflect.defineMetadata(astKey, map, target)
+  }
 
   const existingRoutes = Reflect.getOwnMetadata(routeKey, constructor.prototype) || []
   const validations = Reflect.getOwnMetadata(argsKey, constructor.prototype) || []
