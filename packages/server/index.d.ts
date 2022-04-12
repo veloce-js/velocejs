@@ -49,13 +49,13 @@ export {
   UwsRouteHandler,
   UwsRouteSetup,
   UwsParsedResult,
-} from './src/src/base/interfaces'
+} from './src/base/interfaces'
 // export the types
 export {
   StringPairObj,
   UwsRespondBody,
   UwsBodyParserFileEntry,
-} from './src/src/base/type'
+} from './src/base/type'
 
 // import { RecognizedString } from 'uWebSockets.js'
 // import { StringPairObj } from './src/src/base/type'

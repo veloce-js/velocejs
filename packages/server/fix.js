@@ -3,19 +3,20 @@
 const fs = require('fs-extra')
 const { join } = require('path')
 
-const src = join(__dirname, 'src', 'type.d.ts')
-const file = join(__dirname, 'index.d.ts')
+const src = join(__dirname, 'src', 'types.d.ts')
+const indexFile = join(__dirname, 'index.d.ts')
 
-fs.copy(src, join(__dirname, 'dist', 'type.d.ts'))
-  .then(() => fs.copy(src, file))
+fs.copy(src, join(__dirname, 'dist', 'types.d.ts'))
+  .then(() => fs.copy(src, indexFile))
   .then(() => {
-    fs.readFile(file, (err, txt) => {
+
+    fs.readFile(indexFile, (err, txt) => {
       if (err) {
         console.error('ERROR:', err)
         return
       }
       const output = txt.toString().replace(/\/base\//gi, '/src/base/')
-      fs.writeFile(file, output, (err) => {
+      fs.writeFile(indexFile, output, (err) => {
         if (err) {
           console.error(`Error on write:`, err)
           return
