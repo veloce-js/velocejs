@@ -9,13 +9,13 @@ import {
 @Rest
 class MyExample extends FastApi {
 
-
-  @Post('/submit')
   @Validate()
+  @Post('/submit')
   async submitHandler(a: string, c: number, d: any[]) {
     return 'go see the result in console'
   }
 
+  @Validate()
   @Get('/')
   defaultHandler() {
     return 'some text'

@@ -6,9 +6,11 @@ import { extractArgs } from '../lib/extract'
 
 // The inner decorator factory method
 function innerDecoratorFactory(type: string, path: string, routeType?: string) {
+
   // this is the actual api facing the class method
   // @TODO create a type fo a generic class instance
   return (target: any, propertyName: string, descriptor: DescriptorMeta) => {
+    console.log('descriptor', descriptor)
     const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
     const meta: RouteMetaInfo = { propertyName, path, type: ''}
     switch (type) {
@@ -65,6 +67,7 @@ export const Head = routeDecoratorFactory('head')
 // export const TRACE = routeDecoratorFactory('trace')
 
 // this decorator is going to pass as the onAbort handler
+// @BUG there is a problem here how to id this aborter with the route
 export function Aborted(type: string, path: string) {
 
   return (

@@ -15,22 +15,76 @@ export type DescriptorMeta = {
   enumerable: boolean
   configurable: boolean
 }
-// @TODO
-export type JsonValidateStringRule = {
-  type: string
+//////////////////////// JSON SCHEMA VALIDATION RULES ////////////////////////
+
+/*
+TYPE - null boolean object array string or number (also can be integer)
+ENUM - Array<any>
+
+*/
+
+
+export declare type StringValidateRules = {
+  maxLength?: number // (less than or equal to)
+  minLength?: number // (more than or equal to)
+  pattern?: string // not this is a regex in string
 }
-export type JsonValidateNumberRule = {
-  type: string
+
+export declare type StringValidateRulesAlias = {
+  max?: number // <-- alias to maxLength
+  min?: number // <-- alias to minLength
 }
-export type JsonValidateArrayRule = {
-  type: string
+
+export type JsonValidateStringRule = StringValidateRules & StringValidateRulesAlias
+
+export declare type NumericValidateRules = {
+  multipleOf?: number // integer
+  maximum?: number // (less than or equal to)
+  exclusiveMaxmimum?: number // less than
+  minimum?: number // more than or equal to
+  exclusiveMinimum?: number // more than
 }
-export type JsonValidateObjectRule = {
-  type: string
+
+export declare type NumericValidateRulesAlias = {
+  max?: number // <-- alias to maximum
+  exmax?: number // <-- alias to exclusiveMaximum
+  min?: number // <-- alias to minimum
+  exmin?: number // <-- alias to exclusiveMinimum
 }
-export type JsonValidateAnyRule = {
-  type: string
+
+export type JsonValidateNumericRule = NumericValidateRules & NumericValidateRulesAlias
+// no alias
+export declare type JsonValidateArrayRule = {
+  items?: Array<any>
+  additionalItems?: Array<any>
+  maxItems?: number // unsigned integer
+  minItems?: number // unsigned integer
+  uniqueItems?: boolean // if the items are unique as in a Set
+  contains?: any // this required to be a JSON Schema which meeans the array contains one of these valid JSON Schmea validated item
 }
+
+export declare type ObjectValidateRules = {
+  maxProperties?: number
+  minProperties?: number
+  required?: boolean
+  properties?: any
+  patternProperties?: string
+  additonalPropties?: any
+  dependencies?: any
+  propertyNames?: string | symbol
+}
+
+export declare type ObjectValidateRulesAlias = {
+  maxProps?: number // <-- alias to maxProperties
+  minProps?: number // <-- alias to minProperties
+  props?: any // <-- alias to properties
+  patternProps?: string // <-- alias to patternProperties
+  addProps?: any // <-- alias to addProps
+  deps?: any // <-- alias to dependencies
+}
+
+export type JsonValidateObjectRule = ObjectValidateRules & ObjectValidateRulesAlias
+
 // Validation Type - using the JSON Schema Validation standard
 export type JsonValidationEntry = {
   index?: number
@@ -39,8 +93,7 @@ export type JsonValidationEntry = {
   required?: boolean
   rules?: Array<
     JsonValidateStringRule |
-    JsonValidateNumberRule |
+    JsonValidateNumericRule |
     JsonValidateArrayRule |
-    JsonValidateObjectRule |
-    JsonValidateAnyRule> // @TODO the object will be futher specify
+    JsonValidateObjectRule>
 }

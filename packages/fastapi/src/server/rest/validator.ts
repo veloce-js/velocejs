@@ -2,14 +2,19 @@
 // import { DescriptorMeta } from '../../types'
 import { astKey, validationKey } from './keys'
 import { astParser } from '../lib/ts-ast-parser'
-
-export function Validate(options?: Array<any>) {
-  console.log('Validate', options)
+import { JsonValidationEntry } from '../../types'
+/**
+@TODO if we apply the Validate after the Route definition
+      it won't work - the Route received the descriptor as promise<pending>
+      if it's an async method, if we use async await
+      then the route setup will not able to get any routes (not resolve by that time)
+      but as soon as we switch the order (Validate before  route)
+      it works. This could potentially lead to other unforseen bug
+**/
+export function Validate(options?: Array<JsonValidationEntry>) {
 
   return async (target: any, propertyName: string) => {
 
-    console.log('propertyName', propertyName)
-    
     const astMap = Reflect.getOwnMetadata(astKey, target)
     if (!astMap) {
       const map = await astParser(process.argv[1])
