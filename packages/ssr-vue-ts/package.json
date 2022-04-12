@@ -18,7 +18,7 @@
     "ts": "node -r esbuild-register"
   },
   "dependencies": {
-    "@velocejs/server": "workspace:^0.6.7",
+    "@velocejs/server": "workspace:^0.6.8",
     "mime-types": "^2.1.35",
     "vue": "^3.2.31",
     "vue-router": "^4.0.14"
