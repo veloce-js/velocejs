@@ -3,7 +3,6 @@ import {
   UwsServer,
   bodyParser,
   serveStatic,
-  lookupStatus,
   getWriter,
   jsonWriter
 } from '@velocejs/server/src' // point to the source ts
@@ -190,10 +189,18 @@ export class FastApi {
   private write(type: string, payload: RecognizedString | object): void {
     switch (type) {
       case IS_OTHER:
-          this.writer(payload)
+          this.writer(payload, this.headers, this.status)
         break
       default:
-          this.jsonWriter(payload)
+          // check if they set a different content-type header
+          // if so then we don't use the jsonWriter
+          for (const key in this.headers) {
+            if (key.toLowerCase() === CONTENT_TYPE) {
+              // exit here
+              return this.writer(payload, this.headers, this.status)
+            }
+          }
+          this.jsonWriter(payload, this.status)
     }
   }
 
@@ -201,18 +208,12 @@ export class FastApi {
   // then we can check if the contentType is already provided
   // if so then we don't use the default one
   protected writeHeader(key: string, value: string) {
-    // we keep the structure for faster processing later
-    this.headers.push({ key, value })
+    this.headers.push({ [key]: value })
   }
 
   protected writeStatus(status: number) {
-    const s = lookupStatus(status)
-    if (s) {
-      this.status = s
-    }
+    this.status = status
   }
-
-
 
   /*
   private hasHeaderSet() {
