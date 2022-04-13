@@ -3,7 +3,6 @@
 // for validation
 import * as swc from '@swc/core'
 import fs from 'fs-extra'
-
 // wrap the swc
 export async function astParser(infile: string): Promise<object> {
   console.time('ast')
