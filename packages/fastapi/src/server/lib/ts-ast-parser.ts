@@ -58,7 +58,7 @@ function normalize(body: Array<any>) {
 }
 
 // break this out from above to processing the arguments
-function processArgs(classBody: object) {
+function processArgs(classBody: any) {
   console.timeEnd('ast')
   if (classBody.body) {
     return classBody.body

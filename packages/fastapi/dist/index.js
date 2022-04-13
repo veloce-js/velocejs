@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lookupStatus = exports.getContentType = exports.getWriter = exports.bodyParser = exports.Rest = exports.ServeStatic = exports.Aborted = exports.Head = exports.Patch = exports.Del = exports.Options = exports.Put = exports.Post = exports.Get = exports.Any = exports.Raw = exports.FastApi = void 0;
+exports.lookupStatus = exports.getContentType = exports.getWriter = exports.bodyParser = exports.Validate = exports.Rest = exports.ServeStatic = exports.Aborted = exports.Head = exports.Patch = exports.Del = exports.Options = exports.Put = exports.Post = exports.Get = exports.Any = exports.Raw = exports.FastApi = void 0;
 // fast api
 require("reflect-metadata");
 var fast_api_1 = require("./server/fast-api");
@@ -19,6 +19,8 @@ Object.defineProperty(exports, "Aborted", { enumerable: true, get: function () {
 Object.defineProperty(exports, "ServeStatic", { enumerable: true, get: function () { return routes_1.ServeStatic; } });
 var rest_1 = require("./server/rest/rest");
 Object.defineProperty(exports, "Rest", { enumerable: true, get: function () { return rest_1.Rest; } });
+var validator_1 = require("./server/rest/validator");
+Object.defineProperty(exports, "Validate", { enumerable: true, get: function () { return validator_1.Validate; } });
 // re-export the bodyParser for the Raw method
 var src_1 = require("@velocejs/server/src");
 Object.defineProperty(exports, "bodyParser", { enumerable: true, get: function () { return src_1.bodyParser; } });
