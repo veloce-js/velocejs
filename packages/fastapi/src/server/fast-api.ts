@@ -31,22 +31,34 @@ import {
   JsonValidationEntry
 } from '../types'
 const placeholder = -1
-const placeholderFn = () => { console.log('placeholder') }
+const placeholderFn = (...args: any[] ) => { console.log(args) }
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi {
   private uwsInstance: UwsServer
   private written = false
-  private headers: Array<StringPairObj> = []
+  private headers: StringPairObj = {}
   private status: number = placeholder
+  private onConfigReady: Promise<any>
+  private onConfigWait: (value: unknown) => void = placeholderFn
+  private onConfigError: (value: unknown) => void = placeholderFn
+  // protected properties
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
   protected req: HttpRequest | undefined
   protected writer: UwsWriter = placeholderFn
   protected jsonWriter: UwsJsonWriter = () => placeholderFn
+
   // store the UWS server instance when init
   constructor(config?: AppOptions) {
     this.uwsInstance = new UwsServer(config)
+    // Due to the Decorator now using a Promise to apply the init property to the class
+    // so we need to create an onWait mechanism that let the listen method to know
+    // everything is ready
+    this.onConfigReady = new Promise((resolver, rejecter) => {
+      this.onConfigWait = resolver
+      this.onConfigError = rejecter
+    })
   }
   // instead of using a Prepare decorator and ugly call the super.run
   // we use a class decorator to call this method on init
@@ -55,11 +67,22 @@ export class FastApi {
     routes: Array<RouteMetaInfo>,
     validations?: Array<JsonValidationEntry>
   ):void {
-    console.log('REST CONFIG', routes, validations)
+
+    console.dir(routes, { depth: null })
+    console.dir(validations, { depth: null })
+
     // set the autoStart to false
     this.uwsInstance.autoStart = false
-    // @TODO prepare the validation rules before as pass arg
-    this.uwsInstance.run(this.prepareRoutes(routes /*, valdiation */))
+    try {
+      // @TODO prepare the validation rules before as pass arg
+      this.uwsInstance.run(this.prepareRoutes(routes /*, valdiation */))
+      // create a nextTick effect
+      setTimeout(() => {
+        this.onConfigWait(true)
+      }, 0)
+    } catch(e) {
+      this.onConfigError(e)
+    }
   }
 
   // Mapping all the string name to method and supply to UwsServer run method
@@ -102,10 +125,12 @@ export class FastApi {
   // transform the string name to actual method
   private mapMethodToHandler(
     propertyName: string,
-    args: Array<string>,
+    args: Array<any>,
     /*validationRule */
     onAbortedHandler?: string): UwsRouteHandler {
     const handler = this[propertyName]
+    // the args now using the info from ast map , we strip one array only contains names for user here
+    const argNames = args.map(arg => arg.name)
 
     return async (res: HttpResponse, req: HttpRequest) => {
       const args1: Array<HttpResponse | HttpRequest | (() => void)> = [res, req]
@@ -119,7 +144,10 @@ export class FastApi {
       // then it will be the first argument
       const { params, type } = result
       this.setTemp(result, res)
-      const args2 = this.applyArgs(args, params)
+      // @TODO apply the validaton here, if it didn't pass then it will abort the rest
+
+
+      const args2 = this.applyArgs(argNames, params)
       // @TODO apply the valdiator here
       // if there is an error then it won't get call
       let reply = ''
@@ -151,7 +179,7 @@ export class FastApi {
     res: HttpResponse
     /*, req?: HttpRequest */
   ): void {
-    this.headers = []
+    this.headers = {}
     this.status = placeholder
     this.written = false
     this.payload = payload
@@ -181,12 +209,12 @@ export class FastApi {
       this[fn] = undefined
     })
     this.written = false
-    this.headers = []
+    this.headers = {}
     this.status = placeholder
   }
 
   // write to the client
-  private write(type: string, payload: RecognizedString | object): void {
+  private write(type: string, payload: RecognizedString/* | object */): void {
     switch (type) {
       case IS_OTHER:
           this.writer(payload, this.headers, this.status)
@@ -208,7 +236,7 @@ export class FastApi {
   // then we can check if the contentType is already provided
   // if so then we don't use the default one
   protected writeHeader(key: string, value: string) {
-    this.headers.push({ [key]: value })
+    this.headers[key] = value
   }
 
   protected writeStatus(status: number) {
@@ -238,7 +266,13 @@ export class FastApi {
       this.uwsInstance.onStart = resolver
       this.uwsInstance.onError = rejecter
       // finally start up the server
-      this.uwsInstance.start()
+      this.onConfigReady
+        .then(() => {
+          this.uwsInstance.start()
+        })
+        .catch(e => {
+          rejecter(e)
+        })
     })
   }
   // wrapper around the shutdown

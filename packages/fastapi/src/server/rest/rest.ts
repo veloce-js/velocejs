@@ -6,7 +6,7 @@
   Here we will try to apply the Decorator at the Class level
   and see if we could do it with just init the new class and everything should run
 */
-import { RouteMetaInfo, JsonValidationEntry } from '../../types'
+import { RouteMetaInfo /*, JsonValidationEntry*/ } from '../../types'
 import { routeKey, argsKey } from './keys'
 import { astParser } from '../lib/ts-ast-parser'
 import { PARAMS_KEY } from '../../constants'
@@ -45,7 +45,7 @@ function mergeMapToRoute(map: object, existingRoutes: Array<RouteMetaInfo>) {
       route.args = map[route.propertyName]
     }
 
-    return route 
+    return route
   })
 }
 
