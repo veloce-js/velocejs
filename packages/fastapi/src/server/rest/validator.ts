@@ -2,6 +2,7 @@
 // import { DescriptorMeta } from '../../types'
 import { validationKey } from './keys'
 import { JsonValidationEntry } from '../../types'
+import { RULES_KEY } from '../../constants'
 /**
 @TODO if we apply the Validate after the Route definition
       it won't work - the Route received the descriptor as promise<pending>
@@ -17,7 +18,7 @@ export function Validate(options?: Array<JsonValidationEntry>) {
     // @TODO should the dev input also get validated?
     const existingMap = Reflect.getOwnMetadata(validationKey, target) || {}
     if (!existingMap[propertyName]) {
-      existingMap[propertyName] = options
+      existingMap[propertyName] = { [RULES_KEY]: options }
     }
     Reflect.defineMetadata(validationKey, existingMap, target)
   }

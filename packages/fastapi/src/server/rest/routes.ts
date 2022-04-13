@@ -2,7 +2,7 @@
 import {
   RouteMetaInfo,
   DescriptorMeta,
-  // RouteOptions next when develop protected route  
+  // RouteOptions next when develop protected route
 } from '../../types'
 import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/src/base/constants'
 import { routeKey } from './keys'
@@ -13,20 +13,25 @@ function innerDecoratorFactory(type: string, path: string, routeType?: string) {
   // this is the actual api facing the class method
   // @TODO create a type fo a generic class instance
   return (target: any, propertyName: string, descriptor: DescriptorMeta) => {
-    console.log('descriptor', descriptor)
+    // console.log('descriptor', descriptor)
     const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
-    const meta: RouteMetaInfo = { propertyName, path, type: ''}
+    const meta: RouteMetaInfo = {
+      propertyName,
+      path,
+      type: ''
+    }
     switch (type) {
       case RAW_TYPE:
         meta.type = RAW_TYPE
-        meta.route = routeType
+        meta.route = routeType // this is the GET, POST etc etc
         break
       case STATIC_TYPE:
         meta.type = STATIC_TYPE
         meta.route = STATIC_ROUTE
         break
       default:
-        meta.args = extractArgs(descriptor.value.toString())
+        // this get replace by the AST map
+        // meta.args = extractArgs(descriptor.value.toString())
         meta.type = type
     }
     existingRoutes.push(meta)

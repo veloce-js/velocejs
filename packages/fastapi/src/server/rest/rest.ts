@@ -6,8 +6,10 @@
   Here we will try to apply the Decorator at the Class level
   and see if we could do it with just init the new class and everything should run
 */
+import { RouteMetaInfo, JsonValidationEntry } from '../../types'
 import { routeKey, argsKey } from './keys'
 import { astParser } from '../lib/ts-ast-parser'
+import { PARAMS_KEY } from '../../constants'
 
 export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
   // from https://stackoverflow.com/questions/51124979/typescript-calling-class-methods-inside-constructor-decorator
@@ -25,8 +27,37 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
           // @TODO merge the map into the valdiations
 
           // @ts-ignore: prepare does not exist on Anonymous class (it does on FastApi)
-          this.prepare(existingRoutes, validations)
+          this.prepare(
+            mergeMapToRoute(map, existingRoutes),
+            mergeMapToValidation(map, validations)
+          )
         })
     }
   }
+}
+
+// merge the AST Map data into the route info map
+// then we don't need to extract the param twice
+function mergeMapToRoute(map: object, existingRoutes: Array<RouteMetaInfo>) {
+
+  return existingRoutes.map(route => {
+    if (map[route.propertyName]) {
+      route.args = map[route.propertyName]
+    }
+
+    return route 
+  })
+}
+
+// merge map info to the valdiation info
+function mergeMapToValidation(map: object, validations: object): object {
+  const tmp = {}
+  for (const propertyName in validations) {
+    tmp[propertyName] = Object.assign(
+      validations[propertyName],
+      { [PARAMS_KEY]: map[propertyName] }
+    )
+  }
+
+  return tmp
 }

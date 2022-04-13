@@ -5,6 +5,7 @@ import {
   Rest,
   Get,
   Post,
+  Put,
   Validate,
 } from '../../src'
 
@@ -38,6 +39,11 @@ export class MyApi extends FastApi {
     return { OK: true }
   }
 
-  
+  @Put('/publish')
+  public updatePost(contentId: number, auto=true): object {
+    console.log(contentId, auto)
+
+    return { UPDATE: true }
+  }
 
 }
