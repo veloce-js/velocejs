@@ -8,7 +8,7 @@ import {
   Validate,
 } from '../../src'
 
-@Rest(__filename)
+@Rest
 export class MyApi extends FastApi {
 
   @Get('/post')

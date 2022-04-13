@@ -6,7 +6,7 @@ import {
   Validate
 } from '../../src'
 
-@Rest(__filename)
+@Rest
 class MyExample extends FastApi {
 
   @Validate()
