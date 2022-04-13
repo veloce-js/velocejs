@@ -20,8 +20,9 @@ import { PARAMS_KEY } from '../../constants'
 export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
     // Voodoo magic
     const stacks = new Error().stack?.split('\n').filter(line => line.indexOf('__decorateClass') > -1)
-    // @ts-ignore: stop fucking around this is Voodoo magic 
-    const where = stacks[1].split('(')[1].split(':')[0]
+    // @ts-ignore: stop fucking around this is Voodoo magic
+    // console.log(stacks)
+    const where = stacks ? (stacks.length === 1 ? stacks[0] : stacks[1]).split('(')[1].split(':')[0] : ''
 
     // from https://stackoverflow.com/questions/51124979/typescript-calling-class-methods-inside-constructor-decorator
     // But this will create a Typescript error `method prepare does not exist on Anonymous class`
