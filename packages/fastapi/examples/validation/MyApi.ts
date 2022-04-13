@@ -1,5 +1,4 @@
 // create an example of just about every possible scenario
-
 import {
   FastApi,
   Rest,
@@ -9,7 +8,7 @@ import {
   Validate,
 } from '../../src'
 
-@Rest
+@Rest(__filename)
 export class MyApi extends FastApi {
 
   @Get('/post')

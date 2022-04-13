@@ -42,7 +42,7 @@ export async function astParser(infile: string): Promise<object> {
 }
 
 // strip out to make the structure the same to work with
-function normalize(body: object) {
+function normalize(body: Array<any>) {
   if (body.length) {
     return body.map(code => {
       if (code.type === 'ExportDeclaration') {
@@ -53,6 +53,7 @@ function normalize(body: object) {
       return code
     })[0]
   }
+  // console.dir(body, { depth: null })
   throw new Error(`Could not find any code to work with!`)
 }
 
@@ -95,7 +96,7 @@ function extractAssignmentPattern(pat) {
   }
 }
 // extract the value from the AssignmentPattern
-/* examples: @TODO 
+/* examples: @TODO
 auto = [1]
 {
         type: 'ArrayExpression',

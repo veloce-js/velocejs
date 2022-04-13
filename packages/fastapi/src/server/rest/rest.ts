@@ -11,27 +11,35 @@ import { routeKey, argsKey } from './keys'
 import { astParser } from '../lib/ts-ast-parser'
 import { PARAMS_KEY } from '../../constants'
 
-export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
-  // from https://stackoverflow.com/questions/51124979/typescript-calling-class-methods-inside-constructor-decorator
-  // But this will create a Typescript error `method prepare does not exist on Anonymous class`
-  // another way to get around with the properties not able to bind to the constructor.protoype
-  // https://stackoverflow.com/questions/48599889/typescript-adding-methods-with-decorator-type-does-not-exist
-  return class extends constructor {
-    constructor(...args: any[]) {
-      super(...args)
-      astParser(process.argv[1])
-        .then(map => {
-          const existingRoutes = Reflect.getOwnMetadata(routeKey, constructor.prototype) || []
-          const validations = Reflect.getOwnMetadata(argsKey, constructor.prototype) || []
-          // @TODO merge the argument list into the exitingRoutes
-          // @TODO merge the map into the valdiations
+// @BUG it's a shame we couldn't make this more elegant
+// because if we use the process.argv[1] to find the file location - it change depends on where we call it
+// therefore the parser couldn't find the file
+// hence we need this ugly hack to get around the problem
+export function Rest(where: string) {
 
-          // @ts-ignore: prepare does not exist on Anonymous class (it does on FastApi)
-          this.prepare(
-            mergeMapToRoute(map, existingRoutes),
-            mergeMapToValidation(map, validations)
-          )
-        })
+  return function<T extends { new (...args: any[]): {} }>(constructor: T) {
+    // from https://stackoverflow.com/questions/51124979/typescript-calling-class-methods-inside-constructor-decorator
+    // But this will create a Typescript error `method prepare does not exist on Anonymous class`
+    // another way to get around with the properties not able to bind to the constructor.protoype
+    // https://stackoverflow.com/questions/48599889/typescript-adding-methods-with-decorator-type-does-not-exist
+    return class extends constructor {
+      constructor(...args: any[]) {
+        super(...args)
+
+        astParser(where)
+          .then(map => {
+            const existingRoutes = Reflect.getOwnMetadata(routeKey, constructor.prototype) || []
+            const validations = Reflect.getOwnMetadata(argsKey, constructor.prototype) || []
+            // @TODO merge the argument list into the exitingRoutes
+            // @TODO merge the map into the valdiations
+
+            // @ts-ignore: prepare does not exist on Anonymous class (it does on FastApi)
+            this.prepare(
+              mergeMapToRoute(map, existingRoutes),
+              mergeMapToValidation(map, validations)
+            )
+          })
+      }
     }
   }
 }

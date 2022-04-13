@@ -7,7 +7,7 @@ export const msg1 = `doing the route handling thing`
 export const msg2 = `Here is my own message`
 export const msg3 = `Hello this is completely raw handler`
 
-@Rest
+@Rest(__filename)
 export class MyApi extends FastApi {
 
   @Get('/some-where')
