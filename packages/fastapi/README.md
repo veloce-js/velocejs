@@ -51,10 +51,10 @@ myForm.start()
 ## TODO
 
 - Validation
-- AST to extract type info
+- ~~AST to extract type info~~
 - Contract generator
 - Client
-- Protected route 
+- Protected route
 
 ---
 

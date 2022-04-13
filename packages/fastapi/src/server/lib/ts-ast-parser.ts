@@ -210,6 +210,6 @@ function extractTypeAnnotation(pat) {
         return annotation
     }
   }
-  console.dir('could not find annonation', pat)
+  // console.dir('could not find annonation', pat)
   return NIL
 }
