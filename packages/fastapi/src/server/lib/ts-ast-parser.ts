@@ -19,18 +19,42 @@ export async function astParser(infile: string): Promise<object> {
                   // Input source code are treated as module by default
                   // isModule: false,
                 })
-                .then((module) => (
+                .then((module) => {
+                  // console.dir(module.body, { depth: null})
                   // we only interested in the Class
                   // and what its define within
-                  module.body.filter(body => body.type === 'ClassDeclaration')
-                ))
+                  return module
+                    .body
+                    .filter(body =>
+                      body.type === 'ClassDeclaration'
+                      ||
+                      (
+                        body.type === 'ExportDeclaration'
+                        &&
+                        body.declaration?.type === 'ClassDeclaration'
+                      )
+                    )
+                })
+                .then(normalize)
                 .then(processArgs)
             })
 }
 
+// strip out to make the structure the same to work with
+function normalize(body: object) {
+  return body.map(code => {
+    if (code.type === 'ExportDeclaration') {
+
+      return code.declaration
+    }
+
+    return code
+  })
+}
+
 // break this out from above to processing the arguments
 function processArgs(classBody: object) {
-  // console.dir(classBody, { depth: null })
   console.timeEnd('ast')
+  console.dir(classBody, { depth: null })
   return classBody
 }
