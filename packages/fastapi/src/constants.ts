@@ -8,3 +8,7 @@ export const RULES_KEY = 'rules'
 export const AUTOMATIC = '---automatic---'
 export const OPTIONS_KEY = 'options'
 export const PARAMS_KEY = 'params'
+
+export const RULE_LIST = 'rule-list'
+export const RULE_SIMPLE = 'rule-simple'
+export const RULE_FULL = 'rule-full'

@@ -55,7 +55,7 @@ export function ServeStatic(path: string) {
 
 // Factory method to create factory method
 function routeDecoratorFactory(routeType: string) {
-  // give it a name for easy debug
+
   return (path: string /*, opts?: RouteOptions*/) => {
 
     return innerDecoratorFactory(routeType, path /*, opts */)
