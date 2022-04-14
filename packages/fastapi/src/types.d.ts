@@ -44,13 +44,14 @@ export declare type NumericValidateRules = {
 }
 
 export declare type NumericValidateRulesAlias = {
-  max?: number // <-- alias to maximum
-  exmax?: number // <-- alias to exclusiveMaximum
-  min?: number // <-- alias to minimum
-  exmin?: number // <-- alias to exclusiveMinimum
+  less?: number // <-- alias to exclusiveMaximum
+  greater?: number // <-- alias to exclusiveMinimum
 }
 
-export type JsonValidateNumericRule = NumericValidateRules & NumericValidateRulesAlias
+export type JsonValidateNumericRule =
+  StringValidateRulesAlias &
+  NumericValidateRules &
+  NumericValidateRulesAlias
 // no alias
 export declare type JsonValidateArrayRule = {
   items?: Array<any>
@@ -81,7 +82,8 @@ export declare type ObjectValidateRulesAlias = {
   deps?: any // <-- alias to dependencies
 }
 
-export type JsonValidateObjectRule = ObjectValidateRules & ObjectValidateRulesAlias
+export type JsonValidateObjectRule =
+  ObjectValidateRules & ObjectValidateRulesAlias
 
 // Validation Type - using the JSON Schema Validation standard
 export type JsonValidationEntry = {
