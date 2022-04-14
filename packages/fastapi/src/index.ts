@@ -1,19 +1,11 @@
 // fast api
 import 'reflect-metadata'
-export { FastApi } from './server/fast-api'
-export {
-  Raw,
-  Any, Get, Post, Put, Options, Del, Patch, Head,
-  Aborted,
-  ServeStatic,
-} from './server/rest/routes'
-export {
-  Rest
-} from './server/rest/rest'
-export {
-  Validate
-} from './server/rest/validator'
-// re-export the bodyParser for the Raw method
+// re-export 
+export * from './server/fast-api'
+export * from './server/rest/routes'
+export * from './server/rest/rest'
+export * from './server/rest/validator'
+// re-export some of the methods that is useful here
 export {
   bodyParser,
   getWriter,

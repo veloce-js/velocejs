@@ -28,13 +28,13 @@ export function createValidator(argNames, validationInput) {
 
 
 // Map the alias to our json schema
-const stringSH = {
+export const strAlias = {
   max: 'maxLength',
   '<=': 'maxLength',
   min: 'minLength',
   '>=': 'minLength'
 }
-const numSH = Object.assign(stringSH, {
+export const numAlias = Object.assign(stringSH, {
   less: 'exclusiveMaxmimum',
   '<': 'exclusiveMaxmimum',
   greater: 'exclusiveMinimum',

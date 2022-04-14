@@ -65,8 +65,8 @@ export const C507 = '507 Insufficient Storage'
 export const C508 = '508 Loop Detected'
 export const C510 = '510 Not Extended'
 export const C511 = '511 Network Authentication Required'
-
-export const STATUS_MAP = {
+// internal use only 
+const STATUS_MAP = {
   C100 ,
   C101 ,
   C102 ,
