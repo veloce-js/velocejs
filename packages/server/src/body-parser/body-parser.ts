@@ -85,7 +85,8 @@ export function parseMultipart(headers: StringPairObj, body: Buffer): object {
   if (boundary) {
     const params = parse(body, boundary as string)
     if (Array.isArray(params) && params.length) {
-      return processParams(params)
+
+      return processParams(params as any)
     }
   }
 
@@ -93,12 +94,12 @@ export function parseMultipart(headers: StringPairObj, body: Buffer): object {
 }
 
 // break it out from above for clearity
-function processFileArray(params: Array<any>): any {
+function processFileArray(params: Array<Record<string, UwsBodyParserMixEntry>>): any {
 
   return params.filter(param => param.filename && param.type)
                .map(param => {
                  const { name, type, filename, data } = param
-                 const [ strName, arr ] = takeApartName(name)
+                 const [ strName, arr ] = takeApartName(name as unknown as string)
                  const content = { type, filename, data }
                  const value = arr ? [ content ] : content
 
@@ -137,7 +138,7 @@ function processTextArray(params: Array<Record<string, UwsBodyParserMixEntry>>) 
 }
 
 // export this for unit test
-export function processParams(params: Array<any>): any {
+export function processParams(params: Array<Record<string, UwsBodyParserMixEntry>>): UwsBodyParserMixEntry {
 
   return Object.assign(
     processFileArray(params),

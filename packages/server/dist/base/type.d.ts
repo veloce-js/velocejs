@@ -17,5 +17,5 @@ export declare type UwsBodyParserFileEntry = {
     data: Buffer;
 };
 export declare type UwsBodyParserMixEntry = {
-    [key: string]: string & Buffer & UwsBodyParserFileEntry;
+    [key: string]: string | Buffer | UwsBodyParserFileEntry;
 };

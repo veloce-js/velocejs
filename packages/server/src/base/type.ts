@@ -22,5 +22,5 @@ export type UwsBodyParserFileEntry = {
 }
 
 export type UwsBodyParserMixEntry = {
-  [key: string]: string & Buffer & UwsBodyParserFileEntry
+  [key: string]: string | Buffer | UwsBodyParserFileEntry
 }
