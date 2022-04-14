@@ -1,7 +1,8 @@
 // Testing the validator
 import test from 'ava'
 import { extractArgs } from '../src/server/lib/extract'
-import { createDescriptor, createValidator } from '../src/server/lib/validator'
+// import { createDescriptor, createValidator } from '../src/server/lib/validator'
+import Schema from 'async-validator'
 /*
 test.before(() => {
 
@@ -13,10 +14,36 @@ test.after(() => {
 })
 */
 
-test(`Transform validation input to a schema`, t => {
-  
+test.only(`Transform validation input to a schema`, t => {
+  t.plan(1)
+  const descriptor = {
+    name: {
+      type: 'string',
+      required: true,
+      message: '%s must be string'
+    },
+    userId: [
+      {
+        type: 'integer'
+      },
+      {
+        validator(rule, value, callback, source, options) {
+          console.log('rule', rule)
+          console.log('value', value)
+          console.log('callback', callback)
+          console.log('source', source)
+          console.log('options', options)
+          return []
+        }
+      }
+    ]
+  }
+  const validator = new Schema(descriptor)
 
-
+  return validator.validate({name: 'John Doe', userId: 100})
+    .then(() => {
+      t.pass()
+    })
 })
 
 
