@@ -10,6 +10,7 @@ import { RouteMetaInfo /*, JsonValidationEntry*/ } from '../../types'
 import { routeKey, argsKey } from './keys'
 import { astParser } from '../lib/ts-ast-parser'
 import { PARAMS_KEY } from '../../constants'
+
 // @BUG it's a shame we couldn't make this more elegant
 // because if we use the process.argv[1] to find the file location - it change depends on where we call it
 // therefore the parser couldn't find the file

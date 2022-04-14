@@ -37,12 +37,16 @@ import {
 import {
   createValidator
 } from './lib/validator'
+import {
+  FastApiInterface
+} from './fast-api-interface'
 // dummy stuff
 const placeholder = -1
 const placeholderFn = (...args: any[] ) => { console.log(args) }
+
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
-export class FastApi {
+export class FastApi implements FastApiInterface {
   private uwsInstance: UwsServer
   private written = false
   private headers: StringPairObj = {}
@@ -181,7 +185,7 @@ export class FastApi {
   }
 
   // handle the errors return from validation
-  private handleValidationError(errors, fields) {
+  private handleValidationError(errors: string[], fields: string[]) {
     console.log(errors)
     console.log(fields)
 
@@ -190,7 +194,7 @@ export class FastApi {
   }
 
   // take the argument list and the input to create the correct arguments
-  private applyArgs(args: Array<string>, params: object): Array<any> {
+  private applyArgs(args: Array<string>, params: object) {
     return args.map(arg => params[arg])
   }
 

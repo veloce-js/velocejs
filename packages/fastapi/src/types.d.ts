@@ -98,6 +98,28 @@ export type JsonValidationEntry = {
     JsonValidateObjectRule>
 }
 
+export type ValidationObjectRuleEntry = {
+  required?: boolean
+  type?: string
+  message?: string
+  [key: string]: any
+}
+
+export type ValidationObjectRule = {
+  [key: string]: {
+    rules: Array<ValidationObjectRuleEntry>
+  }
+}
+/*
+  This is the inner simple rules
+*/
+export type ValidationObjectSimpleRule = {
+  [key: string]: string | number // the key will be one of the available keyword from above @TODO write them out
+  message?: string
+  required?: boolean
+  server?: boolean
+}
+
 export type JsonValidationOption = {
   status?: number
 }

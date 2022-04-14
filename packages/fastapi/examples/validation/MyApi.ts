@@ -14,12 +14,17 @@ export class MyApi extends FastApi {
   @Get('/post')
   public post(userId?: number) {
     // then we do our things with the userId
-
     return { userId }
   }
 
   @Validate([
-    {rules: { min: 8, max: 15 }}
+    [
+      {max: 8},
+    ],
+    [
+      {min: 6},
+      {max: 16}
+    ]
   ])
   @Post('/login')
   public login(username: string, password: string) {
