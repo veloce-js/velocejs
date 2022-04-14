@@ -6,19 +6,38 @@ exports.Validate = void 0;
 const keys_1 = require("./keys");
 const constants_1 = require("../../constants");
 /**
-@TODO if we apply the Validate after the Route definition
-      it won't work - the Route received the descriptor as promise<pending>
-      if it's an async method, if we use async await
-      then the route setup will not able to get any routes (not resolve by that time)
-      but as soon as we switch the order (Validate before  route)
-      it works. This could potentially lead to other unforseen bug
+@TODO fix the type for rules
+
+style one follow the async-validator
+
+{
+  fieldName: {
+    rules: [
+
+    ]
+  }
+}
+
+follow the order of the arguments
+
+[
+  [
+    {rules},
+    {rules}
+  ] // <== argument 1
+]
 **/
-function Validate(options) {
-    return async (target, propertyName) => {
+function Validate(rules, options) {
+    return (target, propertyName) => {
         // @TODO should the dev input also get validated?
         const existingMap = Reflect.getOwnMetadata(keys_1.validationKey, target) || {};
         if (!existingMap[propertyName]) {
-            existingMap[propertyName] = { [constants_1.RULES_KEY]: options };
+            // if this get apply to method but not rules, then we use the type info
+            // and just check the type itself
+            existingMap[propertyName] = {
+                [constants_1.RULES_KEY]: rules || constants_1.AUTOMATIC,
+                [constants_1.OPTIONS_KEY]: options || {}
+            };
         }
         Reflect.defineMetadata(keys_1.validationKey, existingMap, target);
     };

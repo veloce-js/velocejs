@@ -1,27 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.lookupStatus = exports.getContentType = exports.getWriter = exports.bodyParser = exports.Validate = exports.Rest = exports.ServeStatic = exports.Aborted = exports.Head = exports.Patch = exports.Del = exports.Options = exports.Put = exports.Post = exports.Get = exports.Any = exports.Raw = exports.FastApi = void 0;
+exports.lookupStatus = exports.getContentType = exports.getWriter = exports.bodyParser = void 0;
+const tslib_1 = require("tslib");
 // fast api
 require("reflect-metadata");
-var fast_api_1 = require("./server/fast-api");
-Object.defineProperty(exports, "FastApi", { enumerable: true, get: function () { return fast_api_1.FastApi; } });
-var routes_1 = require("./server/rest/routes");
-Object.defineProperty(exports, "Raw", { enumerable: true, get: function () { return routes_1.Raw; } });
-Object.defineProperty(exports, "Any", { enumerable: true, get: function () { return routes_1.Any; } });
-Object.defineProperty(exports, "Get", { enumerable: true, get: function () { return routes_1.Get; } });
-Object.defineProperty(exports, "Post", { enumerable: true, get: function () { return routes_1.Post; } });
-Object.defineProperty(exports, "Put", { enumerable: true, get: function () { return routes_1.Put; } });
-Object.defineProperty(exports, "Options", { enumerable: true, get: function () { return routes_1.Options; } });
-Object.defineProperty(exports, "Del", { enumerable: true, get: function () { return routes_1.Del; } });
-Object.defineProperty(exports, "Patch", { enumerable: true, get: function () { return routes_1.Patch; } });
-Object.defineProperty(exports, "Head", { enumerable: true, get: function () { return routes_1.Head; } });
-Object.defineProperty(exports, "Aborted", { enumerable: true, get: function () { return routes_1.Aborted; } });
-Object.defineProperty(exports, "ServeStatic", { enumerable: true, get: function () { return routes_1.ServeStatic; } });
-var rest_1 = require("./server/rest/rest");
-Object.defineProperty(exports, "Rest", { enumerable: true, get: function () { return rest_1.Rest; } });
-var validator_1 = require("./server/rest/validator");
-Object.defineProperty(exports, "Validate", { enumerable: true, get: function () { return validator_1.Validate; } });
-// re-export the bodyParser for the Raw method
+// re-export 
+tslib_1.__exportStar(require("./server/fast-api"), exports);
+tslib_1.__exportStar(require("./server/rest/routes"), exports);
+tslib_1.__exportStar(require("./server/rest/rest"), exports);
+tslib_1.__exportStar(require("./server/rest/validator"), exports);
+// re-export some of the methods that is useful here
 var src_1 = require("@velocejs/server/src");
 Object.defineProperty(exports, "bodyParser", { enumerable: true, get: function () { return src_1.bodyParser; } });
 Object.defineProperty(exports, "getWriter", { enumerable: true, get: function () { return src_1.getWriter; } });
