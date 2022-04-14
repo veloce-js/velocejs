@@ -5,7 +5,8 @@ import {
   HttpResponse,
   HttpRequest,
   UwsRespondBody,
-  StringPairObj
+  StringPairObj,
+  UwsBodyParserMixEntry
 } from '../types'
 import {
   CONTENT_TYPE,
@@ -90,18 +91,6 @@ export function parseMultipart(headers: StringPairObj, body: Buffer): object {
 
   return {}
 }
-/*
-interface FileResultObj {
-  name: string
-  type: string
-  filename: string
-  data: Buffer
-}
-
-type BodyParserResult = {
-  [key string]: FileResultObj
-}
-*/
 
 // break it out from above for clearity
 function processFileArray(params: Array<any>): any {
@@ -116,29 +105,32 @@ function processFileArray(params: Array<any>): any {
                  return { name: strName as string, value }
                })
                // from https://stackoverflow.com/questions/57379778/typescript-type-for-reduce
-               .reduce<Record<string, any>>((a , b): any => {
+               // @TODO the output type still problematic
+               .reduce<Record<string, UwsBodyParserMixEntry>>((a , b): any => {
                  switch (true) {
                   case (isEmptyObj(a)):
+
                     return { [b.name]: b.value } // init
                   case (a[b.name] !== undefined):
-                    // console.log('concat here')
+
                     return Object.assign(a , {
                       [b.name]: toArr(a[b.name]).concat(toArr(b.value))
                     })
                   default:
+
                     return Object.assign(a, {[b.name]: b.value})
                  }
                }, {})
 }
 
 // when the result is simple text then we parse it to string not buffer
-function processTextArray(params: Array<Record<string, any>>) {
+function processTextArray(params: Array<Record<string, UwsBodyParserMixEntry>>) {
 
   return params
     .filter(param => !param.filename && !param.type)
-    .map(param => (
+    .map((param): StringPairObj => (
       // @TODO how to use the type info to return as number or other data type
-      { [param.name as string] : toBuffer(param.data).toString() }
+      { [param.name as unknown as string] : toBuffer(param.data).toString() }
     )
   )
   .reduce<Record<string, string>>((a, b) => Object.assign(a, b), {})

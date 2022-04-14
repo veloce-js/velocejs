@@ -75,12 +75,12 @@ function processFileArray(params) {
         return { name: strName, value };
     })
         // from https://stackoverflow.com/questions/57379778/typescript-type-for-reduce
+        // @TODO the output type still problematic
         .reduce((a, b) => {
         switch (true) {
             case ((0, utils_1.isEmptyObj)(a)):
                 return { [b.name]: b.value }; // init
             case (a[b.name] !== undefined):
-                // console.log('concat here')
                 return Object.assign(a, {
                     [b.name]: (0, utils_1.toArr)(a[b.name]).concat((0, utils_1.toArr)(b.value))
                 });
@@ -93,7 +93,7 @@ function processFileArray(params) {
 function processTextArray(params) {
     return params
         .filter(param => !param.filename && !param.type)
-        .map(param => (
+        .map((param) => (
     // @TODO how to use the type info to return as number or other data type
     { [param.name]: (0, utils_1.toBuffer)(param.data).toString() }))
         .reduce((a, b) => Object.assign(a, b), {});

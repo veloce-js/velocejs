@@ -16,3 +16,6 @@ export declare type UwsBodyParserFileEntry = {
     filename: string;
     data: Buffer;
 };
+export declare type UwsBodyParserMixEntry = {
+    [key: string]: string & Buffer & UwsBodyParserFileEntry;
+};

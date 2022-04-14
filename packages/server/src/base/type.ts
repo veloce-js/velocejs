@@ -20,3 +20,7 @@ export type UwsBodyParserFileEntry = {
   filename: string
   data: Buffer
 }
+
+export type UwsBodyParserMixEntry = {
+  [key: string]: string & Buffer & UwsBodyParserFileEntry
+}
