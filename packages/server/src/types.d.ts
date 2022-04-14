@@ -56,7 +56,7 @@ export {
   UwsRespondBody,
   UwsBodyParserFileEntry,
 } from './base/type'
-
+// don't know why jslint keep saying couldn't find the type, so reimport here again 
 import { RecognizedString } from 'uWebSockets.js'
 import { StringPairObj } from './base/type'
 

@@ -1,5 +1,5 @@
 // using the async-validator https://github.com/yiminghe/async-validator/
-import Schema from 'async-validator'
+// import Schema from 'async-validator'
 /*
 Here is the design idea:
 1. Using the JSON Schema validation rules and keywords
@@ -13,12 +13,14 @@ Here is the design idea:
 export function createDescriptor(argNames: string[], validationInput: any) {
   console.log(argNames)
   console.dir(validationInput, { depth: null })
+
+  return validationInput
 }
 
 // this will get call inside the FastApi
-export function createValidator(argNames, validationInput) {
-  const descriptor = createDescriptor(argNames, validationInput)
-  const validator = new Schema(descriptor)
+export function createValidator(argNames: string[], validationInput: any) {
+  // const descriptor = createDescriptor(argNames, validationInput)
+  // const validator = new Schema(descriptor)
 
   // we just return the actual fn
   // return validator.validate
@@ -34,7 +36,7 @@ export const strAlias = {
   min: 'minLength',
   '>=': 'minLength'
 }
-export const numAlias = Object.assign(stringSH, {
+export const numAlias = Object.assign(strAlias, {
   less: 'exclusiveMaxmimum',
   '<': 'exclusiveMaxmimum',
   greater: 'exclusiveMinimum',

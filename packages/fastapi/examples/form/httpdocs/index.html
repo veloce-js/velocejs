@@ -1,12 +1,15 @@
 <!DOCTYPE>
   <html>
     <head>
-      <title>DEV</title>
+      <title>Form Testing</title>
 
     </head>
 
     <body>
       <h1>Form testing</h1>
+      <hr />
+
+      <h2>Multipart form testing</h2>
       <form action="/submit" method="post" enctype='multipart/form-data'>
         <input type="text" name="name" placeholder="Name"/>
         <br />
@@ -18,5 +21,15 @@
         <br />
         <button type="submit">Send</button>
       </form>
+
+      <h2>Standard form testing</h2>
+      <form action="/submit" method="post" enctype="application/x-www-form-urlencoded">
+        <input type="text" name="username" placeholder="Username" />
+        <br />
+        <input type="password" name="password" placeholder="Password" />
+        <br />
+        <button type="submit">Login</button>
+      </form>
+
     </body>
   </html>

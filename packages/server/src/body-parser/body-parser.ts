@@ -37,7 +37,6 @@ export async function bodyParser(
   onAborted?: () => void
 ): Promise<UwsRespondBody> {
   // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
-
   res.onAborted(() => {
     onAborted ? Reflect.apply(onAborted, null, [res]) : debugFn('ABORTED')
   })
@@ -91,9 +90,22 @@ export function parseMultipart(headers: StringPairObj, body: Buffer): object {
 
   return {}
 }
+/*
+interface FileResultObj {
+  name: string
+  type: string
+  filename: string
+  data: Buffer
+}
+
+type BodyParserResult = {
+  [key string]: FileResultObj
+}
+*/
 
 // break it out from above for clearity
 function processFileArray(params: Array<any>): any {
+
   return params.filter(param => param.filename && param.type)
                .map(param => {
                  const { name, type, filename, data } = param
@@ -120,7 +132,7 @@ function processFileArray(params: Array<any>): any {
 }
 
 // when the result is simple text then we parse it to string not buffer
-function processTextArray(params: Array<any>): any {
+function processTextArray(params: Array<Record<string, any>>) {
 
   return params
     .filter(param => !param.filename && !param.type)
@@ -129,7 +141,7 @@ function processTextArray(params: Array<any>): any {
       { [param.name as string] : toBuffer(param.data).toString() }
     )
   )
-  .reduce<Record<string, any>>((a, b) => Object.assign(a, b), {})
+  .reduce<Record<string, string>>((a, b) => Object.assign(a, b), {})
 }
 
 // export this for unit test

@@ -1,6 +1,5 @@
 // form
 import {
-  UwsServer,
   bodyParser
 } from '@velocejs/server/src'
 import {
@@ -21,7 +20,7 @@ class MyFormExample extends FastApi {
   @Raw('post', '/submit')
   async submitHandler(res: HttpResponse, req: HttpRequest) {
     const result = await bodyParser(res, req)
-    console.log('result', result)
+    console.dir(result, { depth: null })
     res.end('go see the result in console')
   }
 
@@ -31,7 +30,7 @@ class MyFormExample extends FastApi {
   }
 }
 
-const api = new MyFormExample(new UwsServer())
+const api = new MyFormExample()
 api.start()
   .then(url => {
     console.log(`server started on ${url}`)
