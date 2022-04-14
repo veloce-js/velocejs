@@ -95,3 +95,7 @@ export type JsonValidationEntry = {
     JsonValidateArrayRule |
     JsonValidateObjectRule>
 }
+
+export type JsonValidationOption = {
+  status?: number
+}

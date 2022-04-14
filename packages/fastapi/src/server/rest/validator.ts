@@ -1,8 +1,8 @@
 // Validator Decorator
 // import { DescriptorMeta } from '../../types'
 import { validationKey } from './keys'
-import { JsonValidationEntry } from '../../types'
-import { RULES_KEY } from '../../constants'
+import { JsonValidationEntry, JsonValidationOption } from '../../types'
+import { RULES_KEY, OPTIONS_KEY } from '../../constants'
 /**
 @TODO if we apply the Validate after the Route definition
       it won't work - the Route received the descriptor as promise<pending>
@@ -11,14 +11,19 @@ import { RULES_KEY } from '../../constants'
       but as soon as we switch the order (Validate before  route)
       it works. This could potentially lead to other unforseen bug
 **/
-export function Validate(options?: Array<JsonValidationEntry>) {
+export function Validate(rules?: Array<JsonValidationEntry>, options?: JsonValidationOption) {
 
   return async (target: any, propertyName: string) => {
 
     // @TODO should the dev input also get validated?
     const existingMap = Reflect.getOwnMetadata(validationKey, target) || {}
     if (!existingMap[propertyName]) {
-      existingMap[propertyName] = { [RULES_KEY]: options }
+      // if this get apply to method but not rules, then we use the type info
+      // and just check the type itself
+      existingMap[propertyName] = {
+        [RULES_KEY]: rules,
+        [OPTIONS_KEY]: options
+      }
     }
     Reflect.defineMetadata(validationKey, existingMap, target)
   }

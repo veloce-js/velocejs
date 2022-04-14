@@ -25,11 +25,19 @@ import {
   IS_OTHER,
   CONTENT_TYPE
 } from '@velocejs/server/src/base/constants'
+import {
+  C417,
+  lookupStatus
+} from '@velocejs/server/src/base/status'
 // our deps
 import {
   RouteMetaInfo,
   JsonValidationEntry
 } from '../types'
+import {
+  createValidator
+} from './lib/validator'
+// dummy stuff
 const placeholder = -1
 const placeholderFn = (...args: any[] ) => { console.log(args) }
 // We are not going to directly sub-class from the uws-server-class
@@ -42,6 +50,7 @@ export class FastApi {
   private onConfigReady: Promise<any>
   private onConfigWait: (value: unknown) => void = placeholderFn
   private onConfigError: (value: unknown) => void = placeholderFn
+  private jsonValidationErrorStatus: string = C417
   // protected properties
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
@@ -65,17 +74,15 @@ export class FastApi {
   // Dev can do @Rest(config)
   private prepare(
     routes: Array<RouteMetaInfo>,
-    validations?: Array<JsonValidationEntry>
+    validations?: any //Array<JsonValidationEntry>
   ):void {
-
-    console.dir(routes, { depth: null })
+    // console.dir(routes, { depth: null })
     console.dir(validations, { depth: null })
-
     // set the autoStart to false
     this.uwsInstance.autoStart = false
     try {
       // @TODO prepare the validation rules before as pass arg
-      this.uwsInstance.run(this.prepareRoutes(routes /*, valdiation */))
+      this.uwsInstance.run(this.prepareRoutes(routes, validations))
       // create a nextTick effect
       setTimeout(() => {
         this.onConfigWait(true)
@@ -87,12 +94,13 @@ export class FastApi {
 
   // Mapping all the string name to method and supply to UwsServer run method
   private prepareRoutes(
-    meta: RouteMetaInfo[]
-    // validations?: Array<JsonValidationEntry>
+    meta: RouteMetaInfo[],
+    validations?: any //Array<JsonValidationEntry>
   ): Array<UwsRouteSetup> {
 
     return meta.map(m => {
         const { path, type, propertyName, onAbortedHandler } = m
+        const inputRule = validations[propertyName]
         switch (type) {
           case STATIC_TYPE:
             return {
@@ -115,6 +123,7 @@ export class FastApi {
               handler: this.mapMethodToHandler(
                 propertyName,
                 m.args,
+                inputRule,
                 onAbortedHandler
               )
             }
@@ -125,12 +134,13 @@ export class FastApi {
   // transform the string name to actual method
   private mapMethodToHandler(
     propertyName: string,
-    args: Array<any>,
-    /*validationRule */
+    argsList: Array<any>,
+    validationInput: any, // this is the raw rules input by dev
     onAbortedHandler?: string): UwsRouteHandler {
     const handler = this[propertyName]
     // the args now using the info from ast map , we strip one array only contains names for user here
-    const argNames = args.map(arg => arg.name)
+    const argNames = argsList.map(arg => arg.name)
+    const validateFn = createValidator(argNames, validationInput)
 
     return async (res: HttpResponse, req: HttpRequest) => {
       const args1: Array<HttpResponse | HttpRequest | (() => void)> = [res, req]
@@ -142,29 +152,41 @@ export class FastApi {
       const result = await Reflect.apply(bodyParser, null, args1)
       // this is a bit tricky if there is a json result
       // then it will be the first argument
-      const { params, type } = result
       this.setTemp(result, res)
+      const { params, type } = result
       // @TODO apply the validaton here, if it didn't pass then it will abort the rest
-
-
-      const args2 = this.applyArgs(argNames, params)
-      // @TODO apply the valdiator here
-      // if there is an error then it won't get call
-      let reply = ''
-      try {
-        reply = await Reflect.apply(handler, this, args2)
-        if (reply && !this.written) {
-          this.write(type, reply)
-        }
-      } catch (e) {
-        console.log(`ERROR with`, propertyName, e)
-        res.close()
-      } finally {
-        setTimeout(() => {
-          this.unsetTemp()
-        }, 0)
-      }
+      validateFn(params)
+        // success
+        .then(async () => {
+          const args2 = this.applyArgs(argNames, params)
+          // @TODO apply the valdiator here
+          // if there is an error then it won't get call
+          let reply = ''
+          try {
+            reply = await Reflect.apply(handler, this, args2)
+            if (reply && !this.written) {
+              this.write(type, reply)
+            }
+          } catch (e) {
+            console.log(`ERROR with`, propertyName, e)
+            res.close()
+          } finally {
+            this.unsetTemp()
+          }
+        })
+        .catch(({ errors, fields }) => {
+          this.handleValidationError(errors, fields)
+        })
     }
+  }
+
+  // handle the errors return from validation
+  private handleValidationError(errors, fields) {
+    console.log(errors)
+    console.log(fields)
+
+    // clean up
+    this.unsetTemp()
   }
 
   // take the argument list and the input to create the correct arguments
@@ -205,12 +227,15 @@ export class FastApi {
 
   // call this after the call finish
   private unsetTemp() {
-    ['res', 'payload', 'writer', 'jsonWriter'].forEach(fn => {
-      this[fn] = undefined
-    })
-    this.written = false
-    this.headers = {}
-    this.status = placeholder
+    // create a nextTick effect
+    setTimeout(() => {
+      ['res', 'payload', 'writer', 'jsonWriter'].forEach(fn => {
+        this[fn] = undefined
+      })
+      this.written = false
+      this.headers = {}
+      this.status = placeholder
+    }, 0)
   }
 
   // write to the client
@@ -250,6 +275,10 @@ export class FastApi {
   }
   */
 
+  // This is a global override for the status when validation failed
+  public set validationErrorStatus(status: number) {
+    this.jsonValidationErrorStatus = lookupStatus(status) || C417
+  }
 
   /**
    * We remap some of the methods from UwsServer to here for easier to use
