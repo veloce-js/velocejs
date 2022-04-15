@@ -76,17 +76,11 @@ export class FastApi implements FastApiInterface {
   // instead of using a Prepare decorator and ugly call the super.run
   // we use a class decorator to call this method on init
   // Dev can do @Rest(config)
-  private prepare(
-    routes: Array<RouteMetaInfo>,
-    validations?: any //Array<JsonValidationEntry>
-  ):void {
-    // console.dir(routes, { depth: null })
-    console.dir(validations, { depth: null })
-    // set the autoStart to false
+  private prepare(routes: Array<RouteMetaInfo>):void {
     this.uwsInstance.autoStart = false
     try {
       // @TODO prepare the validation rules before as pass arg
-      this.uwsInstance.run(this.prepareRoutes(routes, validations))
+      this.uwsInstance.run(this.prepareRoutes(routes))
       // create a nextTick effect
       setTimeout(() => {
         this.onConfigWait(true)
@@ -97,14 +91,11 @@ export class FastApi implements FastApiInterface {
   }
 
   // Mapping all the string name to method and supply to UwsServer run method
-  private prepareRoutes(
-    meta: RouteMetaInfo[],
-    validations?: any //Array<JsonValidationEntry>
-  ): Array<UwsRouteSetup> {
+  private prepareRoutes(meta: RouteMetaInfo[]): Array<UwsRouteSetup> {
 
     return meta.map(m => {
-        const { path, type, propertyName, onAbortedHandler } = m
-        const inputRule = validations[propertyName]
+        const { path, type, propertyName, validation, onAbortedHandler } = m
+
         switch (type) {
           case STATIC_TYPE:
             return {
@@ -127,7 +118,7 @@ export class FastApi implements FastApiInterface {
               handler: this.mapMethodToHandler(
                 propertyName,
                 m.args,
-                inputRule,
+                validation,
                 onAbortedHandler
               )
             }
