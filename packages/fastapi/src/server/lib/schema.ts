@@ -1,5 +1,13 @@
 // using the async-validator https://github.com/yiminghe/async-validator/
-// import Schema from 'async-validator'
+import Schema from 'async-validator'
+import {
+  RULE_AUTOMATIC,
+  RULE_LIST,
+  RULE_SIMPLE,
+  RULE_FULL
+} from '../../constants'
+import { } from './validate-types'
+
 /*
 Here is the design idea:
 1. Using the JSON Schema validation rules and keywords
@@ -19,8 +27,8 @@ export function createDescriptor(argNames: string[], validationInput: any) {
 
 // this will get call inside the FastApi
 export function createValidator(argNames: string[], validationInput: any) {
-  // const descriptor = createDescriptor(argNames, validationInput)
-  // const validator = new Schema(descriptor)
+  const descriptor = createDescriptor(argNames, validationInput)
+  const validator = new Schema(descriptor)
 
   // we just return the actual fn
   // return validator.validate

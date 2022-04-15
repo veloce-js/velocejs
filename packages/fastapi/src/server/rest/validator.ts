@@ -8,7 +8,7 @@ import {
   ValidationObjectSimpleRule
 } from '../../types'
 import { FastApiInterface } from '../fast-api-interface'
-import { RULES_KEY, OPTIONS_KEY, AUTOMATIC } from '../../constants'
+import { RULES_KEY, OPTIONS_KEY, RULE_AUTOMATIC } from '../../constants'
 /**
 @TODO fix the type for rules
 
@@ -45,7 +45,7 @@ export function Validate(
       // if this get apply to method but not rules, then we use the type info
       // and just check the type itself
       existingMap[propertyName] = {
-        [RULES_KEY]: rules || AUTOMATIC,
+        [RULES_KEY]: rules || RULE_AUTOMATIC,
         [OPTIONS_KEY]: options || {}
       }
     }

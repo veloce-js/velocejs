@@ -20,4 +20,4 @@ export type RouteOptions = {
   protected?: boolean
 }
 
-export * from './server/lib/validator-types'
+export * from './server/lib/validate-types'
