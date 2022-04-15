@@ -61,3 +61,13 @@ export const simpleRule = [
   {max: 20}, // can only have one rule per argument
   {type: 'integer'}
 ]
+
+export const argList = [
+  { name: 'name', required: true, types: { type: 'string' } },
+  { name: 'id', required: false, types: { type: 'number' } }
+]
+
+export const simpleCompleteRule = {
+  name: { rules: [ { max: 20 } ] },
+  id: { rules: [ { max: 20 } ] }
+}

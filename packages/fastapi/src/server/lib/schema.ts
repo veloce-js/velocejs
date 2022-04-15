@@ -37,9 +37,20 @@ export function createDescriptor(argList: string[], validationInput: any) {
       // throw again?
   }
 }
-// @TODO we need the ast map
-function createAutomatic() {
+// use the AST data to generate validation descriptor
+function createAutomatic(argList: any[]) {
 
+  return argList.map(list => {
+    return {
+      [list.name]: list.types.map( type => {
+        return {
+          required: list.required,
+          type: type.type
+        }
+      })
+    }
+  })
+  .reduce<Record<string, any>>((a, b) => Object.assign(a,b), {})
 }
 
 function transformList() {
@@ -82,16 +93,17 @@ export function createValidator(argList: string[], validationInput: any) {
   }
   const descriptor = createDescriptor(argList, validationInput[RULES_KEY])
   const validator = new Schema(descriptor)
-
   // we just return the actual fn
   // return validator.validate
   // return a dummy for now
   return (...args: any[]) => {
     return Reflect.apply(validator.validate, null, args)
-                  .then(() => {
-
-                    return {[OPTIONS_KEY]: validationInput[OPTIONS_KEY]}
-                  })
+                  .then((result) => (
+                    {
+                      result,
+                      [OPTIONS_KEY]: validationInput[OPTIONS_KEY]
+                    }
+                  ))
   }
 }
 

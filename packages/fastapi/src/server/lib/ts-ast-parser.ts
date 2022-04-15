@@ -203,7 +203,7 @@ function translateType(swcType: string): string {
 
 
 // wrap this in one method to make the code cleaner
-function extractIdentifier(pat) {
+function extractIdentifier(pat: any) {
   return {
     name: pat.value,
     required: !pat.optional,
@@ -214,7 +214,7 @@ function extractIdentifier(pat) {
 }
 
 // type annotation could have different field structures
-function extractTypeAnnotation(pat) {
+function extractTypeAnnotation(pat: any) {
   const annotation = pat?.typeAnnotation?.typeAnnotation
   if (annotation) {
     // simple type
