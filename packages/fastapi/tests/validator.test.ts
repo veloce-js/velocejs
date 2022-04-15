@@ -5,11 +5,13 @@ import {
   completeRule,
   listRule,
   simpleRule,
-  argList,
-  simpleCompleteRule
 } from './fixtures/rules'
 import { createDescriptor, createValidator } from '../src/server/lib/schema'
 import Schema from 'async-validator'
+
+
+
+
 /*
 test.before(() => {
 
@@ -21,9 +23,20 @@ test.after(() => {
 })
 */
 
-test(`Transform validation input to a schema`, t => {
+test.only(`Transform validation input to a schema`, t => {
+  const argListWtf = [
+    { name: 'name', required: true, types: { type: 'string' } },
+    { name: 'id', required: false, types: { type: 'number' } }
+  ]
+  const simpleCompleteRule = {
+    name: { rules: [ { max: 20 } ] },
+    id: { rules: [ { max: 20 } ] }
+  }
+
+  console.dir(simpleCompleteRule)
+
   t.plan(1)
-  const validator = createValidator(argList, simpleCompleteRule)
+  const validator = createValidator(argListWtf, simpleCompleteRule)
   validator({name: 'John Doe', id: 1000})
     .then(result => {
       console.log(result)

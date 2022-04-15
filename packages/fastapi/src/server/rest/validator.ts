@@ -20,6 +20,7 @@ export function Validate(
   return (target: FastApiInterface, propertyName: string) => {
     // @TODO should the dev input also get validated?
     const existingMap = Reflect.getOwnMetadata(validationKey, target) || {}
+    // const existingRoute = Reflect.getOwnMetadata(routeKey, target) || []
     if (!existingMap[propertyName]) {
       // if this get apply to method but not rules, then we use the type info
       // and just check the type itself

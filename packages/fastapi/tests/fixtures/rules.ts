@@ -62,7 +62,7 @@ export const simpleRule = [
   {type: 'integer'}
 ]
 
-export const argList = [
+export const argListWtf = [
   { name: 'name', required: true, types: { type: 'string' } },
   { name: 'id', required: false, types: { type: 'number' } }
 ]

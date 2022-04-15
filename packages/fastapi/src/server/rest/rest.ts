@@ -9,7 +9,9 @@
 import { RouteMetaInfo /*, JsonValidationEntry*/ } from '../../types'
 import { routeKey, validationKey, protectedKey } from './keys'
 import { astParser } from '../lib/ts-ast-parser'
-
+import { STATIC_TYPE, RAW_TYPE } from '@velocejs/server/src/base/constants'
+// import debug from 'debug'
+// const debugFn = debug('velocejs:fastapi:decorator:Rest')
 
 // @BUG it's a shame we couldn't make this more elegant
 // because if we use the process.argv[1] to find the file location - it change depends on where we call it
@@ -49,12 +51,13 @@ function mergeInfo(
   protectedRoutes?: string[]
 ) {
   return existingRoutes.map(route => {
-    const { propertyName } = route
+    const { propertyName, type } = route
     if (map[propertyName]) {
       route.args = map[propertyName]
     }
     route.protected = protectedRoutes && protectedRoutes.indexOf(propertyName) > -1
-    route.validation = validations[propertyName] || false
+    // skip the static and raw type
+    route.validation = (type === STATIC_TYPE || type === RAW_TYPE ) ? false : validations[propertyName] || false
 
     return route
   })
