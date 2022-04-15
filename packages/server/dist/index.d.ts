@@ -7,5 +7,6 @@ export * from './body-parser/handle-upload';
 export * from './body-parser';
 export * from './writers';
 export * from './base/mime';
+export { isEmptyObj } from './body-parser/utils';
 export * from './uws-server-class';
 export * from './base/status';
