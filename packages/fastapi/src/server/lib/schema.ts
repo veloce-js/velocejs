@@ -9,6 +9,35 @@ import {
   RULES_KEY
 } from '../../constants'
 import { checkTypeOfRules } from './validate-types'
+
+// This is the main interface to get call
+export function createValidator(argList: any[], validationInput: any) {
+  // nothing to validate
+  if (!validationInput) {
+    return (...args: any[]): Promise<boolean> => (
+      Promise.resolve(true)
+    )
+  }
+  // first develop what is inside the FastApi first
+  const descriptor = validationInput //createDescriptor(argList, validationInput)
+  // @ts-ignore - stop the typescript non-sense
+  const validator = new Schema(descriptor)
+  // we just return the actual fn
+  // return validator.validate
+  // return a dummy for now
+  return (...args: any[]) => {
+    return Reflect.apply(validator.validate, null, args)
+                  .then(({ errors, fields }) => (
+                    {
+                      errors,
+                      fields,
+                      [OPTIONS_KEY]: validationInput[OPTIONS_KEY]
+                    }
+                  ))
+  }
+}
+
+
 /*
 Here is the design idea:
 1. Using the JSON Schema validation rules and keywords
@@ -94,31 +123,6 @@ function transformFullObj(argList: any[], validationInput: any) {
   console.dir(descriptor, { depth: null })
 
   return descriptor
-}
-
-// this will get call inside the FastApi
-export function createValidator(argList: any[], validationInput: any) {
-  // nothing to validate
-  if (!validationInput) {
-    return (...args: any[]): Promise<boolean> => (
-      Promise.resolve(true)
-    )
-  }
-  const descriptor = createDescriptor(argList, validationInput[RULES_KEY])
-  // @ts-ignore - stop the typescript non-sense
-  const validator = new Schema(descriptor)
-  // we just return the actual fn
-  // return validator.validate
-  // return a dummy for now
-  return (...args: any[]) => {
-    return Reflect.apply(validator.validate, null, args)
-                  .then((result) => (
-                    {
-                      result,
-                      [OPTIONS_KEY]: validationInput[OPTIONS_KEY]
-                    }
-                  ))
-  }
 }
 
 // Map the alias to our json schema

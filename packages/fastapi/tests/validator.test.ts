@@ -23,7 +23,7 @@ test.after(() => {
 })
 */
 
-test.only(`Transform validation input to a schema`, t => {
+test.skip(`Transform validation input to a schema`, t => {
   const argListWtf = [
     { name: 'name', required: true, types: { type: 'string' } },
     { name: 'id', required: false, types: { type: 'number' } }
@@ -45,7 +45,7 @@ test.only(`Transform validation input to a schema`, t => {
 })
 
 
-test.skip(`Run a simple validation to understand the callback parameters`, t => {
+test.only(`Run a simple validation to understand the callback parameters`, t => {
   t.plan(1)
   const descriptor = {
     name: {
@@ -61,9 +61,9 @@ test.skip(`Run a simple validation to understand the callback parameters`, t => 
         validator(rule, value, callback, source, options) {
           console.log('rule', rule)
           console.log('value', value)
-          console.log('callback', callback)
+          // console.log('callback', callback)
           console.log('source', source)
-          console.log('options', options)
+          // console.log('options', options)
           return []
         }
       }
@@ -72,7 +72,9 @@ test.skip(`Run a simple validation to understand the callback parameters`, t => 
   const validator = new Schema(descriptor)
 
   return validator.validate({name: 'John Doe', userId: 100})
-    .then(() => {
+    .then(({ errors, fields }) => {
+      console.log(errors)
+      console.log(fields)
       t.pass()
     })
 })
