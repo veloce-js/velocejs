@@ -85,6 +85,16 @@ export type ValidationObjectRule = {
     [propName: string]: any
   }
 }
+// this is super simple entry like:
+// { nameOfArg: { type: 'integer' }}
+export type ValidationObjectObjectRule = {
+  [argName: string]: any
+}
+// this is simple multiple rules like:
+// { nameOfArg: [{max: 30}, {min: 10}]}
+export type ValidationObjectArrayRule = {
+  [argName: string]: any[]
+}
 
 export type ValidationObjectRuleEntry = {
   required?: boolean
@@ -112,8 +122,21 @@ export const checkTypeOfRules = (rules: unknown): string => {
   }
   if (typeof rules === 'object' && !Array.isArray(rules)) {
     for (const name in rules) {
-      rules[name]
-      if (Object.prototype.hasOwnProperty.call(rules[name], 'rules')) {
+      const rule = rules[name]
+      // when { argName: {rules: [] || {}}}
+      if (Object.prototype.hasOwnProperty.call(rule, 'rules')) {
+        return RULE_FULL
+      }
+      // when { argName: [{max: 30}, {min: 10}]}
+      if (Array.isArray(rule)) {
+        for (const r in rule) {
+          if (typeof r === 'object') {
+            return RULE_FULL
+          }
+        }
+      }
+      // when { argName: {max: 30} }
+      if (typeof rule === 'object') {
         return RULE_FULL
       }
     }
