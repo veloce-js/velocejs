@@ -29,7 +29,8 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
       astParser(where)
         .then(map => {
 
-          console.log('astMap', map)
+          console.log('astMap')
+          console.dir(map, {depth: null})
 
           const existingRoutes = Reflect.getOwnMetadata(routeKey, constructor.prototype) || []
           const validations = Reflect.getOwnMetadata(validationKey, constructor.prototype) || []

@@ -11,10 +11,11 @@ class MyExample extends FastApi {
 
   // @Validate()
   @Post('/submit')
-  async submitHandler(a: string, c: number, d: any[]) {
+  async submitHandler(a: string, c: number, d?: any[]) {
     return 'go see the result in console'
   }
 
+  // @Validate()
   @Post('/login')
   login(name: string, id?: number) {
 

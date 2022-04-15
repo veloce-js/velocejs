@@ -87,7 +87,7 @@ function processArgs(classBody: any) {
 
 // this is just assign a value without type info
 function extractAssignmentPattern(pat) {
-  console.dir(pat, { depth: null })
+  // console.dir(pat, { depth: null })
   return {
     name: pat.left.value, // type === 'Identifier
     required: !pat.optional,
@@ -152,7 +152,7 @@ auto={a: 1}
         ]
       }
 */
-function extractValue(pat) {
+function extractValue(pat: any) {
   switch (pat.type) {
     case 'ArrayExpression':
       return pat.elements
@@ -163,7 +163,7 @@ function extractValue(pat) {
   }
 }
 // translate the type name from an AssignmentPattern
-function translateType(swcType) {
+function translateType(swcType: string): string {
   switch (swcType) {
     case 'BooleanLiteral':
       return 'boolean'

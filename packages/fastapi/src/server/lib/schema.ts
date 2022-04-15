@@ -7,7 +7,6 @@ import {
   RULE_FULL
 } from '../../constants'
 import { checkTypeOfRules } from './validate-types'
-
 /*
 Here is the design idea:
 1. Using the JSON Schema validation rules and keywords
@@ -19,18 +18,28 @@ Here is the design idea:
 7. when validation failed we return a 417 status or the dev can override it per route or globally
 */
 export function createDescriptor(argNames: string[], validationInput: any) {
-  const inputType = checkTypeOfRules(validationInput)
-  
-
-
+  console.log('----------------- createDescriptor -----------------')
   console.log(argNames)
   console.dir(validationInput, { depth: null })
+
+  const inputType = checkTypeOfRules(validationInput)
+
+
+
+
 
   return validationInput
 }
 
 // this will get call inside the FastApi
 export function createValidator(argNames: string[], validationInput: any) {
+  // nothing to validate
+  if (!validationInput) {
+    return (...args: any[]): Promise<boolean> => (
+      Promise.resolve(true)
+    )
+  }
+  
   const descriptor = createDescriptor(argNames, validationInput)
   const validator = new Schema(descriptor)
 

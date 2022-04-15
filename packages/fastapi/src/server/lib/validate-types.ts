@@ -1,4 +1,4 @@
-import { RULE_LIST, RULE_SIMPLE, RULE_FULL } from '../../constants'
+import { RULE_LIST, RULE_SIMPLE, RULE_FULL, RULE_AUTOMATIC } from '../../constants'
 
 //////////////////////// JSON SCHEMA VALIDATION RULES ////////////////////////
 
@@ -117,6 +117,7 @@ export const checkTypeOfRules = (rules: unknown): string => {
       }
     }
   }
+  console.log('rules', rules)
   throw new Error(`Unknown validation rule structure!`)
 }
 
