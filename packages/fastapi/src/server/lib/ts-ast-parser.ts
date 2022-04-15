@@ -3,10 +3,27 @@
 // for validation
 import * as swc from '@swc/core'
 import fs from 'fs-extra'
-import { NIL } from '../../constants'
+import {
+  CLASS_TYPE,
+  EXPORT_TYPE,
+  CLASS_METHOD,
+  ASSIGN_PATTERN,
+  OBJ_EXP,
+  ARR_EXP,
+  BOO_LIT,
+  NUM_LIT,
+  STR_LIT,
+  KEY_TYPE,
+  UNION_TYPE,
+  NIL,
+  isDebug
+} from '../../constants'
+
 // wrap the swc
 export async function astParser(infile: string): Promise<object> {
-  console.time('ast')
+  if (isDebug) {
+    console.time('ast')
+  }
   return fs.readFile(infile)
             .then((code: Buffer) => code.toString())
             .then(async (code: string) => {
@@ -17,27 +34,32 @@ export async function astParser(infile: string): Promise<object> {
                   script: true,
                   target: "es5",
                   decorators: true,
-                  // Input source code are treated as module by default
-                  // isModule: false,
+  // Input source code are treated as module by default
+  // isModule: false,
                 })
                 .then((module) => {
-                  // console.dir(module.body, { depth: null})
-                  // we only interested in the Class
-                  // and what its define within
+  // console.dir(module.body, { depth: null})
+  // we only interested in the Class and what its define within
                   return module
                     .body
                     .filter(body =>
-                      body.type === 'ClassDeclaration'
+                      body.type === CLASS_TYPE
                       ||
                       (
-                        body.type === 'ExportDeclaration'
+                        body.type === EXPORT_TYPE
                         &&
-                        body.declaration?.type === 'ClassDeclaration'
+                        body.declaration?.type === CLASS_TYPE
                       )
                     )
                 })
                 .then(normalize)
                 .then(processArgs)
+                .then(result => {
+                  if (isDebug) {
+                    console.timeEnd('ast')
+                  }
+                  return result
+                })
             })
 }
 
@@ -45,7 +67,7 @@ export async function astParser(infile: string): Promise<object> {
 function normalize(body: Array<any>) {
   if (body.length) {
     return body.map(code => {
-      if (code.type === 'ExportDeclaration') {
+      if (code.type === EXPORT_TYPE) {
 
         return code.declaration
       }
@@ -59,10 +81,9 @@ function normalize(body: Array<any>) {
 
 // break this out from above to processing the arguments
 function processArgs(classBody: any) {
-  console.timeEnd('ast')
   if (classBody.body) {
     return classBody.body
-      .filter(body => body.type === 'ClassMethod')
+      .filter(body => body.type === CLASS_METHOD)
       .map(body => {
         const propertyName = body.key.value
         return {
@@ -70,7 +91,7 @@ function processArgs(classBody: any) {
             // console.dir(params,  { depth: null })
             const { pat } = params
             switch (pat.type) {
-              case 'AssignmentPattern':
+              case ASSIGN_PATTERN:
                 return extractAssignmentPattern(pat)
               default:
                 // type === 'Identifier'
@@ -86,7 +107,7 @@ function processArgs(classBody: any) {
 }
 
 // this is just assign a value without type info
-function extractAssignmentPattern(pat) {
+function extractAssignmentPattern(pat: any) {
   // console.dir(pat, { depth: null })
   return {
     name: pat.left.value, // type === 'Identifier
@@ -154,9 +175,9 @@ auto={a: 1}
 */
 function extractValue(pat: any) {
   switch (pat.type) {
-    case 'ArrayExpression':
+    case ARR_EXP:
       return pat.elements
-    case 'ObjectExpression':
+    case OBJ_EXP:
       return pat.properties
     default:
       return pat.value
@@ -165,15 +186,15 @@ function extractValue(pat: any) {
 // translate the type name from an AssignmentPattern
 function translateType(swcType: string): string {
   switch (swcType) {
-    case 'BooleanLiteral':
+    case BOO_LIT:
       return 'boolean'
-    case 'NumericLiteral':
+    case NUM_LIT:
       return 'number'
-    case 'StringLiteral':
+    case STR_LIT:
       return 'string'
-    case 'ArrayExpression':
+    case ARR_EXP:
       return 'array'
-    case 'ObjectExpression':
+    case OBJ_EXP:
       return 'object'
     default:
       return swcType
@@ -198,11 +219,11 @@ function extractTypeAnnotation(pat) {
   if (annotation) {
     // simple type
     switch (annotation.type) {
-      case 'TsKeywordType':
+      case KEY_TYPE:
         return {type: annotation.kind}
-      case 'TsUnionType':
+      case UNION_TYPE:
         return {
-          type: 'TsUnionType',
+          type: UNION_TYPE,
           // @TODO need futher processing
           types: annotation.types.map(type => type.kind)
         }

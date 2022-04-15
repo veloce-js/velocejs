@@ -90,6 +90,7 @@ export type ValidationObjectRuleEntry = {
   required?: boolean
   type?: string
   message?: string
+  server?: boolean
   [key: string]: any
 }
 
@@ -97,10 +98,10 @@ export type ValidationObjectRuleEntry = {
   This is the inner simple rules
 */
 export type ValidationObjectSimpleRule = {
-  [key: string]: string | number // the key will be one of the available keyword from above @TODO write them out
   message?: string
   required?: boolean
   server?: boolean
+  [key: string]: any // the key will be one of the available keyword from above @TODO write them out
 }
 // this will check if the validator rules is correct or not
 export const checkTypeOfRules = (rules: unknown): string => {

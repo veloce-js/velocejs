@@ -40,6 +40,7 @@ import {
 import {
   FastApiInterface
 } from './fast-api-interface'
+const isDebug = process.env.DEBUG
 // dummy stuff
 const placeholder = -1
 const placeholderFn = (...args: any[] ) => { console.log(args) }
@@ -77,6 +78,9 @@ export class FastApi implements FastApiInterface {
   // we use a class decorator to call this method on init
   // Dev can do @Rest(config)
   private prepare(routes: Array<RouteMetaInfo>):void {
+    if (isDebug) {
+      console.time('FastApiStartUp')
+    }
     this.uwsInstance.autoStart = false
     try {
       // @TODO prepare the validation rules before as pass arg
@@ -135,7 +139,7 @@ export class FastApi implements FastApiInterface {
     const handler = this[propertyName]
     // the args now using the info from ast map , we strip one array only contains names for user here
     const argNames = argsList.map(arg => arg.name)
-    const validateFn = createValidator(argNames, validationInput)
+    const validateFn = createValidator(argsList, validationInput)
 
     return async (res: HttpResponse, req: HttpRequest) => {
       const args1: Array<HttpResponse | HttpRequest | (() => void)> = [res, req]
@@ -150,13 +154,22 @@ export class FastApi implements FastApiInterface {
       this.setTemp(result, res)
       const { params, type } = result
       // @TODO apply the validaton here, if it didn't pass then it will abort the rest
-      validateFn(params)
-        // success
-        .then(() => this.handleContent(argNames, params, handler, type, propertyName))
-        .catch(({ errors, fields }) => {
-          this.handleValidationError(errors, fields)
+      this.handleProtectedRoute()
+        .then(() => {
+          validateFn(params)
+            // success
+            .then(() => this.handleContent(argNames, params, handler, type, propertyName))
+            .catch(({ errors, fields }) => {
+              this.handleValidationError(errors, fields)
+            })
         })
     }
+  }
+
+  // handle protected route
+  private async handleProtectedRoute(): Promise<boolean> {
+    console.log('@TODO handle protected route')
+    return true
   }
 
   // break out from above to make the code cleaner
@@ -299,6 +312,9 @@ export class FastApi implements FastApiInterface {
       this.onConfigReady
         .then(() => {
           this.uwsInstance.start()
+          if (isDebug) {
+            console.timeEnd('FastApiStartUp')
+          }
         })
         .catch(e => {
           rejecter(e)

@@ -41,7 +41,12 @@ export const completeRule = {
     ]
   }
 }
-
+/*
+{
+  name: [ { required: true, type: 'string', max: 20 } ],
+  id: [ { required: false, type: 'number', max: 20 } ]
+}
+*/
 export const listRule = [
   [
     {max: 20},
