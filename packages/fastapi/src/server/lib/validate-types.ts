@@ -169,7 +169,7 @@ export class NumericOnlyValidation implements TypeValidator<number> {
 
 
 // example from https://dev-tips.com/typescript/ensuring-reliable-typings-using-typescripts-type-guards#:~:text=To%20allow%20such%20type%20detection%2Fvalidation%2C%20TypeScript%20uses%20type,a%20certain%20type%20for%20a%20certain%20scope.%20typeof
-
+/*
 type Post = {
   id: number;
   title: string;
@@ -185,3 +185,4 @@ const isValidPost = (input: unknown): input is Post => {
     Object.prototype.hasOwnProperty.call(input, 'text')
   );
 };
+*/

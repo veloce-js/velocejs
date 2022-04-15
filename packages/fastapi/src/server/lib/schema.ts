@@ -6,7 +6,7 @@ import {
   RULE_SIMPLE,
   RULE_FULL
 } from '../../constants'
-import { } from './validate-types'
+import { checkTypeOfRules } from './validate-types'
 
 /*
 Here is the design idea:
@@ -19,6 +19,10 @@ Here is the design idea:
 7. when validation failed we return a 417 status or the dev can override it per route or globally
 */
 export function createDescriptor(argNames: string[], validationInput: any) {
+  const inputType = checkTypeOfRules(validationInput)
+  
+
+
   console.log(argNames)
   console.dir(validationInput, { depth: null })
 
