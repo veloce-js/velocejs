@@ -7,7 +7,7 @@
   and see if we could do it with just init the new class and everything should run
 */
 import { RouteMetaInfo /*, JsonValidationEntry*/ } from '../../types'
-import { routeKey, argsKey } from './keys'
+import { routeKey, validationKey } from './keys'
 import { astParser } from '../lib/ts-ast-parser'
 import { PARAMS_KEY } from '../../constants'
 
@@ -28,8 +28,11 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
       super(...args)
       astParser(where)
         .then(map => {
+
+          console.log('astMap', map)
+
           const existingRoutes = Reflect.getOwnMetadata(routeKey, constructor.prototype) || []
-          const validations = Reflect.getOwnMetadata(argsKey, constructor.prototype) || []
+          const validations = Reflect.getOwnMetadata(validationKey, constructor.prototype) || []
           // @ts-ignore: prepare does not exist on Anonymous class (it does on FastApi)
           this.prepare && this.prepare(
             mergeMapToRoute(map, existingRoutes),

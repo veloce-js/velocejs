@@ -1,7 +1,8 @@
 // Testing the validator
 import test from 'ava'
 import { extractArgs } from '../src/server/lib/extract'
-// import { createDescriptor, createValidator } from '../src/server/lib/validator'
+import { completeRule, listRule, simplerule } from './fixtures/rules'
+import { createDescriptor, createValidator } from '../src/server/lib/schema'
 import Schema from 'async-validator'
 /*
 test.before(() => {
@@ -14,7 +15,14 @@ test.after(() => {
 })
 */
 
-test.only(`Transform validation input to a schema`, t => {
+test(`Transform validation input to a schema`, t => {
+  const rule1 = createDescriptor(argList, completeRule)
+  console.log(rule1)
+  t.pass()
+})
+
+
+test.skip(`Run a simple validation to understand the callback parameters`, t => {
   t.plan(1)
   const descriptor = {
     name: {

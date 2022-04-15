@@ -1,5 +1,4 @@
 // Validator Decorator
-// import { DescriptorMeta } from '../../types'
 import { validationKey } from './keys'
 import {
   // JsonValidationEntry,
@@ -9,28 +8,8 @@ import {
 } from '../../types'
 import { FastApiInterface } from '../fast-api-interface'
 import { RULES_KEY, OPTIONS_KEY, RULE_AUTOMATIC } from '../../constants'
-/**
-@TODO fix the type for rules
 
-style one follow the async-validator
-
-{
-  fieldName: {
-    rules: [
-
-    ]
-  }
-}
-
-follow the order of the arguments
-
-[
-  [
-    {rules},
-    {rules}
-  ] // <== argument 1
-]
-**/
+// Validate Decorator
 export function Validate(
   rules?: Array<ValidationObjectSimpleRule> |
           Array<Array<ValidationObjectSimpleRule>> |

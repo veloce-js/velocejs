@@ -36,7 +36,7 @@ import {
 } from '../types'
 import {
   createValidator
-} from './lib/validator'
+} from './lib/schema'
 import {
   FastApiInterface
 } from './fast-api-interface'
