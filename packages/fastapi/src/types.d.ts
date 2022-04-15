@@ -4,6 +4,8 @@ export type RouteMetaInfo = {
   path: string
   type: string
   onAbortedHandler?: string
+  protected?: boolean
+  validation?: any
   [key: string]: any // so we can store more info if we need to
 }
 // this is totally pointless

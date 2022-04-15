@@ -161,26 +161,32 @@ export class FastApi implements FastApiInterface {
       // @TODO apply the validaton here, if it didn't pass then it will abort the rest
       validateFn(params)
         // success
-        .then(async () => {
-          const args2 = this.applyArgs(argNames, params)
-          // @TODO apply the valdiator here
-          // if there is an error then it won't get call
-          let reply = ''
-          try {
-            reply = await Reflect.apply(handler, this, args2)
-            if (reply && !this.written) {
-              this.write(type, reply)
-            }
-          } catch (e) {
-            console.log(`ERROR with`, propertyName, e)
-            res.close()
-          } finally {
-            this.unsetTemp()
-          }
-        })
+        .then(() => this.handleContent(argNames, params, handler, type, propertyName))
         .catch(({ errors, fields }) => {
           this.handleValidationError(errors, fields)
         })
+    }
+  }
+
+  // break out from above to make the code cleaner
+  private async handleContent(
+    argNames: string[],
+    params: any,
+    handler: any,
+    type: string,
+    propertyName: string
+  ) {
+    const args2 = this.applyArgs(argNames, params)
+    try {
+      const reply = await Reflect.apply(handler, this, args2)
+      if (reply && !this.written) {
+        this.write(type, reply)
+      }
+    } catch (e) {
+      console.log(`ERROR with`, propertyName, e)
+      this.res?.close()
+    } finally {
+      this.unsetTemp()
     }
   }
 

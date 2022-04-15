@@ -7,9 +7,9 @@
   and see if we could do it with just init the new class and everything should run
 */
 import { RouteMetaInfo /*, JsonValidationEntry*/ } from '../../types'
-import { routeKey, validationKey } from './keys'
+import { routeKey, validationKey, protectedKey } from './keys'
 import { astParser } from '../lib/ts-ast-parser'
-import { PARAMS_KEY } from '../../constants'
+
 
 // @BUG it's a shame we couldn't make this more elegant
 // because if we use the process.argv[1] to find the file location - it change depends on where we call it
@@ -28,44 +28,34 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
       super(...args)
       astParser(where)
         .then(map => {
-
-          console.log('astMap')
-          console.dir(map, {depth: null})
-
-          const existingRoutes = Reflect.getOwnMetadata(routeKey, constructor.prototype) || []
-          const validations = Reflect.getOwnMetadata(validationKey, constructor.prototype) || []
+          const target = constructor.prototype
+          const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
+          const validations = Reflect.getOwnMetadata(validationKey, target) || []
+          const protectedRoute = Reflect.getOwnMetadata(protectedKey, target) || []
           // @ts-ignore: prepare does not exist on Anonymous class (it does on FastApi)
           this.prepare && this.prepare(
-            mergeMapToRoute(map, existingRoutes),
-            mergeMapToValidation(map, validations)
+            mergeInfo(map, existingRoutes, validations, protectedRoute)
           )
         })
     }
   }
 }
-
-// merge the AST Map data into the route info map
-// then we don't need to extract the param twice
-function mergeMapToRoute(map: object, existingRoutes: Array<RouteMetaInfo>) {
-
+// just put them all together
+// @TODO protected route as well
+function mergeInfo(
+  map: object,
+  existingRoutes: Array<RouteMetaInfo>,
+  validations: any,
+  protectedRoutes?: string[]
+) {
   return existingRoutes.map(route => {
-    if (map[route.propertyName]) {
-      route.args = map[route.propertyName]
+    const { propertyName } = route
+    if (map[propertyName]) {
+      route.args = map[propertyName]
     }
+    route.protected = protectedRoutes && protectedRoutes.indexOf(propertyName) > -1
+    route.validation = validations[propertyName] || false
 
     return route
   })
-}
-
-// merge map info to the valdiation info
-function mergeMapToValidation(map: object, validations: object): object {
-  const tmp = {}
-  for (const propertyName in validations) {
-    tmp[propertyName] = Object.assign(
-      validations[propertyName],
-      { [PARAMS_KEY]: map[propertyName] }
-    )
-  }
-
-  return tmp
 }

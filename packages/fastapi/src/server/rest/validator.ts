@@ -27,9 +27,6 @@ export function Validate(
         [RULES_KEY]: rules || RULE_AUTOMATIC,
         [OPTIONS_KEY]: options || {}
       }
-
-      console.dir(existingMap, { depth: null })
-
     }
     Reflect.defineMetadata(validationKey, existingMap, target)
   }

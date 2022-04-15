@@ -15,7 +15,14 @@ class MyExample extends FastApi {
     return 'go see the result in console'
   }
 
-  // @Validate()
+  @Validate({
+    name: {
+      rules: [{ max: 20 }]
+    },
+    id: {
+      rules: [{ max: 20 }]
+    }
+  })
   @Post('/login')
   login(name: string, id?: number) {
 

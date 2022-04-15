@@ -5,8 +5,9 @@ export const routeKey = Symbol("FastApiRouteKey")
 export const abortFnKey = Symbol('FastApiAbortFnKey')
 // for storing the validation map
 export const validationKey = Symbol("FastApiValidationKey")
-
-// Below are not in use anymore 
+// protected route 
+export const protectedKey = Symbol("FastApiProtectedKey")
+// Below are not in use anymore
 
 // for extracting argument names
 export const argsKey = Symbol("FastApiArgsKey")

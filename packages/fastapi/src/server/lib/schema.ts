@@ -21,7 +21,17 @@ export function createDescriptor(argNames: string[], validationInput: any) {
   console.log('----------------- createDescriptor -----------------')
   console.log(argNames)
   console.dir(validationInput, { depth: null })
+  /*
+  rules {
+  rules: 'rule-automatic',
+  options: {},
+  params: [
+    { name: 'name', required: true, types: [Object] },
+    { name: 'id', required: false, types: [Object] }
+  ]
+}
 
+  */
   const inputType = checkTypeOfRules(validationInput)
 
 
@@ -39,7 +49,7 @@ export function createValidator(argNames: string[], validationInput: any) {
       Promise.resolve(true)
     )
   }
-  
+
   const descriptor = createDescriptor(argNames, validationInput)
   const validator = new Schema(descriptor)
 
