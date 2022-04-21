@@ -5,7 +5,7 @@ import {
   HttpResponse,
   HttpRequest,
   UwsRespondBody,
-  StringPairObj,
+  UwsStringPairObj,
   UwsBodyParserMixEntry
 } from '../types'
 import {
@@ -80,7 +80,7 @@ export async function bodyParser(
 }
 
 // all-in-one to parse and post process the multipart-formdata input
-export function parseMultipart(headers: StringPairObj, body: Buffer): object {
+export function parseMultipart(headers: UwsStringPairObj, body: Buffer): object {
   const boundary = getBoundary(headers[CONTENT_TYPE])
   if (boundary) {
     const params = parse(body, boundary as string)
@@ -129,7 +129,7 @@ function processTextArray(params: Array<Record<string, UwsBodyParserMixEntry>>) 
 
   return params
     .filter(param => !param.filename && !param.type)
-    .map((param): StringPairObj => (
+    .map((param): UwsStringPairObj => (
       // @TODO how to use the type info to return as number or other data type
       { [param.name as unknown as string] : toBuffer(param.data).toString() }
     )

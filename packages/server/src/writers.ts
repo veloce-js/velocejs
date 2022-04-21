@@ -1,6 +1,6 @@
 // from write-json and change the interface to be the same
 import fs from 'fs-extra'
-import { HttpResponse, StringPairObj, RecognizedString, UwsWriter, UwsJsonWriter } from './types'
+import { HttpResponse, UwsStringPairObj, RecognizedString, UwsWriter, UwsJsonWriter } from './types'
 import { CONTENT_TYPE, JSON_HEADER } from './base/constants'
 import { C200, C404, lookupStatus } from './base/status'
 import debug from 'debug'
@@ -20,7 +20,7 @@ export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
 // break this out for re-use
 export const getWriter = (res: HttpResponse): UwsWriter => {
 
-  return (payload: RecognizedString, headers?: StringPairObj, status?: number) => {
+  return (payload: RecognizedString, headers?: UwsStringPairObj, status?: number) => {
     // this could create a bug - if they pass the wrong status code
     // then we fill it with 200 OK by default, it's hard to check
     const _status = status ? lookupStatus(status) : C200

@@ -135,7 +135,7 @@ type UwsRespondBody = {
  url: string
  method: string
  query: string,
- headers: StringPairObj
+ headers: UwsStringPairObj
  params: any
  payload?: Buffer
 }

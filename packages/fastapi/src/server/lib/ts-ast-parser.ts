@@ -83,11 +83,11 @@ function normalize(body: Array<any>) {
 function processArgs(classBody: any) {
   if (classBody.body) {
     return classBody.body
-      .filter(body => body.type === CLASS_METHOD)
-      .map(body => {
+      .filter((body: any) => body.type === CLASS_METHOD)
+      .map((body: any) => {
         const propertyName = body.key.value
         return {
-          [propertyName]: body.function.params.map(params => {
+          [propertyName]: body.function.params.map((params: any) => {
             // console.dir(params,  { depth: null })
             const { pat } = params
             switch (pat.type) {

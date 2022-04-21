@@ -1,6 +1,6 @@
 import {
   HttpRequest,
-  StringPairObj
+  UwsStringPairObj
 } from '../types'
 import {
   CONTENT_TYPE,
@@ -39,22 +39,22 @@ export const isEmptyObj = (obj: any): boolean => (
 )
 
 // check if the header 'Content-Type' is a json
-export const isJson = (headers: StringPairObj): boolean => (
+export const isJson = (headers: UwsStringPairObj): boolean => (
   headers[CONTENT_TYPE] !== undefined && headers[CONTENT_TYPE].indexOf('json') > -1
 )
 // check if it's regular post form
-export const isForm = (headers: StringPairObj): boolean => (
+export const isForm = (headers: UwsStringPairObj): boolean => (
   headers[CONTENT_TYPE] !== undefined && headers[CONTENT_TYPE].indexOf(DEFAULT_FORM_HEADER) > -1
 )
 // check if it's a file upload form
-export const isFile = (headers: StringPairObj): boolean => (
+export const isFile = (headers: UwsStringPairObj): boolean => (
   headers[CONTENT_TYPE] !== undefined &&
   headers[CONTENT_TYPE].indexOf(FILE_POST_HEADER) > -1
   // headers[CONTENT_TYPE].indexOf(BOUNDARY) > -1
 )
 
 // the actual function to take the query apart
-export function parseQuery(query: string): StringPairObj {
+export function parseQuery(query: string): UwsStringPairObj {
   const params = new URLSearchParams(query)
   const result = {}
   for (const pair of params.entries()) {

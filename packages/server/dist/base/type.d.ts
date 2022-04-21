@@ -1,12 +1,12 @@
 /// <reference types="node" />
-export declare type StringPairObj = {
+export declare type UwsStringPairObj = {
     [key: string]: string;
 };
 export declare type UwsRespondBody = {
     url: string;
     method: string;
     query: string;
-    headers: StringPairObj;
+    headers: UwsStringPairObj;
     params: object;
     type?: string;
     payload?: Buffer;

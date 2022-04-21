@@ -15,7 +15,7 @@ import {
   UwsRespondBody,
   UwsWriter,
   UwsJsonWriter,
-  StringPairObj,
+  UwsStringPairObj,
   RecognizedString
 } from '@velocejs/server/src/types' // point to the source ts
 import {
@@ -50,7 +50,7 @@ const placeholderFn = (...args: any[] ) => { console.log(args) }
 export class FastApi implements FastApiInterface {
   private uwsInstance: UwsServer
   private written = false
-  private headers: StringPairObj = {}
+  private headers: UwsStringPairObj = {}
   private status: number = placeholder
   private onConfigReady: Promise<any>
   private onConfigWait: (value: unknown) => void = placeholderFn
