@@ -77,7 +77,7 @@ module.exports = function(plop) {
             templateFile: join(tmplRoot, 'package.json.tpl'),
             path: join(projectRoot, 'package.json'),
             data: {
-              name: [rootPkgJson.name, camelCase(answers.projectName)].join('/'),
+              name: ['@' + rootPkgJson.name, camelCase(answers.projectName)].join('/'),
               author: rootPkgJson.author,
               license: rootPkgJson.license,
               homepage: rootPkgJson.homepage

@@ -1,5 +1,5 @@
 {
-  "name": "@velocejs",
+  "name": "velocejs",
   "version": "1.0.0",
   "description": "Veloce mono repo",
   "main": "index.js",
