@@ -1,6 +1,5 @@
 // test server to send back whatever you send it, with a timestamp
 import {
-  bodyParser,
   UwsServer,
   jsonWriter
 } from '../../dist'
@@ -8,6 +7,7 @@ import {
   HttpResponse,
   HttpRequest
 } from '../../'
+import bodyParser from '@velocejs/bodyparser'
 
 const app = new UwsServer()
 app.autoStart = false
