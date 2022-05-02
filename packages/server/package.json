@@ -12,8 +12,9 @@
   ],
   "homepage": "https://velocejs.com",
   "scripts": {
-    "test:ava": "nyc ava",
-    "test": "pnpm build && pnpm test:ava",
+    "test:ava": "ava",
+    "test:nyc": "nyc ava",
+    "test": "pnpm build && pnpm test:nyc",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "prepare:types": "node ./fix.js",
     "build:tsc": "tsc -p tsconfig.json",

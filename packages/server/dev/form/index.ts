@@ -5,7 +5,7 @@ import {
   // shutdownServer,
   serveStatic,
   getPort,
-} from '../../src'
+} from '../../dist'
 import {
   HttpRequest,
   HttpResponse,

@@ -26,8 +26,7 @@
     ],
     "lib": [
       "esnext",
-      "DOM",
-      "ES2015"
+      "DOM"
     ]
   },
   "include": [

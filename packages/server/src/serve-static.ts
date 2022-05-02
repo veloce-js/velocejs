@@ -6,7 +6,8 @@ import { HttpResponse, HttpRequest } from './types'
 import { DEFAULT_FILE, CONTENT_TYPE } from './base/constants'
 import { getWriter, write404 } from './writers'
 import { lookup } from './base/mime'
-import { toArray } from '@jsonql/utils/src'
+import { toArray } from '@jsonql/utils'
+
 import debug from 'debug'
 const debugFn = debug('velocejs:server:serve-static')
 
