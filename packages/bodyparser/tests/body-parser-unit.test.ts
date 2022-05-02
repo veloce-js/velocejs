@@ -1,8 +1,8 @@
 // testing the bodyParser
 import test from 'ava'
-import { parse } from '../src/body-parser/parse-multipart-data'
-// import { parse } from 'parse-multipart-data'
-import { processParams } from '../src/body-parser/body-parser'
+import { parseMultipart as parse } from '../src'
+import { processParams } from '../src/body-parser'
+import { UwsBodyParserMixEntry } from '../src/types'
 // single file
 import {
   body as body1,

@@ -1,12 +1,12 @@
 import {
   HttpRequest,
   UwsStringPairObj
-} from '../types'
+} from './types'
 import {
   CONTENT_TYPE,
   DEFAULT_FORM_HEADER,
   FILE_POST_HEADER,
-} from '../base/constants'
+} from './constants'
 // return all the headers
 export function getHeaders(req: HttpRequest) {
   const headers = {}
