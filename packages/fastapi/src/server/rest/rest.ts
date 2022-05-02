@@ -8,19 +8,14 @@
 */
 import { RouteMetaInfo /*, JsonValidationEntry*/ } from '../../types'
 import { routeKey, validationKey, protectedKey } from './keys'
-import { astParser } from '../lib/ts-ast-parser'
+import { pickInputFile, tsClassParser } from '@jsonql/ast/src'
 import { STATIC_TYPE, RAW_TYPE } from '@velocejs/server/src/base/constants'
 // import debug from 'debug'
 // const debugFn = debug('velocejs:fastapi:decorator:Rest')
 
-// @BUG it's a shame we couldn't make this more elegant
-// because if we use the process.argv[1] to find the file location - it change depends on where we call it
-// therefore the parser couldn't find the file
-// hence we need this ugly hack to get around the problem
 export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
   // Voodoo magic
-  const stacks = new Error().stack?.split('\n').filter(line => line.indexOf('__decorateClass') > -1)
-  const where = stacks ? stacks[stacks.length - 1].split('(')[1].split(':')[0] : ''
+  const where = pickInputFile(new Error())
   // from https://stackoverflow.com/questions/51124979/typescript-calling-class-methods-inside-constructor-decorator
   // But this will create a Typescript error `method prepare does not exist on Anonymous class`
   // another way to get around with the properties not able to bind to the constructor.protoype
@@ -28,7 +23,7 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
   return class extends constructor {
     constructor(...args: any[]) {
       super(...args)
-      astParser(where)
+      tsClassParser(where)
         .then(map => {
           const target = constructor.prototype
           const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
@@ -57,8 +52,9 @@ function mergeInfo(
     }
     route.protected = protectedRoutes && protectedRoutes.indexOf(propertyName) > -1
     // skip the static and raw type
-    route.validation = (type === STATIC_TYPE || type === RAW_TYPE ) ? false : validations[propertyName] || false
-
+    route.validation = (type === STATIC_TYPE || type === RAW_TYPE ) ?
+                                                              false :
+                                 validations[propertyName] || false
     return route
   })
 }

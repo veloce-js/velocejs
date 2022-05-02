@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@swc/cli': ^0.1.57
@@ -1776,7 +1776,7 @@ packages:
       '@vuepress/shared-utils': 1.9.7
       '@vuepress/types': 1.9.7
       autoprefixer: 9.8.8
-      babel-loader: 8.2.4_b72fb7e629d39881e138edb6dcd0dfbe
+      babel-loader: 8.2.4_w4x3pzrj2omidyjy5w3nzug7xy
       bundle-require: 2.1.8_esbuild@0.14.7
       cache-loader: 3.0.1_webpack@4.46.0
       chokidar: 2.1.8
@@ -1797,7 +1797,7 @@ packages:
       toml: 3.0.0
       url-loader: 1.1.2_webpack@4.46.0
       vue: 2.6.14
-      vue-loader: 15.9.8_a021309c4954b2e3e3b6c3a6e1323de2
+      vue-loader: 15.9.8_uaqtbhcjkszohy5wyotocmr54i
       vue-router: 3.5.3
       vue-server-renderer: 2.6.14
       vue-template-compiler: 2.6.14
@@ -2367,7 +2367,7 @@ packages:
     resolution: {integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==}
     dev: true
 
-  /babel-loader/8.2.4_b72fb7e629d39881e138edb6dcd0dfbe:
+  /babel-loader/8.2.4_w4x3pzrj2omidyjy5w3nzug7xy:
     resolution: {integrity: sha512-8dytA3gcvPPPv4Grjhnt8b5IIiTcq/zeXOPk4iTYI0SVXcsmuGg7JtBRDp8S9X+gJfhQ8ektjXZlDu1Bb33U8A==}
     engines: {node: '>= 8.9'}
     peerDependencies:
@@ -2952,6 +2952,7 @@ packages:
   /chokidar/3.5.3:
     resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
     engines: {node: '>= 8.10.0'}
+    requiresBuild: true
     dependencies:
       anymatch: 3.1.2
       braces: 3.0.2
@@ -9318,7 +9319,7 @@ packages:
     resolution: {integrity: sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==}
     dev: true
 
-  /vue-loader/15.9.8_a021309c4954b2e3e3b6c3a6e1323de2:
+  /vue-loader/15.9.8_uaqtbhcjkszohy5wyotocmr54i:
     resolution: {integrity: sha512-GwSkxPrihfLR69/dSV3+5CdMQ0D+jXg8Ma1S4nQXKJAznYFX14vHdc/NetQc34Dw+rBbIJyP7JOuVb9Fhprvog==}
     peerDependencies:
       cache-loader: '*'

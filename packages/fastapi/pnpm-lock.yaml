@@ -1,13 +1,15 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@ava/typescript': ^3.0.1
+  '@jsonql/ast': ^0.6.1
+  '@jsonql/validator': ^0.2.0
   '@swc/core': ^1.2.163
   '@types/fs-extra': ^9.0.13
   '@types/node': ^17.0.23
   '@typescript-eslint/eslint-plugin': ^5.17.0
   '@typescript-eslint/parser': ^5.17.0
-  '@velocejs/server': workspace:^0.6.8
+  '@velocejs/server': workspace:^0.6.12
   async-validator: ^4.0.7
   ava: ^4.1.0
   debug: ^4.3.4
@@ -26,6 +28,8 @@ specifiers:
   typescript: ^4.6.3
 
 dependencies:
+  '@jsonql/ast': 0.6.1
+  '@jsonql/validator': 0.2.0
   '@swc/core': 1.2.165
   '@velocejs/server': link:../server
   async-validator: 4.0.7
@@ -39,8 +43,8 @@ devDependencies:
   '@ava/typescript': 3.0.1
   '@types/fs-extra': 9.0.13
   '@types/node': 17.0.23
-  '@typescript-eslint/eslint-plugin': 5.17.0_689ff565753ecf7c3328c07fad067df5
-  '@typescript-eslint/parser': 5.17.0_eslint@8.12.0+typescript@4.6.3
+  '@typescript-eslint/eslint-plugin': 5.17.0_ncp7kzlvh3hxymziyb722bt56u
+  '@typescript-eslint/parser': 5.17.0_thk3xo4exzjr5rl6cnexo7v6re
   ava: 4.1.0_@ava+typescript@3.0.1
   esbuild: 0.14.30
   esbuild-register: 3.3.2_esbuild@0.14.30
@@ -49,7 +53,7 @@ devDependencies:
   nyc: 15.1.0
   open: 8.4.0
   rimraf: 3.0.2
-  ts-node: 10.7.0_f533c3387680131348857b0baefd0f31
+  ts-node: 10.7.0_6uz4godwqajrgsefpmf257ipge
   typescript: 4.6.3
 
 packages:
@@ -332,6 +336,53 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.11
     dev: true
 
+  /@jsonql/ast/0.6.1:
+    resolution: {integrity: sha512-MnBYyn1pdKgTfJkXB9bVSbsyXEDJClDIB6EErUY5C4RD09ecaJOMIUGIXjS7+F9Z8jDI7zD9BBr/jWX7qRvE8Q==}
+    dependencies:
+      '@jsonql/constants': 0.5.10
+    dev: false
+
+  /@jsonql/constants/0.5.10:
+    resolution: {integrity: sha512-L7sx3pGgfxMQD/7WLBdX/lxO6n0RDKEJMwm0cncLO+Fx9uF+8+EaoclszciAPbM7zqPO/hBZnq/OPsEmaXFd5A==}
+    dev: false
+
+  /@jsonql/errors/0.6.0:
+    resolution: {integrity: sha512-h7ImrJh5YU3rITq2QtbWm4Nz0pdlXI3CuVYDaYe349AkZc5Ss0f4urSMw0ChL/Pz0sqfs6wh9lwNWi7xv3eslA==}
+    dependencies:
+      '@jsonql/constants': 0.5.10
+    dev: false
+
+  /@jsonql/utils/0.6.2:
+    resolution: {integrity: sha512-2Qm8TSWoSzOx7heM1Cb0m2M3Tq6/nFD7ubLPIK5d3nUhNaAGYlZmZG7x4fWBnXhX2kkKLraHcdgR4+lhdSadlw==}
+    dependencies:
+      '@jsonql/constants': 0.5.10
+      '@jsonql/errors': 0.6.0
+      lodash-es: 4.17.21
+    dev: false
+
+  /@jsonql/validator-core/0.6.0:
+    resolution: {integrity: sha512-6ZOkdrl/BHGHqHjSIgHESKUi/VCWqPymtqTkIpcGq6URXWP6phCbm4297555kZ/i2NilErb2XRMshLwpO9pPaw==}
+    dependencies:
+      '@jsonql/constants': 0.5.10
+      '@jsonql/errors': 0.6.0
+      '@jsonql/utils': 0.6.2
+      lodash-es: 4.17.21
+    dev: false
+
+  /@jsonql/validator/0.2.0:
+    resolution: {integrity: sha512-nbx1GTId7BWgprhn2FJe7lCcrDhnLX45pVXsrhs7V3zKAM58EVCoQxd3NsMwcCXqyNSJX5qK4smnVPeMo3dV7w==}
+    dependencies:
+      '@jsonql/ast': 0.6.1
+      '@jsonql/constants': 0.5.10
+      '@jsonql/errors': 0.6.0
+      '@jsonql/utils': 0.6.2
+      '@jsonql/validator-core': 0.6.0
+      debug: 4.3.4
+      reflect-metadata: 0.1.13
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -524,7 +575,7 @@ packages:
     resolution: {integrity: sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==}
     dev: true
 
-  /@typescript-eslint/eslint-plugin/5.17.0_689ff565753ecf7c3328c07fad067df5:
+  /@typescript-eslint/eslint-plugin/5.17.0_ncp7kzlvh3hxymziyb722bt56u:
     resolution: {integrity: sha512-qVstvQilEd89HJk3qcbKt/zZrfBZ+9h2ynpAGlWjWiizA7m/MtLT9RoX6gjtpE500vfIg8jogAkDzdCxbsFASQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -535,10 +586,10 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.17.0_eslint@8.12.0+typescript@4.6.3
+      '@typescript-eslint/parser': 5.17.0_thk3xo4exzjr5rl6cnexo7v6re
       '@typescript-eslint/scope-manager': 5.17.0
-      '@typescript-eslint/type-utils': 5.17.0_eslint@8.12.0+typescript@4.6.3
-      '@typescript-eslint/utils': 5.17.0_eslint@8.12.0+typescript@4.6.3
+      '@typescript-eslint/type-utils': 5.17.0_thk3xo4exzjr5rl6cnexo7v6re
+      '@typescript-eslint/utils': 5.17.0_thk3xo4exzjr5rl6cnexo7v6re
       debug: 4.3.4
       eslint: 8.12.0
       functional-red-black-tree: 1.0.1
@@ -551,7 +602,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser/5.17.0_eslint@8.12.0+typescript@4.6.3:
+  /@typescript-eslint/parser/5.17.0_thk3xo4exzjr5rl6cnexo7v6re:
     resolution: {integrity: sha512-aRzW9Jg5Rlj2t2/crzhA2f23SIYFlF9mchGudyP0uiD6SenIxzKoLjwzHbafgHn39dNV/TV7xwQkLfFTZlJ4ig==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -579,7 +630,7 @@ packages:
       '@typescript-eslint/visitor-keys': 5.17.0
     dev: true
 
-  /@typescript-eslint/type-utils/5.17.0_eslint@8.12.0+typescript@4.6.3:
+  /@typescript-eslint/type-utils/5.17.0_thk3xo4exzjr5rl6cnexo7v6re:
     resolution: {integrity: sha512-3hU0RynUIlEuqMJA7dragb0/75gZmwNwFf/QJokWzPehTZousP/MNifVSgjxNcDCkM5HI2K22TjQWUmmHUINSg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -589,7 +640,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@typescript-eslint/utils': 5.17.0_eslint@8.12.0+typescript@4.6.3
+      '@typescript-eslint/utils': 5.17.0_thk3xo4exzjr5rl6cnexo7v6re
       debug: 4.3.4
       eslint: 8.12.0
       tsutils: 3.21.0_typescript@4.6.3
@@ -624,7 +675,7 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/utils/5.17.0_eslint@8.12.0+typescript@4.6.3:
+  /@typescript-eslint/utils/5.17.0_thk3xo4exzjr5rl6cnexo7v6re:
     resolution: {integrity: sha512-DVvndq1QoxQH+hFv+MUQHrrWZ7gQ5KcJzyjhzcqB1Y2Xes1UQQkTRPUfRpqhS8mhTWsSb2+iyvDW1Lef5DD7vA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
@@ -2112,6 +2163,10 @@ packages:
       p-locate: 6.0.0
     dev: true
 
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
+
   /lodash.flattendeep/4.4.0:
     resolution: {integrity: sha1-+wMJF/hqMTTlvJvsDWngAT3f7bI=}
     dev: true
@@ -2791,7 +2846,7 @@ packages:
       is-number: 7.0.0
     dev: true
 
-  /ts-node/10.7.0_f533c3387680131348857b0baefd0f31:
+  /ts-node/10.7.0_6uz4godwqajrgsefpmf257ipge:
     resolution: {integrity: sha512-TbIGS4xgJoX2i3do417KSaep1uRAW/Lu+WAL2doDHC0D6ummjirVOXU5/7aiZotbQ5p1Zp9tP7U6cYhA0O7M8A==}
     hasBin: true
     peerDependencies:
