@@ -2,7 +2,7 @@
 import test from 'ava'
 import { parseMultipart as parse } from '../src'
 import { processParams } from '../src/body-parser'
-import { UwsBodyParserMixEntry } from '../src/types'
+// import { UwsBodyParserMixEntry } from '../src/types'
 // single file
 import {
   body as body1,
