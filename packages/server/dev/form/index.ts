@@ -1,19 +1,13 @@
 // form
 import {
   bodyParser
-} from '@velocejs/server/src'
+} from '../../src'
 import {
   HttpRequest,
   HttpResponse,
-} from '@velocejs/server/src/types'
+} from '../../src/types'
 import { join } from 'path'
-import {
-  FastApi,
-  ServeStatic,
-  Raw,
-  Rest
-} from '../../src'
-import open from 'open'
+
 
 @Rest
 class MyFormExample extends FastApi {
