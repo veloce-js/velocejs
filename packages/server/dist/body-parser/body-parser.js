@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.processParams = exports.parseMultipart = exports.bodyParser = void 0;
 const tslib_1 = require("tslib");
 const handle_upload_1 = require("./handle-upload");
-const parse_multipart_data_1 = require("./parse-multipart-data");
+const parse_multipart_data_1 = require("parse-multipart-data");
 const constants_1 = require("../base/constants");
 const utils_1 = require("./utils");
 // debug

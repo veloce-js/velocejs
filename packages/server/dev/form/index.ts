@@ -1,6 +1,10 @@
 // form
 import {
-  bodyParser
+  bodyParser,
+  createApp,
+  // shutdownServer,
+  serveStatic,
+  getPort,
 } from '../../src'
 import {
   HttpRequest,
@@ -8,29 +12,15 @@ import {
 } from '../../src/types'
 import { join } from 'path'
 
+let listenSocket
 
-@Rest
-class MyFormExample extends FastApi {
-
-  @Raw('post', '/submit')
-  async submitHandler(res: HttpResponse, req: HttpRequest) {
-    const result = await bodyParser(res, req)
-    console.dir(result, { depth: null })
-    res.end('go see the result in console')
-  }
-
-  @ServeStatic('/*')
-  get staticHandler(): string {
-    return join(__dirname, 'httpdocs')
-  }
-}
-
-const api = new MyFormExample()
-api.start()
-  .then(url => {
-    console.log(`server started on ${url}`)
-    open(url)
+createApp()
+  .any('/*', serveStatic(join(__dirname, 'httpdocs')))
+  .post('/upload', async (res: HttpResponse, req: HttpRequest) => {
+      const result = await bodyParser(res, req)
+      console.log(result)
+      res.end('OK')
   })
-  .catch(err => {
-    console.log(err)
+  .listen(0, (token: any) => {
+    console.log(getPort(token))
   })

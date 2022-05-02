@@ -6,6 +6,7 @@ import { HttpResponse, HttpRequest } from './types'
 import { DEFAULT_FILE, CONTENT_TYPE } from './base/constants'
 import { getWriter, write404 } from './writers'
 import { lookup } from './base/mime'
+import { toArray } from '@jsonql/utils/src'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:serve-static')
 
@@ -13,7 +14,7 @@ const debugFn = debug('velocejs:server:serve-static')
  * serve static files from assetDir
  */
 export function serveStatic(assetDir: string | string[]) {
-  const dirs: string[] = Array.isArray(assetDir) ? assetDir : [assetDir]
+  const dirs: Array<string> = toArray(assetDir)
 
   return function(res: HttpResponse, req: HttpRequest) {
     // we need to provide a onAbortedHandler here
@@ -26,8 +27,8 @@ export function serveStatic(assetDir: string | string[]) {
     }
     debugFn(url)
     const file = dirs
-      .filter(dir => fs.existsSync(path.join(dir, url)))
-      .map(dir => fs.readFileSync(path.join(dir, url)))
+      .filter((dir: string) => fs.existsSync(path.join(dir, url)))
+      .map((dir: string) => fs.readFileSync(path.join(dir, url)))
 
     if (file.length) {
       const mimeType = lookup(url)

@@ -21,7 +21,7 @@
     "test:srv": "PORT=9010 pnpm ts -- ./dev/server.ts",
     "test:client": "PORT=9010 pnpm ts -- ./dev/client.ts",
     "test:api": "DEBUG=velocejs* pnpm ts -- ./dev/decorator.ts",
-    "run:example:form": "DEBUG=velocejs:server:* pnpm ts -- ./examples/form/index.ts",
+    "run:example:form": "DEBUG=velocejs:server:* pnpm ts -- ./dev/form/index.ts",
     "ts:check": "tsc -noEmit",
     "clean": "node ./clean.js",
     "docs": "typedoc --entryPoints src/main.ts",
