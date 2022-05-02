@@ -11,18 +11,7 @@
  *  or { name: 'key', data: <Buffer 41 41 41 41 42 42 42 42> }
  */
 
-type Part = {
-  header: string
-  info: string
-  part: number[]
-}
-
-type Input = {
-  filename?: string
-  name?: string
-  type: string
-  data: Buffer
-}
+import { Part, Input } from './types'
 
 export function parse(multipartBodyBuffer: Buffer, boundary: string): Input[] {
   let lastline = ''

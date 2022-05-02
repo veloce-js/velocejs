@@ -1,21 +1,21 @@
 
 import { onDataHandler } from './handle-upload'
 // @NOTE 2022-05-02 although the module has updated but it still not working correctly!
-import { parse, getBoundary } from './parse-multipart-data'
+import { parse, getBoundary } from './parse-multipart'
 import {
   HttpResponse,
   HttpRequest,
   UwsRespondBody,
   UwsStringPairObj,
   UwsBodyParserMixEntry
-} from '../types'
+} from './types'
 import {
   CONTENT_TYPE,
   IS_FORM,
   IS_JSON,
   IS_MULTI,
   IS_OTHER,
-} from '../base/constants'
+} from './constants'
 import {
   getHeaders,
   toArr,
@@ -29,7 +29,7 @@ import {
 } from './utils'
 // debug
 import debug from 'debug'
-const debugFn = debug('velocejs:server:body-parser')
+const debugFn = debug('velocejs:body-parser:main')
 // processing
 
 // main
@@ -81,7 +81,10 @@ export async function bodyParser(
 }
 
 // all-in-one to parse and post process the multipart-formdata input
-export function parseMultipart(headers: UwsStringPairObj, body: Buffer): object {
+export function parseMultipart(
+  headers: UwsStringPairObj,
+  body: Buffer
+): object {
   const boundary = getBoundary(headers[CONTENT_TYPE])
   if (boundary) {
     const params = parse(body, boundary as string)
@@ -95,7 +98,9 @@ export function parseMultipart(headers: UwsStringPairObj, body: Buffer): object 
 }
 
 // break it out from above for clearity
-function processFileArray(params: Array<Record<string, UwsBodyParserMixEntry>>): any {
+function processFileArray(
+  params: Array<Record<string, UwsBodyParserMixEntry>>
+): any {
 
   return params.filter(param => param.filename && param.type)
                .map(param => {
@@ -126,7 +131,9 @@ function processFileArray(params: Array<Record<string, UwsBodyParserMixEntry>>):
 }
 
 // when the result is simple text then we parse it to string not buffer
-function processTextArray(params: Array<Record<string, UwsBodyParserMixEntry>>) {
+function processTextArray(
+  params: Array<Record<string, UwsBodyParserMixEntry>>
+) {
 
   return params
     .filter(param => !param.filename && !param.type)
@@ -139,7 +146,9 @@ function processTextArray(params: Array<Record<string, UwsBodyParserMixEntry>>) 
 }
 
 // export this for unit test
-export function processParams(params: Array<Record<string, UwsBodyParserMixEntry>>): UwsBodyParserMixEntry {
+export function processParams(
+  params: Array<Record<string, UwsBodyParserMixEntry>>
+): UwsBodyParserMixEntry {
 
   return Object.assign(
     processFileArray(params),
