@@ -31,13 +31,13 @@
   "homepage": "https://velocejs.com",
   "devDependencies": {
     "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.2.163",
-    "esbuild": "^0.14.30",
+    "@swc/core": "^1.2.174",
+    "esbuild": "^0.14.38",
     "esbuild-register": "^3.3.2",
-    "fs-extra": "^10.0.1",
-    "glob": "^7.2.0",
+    "fs-extra": "^10.1.0",
+    "glob": "^8.0.1",
     "lodash": "^4.17.21",
-    "plop": "^3.0.5",
+    "plop": "^3.1.0",
     "vuepress": "^1.9.7"
   },
   "ava": {

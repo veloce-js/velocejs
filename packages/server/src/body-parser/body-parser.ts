@@ -1,6 +1,6 @@
 
 import { onDataHandler } from './handle-upload'
-import { parse, getBoundary } from './parse-multipart-data'
+import { parse, getBoundary } from 'parse-multipart-data'
 import {
   HttpResponse,
   HttpRequest,
