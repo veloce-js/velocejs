@@ -9,9 +9,11 @@ import { sendFile } from '../dev/send-file'
 import {
   createApp,
   shutdownServer,
-  uploadHandler,
   writeBufferToFile
 } from '../dist'
+
+import { uploadHandler } from '@velocejs/bodyparser'
+
 import { HttpResponse } from '../dist/types'
 
 let listenSocket: any = null

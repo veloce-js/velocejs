@@ -1,6 +1,7 @@
 import test from 'ava'
-import { UwsServer, bodyParser } from '../dist'
+import { UwsServer } from '../dist'
 import { HttpResponse, HttpRequest } from '../src/types'
+import bodyParser from '@velocejs/bodyparser'
 import Fetch from 'node-fetch'
 
 let app: UwsServer = null

@@ -1,6 +1,7 @@
 // testing the UwsServer start stop methods
 import test from 'ava'
-import { UwsServer, bodyParser, jsonWriter } from '../dist'
+import { UwsServer, jsonWriter } from '../dist'
+import bodyParser from '@velocejs/bodyparser'
 import { HttpResponse, HttpRequest } from '../dist/types'
 import Fetch from 'node-fetch'
 
