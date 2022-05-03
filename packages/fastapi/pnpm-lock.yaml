@@ -3,14 +3,15 @@ lockfileVersion: 5.4
 specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/ast': ^0.6.1
+  '@jsonql/errors': ^0.6.0
   '@jsonql/utils': ^0.6.5
   '@jsonql/validator': ^0.3.0
   '@types/fs-extra': ^9.0.13
   '@types/node': ^17.0.31
   '@typescript-eslint/eslint-plugin': ^5.22.0
   '@typescript-eslint/parser': ^5.22.0
-  '@velocejs/bodyparser': workspace:^0.1.2
-  '@velocejs/server': workspace:^0.7.1
+  '@velocejs/bodyparser': workspace:^0.2.0
+  '@velocejs/server': workspace:^0.7.2
   ava: ^4.2.0
   debug: ^4.3.4
   esbuild: ^0.14.38
@@ -28,6 +29,7 @@ specifiers:
 
 dependencies:
   '@jsonql/ast': 0.6.1
+  '@jsonql/errors': 0.6.0
   '@jsonql/utils': 0.6.5
   '@jsonql/validator': 0.3.0
   '@velocejs/bodyparser': link:../bodyparser
