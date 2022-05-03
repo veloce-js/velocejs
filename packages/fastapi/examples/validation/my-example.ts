@@ -25,7 +25,14 @@ class MyExample extends FastApi {
     return 'done'
   }
 
-  // @Validate()
+  @Validate()
+  @Post('/other')
+  someOtherApi(x: number, y: number | string) {
+    return { x , y }
+  }
+
+
+  @Validate() // this one should throw an error 
   @Get('/')
   defaultHandler() {
     return 'some text'

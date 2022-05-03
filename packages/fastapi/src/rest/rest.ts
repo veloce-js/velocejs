@@ -12,7 +12,7 @@ import { pickInputFile, tsClassParser } from '@jsonql/ast'
 import { STATIC_TYPE, RAW_TYPE } from '@velocejs/server'
 // import debug from 'debug'
 // const debugFn = debug('velocejs:fastapi:decorator:Rest')
-
+/** This should be generic that could apply to different Decorator init */
 export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
   // Voodoo magic
   const where = pickInputFile(new Error())
@@ -51,10 +51,18 @@ function mergeInfo(
       route.args = map[propertyName]
     }
     route.protected = protectedRoutes && protectedRoutes.indexOf(propertyName) > -1
-    // skip the static and raw type
-    route.validation = (type === STATIC_TYPE || type === RAW_TYPE ) ?
-                                                              false :
-                                 validations[propertyName] || false
+    route.validation = prepareValidateRoute(type, propertyName, validations)
+
     return route
   })
+}
+/** skip the static and raw type */
+function prepareValidateRoute(
+  type: string,
+  propertyName: string,
+  validations: any
+) {
+  return (type === STATIC_TYPE || type === RAW_TYPE ) ?
+                                                false :
+                   validations[propertyName] || false
 }

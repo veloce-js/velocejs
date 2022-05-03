@@ -22,7 +22,7 @@
     "ts": "node -r esbuild-register",
     "test:form": "DEBUG=velocejs:server:* pnpm ts -- ./examples/form/index.ts",
     "test:upload": "DEBUG=velocejs:server:* pnpm ts -- ./examples/upload/index.ts",
-    "test:vali": "DEBUG=velocejs:server:* pnpm ts -- ./examples/validation/index.ts",
+    "test:vali": "DEBUG=velocejs:server:* pnpm ts -- ./examples/validation/my-example.ts",
     "ts-node": "ts-node",
     "clean:dist": "rimraf ./dist",
     "prepublishOnly": "pnpm prepare:types && pnpm test",

@@ -127,7 +127,7 @@ export class FastApi implements FastApiInterface {
                 onAbortedHandler
               )
             }
-        }
+          }
       })
   }
 
@@ -141,7 +141,7 @@ export class FastApi implements FastApiInterface {
     const handler = this[propertyName]
     // the args now using the info from ast map , we strip one array only contains names for user here
     const argNames = argsList.map(arg => arg.name)
-    const validateFn = createValidator(argsList, validationInput)
+    const validateFn = createValidator(propertyName, argsList, validationInput)
     // @TODO need to rethink about how this work
     return async (res: HttpResponse, req: HttpRequest) => {
       const args1: Array<HttpResponse | HttpRequest | (() => void)> = [res, req]
@@ -205,8 +205,8 @@ export class FastApi implements FastApiInterface {
 
   // handle the errors return from validation
   private handleValidationError(errors: string[], fields: string[]) {
-    console.log(errors)
-    console.log(fields)
+    console.log('errors', errors)
+    console.log('fields', fields)
 
     // clean up
     this.unsetTemp()
