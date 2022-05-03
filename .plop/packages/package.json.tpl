@@ -23,6 +23,7 @@
     "clean:dist": "rimraf ./dist",
     "build": "pnpm clean:dist && pnpm build:tsc",
     "prepublishOnly": "pnpm build && pnpm test:nyc",
+    "postpublish": "pnpm update:version",
     "patch": "npm version patch",
     "minor": "npm version minor",
     "major": "npm version major"
