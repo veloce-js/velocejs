@@ -1,11 +1,10 @@
 // this will allow you to create a series of API in no time
 import {
   UwsServer,
-  bodyParser,
   serveStatic,
   getWriter,
   jsonWriter
-} from '@velocejs/server/src' // point to the source ts
+} from '@velocejs/server'
 import {
   AppOptions,
   HttpResponse,
@@ -17,26 +16,25 @@ import {
   UwsJsonWriter,
   UwsStringPairObj,
   RecognizedString
-} from '@velocejs/server/src/types' // point to the source ts
+} from '@velocejs/server/index' // point to the source ts
 import {
   STATIC_TYPE,
   STATIC_ROUTE,
   RAW_TYPE,
   IS_OTHER,
   CONTENT_TYPE
-} from '@velocejs/server/src/base/constants'
+} from '@velocejs/server'
 import {
   C417,
   lookupStatus
-} from '@velocejs/server/src/base/status'
+} from '@velocejs/server'
 // our deps
 import {
   RouteMetaInfo,
   JsonValidationEntry
 } from '../types'
-import {
-  createValidator
-} from './lib/schema'
+import bodyParser from '@velocejs/bodyparser'
+import { createValidator } from './lib/validator'
 import {
   FastApiInterface
 } from './fast-api-interface'
@@ -77,7 +75,7 @@ export class FastApi implements FastApiInterface {
   // instead of using a Prepare decorator and ugly call the super.run
   // we use a class decorator to call this method on init
   // Dev can do @Rest(config)
-  private prepare(routes: Array<RouteMetaInfo>):void {
+  protected prepare(routes: Array<RouteMetaInfo>):void {
     if (isDebug) {
       console.time('FastApiStartUp')
     }
@@ -135,10 +133,12 @@ export class FastApi implements FastApiInterface {
     propertyName: string,
     argsList: Array<any>,
     validationInput: any, // this is the raw rules input by dev
-    onAbortedHandler?: string): UwsRouteHandler {
+    onAbortedHandler?: string
+  ): UwsRouteHandler {
     const handler = this[propertyName]
     // the args now using the info from ast map , we strip one array only contains names for user here
     const argNames = argsList.map(arg => arg.name)
+
     const validateFn = createValidator(argsList, validationInput)
 
     return async (res: HttpResponse, req: HttpRequest) => {
