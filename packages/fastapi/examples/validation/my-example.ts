@@ -16,12 +16,8 @@ class MyExample extends FastApi {
   }
 
   @Validate({
-    name: {
-      rules: [{ max: 20 }]
-    },
-    id: {
-      rules: [{ max: 20 }]
-    }
+    name: [{ plugin: 'lessThan', num: 20 }],
+    id: { plugin: 'lessThan', num: 20 }
   })
   @Post('/login')
   login(name: string, id?: number) {

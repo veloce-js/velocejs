@@ -3,17 +3,15 @@ import { validationKey } from './keys'
 import {
   // JsonValidationEntry,
   JsonValidationOption,
-  ValidationObjectRule,
-  ValidationObjectSimpleRule
+  // ValidationObjectRule,
+  // ValidationObjectSimpleRule
 } from '../../types'
 import { FastApiInterface } from '../fast-api-interface'
 import { RULES_KEY, OPTIONS_KEY, RULE_AUTOMATIC } from '../../constants'
 
 // Validate Decorator
 export function Validate(
-  rules?: Array<ValidationObjectSimpleRule> |
-          Array<Array<ValidationObjectSimpleRule>> |
-          ValidationObjectRule,
+  rules?: any, // @TODO need to reply the types here
   options?: JsonValidationOption
 ) {
 

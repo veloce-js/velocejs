@@ -23,3 +23,5 @@ export type RouteOptions = {
 }
 
 export * from './server/lib/validate-types'
+// just stub this for now 
+export type MiddlewareFunction = (...args: any[]) => Promise<any>

@@ -10,7 +10,7 @@ export type RouteMetaInfo = {
 export type MetaDecorator = (path: string) => (target: any, propertyName: string, descriptor: any) => void
 
 export type DescriptorMeta = {
-  value: function
+  value: Function
   writable: boolean
   enumerable: boolean
   configurable: boolean
