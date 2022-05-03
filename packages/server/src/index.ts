@@ -17,6 +17,7 @@ export * from './base/mime'
 // extended
 export * from './uws-server-class'
 export * from './base/status'
+export * from './base/constants'
 // @TODO streaming
 
 // @TODO ws

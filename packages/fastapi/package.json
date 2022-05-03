@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "test:ava": "ava",
-    "test": "pnpm build && nyc ava",
+    "test:nyc": "nyc ava",
+    "test": "pnpm build && pnpm test:nyc",
     "build": "pnpm clean:dist && pnpm build:tsc",
     "prepare:types": "cp ./src/types.d.ts ./index.d.ts",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
@@ -33,6 +34,7 @@
   "license": "ISC",
   "dependencies": {
     "@jsonql/ast": "^0.6.1",
+    "@jsonql/utils": "^0.6.5",
     "@jsonql/validator": "^0.3.0",
     "@velocejs/bodyparser": "workspace:^0.1.2",
     "@velocejs/server": "workspace:^0.7.1",

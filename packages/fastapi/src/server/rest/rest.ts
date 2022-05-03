@@ -8,8 +8,8 @@
 */
 import { RouteMetaInfo /*, JsonValidationEntry*/ } from '../../types'
 import { routeKey, validationKey, protectedKey } from './keys'
-import { pickInputFile, tsClassParser } from '@jsonql/ast/src'
-import { STATIC_TYPE, RAW_TYPE } from '@velocejs/server/src/base/constants'
+import { pickInputFile, tsClassParser } from '@jsonql/ast'
+import { STATIC_TYPE, RAW_TYPE } from '@velocejs/server'
 // import debug from 'debug'
 // const debugFn = debug('velocejs:fastapi:decorator:Rest')
 
