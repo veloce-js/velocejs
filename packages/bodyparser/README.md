@@ -26,6 +26,10 @@ The follow two exports can use in any node.js project
 ### parseMultipart
 ### getBoundary
 
-
+First you use the `getBoundary(headers: string[])` to extract the boundary
+then use the `parseMultipart(body: Buffer, boundary: string)` to parse the input.
+And you will get the result in an array, file will also be in it.
 
 ---
+
+Joel Chu (c) 2022
