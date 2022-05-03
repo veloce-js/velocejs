@@ -6,7 +6,7 @@ import { HttpResponse, HttpRequest } from './types'
 import { DEFAULT_FILE, CONTENT_TYPE } from './base/constants'
 import { getWriter, write404 } from './writers'
 import { lookup } from './base/mime'
-import { isFunction } from '@jsonql/utils'
+import { isFunction, toArray } from '@jsonql/utils'
 // import { toArray } from '@jsonql/utils'
 // import { toArr } from '@velocejs/bodyparser/utils'
 import debug from 'debug'
@@ -19,7 +19,7 @@ export function serveStatic(
   assetDir: string | string[],
   onAbortedHandler?: () => void
 ) {
-  const dirs: Array<string> = Array.isArray(assetDir) ? assetDir : [assetDir]
+  const dirs: Array<string> = toArray(assetDir)
 
   return function(res: HttpResponse, req: HttpRequest) {
     // we need to provide a onAbortedHandler here

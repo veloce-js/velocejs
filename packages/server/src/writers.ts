@@ -1,6 +1,12 @@
 // from write-json and change the interface to be the same
 import fs from 'fs-extra'
-import { HttpResponse, UwsStringPairObj, RecognizedString, UwsWriter, UwsJsonWriter } from './types'
+import {
+  HttpResponse,
+  UwsStringPairObj,
+  RecognizedString,
+  UwsWriter,
+  UwsJsonWriter
+} from './types'
 import { CONTENT_TYPE, JSON_HEADER } from './base/constants'
 import { C200, C404, lookupStatus } from './base/status'
 import debug from 'debug'

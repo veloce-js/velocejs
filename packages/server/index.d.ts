@@ -47,7 +47,7 @@ export {
 // export all the interfaces
 export * from './src/base/interfaces'
 // export the types
-export * from './src/base/type'
+export * from './src/base/types'
 // don't know why jslint keep saying couldn't find the type, so reimport here again
 import { RecognizedString } from 'uWebSockets.js'
 import { UwsStringPairObj } from './src/base/type'

@@ -8,6 +8,7 @@ const node_path_1 = tslib_1.__importDefault(require("node:path"));
 const constants_1 = require("./base/constants");
 const writers_1 = require("./writers");
 const mime_1 = require("./base/mime");
+const utils_1 = require("@jsonql/utils");
 // import { toArray } from '@jsonql/utils'
 // import { toArr } from '@velocejs/bodyparser/utils'
 const debug_1 = tslib_1.__importDefault(require("debug"));
@@ -15,12 +16,17 @@ const debugFn = (0, debug_1.default)('velocejs:server:serve-static');
 /**
  * serve static files from assetDir
  */
-function serveStatic(assetDir) {
-    const dirs = Array.isArray(assetDir) ? assetDir : [assetDir];
+function serveStatic(assetDir, onAbortedHandler) {
+    const dirs = (0, utils_1.toArray)(assetDir);
     return function (res, req) {
         // we need to provide a onAbortedHandler here
         res.onAborted(() => {
-            debugFn(`Serve static aborted`);
+            if (onAbortedHandler && (0, utils_1.isFunction)(onAbortedHandler)) {
+                onAbortedHandler(); // @TODO should we pass the res ?
+            }
+            else {
+                debugFn(`Serve static aborted`);
+            }
         });
         let url = req.getUrl();
         if (url === '/') {

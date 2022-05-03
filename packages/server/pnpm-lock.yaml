@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ava/typescript': ^3.0.1
+  '@jsonql/utils': ^0.6.5
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
@@ -25,6 +26,7 @@ specifiers:
   uWebSockets.js: github:uNetworking/uWebSockets.js#v20.9.0
 
 dependencies:
+  '@jsonql/utils': 0.6.5
   debug: 4.3.4
   mime-types: 2.1.35
   tslib: 2.4.0
@@ -331,6 +333,28 @@ packages:
       '@jridgewell/resolve-uri': 3.0.6
       '@jridgewell/sourcemap-codec': 1.4.11
     dev: true
+
+  /@jsonql/constants/0.5.10:
+    resolution: {integrity: sha512-L7sx3pGgfxMQD/7WLBdX/lxO6n0RDKEJMwm0cncLO+Fx9uF+8+EaoclszciAPbM7zqPO/hBZnq/OPsEmaXFd5A==}
+    dev: false
+
+  /@jsonql/constants/0.6.0:
+    resolution: {integrity: sha512-TPzeakTNoifiBhRrT/TlrPFyldvHQjBmi+fuTWRjdrqXwQKAF+vw0Huho+fxprpJWmOSaxaFXrPZHlAQpL8moQ==}
+    dev: false
+
+  /@jsonql/errors/0.6.0:
+    resolution: {integrity: sha512-h7ImrJh5YU3rITq2QtbWm4Nz0pdlXI3CuVYDaYe349AkZc5Ss0f4urSMw0ChL/Pz0sqfs6wh9lwNWi7xv3eslA==}
+    dependencies:
+      '@jsonql/constants': 0.5.10
+    dev: false
+
+  /@jsonql/utils/0.6.5:
+    resolution: {integrity: sha512-ISIwnx6Q2SRHAoic1Djcr6fy2abEE+WG1T1vWqZRhgsOjvwtMVGbESVowcWHB8c8GHG1+T2bjtACRkpRaz1H/A==}
+    dependencies:
+      '@jsonql/constants': 0.6.0
+      '@jsonql/errors': 0.6.0
+      lodash-es: 4.17.21
+    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1952,6 +1976,10 @@ packages:
     dependencies:
       p-locate: 6.0.0
     dev: true
+
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
 
   /lodash.flattendeep/4.4.0:
     resolution: {integrity: sha1-+wMJF/hqMTTlvJvsDWngAT3f7bI=}
