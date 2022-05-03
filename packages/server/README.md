@@ -111,15 +111,19 @@ and `serveStatic` takes care of the rest.
 
 ### async bodyParser(res: HttpResponse, req: HttpRequest, onAborted?: () => void): Promise&lt;UwsRespondBody&gt;
 
+**bodyParser is now a standalone project [@velocejs/bodyparser](https://www.npmjs.com/package/@velocejs/bodyparser)**
+
 This will help you to parse the request input, and put into easier to use format.
 
 ```ts
+import bodyParser from '@velocejs/bodyparser'
+
 const app = createApp()
   .get('/*', async (res: HttpResponse, req: HttpRequest) => {
     const result: UwsRespondBody = await bodyParser(
       res,
       req,
-      /* optional */ () => console.log(`something wrong`)
+      /* optional onAbortedHandler */ () => console.log(`something wrong`)
     )
     // do your thing with the result  
   })
@@ -165,7 +169,7 @@ with the the follow name / value pair
 ```
 
 This example form setup has two text fields, and multiple files upload field.
-Once it got to the server and processed `bodyParser`:
+Once it got to the server and processed by `bodyParser`:
 
 ```ts
 // server setup etc
