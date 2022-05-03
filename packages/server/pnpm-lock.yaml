@@ -2,7 +2,6 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ava/typescript': ^3.0.1
-  '@jsonql/utils': ^0.6.2
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
@@ -26,7 +25,6 @@ specifiers:
   uWebSockets.js: github:uNetworking/uWebSockets.js#v20.9.0
 
 dependencies:
-  '@jsonql/utils': 0.6.2
   '@velocejs/bodyparser': link:../bodyparser
   debug: 4.3.4
   mime-types: 2.1.35
@@ -333,24 +331,6 @@ packages:
       '@jridgewell/resolve-uri': 3.0.6
       '@jridgewell/sourcemap-codec': 1.4.11
     dev: true
-
-  /@jsonql/constants/0.5.10:
-    resolution: {integrity: sha512-L7sx3pGgfxMQD/7WLBdX/lxO6n0RDKEJMwm0cncLO+Fx9uF+8+EaoclszciAPbM7zqPO/hBZnq/OPsEmaXFd5A==}
-    dev: false
-
-  /@jsonql/errors/0.6.0:
-    resolution: {integrity: sha512-h7ImrJh5YU3rITq2QtbWm4Nz0pdlXI3CuVYDaYe349AkZc5Ss0f4urSMw0ChL/Pz0sqfs6wh9lwNWi7xv3eslA==}
-    dependencies:
-      '@jsonql/constants': 0.5.10
-    dev: false
-
-  /@jsonql/utils/0.6.2:
-    resolution: {integrity: sha512-2Qm8TSWoSzOx7heM1Cb0m2M3Tq6/nFD7ubLPIK5d3nUhNaAGYlZmZG7x4fWBnXhX2kkKLraHcdgR4+lhdSadlw==}
-    dependencies:
-      '@jsonql/constants': 0.5.10
-      '@jsonql/errors': 0.6.0
-      lodash-es: 4.17.21
-    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1973,10 +1953,6 @@ packages:
       p-locate: 6.0.0
     dev: true
 
-  /lodash-es/4.17.21:
-    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
-    dev: false
-
   /lodash.flattendeep/4.4.0:
     resolution: {integrity: sha1-+wMJF/hqMTTlvJvsDWngAT3f7bI=}
     dev: true
@@ -2837,7 +2813,7 @@ packages:
     dev: true
 
   github.com/uNetworking/uWebSockets.js/404593bbe701e460413e3036df9f4cf9c92362ba:
-    resolution: {tarball: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/404593bbe701e460413e3036df9f4cf9c92362ba}
+    resolution: {commit: 404593bbe701e460413e3036df9f4cf9c92362ba, repo: git+ssh://git@github.com/uNetworking/uWebSockets.js.git, type: git}
     name: uWebSockets.js
     version: 20.9.0
     dev: false

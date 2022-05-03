@@ -8,14 +8,15 @@ const path_1 = tslib_1.__importDefault(require("path"));
 const constants_1 = require("./base/constants");
 const writers_1 = require("./writers");
 const mime_1 = require("./base/mime");
-const src_1 = require("@jsonql/utils/src");
+// import { toArray } from '@jsonql/utils'
+// import { toArr } from '@velocejs/bodyparser/utils'
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)('velocejs:server:serve-static');
 /**
  * serve static files from assetDir
  */
 function serveStatic(assetDir) {
-    const dirs = (0, src_1.toArray)(assetDir);
+    const dirs = Array.isArray(assetDir) ? assetDir : [assetDir];
     return function (res, req) {
         // we need to provide a onAbortedHandler here
         res.onAborted(() => {

@@ -1,13 +1,13 @@
 // server static methods
 
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 import { HttpResponse, HttpRequest } from './types'
 import { DEFAULT_FILE, CONTENT_TYPE } from './base/constants'
 import { getWriter, write404 } from './writers'
 import { lookup } from './base/mime'
-import { toArray } from '@jsonql/utils'
-
+// import { toArray } from '@jsonql/utils'
+// import { toArr } from '@velocejs/bodyparser/utils'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:serve-static')
 
@@ -15,7 +15,7 @@ const debugFn = debug('velocejs:server:serve-static')
  * serve static files from assetDir
  */
 export function serveStatic(assetDir: string | string[]) {
-  const dirs: Array<string> = toArray(assetDir)
+  const dirs: Array<string> = Array.isArray(assetDir) ? assetDir : [assetDir]
 
   return function(res: HttpResponse, req: HttpRequest) {
     // we need to provide a onAbortedHandler here

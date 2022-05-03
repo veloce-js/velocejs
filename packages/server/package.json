@@ -39,8 +39,6 @@
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@jsonql/utils": "^0.6.2",
-    "@velocejs/bodyparser": "workspace:^0.1.0",
     "debug": "^4.3.4",
     "mime-types": "^2.1.35",
     "tslib": "^2.4.0",
@@ -54,6 +52,7 @@
     "@types/node": "^17.0.31",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
+    "@velocejs/bodyparser": "workspace:^0.1.0",
     "ava": "^4.2.0",
     "esbuild": "^0.14.38",
     "esbuild-register": "^3.3.2",
