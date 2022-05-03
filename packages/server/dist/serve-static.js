@@ -3,8 +3,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.serveStatic = void 0;
 const tslib_1 = require("tslib");
-const fs_1 = tslib_1.__importDefault(require("fs"));
-const path_1 = tslib_1.__importDefault(require("path"));
+const node_fs_1 = tslib_1.__importDefault(require("node:fs"));
+const node_path_1 = tslib_1.__importDefault(require("node:path"));
 const constants_1 = require("./base/constants");
 const writers_1 = require("./writers");
 const mime_1 = require("./base/mime");
@@ -28,8 +28,8 @@ function serveStatic(assetDir) {
         }
         debugFn(url);
         const file = dirs
-            .filter((dir) => fs_1.default.existsSync(path_1.default.join(dir, url)))
-            .map((dir) => fs_1.default.readFileSync(path_1.default.join(dir, url)));
+            .filter((dir) => node_fs_1.default.existsSync(node_path_1.default.join(dir, url)))
+            .map((dir) => node_fs_1.default.readFileSync(node_path_1.default.join(dir, url)));
         if (file.length) {
             const mimeType = (0, mime_1.lookup)(url);
             const writer = (0, writers_1.getWriter)(res);
