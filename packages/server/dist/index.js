@@ -19,5 +19,6 @@ tslib_1.__exportStar(require("./base/mime"), exports);
 // extended
 tslib_1.__exportStar(require("./uws-server-class"), exports);
 tslib_1.__exportStar(require("./base/status"), exports);
+tslib_1.__exportStar(require("./base/constants"), exports);
 // @TODO streaming
 // @TODO ws
