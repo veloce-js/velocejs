@@ -1,5 +1,5 @@
 // wrap the @jsonql/validator here
-// import { ValidatorFactory } from '@jsonql/validator'
+import { ValidatorFactory } from '@jsonql/validator'
 import {
   RULES_KEY,
   // OPTIONS_KEY,
@@ -8,7 +8,7 @@ import {
 import { inArray } from '@jsonql/utils'
 import { VeloceError } from '../lib/errors'
 import debugFn from 'debug'
-const debug = debugFn('velocejs:lib:validator')
+const debug = debugFn('velocejs:fastapi:lib:validator')
 
 export function createValidator(
   propertyName: string,
@@ -21,16 +21,19 @@ export function createValidator(
     // return a dummy handler
     return async (values: any) => values
   }
-  console.log('argsList', argsList)
-  console.log('input', validationInput)
+
+  debug(`propertyName`, propertyName)
+  debug('argsList', argsList)
+  debug('input', validationInput)
 
   assert(propertyName, argsList, validationInput)
-
-  // just stub it for now
-  return async function(values: any) {
-    console.log('value', values)
-    return true
+  // @TODO we might need to subclass this and create a set global plugin
+  const vObj = new ValidatorFactory(argsList)
+  if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
+    vObj.createSchema(validationInput[RULES_KEY])
   }
+  // return the validate method directly
+  return vObj.validate
 }
 
 /** validate aginst the dev input first */
