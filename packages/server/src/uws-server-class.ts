@@ -81,9 +81,7 @@ export class UwsServer {
   // this doesn't do anything just for overwrite or display a debug message
   public onStartCb() {
     const portNum = this.portNum || this.getPortNum()
-    const s = this.opts ? 's' : ''
-    const proto = `http${s}://`
-    const hostName = this.hostName ? proto + this.hostName : `${proto}localhost`
+    const hostName = this.getHostName()
 
     this.onStartFn(`${hostName}:${portNum}`)
   }
@@ -129,9 +127,16 @@ export class UwsServer {
     }
   }
 
-  // get the port number if it's randomly assign port
+  /** get the port number if it's randomly assign port */
   public getPortNum(): number {
     return this.token ? getPort(this.token) : -1
+  }
+  
+  /** get fully constructed hostname */
+  public getHostName(): string {
+    const s = this.opts ? 's' : ''
+    const proto = `http${s}://`
+    return this.hostName ? proto + this.hostName : `${proto}localhost`
   }
 
 }

@@ -362,4 +362,12 @@ export class FastApi implements FastApiInterface {
   public stop(): void {
     this._uwsInstance.shutdown()
   }
+
+  /* return stuff about the server */
+  public get fastApiInfo() {
+    return {
+      port: this._uwsInstance.getPortNum(),
+      host: this._uwsInstance.hostName
+    }
+  }
 }
