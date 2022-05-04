@@ -101,8 +101,7 @@ export class FastApi implements FastApiInterface {
   private prepareRoutes(meta: RouteMetaInfo[]): Array<UwsRouteSetup> {
 
     return meta.map(m => {
-        const { path, type, propertyName, validation, onAbortedHandler } = m
-
+        const { path, type, propertyName, validation /*, onAbortedHandler */} = m
         switch (type) {
           case STATIC_TYPE:
             return {
@@ -126,7 +125,7 @@ export class FastApi implements FastApiInterface {
                 propertyName,
                 m.args,
                 validation,
-                onAbortedHandler
+                // onAbortedHandler
               )
             }
           }
@@ -138,7 +137,7 @@ export class FastApi implements FastApiInterface {
     propertyName: string,
     argsList: Array<any>,
     validationInput: any, // this is the raw rules input by dev
-    onAbortedHandler?: string
+    // onAbortedHandler?: string // take out
   ): UwsRouteHandler {
     const handler = this[propertyName]
     // the args now using the info from ast map , we strip one array only contains names for user here
@@ -167,7 +166,12 @@ export class FastApi implements FastApiInterface {
         }
       ]
       // run the middleware stacks
-      return this._runMiddlewareStacks(stacks, res, req, onAbortedHandler)
+      return this._runMiddlewareStacks(
+        stacks,
+        res,
+        req,
+        () => console.log(`@TODO`, 'define our own onAbortedHandler')
+      )
     }
   }
 
