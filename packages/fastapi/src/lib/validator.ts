@@ -7,6 +7,8 @@ import {
 } from './constants'
 import { inArray } from '@jsonql/utils'
 import { VeloceError } from '../lib/errors'
+import debugFn from 'debug'
+const debug = debugFn('velocejs:lib:validator')
 
 export function createValidator(
   propertyName: string,
@@ -15,6 +17,7 @@ export function createValidator(
 ) {
   // first need to check if they actually apply the @Validate decorator
   if (validationInput === false) {
+    debug(`${propertyName} skip validation`)
     // return a dummy handler
     return async (values: any) => values
   }
