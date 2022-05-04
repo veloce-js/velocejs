@@ -1,2 +1,9 @@
 // we subclass the JsonqlErrors and create our VeloceError here
-import { JsonqlErrors } from '@jsonql/errors'
+import { JsonqlError } from '@jsonql/errors'
+
+export class VeloceErrors extends JsonqlError {
+
+  constructor(message: string, details: any) {
+    super(message, details)
+  }
+}

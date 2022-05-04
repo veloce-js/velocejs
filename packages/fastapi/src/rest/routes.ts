@@ -1,18 +1,26 @@
 // all decorators are here
 import {
   RouteMetaInfo,
-  DescriptorMeta,
+  // DescriptorMeta,
   // RouteOptions next when develop protected route
-} from '../../types'
-import { STATIC_TYPE, STATIC_ROUTE, RAW_TYPE } from '@velocejs/server/src/base/constants'
+} from '../types'
+import {
+  STATIC_TYPE,
+  STATIC_ROUTE,
+  RAW_TYPE
+} from '@velocejs/server'
 import { routeKey } from './keys'
 // import { extractArgs } from '../lib/extract'
-import { FastApiInterface } from '../fast-api-interface'
+import { FastApiInterface } from '../server/fast-api-interface'
 // The inner decorator factory method
 function innerDecoratorFactory(type: string, path: string, routeType?: string) {
   // this is the actual api facing the class method
   // @TODO create a type fo a generic class instance
-  return (target: FastApiInterface, propertyName: string, descriptor: DescriptorMeta) => {
+  return (
+    target: FastApiInterface,
+    propertyName: string
+  /*, descriptor: DescriptorMeta*/
+  ) => {
     // console.log('descriptor', descriptor)
     const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
     const meta: RouteMetaInfo = {
