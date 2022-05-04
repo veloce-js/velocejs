@@ -75,9 +75,7 @@ class UwsServer {
     // this doesn't do anything just for overwrite or display a debug message
     onStartCb() {
         const portNum = this.portNum || this.getPortNum();
-        const s = this.opts ? 's' : '';
-        const proto = `http${s}://`;
-        const hostName = this.hostName ? proto + this.hostName : `${proto}localhost`;
+        const hostName = this.getHostName();
         this.onStartFn(`${hostName}:${portNum}`);
     }
     // to init, bind handlers and then start up the UWS Server
@@ -118,9 +116,15 @@ class UwsServer {
             this.running = false;
         }
     }
-    // get the port number if it's randomly assign port
+    /** get the port number if it's randomly assign port */
     getPortNum() {
         return this.token ? (0, create_app_1.getPort)(this.token) : -1;
+    }
+    /** get fully constructed hostname */
+    getHostName() {
+        const s = this.opts ? 's' : '';
+        const proto = `http${s}://`;
+        return this.hostName ? proto + this.hostName : `${proto}localhost`;
     }
 }
 exports.UwsServer = UwsServer;

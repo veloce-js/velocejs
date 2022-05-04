@@ -22,5 +22,8 @@ export declare class UwsServer {
     run(handlers: UwsRouteSetup[]): void;
     start(): void;
     shutdown(): void;
+    /** get the port number if it's randomly assign port */
     getPortNum(): number;
+    /** get fully constructed hostname */
+    getHostName(): string;
 }
