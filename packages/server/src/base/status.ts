@@ -1,4 +1,5 @@
 // all the status related code here
+import { isString } from '@jsonql/utils'
 // ----------------------- HTTP RESPONSE STATUS ------------------ //
 // FROM: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 // successful
@@ -65,7 +66,7 @@ export const C507 = '507 Insufficient Storage'
 export const C508 = '508 Loop Detected'
 export const C510 = '510 Not Extended'
 export const C511 = '511 Network Authentication Required'
-// internal use only 
+// internal use only
 const STATUS_MAP = {
   C100 ,
   C101 ,
@@ -132,9 +133,9 @@ const STATUS_MAP = {
   C511 ,
 }
 
-// look up the code by the number
-export function lookupStatus(status: number): string {
-  const key = `C${status}`
-
+/** look up the code by the number or by the key string */
+export function lookupStatus(status: number | string): string {
+  const key = isString(status) ? status : `C${status}`
+  
   return STATUS_MAP[key]
 }

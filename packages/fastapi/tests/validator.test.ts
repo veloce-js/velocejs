@@ -6,7 +6,7 @@ import { MyExample } from './fixtures/my-example'
 let myExampleObj: MyExample
 const port = 30338
 const hostname = `http://localhost:${port}`
-
+const logigEndpoint = `${hostname}/login`
 test.before(async () => {
   myExampleObj = new MyExample()
   await myExampleObj.start(port)
@@ -17,11 +17,10 @@ test.after(() => {
 })
 
 test(`Validation with Decorator and @jsonql/validator`, async t => {
-
-  const endpoint = `${hostname}/login`
+  t.plan(1)
   const login = {username: 'John', password: '123456'}
 
-  return Fetch(endpoint, {
+  return Fetch(logigEndpoint, {
     method: 'POST',
     body: JSON.stringify(login),
     headers: { 'Content-Type': 'application/json' }
@@ -30,4 +29,21 @@ test(`Validation with Decorator and @jsonql/validator`, async t => {
   .then(json => {
     t.deepEqual(json, {username: 'John'})
   })
+})
+
+test.only(`Validation with wrong property to cause a throw`, async t => {
+  const login = {username: 'John', password: '123'}
+
+  return Fetch(logigEndpoint, {
+    method: 'POST',
+    body: JSON.stringify(login),
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(res => res.json())
+  .catch(error => {
+    // should get a non 200 respond
+    console.log(error)
+    t.pass()
+  })
+
 })

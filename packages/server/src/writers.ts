@@ -16,19 +16,26 @@ const debugFn = debug('velocejs:server:writers')
 export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
   const writer = getWriter(res)
 
-  return (jsonObj: RecognizedString | object, status?: number): void => {
-    writer(JSON.stringify(jsonObj), {
-      [CONTENT_TYPE]: JSON_HEADER
-    }, status)
+  return (jsonObj: RecognizedString | object, status?: number | string): void => {
+    writer(
+      JSON.stringify(jsonObj),
+      { [CONTENT_TYPE]: JSON_HEADER},
+      // @ts-ignore another non-sense
+      status
+    )
   }
 }
 
 // break this out for re-use
 export const getWriter = (res: HttpResponse): UwsWriter => {
 
-  return (payload: RecognizedString, headers?: UwsStringPairObj, status?: number) => {
+  return (
+    payload: RecognizedString,
+    headers?: UwsStringPairObj,
+    status?: number | string
+  ) => {
     // this could create a bug - if they pass the wrong status code
-    // then we fill it with 200 OK by default, it's hard to check
+    // then we fill it with 200 OK by default because it's hard to check
     const _status = status ? lookupStatus(status) : C200
     debugFn(`status: ${_status}`)
 
@@ -53,7 +60,7 @@ export const write404 = (res: HttpResponse): void => {
 
 // writing the Buffer to a file
 export function writeBufferToFile(buffer: Buffer, path: string, permission=0o666): boolean {
-  let fileDescriptor
+  let fileDescriptor: any
   try {
     fileDescriptor = fs.openSync(path, 'w', permission)
   } catch (e) {
