@@ -6,6 +6,7 @@ import {
   RULE_AUTOMATIC
 } from './constants'
 import { inArray } from '@jsonql/utils'
+import { VeloceError } from '../lib/errors'
 
 export function createValidator(
   propertyName: string,
@@ -47,7 +48,10 @@ function assert(
     }
     const wrongName = argsList.filter(arg => !inArray(names, arg.name))
     if (wrongName.length) {
-      throw new Error(`${propertyName}: Some of your validation argument name is wrong! ${names.join(',')}`)
+      throw new VeloceError(
+        `${propertyName}: Some of your validation argument name is wrong!
+        ${names.join(',')} NOT IN ${wrongName.map(w => w.name).join(',')}`
+      )
     }
   }
 }

@@ -32,7 +32,7 @@ class MyExample extends FastApi {
   }
 
 
-  @Validate() // this one should throw an error 
+  // @Validate() // this one should throw an error
   @Get('/')
   defaultHandler() {
     return 'some text'
