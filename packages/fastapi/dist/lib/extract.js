@@ -19,25 +19,3 @@ function splitMethod(fnStr) {
         .map(t => t.trim())
         .filter(t => t !== '');
 }
-/*
-function regexMethod(fnStr: string): Array<string> {
-  // 0.156ms
-  try {
-    console.time(`regex`)
-    const parts = fnStr.match(/\(([\s\S]*)\)/gm)
-    if (parts && parts[0]) {
-
-      return parts[0]
-              .replace('(', '')
-              .replace(')', '')
-              .split(',')
-              .map(s => s.trim())
-    }
-
-    return []
-  } catch(e) {
-    console.error(e)
-  } finally {
-    console.timeEnd(`regex`)
-  }
-} */

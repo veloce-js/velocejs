@@ -1,25 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FastApi = void 0;
+const tslib_1 = require("tslib");
 // this will allow you to create a series of API in no time
-const src_1 = require("@velocejs/server/src"); // point to the source ts
-const constants_1 = require("@velocejs/server/src/base/constants");
-const status_1 = require("@velocejs/server/src/base/status");
+const server_1 = require("@velocejs/server");
+const server_2 = require("@velocejs/server");
+const server_3 = require("@velocejs/server");
+const bodyparser_1 = tslib_1.__importDefault(require("@velocejs/bodyparser"));
+const utils_1 = require("@jsonql/utils");
+// here
 const validator_1 = require("./lib/validator");
+const isDebug = process.env.DEBUG;
 // dummy stuff
 const placeholder = -1;
 const placeholderFn = (...args) => { console.log(args); };
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 class FastApi {
-    uwsInstance;
-    written = false;
-    headers = {};
-    status = placeholder;
-    onConfigReady;
-    onConfigWait = placeholderFn;
-    onConfigError = placeholderFn;
-    jsonValidationErrorStatus = status_1.C417;
+    _uwsInstance;
+    _written = false;
+    _headers = {};
+    _status = placeholder;
+    _onConfigReady;
+    _onConfigWait = placeholderFn;
+    _onConfigError = placeholderFn;
+    _jsonValidationErrorStatus = server_3.C417;
     // protected properties
     payload;
     res;
@@ -28,52 +33,49 @@ class FastApi {
     jsonWriter = () => placeholderFn;
     // store the UWS server instance when init
     constructor(config) {
-        this.uwsInstance = new src_1.UwsServer(config);
+        this._uwsInstance = new server_1.UwsServer(config);
         // Due to the Decorator now using a Promise to apply the init property to the class
         // so we need to create an onWait mechanism that let the listen method to know
         // everything is ready
-        this.onConfigReady = new Promise((resolver, rejecter) => {
-            this.onConfigWait = resolver;
-            this.onConfigError = rejecter;
+        this._onConfigReady = new Promise((resolver, rejecter) => {
+            this._onConfigWait = resolver;
+            this._onConfigError = rejecter;
         });
     }
     // instead of using a Prepare decorator and ugly call the super.run
     // we use a class decorator to call this method on init
     // Dev can do @Rest(config)
-    prepare(routes, validations //Array<JsonValidationEntry>
-    ) {
-        // console.dir(routes, { depth: null })
-        console.dir(validations, { depth: null });
-        // set the autoStart to false
-        this.uwsInstance.autoStart = false;
+    prepare(routes) {
+        if (isDebug) {
+            console.time('FastApiStartUp');
+        }
+        this._uwsInstance.autoStart = false;
         try {
             // @TODO prepare the validation rules before as pass arg
-            this.uwsInstance.run(this.prepareRoutes(routes, validations));
+            this._uwsInstance.run(this.prepareRoutes(routes));
             // create a nextTick effect
             setTimeout(() => {
-                this.onConfigWait(true);
+                this._onConfigWait(true);
             }, 0);
         }
         catch (e) {
-            this.onConfigError(e);
+            this._onConfigError(e);
         }
     }
     // Mapping all the string name to method and supply to UwsServer run method
-    prepareRoutes(meta, validations //Array<JsonValidationEntry>
-    ) {
+    prepareRoutes(meta) {
         return meta.map(m => {
-            const { path, type, propertyName, onAbortedHandler } = m;
-            const inputRule = validations[propertyName];
+            const { path, type, propertyName, validation, onAbortedHandler } = m;
             switch (type) {
-                case constants_1.STATIC_TYPE:
+                case server_2.STATIC_TYPE:
                     return {
                         path,
-                        type: constants_1.STATIC_ROUTE,
+                        type: server_2.STATIC_ROUTE,
                         // the method just return the path to the files
                         // We change this to be a accessor decorator which a getter
-                        handler: (0, src_1.serveStatic)(this[propertyName])
+                        handler: (0, server_1.serveStatic)(this[propertyName])
                     };
-                case constants_1.RAW_TYPE:
+                case server_2.RAW_TYPE:
                     return {
                         path,
                         type: m.route,
@@ -83,7 +85,7 @@ class FastApi {
                     return {
                         type,
                         path,
-                        handler: this.mapMethodToHandler(propertyName, m.args, inputRule, onAbortedHandler)
+                        handler: this.mapMethodToHandler(propertyName, m.args, validation, onAbortedHandler)
                     };
             }
         });
@@ -94,7 +96,8 @@ class FastApi {
         const handler = this[propertyName];
         // the args now using the info from ast map , we strip one array only contains names for user here
         const argNames = argsList.map(arg => arg.name);
-        const validateFn = (0, validator_1.createValidator)(argNames, validationInput);
+        const validateFn = (0, validator_1.createValidator)(propertyName, argsList, validationInput);
+        // @TODO need to rethink about how this work
         return async (res, req) => {
             const args1 = [res, req];
             // add onAbortedHandler
@@ -102,42 +105,54 @@ class FastApi {
                 args1.push(this[onAbortedHandler]);
             }
             // process input
-            const result = await Reflect.apply(src_1.bodyParser, null, args1);
+            const result = await Reflect.apply(bodyparser_1.default, null, args1);
             // this is a bit tricky if there is a json result
             // then it will be the first argument
             this.setTemp(result, res);
             const { params, type } = result;
             // @TODO apply the validaton here, if it didn't pass then it will abort the rest
-            validateFn(params)
-                // success
-                .then(async () => {
-                const args2 = this.applyArgs(argNames, params);
-                // @TODO apply the valdiator here
-                // if there is an error then it won't get call
-                let reply = '';
-                try {
-                    reply = await Reflect.apply(handler, this, args2);
-                    if (reply && !this.written) {
-                        this.write(type, reply);
-                    }
-                }
-                catch (e) {
-                    console.log(`ERROR with`, propertyName, e);
-                    res.close();
-                }
-                finally {
-                    this.unsetTemp();
-                }
-            })
-                .catch(({ errors, fields }) => {
-                this.handleValidationError(errors, fields);
+            // @TODO create a middleware stack machine here
+            this.handleProtectedRoute()
+                .then(() => {
+                validateFn(params)
+                    // success
+                    .then(() => this.handleContent(argNames, params, handler, type, propertyName))
+                    .catch(({ errors, fields }) => {
+                    this.handleValidationError(errors, fields);
+                });
             });
         };
     }
+    /** this is where the stack get exeucted */
+    runMiddlewareStacks(middlewares) {
+        console.log('@TODO', middlewares);
+    }
+    // handle protected route
+    async handleProtectedRoute() {
+        console.log('@TODO handle protected route');
+        return true;
+    }
+    // break out from above to make the code cleaner
+    async handleContent(argNames, params, handler, type, propertyName) {
+        const args2 = this.applyArgs(argNames, params);
+        try {
+            const reply = await Reflect.apply(handler, this, args2);
+            if (reply && !this._written) {
+                this.write(type, reply);
+            }
+        }
+        catch (e) {
+            console.log(`ERROR with`, propertyName, e);
+            this.res?.close();
+        }
+        finally {
+            this.unsetTemp();
+        }
+    }
     // handle the errors return from validation
     handleValidationError(errors, fields) {
-        console.log(errors);
-        console.log(fields);
+        console.log('errors', errors);
+        console.log('fields', fields);
         // clean up
         this.unsetTemp();
     }
@@ -150,25 +165,25 @@ class FastApi {
     setTemp(payload, res
     /*, req?: HttpRequest */
     ) {
-        this.headers = {};
-        this.status = placeholder;
-        this.written = false;
+        this._headers = {};
+        this._status = placeholder;
+        this._written = false;
         this.payload = payload;
         this.res = res;
         // this.req = req
         // create a jsonWriter and a writer
         // add a guard to prevent accidental double write
-        const _writer = (0, src_1.getWriter)(res);
+        const _writer = (0, server_1.getWriter)(res);
         this.writer = (...args) => {
-            if (!this.written) {
-                this.written = true;
+            if (!this._written) {
+                this._written = true;
                 Reflect.apply(_writer, null, args);
             }
         };
-        const _jsonWriter = (0, src_1.jsonWriter)(res);
+        const _jsonWriter = (0, server_1.jsonWriter)(res);
         this.jsonWriter = (...args) => {
-            if (!this.written) {
-                this.written = true;
+            if (!this._written) {
+                this._written = true;
                 Reflect.apply(_jsonWriter, null, args);
             }
         };
@@ -180,37 +195,37 @@ class FastApi {
             ['res', 'payload', 'writer', 'jsonWriter'].forEach(fn => {
                 this[fn] = undefined;
             });
-            this.written = false;
-            this.headers = {};
-            this.status = placeholder;
+            this._written = false;
+            this._headers = {};
+            this._status = placeholder;
         }, 0);
     }
     // write to the client
     write(type, payload /* | object */) {
         switch (type) {
-            case constants_1.IS_OTHER:
-                this.writer(payload, this.headers, this.status);
+            case server_2.IS_OTHER:
+                this.writer(payload, this._headers, this._status);
                 break;
             default:
                 // check if they set a different content-type header
                 // if so then we don't use the jsonWriter
-                for (const key in this.headers) {
-                    if (key.toLowerCase() === constants_1.CONTENT_TYPE) {
+                for (const key in this._headers) {
+                    if (key.toLowerCase() === server_2.CONTENT_TYPE) {
                         // exit here
-                        return this.writer(payload, this.headers, this.status);
+                        return this.writer(payload, this._headers, this._status);
                     }
                 }
-                this.jsonWriter(payload, this.status);
+                this.jsonWriter(payload, this._status);
         }
     }
     // if the dev use this to provide an extra header
     // then we can check if the contentType is already provided
     // if so then we don't use the default one
     writeHeader(key, value) {
-        this.headers[key] = value;
+        this._headers[key] = value;
     }
     writeStatus(status) {
-        this.status = status;
+        this._status = status;
     }
     // using a setter to trigger series of things to do with the validation map
     /*
@@ -218,27 +233,35 @@ class FastApi {
       console.log(validationMap)
     }
     */
+    /** dev can register their global middleware here */
+    registerMiddleware(middlewares) {
+        const _middlewares = (0, utils_1.toArray)(middlewares);
+        console.log(_middlewares);
+    }
     // This is a global override for the status when validation failed
     set validationErrorStatus(status) {
-        this.jsonValidationErrorStatus = (0, status_1.lookupStatus)(status) || status_1.C417;
+        this._jsonValidationErrorStatus = (0, server_3.lookupStatus)(status) || server_3.C417;
     }
     /**
      * We remap some of the methods from UwsServer to here for easier to use
      */
     async start(port, host) {
         if (port) {
-            this.uwsInstance.portNum = port;
+            this._uwsInstance.portNum = port;
         }
         if (host) {
-            this.uwsInstance.hostName = host;
+            this._uwsInstance.hostName = host;
         }
         return new Promise((resolver, rejecter) => {
-            this.uwsInstance.onStart = resolver;
-            this.uwsInstance.onError = rejecter;
+            this._uwsInstance.onStart = resolver;
+            this._uwsInstance.onError = rejecter;
             // finally start up the server
-            this.onConfigReady
+            this._onConfigReady
                 .then(() => {
-                this.uwsInstance.start();
+                this._uwsInstance.start();
+                if (isDebug) {
+                    console.timeEnd('FastApiStartUp');
+                }
             })
                 .catch(e => {
                 rejecter(e);
@@ -247,7 +270,7 @@ class FastApi {
     }
     // wrapper around the shutdown
     stop() {
-        this.uwsInstance.shutdown();
+        this._uwsInstance.shutdown();
     }
 }
 exports.FastApi = FastApi;

@@ -1,13 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Aborted = exports.Head = exports.Patch = exports.Del = exports.Options = exports.Put = exports.Post = exports.Get = exports.Any = exports.ServeStatic = exports.Raw = void 0;
-const constants_1 = require("@velocejs/server/src/base/constants");
+const server_1 = require("@velocejs/server");
 const keys_1 = require("./keys");
 // The inner decorator factory method
 function innerDecoratorFactory(type, path, routeType) {
     // this is the actual api facing the class method
     // @TODO create a type fo a generic class instance
-    return (target, propertyName, descriptor) => {
+    return (target, propertyName
+    /*, descriptor: DescriptorMeta*/
+    ) => {
         // console.log('descriptor', descriptor)
         const existingRoutes = Reflect.getOwnMetadata(keys_1.routeKey, target) || [];
         const meta = {
@@ -16,13 +18,13 @@ function innerDecoratorFactory(type, path, routeType) {
             type: ''
         };
         switch (type) {
-            case constants_1.RAW_TYPE:
-                meta.type = constants_1.RAW_TYPE;
+            case server_1.RAW_TYPE:
+                meta.type = server_1.RAW_TYPE;
                 meta.route = routeType; // this is the GET, POST etc etc
                 break;
-            case constants_1.STATIC_TYPE:
-                meta.type = constants_1.STATIC_TYPE;
-                meta.route = constants_1.STATIC_ROUTE;
+            case server_1.STATIC_TYPE:
+                meta.type = server_1.STATIC_TYPE;
+                meta.route = server_1.STATIC_ROUTE;
                 break;
             default:
                 // this get replace by the AST map
@@ -36,18 +38,17 @@ function innerDecoratorFactory(type, path, routeType) {
 }
 // allow dev to define a raw handler - we don't do any processing
 function Raw(route, path) {
-    return innerDecoratorFactory(constants_1.RAW_TYPE, path, route);
+    return innerDecoratorFactory(server_1.RAW_TYPE, path, route);
 }
 exports.Raw = Raw;
 // special decorator to create a serveStatic method
 // Accessor Decorator
 function ServeStatic(path) {
-    return innerDecoratorFactory(constants_1.STATIC_TYPE, path);
+    return innerDecoratorFactory(server_1.STATIC_TYPE, path);
 }
 exports.ServeStatic = ServeStatic;
 // Factory method to create factory method
 function routeDecoratorFactory(routeType) {
-    // give it a name for easy debug
     return (path /*, opts?: RouteOptions*/) => {
         return innerDecoratorFactory(routeType, path /*, opts */);
     };

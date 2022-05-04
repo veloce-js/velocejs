@@ -1,0 +1,10 @@
+export declare const BOUNDARY = "boundary";
+export declare const NIL = "NIL";
+export declare const RULES_KEY = "rules";
+export declare const OPTIONS_KEY = "options";
+export declare const PARAMS_KEY = "params";
+export declare const RULE_AUTOMATIC = "rule-automatic";
+export declare const RULE_LIST = "rule-list";
+export declare const RULE_SIMPLE = "rule-simple";
+export declare const RULE_FULL = "rule-full";
+export declare const isDebug: string | undefined;
