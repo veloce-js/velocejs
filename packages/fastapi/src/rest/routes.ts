@@ -11,7 +11,7 @@ import {
 } from '@velocejs/server'
 import { routeKey } from './keys'
 // import { extractArgs } from '../lib/extract'
-import { FastApiInterface } from '../server/fast-api-interface'
+import { FastApiInterface } from '../lib/fast-api-interface'
 // The inner decorator factory method
 function innerDecoratorFactory(type: string, path: string, routeType?: string) {
   // this is the actual api facing the class method

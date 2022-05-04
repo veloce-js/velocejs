@@ -32,15 +32,15 @@ import {
 import {
   RouteMetaInfo,
   MiddlewareFunction,
-  JsonValidationEntry,
-} from '../types'
+  // JsonValidationEntry,
+} from './types'
 import bodyParser from '@velocejs/bodyparser'
 import { queuePromisesProcess, toArray } from '@jsonql/utils'
 // here
 import { createValidator } from './lib/validator'
 import {
   FastApiInterface
-} from './fast-api-interface'
+} from './lib/fast-api-interface'
 const isDebug = process.env.DEBUG
 // dummy stuff
 const placeholder = -1

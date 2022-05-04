@@ -22,6 +22,6 @@ export type RouteOptions = {
   protected?: boolean
 }
 
-export * from './server/lib/validate-types'
-// just stub this for now 
+export * from './lib/validate-types'
+// just stub this for now
 export type MiddlewareFunction = (...args: any[]) => Promise<any>

@@ -5,9 +5,14 @@ import {
   JsonValidationOption,
   // ValidationObjectRule,
   // ValidationObjectSimpleRule
-} from '../../types'
-import { FastApiInterface } from '../fast-api-interface'
-import { RULES_KEY, OPTIONS_KEY, RULE_AUTOMATIC } from '../../constants'
+} from '../types'
+import {
+  RULES_KEY,
+  OPTIONS_KEY,
+  RULE_AUTOMATIC
+} from '../constants'
+import { FastApiInterface } from '../lib/fast-api-interface'
+
 
 // Validate Decorator
 export function Validate(
