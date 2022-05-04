@@ -149,12 +149,18 @@ export class FastApi implements FastApiInterface {
       if (onAbortedHandler) {
         args1.push(this[onAbortedHandler])
       }
-      // process input
+      // @0.3.0 we change the whole thing into one middlewares stack
+
+
+      // process input FIRST and this will become the init input
       const result = await Reflect.apply(
         bodyParser as unknown as Function, null, args1)
       // this is a bit tricky if there is a json result
       // then it will be the first argument
       this.setTemp(result, res)
+      
+
+
       const { params, type } = result
       // @TODO apply the validaton here, if it didn't pass then it will abort the rest
       // @TODO create a middleware stack machine here
