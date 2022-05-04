@@ -1,4 +1,9 @@
-import { RULE_LIST, RULE_SIMPLE, RULE_FULL, RULE_AUTOMATIC } from '../../constants'
+import {
+  RULE_LIST,
+  RULE_SIMPLE,
+  RULE_FULL,
+  // RULE_AUTOMATIC
+} from './constants'
 
 //////////////////////// JSON SCHEMA VALIDATION RULES ////////////////////////
 
@@ -113,7 +118,7 @@ export type ValidationObjectSimpleRule = {
   server?: boolean
   [key: string]: any // the key will be one of the available keyword from above @TODO write them out
 }
-// this will check if the validator rules is correct or not
+/**  this will check if the validator rules is correct or not @deprecated */
 export const checkTypeOfRules = (rules: unknown): string => {
   if (Array.isArray(rules)) {
     if (rules.length) {

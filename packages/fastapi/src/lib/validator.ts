@@ -4,7 +4,7 @@ import {
   RULES_KEY,
   // OPTIONS_KEY,
   RULE_AUTOMATIC
-} from '../../constants'
+} from './constants'
 import { inArray } from '@jsonql/utils'
 
 export function createValidator(

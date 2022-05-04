@@ -10,7 +10,7 @@ import {
   RULES_KEY,
   OPTIONS_KEY,
   RULE_AUTOMATIC
-} from '../constants'
+} from '../lib/constants'
 import { FastApiInterface } from '../lib/fast-api-interface'
 
 
