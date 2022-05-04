@@ -13,7 +13,8 @@ const debug = debugFn('velocejs:fastapi:lib:validator')
 export function createValidator(
   propertyName: string,
   argsList: any,
-  validationInput: any
+  validationInput: any,
+  plugins: Array<any> // @TODO fix types
 ) {
   // first need to check if they actually apply the @Validate decorator
   if (validationInput === false) {
@@ -29,6 +30,9 @@ export function createValidator(
   assert(propertyName, argsList, validationInput)
   // @TODO we might need to subclass this and create a set global plugin
   const vObj = new ValidatorFactory(argsList)
+  if (plugins && plugins.length) {
+    console.info('create plugins', plugins)
+  }
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
     vObj.createSchema(validationInput[RULES_KEY])
   }

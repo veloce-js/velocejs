@@ -63,6 +63,8 @@ export class FastApi implements FastApiInterface {
   protected req: HttpRequest | undefined
   protected writer: UwsWriter = placeholderFn
   protected jsonWriter: UwsJsonWriter = () => placeholderFn
+  // override this then we could use this to add to the plugin list
+  public validatorPlugins: Array<any> = [] // @TODO fix type
 
   // store the UWS server instance when init
   constructor(config?: AppOptions) {
@@ -120,7 +122,7 @@ export class FastApi implements FastApiInterface {
             return {
               type,
               path,
-              handler: this.mapMethodToHandler(
+              handler: this._mapMethodToHandler(
                 propertyName,
                 m.args,
                 validation,
@@ -132,7 +134,7 @@ export class FastApi implements FastApiInterface {
   }
 
   // transform the string name to actual method
-  private mapMethodToHandler(
+  private _mapMethodToHandler(
     propertyName: string,
     argsList: Array<any>,
     validationInput: any, // this is the raw rules input by dev
@@ -141,91 +143,107 @@ export class FastApi implements FastApiInterface {
     const handler = this[propertyName]
     // the args now using the info from ast map , we strip one array only contains names for user here
     const argNames = argsList.map(arg => arg.name)
-    const validateFn = createValidator(propertyName, argsList, validationInput)
+    const validateFn = this._createValidator(propertyName, argsList, validationInput)
     // @TODO need to rethink about how this work
     return async (res: HttpResponse, req: HttpRequest) => {
-      const args1: Array<HttpResponse | HttpRequest | (() => void)> = [res, req]
+      const _arg: Array<HttpResponse | HttpRequest | (() => void)> = [res, req]
       // add onAbortedHandler
       if (onAbortedHandler) {
-        args1.push(this[onAbortedHandler])
+        _arg.push(this[onAbortedHandler])
       }
       // @0.3.0 we change the whole thing into one middlewares stack
-
-
-      // process input FIRST and this will become the init input
-      const result = await Reflect.apply(
-        bodyParser as unknown as Function, null, args1)
-      // this is a bit tricky if there is a json result
-      // then it will be the first argument
-      this.setTemp(result, res)
-      
-
-
-      const { params, type } = result
-      // @TODO apply the validaton here, if it didn't pass then it will abort the rest
-      // @TODO create a middleware stack machine here
-      this.handleProtectedRoute()
-        .then(() => {
-          validateFn(params)
-            // success
-            .then(() => this.handleContent(argNames, params, handler, type, propertyName))
-            .catch(({ errors, fields }) => {
-              this.handleValidationError(errors, fields)
-            })
-        })
+      const stacks = [
+        bodyParser,
+        async (result: any) => {
+          this._setTemp(result, res)
+          return result
+        },
+        this._handleProtectedRoute,
+        async (result: any) => {
+          const { params, type } = result
+          return validateFn(params)
+                    .then((validatedResult: any) => (
+                      { params: validatedResult, type }
+                    ))
+        },
+        async (result: any) => {
+          const { params, type } = result
+          return this._handleContent(argNames, params, handler, type, propertyName)
+        }
+      ]
+      // run the middleware stacks
+      return this._runMiddlewareStacks(stacks, _arg)
     }
   }
 
   /** this is where the stack get exeucted */
-  private runMiddlewareStacks(middlewares: Array<any>): void {
-    console.log('@TODO', middlewares)
+  private _runMiddlewareStacks(stacks: Array<any>, arg: any) {
+    return queuePromisesProcess(stacks, arg)
+              .catch(this._handleValidationError)
+              .finally(() => {
+                this._unsetTemp()
+              })
   }
 
-  // handle protected route
-  private async handleProtectedRoute(): Promise<boolean> {
-    console.log('@TODO handle protected route')
-    return true
+  /** wrap the _createValidator with additoinal property */
+  private _createValidator(
+    propertyName: string,
+    argsList: any,// @TODO fix type
+    validationInput: any // @TODO fix type
+  ) {
+    return createValidator(
+      propertyName,
+      argsList,
+      validationInput,
+      this.validatorPlugins
+    )
+  }
+
+  /** @TODO handle protected route */
+  private async _handleProtectedRoute(
+    bodyParserProcessedResult: any
+  ): Promise<boolean> {
+    // the value is bodyParser processed result
+    console.info('@TODO handle protected route', bodyParserProcessedResult)
+    return bodyParserProcessedResult
   }
 
   // break out from above to make the code cleaner
-  private async handleContent(
+  private async _handleContent(
     argNames: string[],
     params: any,
     handler: any,
     type: string,
     propertyName: string
   ) {
-    const args2 = this.applyArgs(argNames, params)
+    const args2 = this._applyArgs(argNames, params)
     try {
       const reply = await Reflect.apply(handler, this, args2)
       if (reply && !this._written) {
-        this.write(type, reply)
+        this._render(type, reply)
       }
     } catch (e) {
       console.log(`ERROR with`, propertyName, e)
       this.res?.close()
     } finally {
-      this.unsetTemp()
+      this._unsetTemp()
     }
   }
 
   // handle the errors return from validation
-  private handleValidationError(errors: string[], fields: string[]) {
+  private _handleValidationError(errors: string[], fields: string[]) {
     console.log('errors', errors)
     console.log('fields', fields)
-
-    // clean up
-    this.unsetTemp()
   }
 
   // take the argument list and the input to create the correct arguments
-  private applyArgs(args: Array<string>, params: object) {
+  private _applyArgs(args: Array<string>, params: object) {
     return args.map(arg => params[arg])
   }
 
   // When we call the user provided method, we will pass them the payload.params pass instead of
   // the whole payload, and we keep them in a temporary place, and destroy it once the call is over
-  private setTemp(
+  private _setTemp(
     payload: UwsRespondBody,
     res: HttpResponse
     /*, req?: HttpRequest */
@@ -255,7 +273,7 @@ export class FastApi implements FastApiInterface {
   }
 
   // call this after the call finish
-  private unsetTemp() {
+  private _unsetTemp() {
     // create a nextTick effect
     setTimeout(() => {
       ['res', 'payload', 'writer', 'jsonWriter'].forEach(fn => {
@@ -268,7 +286,7 @@ export class FastApi implements FastApiInterface {
   }
 
   // write to the client
-  private write(type: string, payload: RecognizedString/* | object */): void {
+  private _render(type: string, payload: RecognizedString/* | object */): void {
     switch (type) {
       case IS_OTHER:
           this.writer(payload, this._headers, this._status)
@@ -297,12 +315,9 @@ export class FastApi implements FastApiInterface {
     this._status = status
   }
 
-  // using a setter to trigger series of things to do with the validation map
-  /*
-  private set validationMap(validationMap: Array<any>) {
-    console.log(validationMap)
-  }
-  */
+  ///////////////////////////////////////////
+  //             PUBLIC                    //
+  ///////////////////////////////////////////
 
   /** dev can register their global middleware here */
   public registerMiddleware(
