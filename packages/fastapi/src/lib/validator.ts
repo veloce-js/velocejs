@@ -36,8 +36,8 @@ export function createValidator(
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
     vObj.createSchema(validationInput[RULES_KEY])
   }
-  // return the validate method directly
-  return vObj.validate
+  // if we return it directly then it won't run 
+  return async (values: Array<any>) => vObj.validate(values)
 }
 
 /** validate aginst the dev input first */

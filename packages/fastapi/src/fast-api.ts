@@ -24,10 +24,6 @@ import {
   IS_OTHER,
   CONTENT_TYPE
 } from '@velocejs/server'
-import {
-  C417,
-  lookupStatus
-} from '@velocejs/server'
 // our deps
 import {
   RouteMetaInfo,
@@ -36,6 +32,7 @@ import {
 } from './types'
 import bodyParser from '@velocejs/bodyparser'
 import { queuePromisesProcess, toArray } from '@jsonql/utils'
+import { JsonqlValidationError } from '@jsonql/errors'
 // here
 import { createValidator } from './lib/validator'
 import {
@@ -56,7 +53,7 @@ export class FastApi implements FastApiInterface {
   private _onConfigReady: Promise<any>
   private _onConfigWait: (value: unknown) => void = placeholderFn
   private _onConfigError: (value: unknown) => void = placeholderFn
-  private _jsonValidationErrorStatus: string = C417
+  private _validationErrStatus: number = 417
   // protected properties
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
@@ -158,31 +155,50 @@ export class FastApi implements FastApiInterface {
           const args = this._applyArgs(argNames, params)
           return validateFn(args)
                     .then((validatedResult: any) => (
-                      { params: validatedResult, type , args }
+                      // the validatedResult could have new props
+                      { args: this._applyArgs(argNames, validatedResult), type }
                     ))
+                    .catch((err: JsonqlValidationError) => {
+                      console.log('rethrow', err.message, err.detail)
+                      // we need to rethrow it again with the addtional type info for _render
+                      throw new JsonqlValidationError(err.message, {detail: err.detail, type})
+                    })
         },
         async (result: any) => {
           const { type, args } = result
+
           return this._handleContent(args, handler, type, propertyName)
         }
       ]
       // run the middleware stacks
-      return this._runMiddlewareStacks(
+      return queuePromisesProcess(
         stacks,
         res,
         req,
         () => console.log(`@TODO`, 'define our own onAbortedHandler')
       )
+      .catch((error: JsonqlValidationError) => {
+        this._handleValidationError(error)
+      })
+      .finally(() => {
+        this._unsetTemp()
+      })
+
     }
   }
 
-  /** this is where the stack get exeucted */
-  private _runMiddlewareStacks(...arg: any[]) {
-    return Reflect.apply(queuePromisesProcess, null, arg)
-              .catch(this._handleValidationError)
-              .finally(() => {
-                this._unsetTemp()
-              })
+  // handle the errors return from validation
+  private _handleValidationError(error: any) {
+    const { detail, type } = error
+    const payload = {
+      errors: {
+        detail: detail
+      }
+    }
+    // this._status = this._validationErrStatus
+    console.log(this._status)
+
+    this._render(type, JSON.stringify(payload))
   }
 
   /** wrap the _createValidator with additoinal property */
@@ -224,18 +240,6 @@ export class FastApi implements FastApiInterface {
     } catch (e) {
       console.log(`ERROR with`, propertyName, e)
       this.res?.close()
-    } finally {
-      this._unsetTemp()
-    }
-  }
-
-  // handle the errors return from validation
-  private _handleValidationError(errors: string[], fields: string[]) {
-    console.log('errors', errors)
-    console.log('fields', fields)
-    // just abort the call for now @TODO should return an error code with details
-    if (this.res) {
-      this.res.abort()
     }
   }
 
@@ -296,7 +300,7 @@ export class FastApi implements FastApiInterface {
         break
       default:
           // check if they set a different content-type header
-          // if so then we don't use the jsonWriter
+          // if so we don't use the jsonWriter
           for (const key in this._headers) {
             if (key.toLowerCase() === CONTENT_TYPE) {
               // exit here
@@ -332,7 +336,7 @@ export class FastApi implements FastApiInterface {
 
   // This is a global override for the status when validation failed
   public set validationErrorStatus(status: number) {
-    this._jsonValidationErrorStatus = lookupStatus(status) || C417
+    this._validationErrStatus = status || 417
   }
 
   /**

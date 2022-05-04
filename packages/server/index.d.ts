@@ -50,7 +50,7 @@ export * from './src/base/interfaces'
 export * from './src/base/types'
 // don't know why jslint keep saying couldn't find the type, so reimport here again
 import { RecognizedString } from 'uWebSockets.js'
-import { UwsStringPairObj } from './src/base/type'
+import { UwsStringPairObj } from './src/base/types'
 
 export type UwsWriter = (payload: RecognizedString, headers?: UwsStringPairObj, status?: number) => void
 
