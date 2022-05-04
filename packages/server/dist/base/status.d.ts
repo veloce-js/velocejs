@@ -58,4 +58,5 @@ export declare const C507 = "507 Insufficient Storage";
 export declare const C508 = "508 Loop Detected";
 export declare const C510 = "510 Not Extended";
 export declare const C511 = "511 Network Authentication Required";
-export declare function lookupStatus(status: number): string;
+/** look up the code by the number or by the key string */
+export declare function lookupStatus(status: number | string): string;

@@ -12,9 +12,9 @@ const debugFn = (0, debug_1.default)('velocejs:server:writers');
 const jsonWriter = (res) => {
     const writer = (0, exports.getWriter)(res);
     return (jsonObj, status) => {
-        writer(JSON.stringify(jsonObj), {
-            [constants_1.CONTENT_TYPE]: constants_1.JSON_HEADER
-        }, status);
+        writer(JSON.stringify(jsonObj), { [constants_1.CONTENT_TYPE]: constants_1.JSON_HEADER }, 
+        // @ts-ignore another non-sense
+        status);
     };
 };
 exports.jsonWriter = jsonWriter;
@@ -22,7 +22,7 @@ exports.jsonWriter = jsonWriter;
 const getWriter = (res) => {
     return (payload, headers, status) => {
         // this could create a bug - if they pass the wrong status code
-        // then we fill it with 200 OK by default, it's hard to check
+        // then we fill it with 200 OK by default because it's hard to check
         const _status = status ? (0, status_1.lookupStatus)(status) : status_1.C200;
         debugFn(`status: ${_status}`);
         res.cork(() => {
