@@ -16,13 +16,13 @@ export class MyExample extends FastApi {
   }
 
   @Validate({
-    name: [{ plugin: 'lessThan', num: 20 }],
+    username: [{ plugin: 'lessThan', num: 20 }],
     password: { plugin: 'between', max: 20, min: 5 }
   })
   @Post('/login')
-  login(name: string, password: string) {
-
-    return { name }
+  login(username: string, password: string) {
+    console.log(password)
+    return { username }
   }
 
   @Validate()

@@ -155,14 +155,15 @@ export class FastApi implements FastApiInterface {
         this._handleProtectedRoute,
         async (result: any) => {
           const { params, type } = result
-          return validateFn(params)
+          const args = this._applyArgs(argNames, params)
+          return validateFn(args)
                     .then((validatedResult: any) => (
-                      { params: validatedResult, type }
+                      { params: validatedResult, type , args }
                     ))
         },
         async (result: any) => {
-          const { params, type } = result
-          return this._handleContent(argNames, params, handler, type, propertyName)
+          const { type, args } = result
+          return this._handleContent(args, handler, type, propertyName)
         }
       ]
       // run the middleware stacks
@@ -209,15 +210,14 @@ export class FastApi implements FastApiInterface {
 
   // break out from above to make the code cleaner
   private async _handleContent(
-    argNames: string[],
-    params: any,
+    args: any[],
     handler: any,
     type: string,
     propertyName: string
   ) {
-    const args2 = this._applyArgs(argNames, params)
+    // const args2 = this._applyArgs(argNames, params)
     try {
-      const reply = await Reflect.apply(handler, this, args2)
+      const reply = await Reflect.apply(handler, this, args)
       if (reply && !this._written) {
         this._render(type, reply)
       }
@@ -233,6 +233,10 @@ export class FastApi implements FastApiInterface {
   private _handleValidationError(errors: string[], fields: string[]) {
     console.log('errors', errors)
     console.log('fields', fields)
+    // just abort the call for now @TODO should return an error code with details
+    if (this.res) {
+      this.res.abort()
+    }
   }
 
   // take the argument list and the input to create the correct arguments

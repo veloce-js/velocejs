@@ -7,9 +7,9 @@ let myExampleObj: MyExample
 const port = 30338
 const hostname = `http://localhost:${port}`
 
-test.before(() => {
+test.before(async () => {
   myExampleObj = new MyExample()
-  myExampleObj.start(port)
+  await myExampleObj.start(port)
 })
 
 test.after(() => {
@@ -28,7 +28,6 @@ test(`Validation with Decorator and @jsonql/validator`, async t => {
   })
   .then(res => res.json())
   .then(json => {
-    console.log(json)
-    t.truthy(json)
+    t.deepEqual(json, {username: 'John'})
   })
 })

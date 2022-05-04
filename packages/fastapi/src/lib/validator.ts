@@ -37,7 +37,10 @@ export function createValidator(
     vObj.createSchema(validationInput[RULES_KEY])
   }
   // return the validate method directly
-  return vObj.validate
+  return (values: any[]) => {
+    console.log('arg for validatar', values)
+    return vObj.validate(values)
+  }
 }
 
 /** validate aginst the dev input first */
