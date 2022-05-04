@@ -146,11 +146,6 @@ export class FastApi implements FastApiInterface {
     const validateFn = this._createValidator(propertyName, argsList, validationInput)
     // @TODO need to rethink about how this work
     return async (res: HttpResponse, req: HttpRequest) => {
-      const _arg: Array<HttpResponse | HttpRequest | (() => void)> = [res, req]
-      // add onAbortedHandler
-      if (onAbortedHandler) {
-        _arg.push(this[onAbortedHandler])
-      }
       // @0.3.0 we change the whole thing into one middlewares stack
       const stacks = [
         bodyParser,
@@ -172,13 +167,13 @@ export class FastApi implements FastApiInterface {
         }
       ]
       // run the middleware stacks
-      return this._runMiddlewareStacks(stacks, _arg)
+      return this._runMiddlewareStacks(stacks, res, req, onAbortedHandler)
     }
   }
 
   /** this is where the stack get exeucted */
-  private _runMiddlewareStacks(stacks: Array<any>, arg: any) {
-    return queuePromisesProcess(stacks, arg)
+  private _runMiddlewareStacks(...arg: any[]) {
+    return Reflect.apply(queuePromisesProcess, null, arg)
               .catch(this._handleValidationError)
               .finally(() => {
                 this._unsetTemp()

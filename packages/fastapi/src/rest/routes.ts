@@ -63,7 +63,7 @@ export function ServeStatic(path: string) {
 
 // Factory method to create factory method
 function routeDecoratorFactory(routeType: string) {
-
+  // @TODO if they didn't provide a path then we should just use the propertyName as path
   return (path: string /*, opts?: RouteOptions*/) => {
 
     return innerDecoratorFactory(routeType, path /*, opts */)
@@ -82,8 +82,9 @@ export const Head = routeDecoratorFactory('head')
 // export const CONNECT = routeDecoratorFactory('connect')
 // export const TRACE = routeDecoratorFactory('trace')
 
-// this decorator is going to pass as the onAbort handler
+// this decorator is going to pass as the onAbortHandler
 // @BUG there is a problem here how to id this aborter with the route
+// May be we should only allow one aborter to handle all 
 export function Aborted(type: string, path: string) {
 
   return (
