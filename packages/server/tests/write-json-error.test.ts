@@ -8,11 +8,19 @@ const port = 9003
 const payload = {data: [1,2,3]}
 const reply = { OK: false }
 
+async function throwSomething() {
+  throw new Error('something')
+}
+
 let listenSocket: any = null
 test.before(() => {
   createApp()
     .post('/*', (res: HttpResponse) => {
-      jsonWriter(res)(reply, 417)
+
+      throwSomething()
+        .catch(() => {
+          jsonWriter(res)(reply, 417)
+        })
     })
     .listen(port, (token: any) => {
       listenSocket = token
