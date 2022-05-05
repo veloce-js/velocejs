@@ -27,7 +27,22 @@ test(`Validation with Decorator and @jsonql/validator`, async t => {
   })
   .then(res => res.json())
   .then(json => {
-    t.deepEqual(json, {username: 'John'})
+    t.deepEqual(json, {username: 'john'})
+  })
+})
+
+test(`Validation with Decorator and @jsonql/validator another success to call api repeatly`, async t => {
+  t.plan(1)
+  const login = {username: 'Doe', password: '654321'}
+
+  return Fetch(logigEndpoint, {
+    method: 'POST',
+    body: JSON.stringify(login),
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(res => res.json())
+  .then(json => {
+    t.deepEqual(json, {username: 'doe'})
   })
 })
 
@@ -39,10 +54,18 @@ test.only(`Validation with wrong property to cause a throw`, async t => {
     body: JSON.stringify(login),
     headers: { 'Content-Type': 'application/json' }
   })
-  .then(res => res.json())
+  .then(res => {
+    console.log('server status -->', res.status)
+    return res.json()
+  })
+  .then(json => {
+    console.log('json', json)
+    t.pass()
+  })
   .catch(error => {
+
     // should get a non 200 respond
-    console.log(error)
+    console.log('catch server error here', error)
     t.pass()
   })
 

@@ -16,11 +16,10 @@ const debugFn = debug('velocejs:server:writers')
 export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
   const writer = getWriter(res)
 
-  return (jsonObj: RecognizedString | object, status?: number | string): void => {
+  return (jsonObj: any, status?: number): void => {
     writer(
       JSON.stringify(jsonObj),
       { [CONTENT_TYPE]: JSON_HEADER},
-      // @ts-ignore another non-sense
       status
     )
   }
@@ -32,7 +31,7 @@ export const getWriter = (res: HttpResponse): UwsWriter => {
   return (
     payload: RecognizedString,
     headers?: UwsStringPairObj,
-    status?: number | string
+    status?: number
   ) => {
     // this could create a bug - if they pass the wrong status code
     // then we fill it with 200 OK by default because it's hard to check

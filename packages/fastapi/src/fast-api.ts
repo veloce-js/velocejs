@@ -158,15 +158,10 @@ export class FastApi implements FastApiInterface {
                       // the validatedResult could have new props
                       { args: this._applyArgs(argNames, validatedResult), type }
                     ))
-                    .catch((err: JsonqlValidationError) => {
-                      console.log('rethrow', err.message, err.detail)
-                      // we need to rethrow it again with the addtional type info for _render
-                      throw new JsonqlValidationError(err.message, {detail: err.detail, type})
-                    })
         },
         async (result: any) => {
           const { type, args } = result
-
+          // if we use the catch the server hang, if we call close the client hang
           return this._handleContent(args, handler, type, propertyName)
         }
       ]
@@ -177,28 +172,29 @@ export class FastApi implements FastApiInterface {
         req,
         () => console.log(`@TODO`, 'define our own onAbortedHandler')
       )
-      .catch((error: JsonqlValidationError) => {
-        this._handleValidationError(error)
-      })
+      .catch(this._handleValidationError.bind(this))
       .finally(() => {
         this._unsetTemp()
       })
-
     }
   }
 
   // handle the errors return from validation
   private _handleValidationError(error: any) {
-    const { detail, type } = error
+    const { detail } = error
     const payload = {
       errors: {
         detail: detail
       }
     }
-    // this._status = this._validationErrStatus
-    console.log(this._status)
-
-    this._render(type, JSON.stringify(payload))
+    console.log('errors', payload)
+    if (this.res) {
+      this.res.writeStatus(this._validationErrStatus + '')
+    /// console.log('this._status', this._status)
+      this.res.write(JSON.stringify(payload))
+    // this._render(type, payload)
+      this.res.end()
+    }
   }
 
   /** wrap the _createValidator with additoinal property */
@@ -220,7 +216,7 @@ export class FastApi implements FastApiInterface {
     bodyParserProcessedResult: any
   ): Promise<boolean> {
     // the value is bodyParser processed result
-    console.info('@TODO handle protected route', bodyParserProcessedResult)
+    // console.info('@TODO handle protected route') //, bodyParserProcessedResult)
     return bodyParserProcessedResult
   }
 
@@ -263,16 +259,19 @@ export class FastApi implements FastApiInterface {
     // this.req = req
     // create a jsonWriter and a writer
     // add a guard to prevent accidental double write
-    const _writer = getWriter(res)
+    const _writer = getWriter(this.res)
+
     this.writer = (...args: Array<any>): void => {
       if (!this._written) {
         this._written = true
         Reflect.apply(_writer, null, args)
       }
     }
-    const _jsonWriter = jsonWriter(res)
+
+    const _jsonWriter = jsonWriter(this.res)
     this.jsonWriter = (...args: Array<any>): void => {
       if (!this._written) {
+        console.log(`call jsonWriter here`)
         this._written = true
         Reflect.apply(_jsonWriter, null, args)
       }
@@ -293,7 +292,7 @@ export class FastApi implements FastApiInterface {
   }
 
   // write to the client
-  private _render(type: string, payload: RecognizedString/* | object */): void {
+  private _render(type: string, payload: any): void {
     switch (type) {
       case IS_OTHER:
           this.writer(payload, this._headers, this._status)

@@ -22,7 +22,7 @@ export class MyExample extends FastApi {
   @Post('/login')
   login(username: string, password: string) {
     console.log(password)
-    return { username }
+    return { username: username.toLowerCase() }
   }
 
   @Validate()
