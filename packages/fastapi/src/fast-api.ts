@@ -100,7 +100,7 @@ export class FastApi implements FastApiInterface {
   private prepareRoutes(meta: RouteMetaInfo[]): Array<UwsRouteSetup> {
 
     return meta.map(m => {
-        const { path, type, propertyName, validation /*, onAbortedHandler */} = m
+        const { path, type, propertyName, validation } = m
         switch (type) {
           case STATIC_TYPE:
             return {
@@ -151,6 +151,7 @@ export class FastApi implements FastApiInterface {
         this._handleProtectedRoute(propertyName),
         async (ctx: VeloceCtx) => {
           const args = this._applyArgs(argNames, ctx.params)
+          console.log('args for valdiation', args)
           return validateFn(args)
                     .then((validatedResult: VeloceCtx) => {
                       // console.log('validatedResult', validatedResult, argNames)
