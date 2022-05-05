@@ -5,7 +5,6 @@ const tslib_1 = require("tslib");
 // this will allow you to create a series of API in no time
 const server_1 = require("@velocejs/server");
 const server_2 = require("@velocejs/server");
-const server_3 = require("@velocejs/server");
 const bodyparser_1 = tslib_1.__importDefault(require("@velocejs/bodyparser"));
 const utils_1 = require("@jsonql/utils");
 // here
@@ -21,16 +20,19 @@ class FastApi {
     _written = false;
     _headers = {};
     _status = placeholder;
-    _onConfigReady;
+    _onConfigReady; // fucking any script 
     _onConfigWait = placeholderFn;
     _onConfigError = placeholderFn;
-    _jsonValidationErrorStatus = server_3.C417;
+    _middlewares = [];
+    _validationErrStatus = 417;
     // protected properties
     payload;
     res;
     req;
     writer = placeholderFn;
     jsonWriter = () => placeholderFn;
+    // override this then we could use this to add to the plugin list
+    validatorPlugins = []; // @TODO fix type
     // store the UWS server instance when init
     constructor(config) {
         this._uwsInstance = new server_1.UwsServer(config);
@@ -65,7 +67,7 @@ class FastApi {
     // Mapping all the string name to method and supply to UwsServer run method
     prepareRoutes(meta) {
         return meta.map(m => {
-            const { path, type, propertyName, validation, onAbortedHandler } = m;
+            const { path, type, propertyName, validation /*, onAbortedHandler */ } = m;
             switch (type) {
                 case server_2.STATIC_TYPE:
                     return {
@@ -85,84 +87,114 @@ class FastApi {
                     return {
                         type,
                         path,
-                        handler: this.mapMethodToHandler(propertyName, m.args, validation, onAbortedHandler)
+                        handler: this._mapMethodToHandler(propertyName, m.args, validation)
                     };
             }
         });
     }
     // transform the string name to actual method
-    mapMethodToHandler(propertyName, argsList, validationInput, // this is the raw rules input by dev
-    onAbortedHandler) {
+    _mapMethodToHandler(propertyName, argsList, validationInput) {
         const handler = this[propertyName];
         // the args now using the info from ast map , we strip one array only contains names for user here
         const argNames = argsList.map(arg => arg.name);
-        const validateFn = (0, validator_1.createValidator)(propertyName, argsList, validationInput);
+        const validateFn = this._createValidator(propertyName, argsList, validationInput);
         // @TODO need to rethink about how this work
         return async (res, req) => {
-            const args1 = [res, req];
-            // add onAbortedHandler
-            if (onAbortedHandler) {
-                args1.push(this[onAbortedHandler]);
-            }
-            // process input
-            const result = await Reflect.apply(bodyparser_1.default, null, args1);
-            // this is a bit tricky if there is a json result
-            // then it will be the first argument
-            this.setTemp(result, res);
-            const { params, type } = result;
-            // @TODO apply the validaton here, if it didn't pass then it will abort the rest
-            // @TODO create a middleware stack machine here
-            this.handleProtectedRoute()
-                .then(() => {
-                validateFn(params)
-                    // success
-                    .then(() => this.handleContent(argNames, params, handler, type, propertyName))
-                    .catch(({ errors, fields }) => {
-                    this.handleValidationError(errors, fields);
-                });
-            });
+            // @0.3.0 we change the whole thing into one middlewares stack
+            const stacks = [
+                bodyparser_1.default,
+                this._prepareCtx(propertyName, res),
+                this._handleProtectedRoute(propertyName),
+                async (ctx) => {
+                    const { params, type } = ctx;
+                    const args = this._applyArgs(argNames, params);
+                    return validateFn(args)
+                        .then((validatedResult) => (
+                    // the validatedResult could have new props
+                    { args: this._applyArgs(argNames, validatedResult), type }));
+                },
+                // last of the calls
+                async (ctx) => {
+                    const { type, args } = ctx;
+                    // if we use the catch the server hang, if we call close the client hang
+                    return this._handleContent(args, handler, type, propertyName);
+                }
+            ];
+            this._handleMiddlewares(stacks, res, req, () => console.log(`@TODO`, 'define our own onAbortedHandler'));
         };
     }
-    /** this is where the stack get exeucted */
-    runMiddlewareStacks(middlewares) {
-        console.log('@TODO', middlewares);
+    /** get call after the bodyParser */
+    _prepareCtx(propertyName, res) {
+        return async (result) => {
+            const ctx = (0, utils_1.assign)(result, { propertyName });
+            this._setTemp(result, res);
+            return ctx;
+        };
     }
-    // handle protected route
-    async handleProtectedRoute() {
-        console.log('@TODO handle protected route');
-        return true;
+    /** split out from above because we still need to handle the user provide middlewares */
+    _handleMiddlewares(...args) {
+        // @TODO if there is any middleware we insert that before the validation pos 1
+        // run the middleware stacks
+        return Reflect.apply(utils_1.queuePromisesProcess, null, args)
+            .catch(this._handleValidationError.bind(this))
+            .finally(() => {
+            this._unsetTemp();
+        });
+    }
+    // handle the errors return from validation
+    _handleValidationError(error) {
+        const { detail } = error;
+        const payload = {
+            errors: {
+                detail: detail
+            }
+        };
+        console.log('errors', payload);
+        if (this.res) {
+            this.res.writeStatus(this._validationErrStatus + '');
+            /// console.log('this._status', this._status)
+            this.res.write(JSON.stringify(payload));
+            // this._render(type, payload)
+            this.res.end();
+        }
+    }
+    /** wrap the _createValidator with additoinal property */
+    _createValidator(propertyName, argsList, // @TODO fix type
+    validationInput // @TODO fix type
+    ) {
+        return (0, validator_1.createValidator)(propertyName, argsList, validationInput, this.validatorPlugins);
+    }
+    /** @TODO handle protected route */
+    _handleProtectedRoute(propertyName) {
+        // need to check out the route info
+        console.info(`checking the route`, propertyName);
+        return async (bodyParserProcessedResult) => {
+            // the value is bodyParser processed result
+            // console.info('@TODO handle protected route') //, bodyParserProcessedResult)
+            return bodyParserProcessedResult;
+        };
     }
     // break out from above to make the code cleaner
-    async handleContent(argNames, params, handler, type, propertyName) {
-        const args2 = this.applyArgs(argNames, params);
+    async _handleContent(args, handler, type, propertyName) {
+        // const args2 = this._applyArgs(argNames, params)
         try {
-            const reply = await Reflect.apply(handler, this, args2);
+            const reply = await Reflect.apply(handler, this, args);
             if (reply && !this._written) {
-                this.write(type, reply);
+                this._render(type, reply);
             }
         }
         catch (e) {
             console.log(`ERROR with`, propertyName, e);
             this.res?.close();
         }
-        finally {
-            this.unsetTemp();
-        }
-    }
-    // handle the errors return from validation
-    handleValidationError(errors, fields) {
-        console.log('errors', errors);
-        console.log('fields', fields);
-        // clean up
-        this.unsetTemp();
     }
     // take the argument list and the input to create the correct arguments
-    applyArgs(args, params) {
+    _applyArgs(args, params) {
         return args.map(arg => params[arg]);
     }
     // When we call the user provided method, we will pass them the payload.params pass instead of
     // the whole payload, and we keep them in a temporary place, and destroy it once the call is over
-    setTemp(payload, res
+    _setTemp(payload, res
     /*, req?: HttpRequest */
     ) {
         this._headers = {};
@@ -173,23 +205,24 @@ class FastApi {
         // this.req = req
         // create a jsonWriter and a writer
         // add a guard to prevent accidental double write
-        const _writer = (0, server_1.getWriter)(res);
+        const _writer = (0, server_1.getWriter)(this.res);
         this.writer = (...args) => {
             if (!this._written) {
                 this._written = true;
                 Reflect.apply(_writer, null, args);
             }
         };
-        const _jsonWriter = (0, server_1.jsonWriter)(res);
+        const _jsonWriter = (0, server_1.jsonWriter)(this.res);
         this.jsonWriter = (...args) => {
             if (!this._written) {
+                console.log(`call jsonWriter here`);
                 this._written = true;
                 Reflect.apply(_jsonWriter, null, args);
             }
         };
     }
     // call this after the call finish
-    unsetTemp() {
+    _unsetTemp() {
         // create a nextTick effect
         setTimeout(() => {
             ['res', 'payload', 'writer', 'jsonWriter'].forEach(fn => {
@@ -201,14 +234,14 @@ class FastApi {
         }, 0);
     }
     // write to the client
-    write(type, payload /* | object */) {
+    _render(type, payload) {
         switch (type) {
             case server_2.IS_OTHER:
                 this.writer(payload, this._headers, this._status);
                 break;
             default:
                 // check if they set a different content-type header
-                // if so then we don't use the jsonWriter
+                // if so we don't use the jsonWriter
                 for (const key in this._headers) {
                     if (key.toLowerCase() === server_2.CONTENT_TYPE) {
                         // exit here
@@ -227,20 +260,30 @@ class FastApi {
     writeStatus(status) {
         this._status = status;
     }
-    // using a setter to trigger series of things to do with the validation map
-    /*
-    private set validationMap(validationMap: Array<any>) {
-      console.log(validationMap)
+    ///////////////////////////////////////////
+    //             PUBLIC                    //
+    ///////////////////////////////////////////
+    /** register a method that will check the route */
+    registerProtectedRouteMethod() {
+        console.log(`@TODO registerProtectedRouteMethod`);
     }
-    */
     /** dev can register their global middleware here */
-    registerMiddleware(middlewares) {
-        const _middlewares = (0, utils_1.toArray)(middlewares);
-        console.log(_middlewares);
+    use(middlewares) {
+        if (middlewares) {
+            const _middlewares = (0, utils_1.toArray)(middlewares).map(m => {
+                // @TODO prepare the middleware
+                return m;
+            });
+            // @TODO should this be a Set and check if already registered
+            this._middlewares = this._middlewares.length ?
+                this._middlewares.concat(_middlewares) :
+                _middlewares;
+            console.log(this._middlewares);
+        }
     }
     // This is a global override for the status when validation failed
     set validationErrorStatus(status) {
-        this._jsonValidationErrorStatus = (0, server_3.lookupStatus)(status) || server_3.C417;
+        this._validationErrStatus = status || 417;
     }
     /**
      * We remap some of the methods from UwsServer to here for easier to use
@@ -263,7 +306,7 @@ class FastApi {
                     console.timeEnd('FastApiStartUp');
                 }
             })
-                .catch(e => {
+                .catch((e) => {
                 rejecter(e);
             });
         });
@@ -271,6 +314,13 @@ class FastApi {
     // wrapper around the shutdown
     stop() {
         this._uwsInstance.shutdown();
+    }
+    /* return stuff about the server */
+    get fastApiInfo() {
+        return {
+            port: this._uwsInstance.getPortNum(),
+            host: this._uwsInstance.hostName
+        };
     }
 }
 exports.FastApi = FastApi;

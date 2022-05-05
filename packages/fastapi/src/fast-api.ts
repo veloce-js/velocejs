@@ -51,7 +51,7 @@ export class FastApi implements FastApiInterface {
   private _written = false
   private _headers: UwsStringPairObj = {}
   private _status: number = placeholder
-  private _onConfigReady: Promise<void>
+  private _onConfigReady: Promise<any> // fucking any script
   private _onConfigWait: (value: unknown) => void = placeholderFn
   private _onConfigError: (value: unknown) => void = placeholderFn
   private _middlewares: Array<VeloceMiddleware> = []
@@ -150,17 +150,18 @@ export class FastApi implements FastApiInterface {
         this._prepareCtx(propertyName, res),
         this._handleProtectedRoute(propertyName),
         async (ctx: VeloceCtx) => {
-          const { params, type } = ctx
-          const args = this._applyArgs(argNames, params)
+          const args = this._applyArgs(argNames, ctx.params)
           return validateFn(args)
-                    .then((validatedResult: VeloceCtx) => (
+                    .then((validatedResult: VeloceCtx) => {
+                      // console.log('validatedResult', validatedResult, argNames)
                       // the validatedResult could have new props
-                      { args: this._applyArgs(argNames, validatedResult), type }
-                    ))
+                      return assign(ctx, { args: validatedResult })
+                    })
         },
         // last of the calls
         async (ctx: VeloceCtx) => {
           const { type, args } = ctx
+          console.log(`Before handler call`, ctx)
           // if we use the catch the server hang, if we call close the client hang
           return this._handleContent(args, handler, type as string, propertyName)
         }
@@ -179,6 +180,9 @@ export class FastApi implements FastApiInterface {
     return async (result: UwsRespondBody): Promise<VeloceCtx> => {
       const ctx: VeloceCtx = assign(result, { propertyName })
       this._setTemp(result, res)
+
+      console.log('VeloceCtx', ctx)
+
       return ctx
     }
   }

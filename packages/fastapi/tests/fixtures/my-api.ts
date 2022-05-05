@@ -28,6 +28,9 @@ export class MyApi extends FastApi {
 
   @Post('/submit')
   myPostFunc(name: string, value: string) {
+
+    console.log('myPostFunc', name, value)
+
     // console.log('hanlder got call with', params)
     return {msg: `${name} is doing ${value}`}
   }

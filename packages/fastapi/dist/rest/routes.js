@@ -49,6 +49,7 @@ function ServeStatic(path) {
 exports.ServeStatic = ServeStatic;
 // Factory method to create factory method
 function routeDecoratorFactory(routeType) {
+    // @TODO if they didn't provide a path then we should just use the propertyName as path
     return (path /*, opts?: RouteOptions*/) => {
         return innerDecoratorFactory(routeType, path /*, opts */);
     };
@@ -65,8 +66,9 @@ exports.Head = routeDecoratorFactory('head');
 // TBC what these two for
 // export const CONNECT = routeDecoratorFactory('connect')
 // export const TRACE = routeDecoratorFactory('trace')
-// this decorator is going to pass as the onAbort handler
+// this decorator is going to pass as the onAbortHandler
 // @BUG there is a problem here how to id this aborter with the route
+// May be we should only allow one aborter to handle all 
 function Aborted(type, path) {
     return (target, propertyName
     // descriptor: TypedPropertyDescriptor<(meta: RouteMetaInfo[]) => void>

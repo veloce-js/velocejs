@@ -9,7 +9,8 @@ const utils_1 = require("@jsonql/utils");
 const errors_1 = require("../lib/errors");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fastapi:lib:validator');
-function createValidator(propertyName, argsList, validationInput) {
+function createValidator(propertyName, argsList, validationInput, plugins // @TODO fix types
+) {
     // first need to check if they actually apply the @Validate decorator
     if (validationInput === false) {
         debug(`${propertyName} skip validation`);
@@ -22,11 +23,14 @@ function createValidator(propertyName, argsList, validationInput) {
     assert(propertyName, argsList, validationInput);
     // @TODO we might need to subclass this and create a set global plugin
     const vObj = new validator_1.ValidatorFactory(argsList);
+    if (plugins && plugins.length) {
+        console.info('create plugins', plugins);
+    }
     if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
         vObj.createSchema(validationInput[constants_1.RULES_KEY]);
     }
-    // return the validate method directly
-    return vObj.validate;
+    // if we return it directly then it won't run 
+    return async (values) => vObj.validate(values);
 }
 exports.createValidator = createValidator;
 /** validate aginst the dev input first */

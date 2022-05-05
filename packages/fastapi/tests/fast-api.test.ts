@@ -49,8 +49,14 @@ test(`Testing the post method handler`, async (t) => {
     body: JSON.stringify(todo),
     headers: { 'Content-Type': 'application/json' }
   })
-  .then(res => res.json())
+  .then(res => {
+    console.log(res.status)
+    return res.json()
+  })
   .then(text => {
+
+      console.log(text)
+
     t.deepEqual(text, {msg: `John is doing something`})
   })
 })
