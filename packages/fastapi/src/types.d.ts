@@ -1,4 +1,18 @@
 // move from @velocejs/server
+
+import {
+  // AppOptions,
+  // HttpResponse,
+  // HttpRequest,
+  // UwsRouteSetup,
+  // UwsRouteHandler,
+  UwsRespondBody,
+  // UwsWriter,
+  // UwsJsonWriter,
+  // UwsStringPairObj,
+  // RecognizedString
+} from '@velocejs/server/index'
+
 export type RouteMetaInfo = {
   propertyName: string
   path: string
@@ -24,4 +38,9 @@ export type RouteOptions = {
 
 export * from './lib/validate-types'
 // just stub this for now
-export type MiddlewareFunction = (...args: any[]) => Promise<any>
+export type VeloceCtx = {
+  propertyName: string
+  [key: string]: any
+} & UwsRespondBody
+
+export type VeloceMiddleware = (ctx: VeloceCtx) => Promise<VeloceCtx>

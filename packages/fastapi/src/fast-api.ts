@@ -15,7 +15,7 @@ import {
   UwsWriter,
   UwsJsonWriter,
   UwsStringPairObj,
-  RecognizedString
+  // RecognizedString
 } from '@velocejs/server/index' // point to the source ts
 import {
   STATIC_TYPE,
@@ -27,11 +27,12 @@ import {
 // our deps
 import {
   RouteMetaInfo,
-  MiddlewareFunction,
+  VeloceCtx,
+  VeloceMiddleware,
   // JsonValidationEntry,
 } from './types'
 import bodyParser from '@velocejs/bodyparser'
-import { queuePromisesProcess, toArray } from '@jsonql/utils'
+import { queuePromisesProcess, toArray, assign } from '@jsonql/utils'
 import { JsonqlValidationError } from '@jsonql/errors'
 // here
 import { createValidator } from './lib/validator'
@@ -50,10 +51,11 @@ export class FastApi implements FastApiInterface {
   private _written = false
   private _headers: UwsStringPairObj = {}
   private _status: number = placeholder
-  private _onConfigReady: Promise<any>
+  private _onConfigReady: Promise<void>
   private _onConfigWait: (value: unknown) => void = placeholderFn
   private _onConfigError: (value: unknown) => void = placeholderFn
-  private _validationErrStatus: number = 417
+  private _middlewares: Array<VeloceMiddleware> = []
+  private _validationErrStatus = 417
   // protected properties
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
@@ -145,42 +147,56 @@ export class FastApi implements FastApiInterface {
       // @0.3.0 we change the whole thing into one middlewares stack
       const stacks = [
         bodyParser,
-        async (result: any) => {
-          this._setTemp(result, res)
-          return result
-        },
-        this._handleProtectedRoute,
-        async (result: any) => {
-          const { params, type } = result
+        this._prepareCtx(propertyName, res),
+        this._handleProtectedRoute(propertyName),
+        async (ctx: VeloceCtx) => {
+          const { params, type } = ctx
           const args = this._applyArgs(argNames, params)
           return validateFn(args)
-                    .then((validatedResult: any) => (
+                    .then((validatedResult: VeloceCtx) => (
                       // the validatedResult could have new props
                       { args: this._applyArgs(argNames, validatedResult), type }
                     ))
         },
-        async (result: any) => {
-          const { type, args } = result
+        // last of the calls
+        async (ctx: VeloceCtx) => {
+          const { type, args } = ctx
           // if we use the catch the server hang, if we call close the client hang
-          return this._handleContent(args, handler, type, propertyName)
+          return this._handleContent(args, handler, type as string, propertyName)
         }
       ]
-      // run the middleware stacks
-      return queuePromisesProcess(
+      this._handleMiddlewares(
         stacks,
         res,
         req,
         () => console.log(`@TODO`, 'define our own onAbortedHandler')
       )
-      .catch(this._handleValidationError.bind(this))
-      .finally(() => {
-        this._unsetTemp()
-      })
     }
   }
 
+  /** get call after the bodyParser */
+  private _prepareCtx(propertyName: string, res: HttpResponse) {
+    return async (result: UwsRespondBody): Promise<VeloceCtx> => {
+      const ctx: VeloceCtx = assign(result, { propertyName })
+      this._setTemp(result, res)
+      return ctx
+    }
+  }
+
+  /** split out from above because we still need to handle the user provide middlewares */
+  private _handleMiddlewares(...args: any[]) {
+    // @TODO if there is any middleware we insert that before the validation pos 1
+
+    // run the middleware stacks
+    return Reflect.apply(queuePromisesProcess, null, args)
+              .catch(this._handleValidationError.bind(this))
+              .finally(() => {
+                this._unsetTemp()
+              })
+  }
+
   // handle the errors return from validation
-  private _handleValidationError(error: any) {
+  private _handleValidationError(error: JsonqlValidationError) {
     const { detail } = error
     const payload = {
       errors: {
@@ -212,14 +228,15 @@ export class FastApi implements FastApiInterface {
   }
 
   /** @TODO handle protected route */
-  private async _handleProtectedRoute(
-    bodyParserProcessedResult: any
-  ): Promise<boolean> {
-    // the value is bodyParser processed result
-    // console.info('@TODO handle protected route') //, bodyParserProcessedResult)
-    return bodyParserProcessedResult
+  private _handleProtectedRoute(propertyName: string) {
+    // need to check out the route info
+    console.info(`checking the route`, propertyName)
+    return async (bodyParserProcessedResult: VeloceCtx): Promise<VeloceCtx> => {
+      // the value is bodyParser processed result
+      // console.info('@TODO handle protected route') //, bodyParserProcessedResult)
+      return bodyParserProcessedResult
+    }
   }
-
   // break out from above to make the code cleaner
   private async _handleContent(
     args: any[],
@@ -325,12 +342,26 @@ export class FastApi implements FastApiInterface {
   //             PUBLIC                    //
   ///////////////////////////////////////////
 
+  /** register a method that will check the route */
+  public registerProtectedRouteMethod(): void {
+    console.log(`@TODO registerProtectedRouteMethod`)
+  }
+
   /** dev can register their global middleware here */
-  public registerMiddleware(
-    middlewares: MiddlewareFunction | Array<MiddlewareFunction>
+  public use(
+    middlewares: VeloceMiddleware | Array<VeloceMiddleware>
   ): void {
-    const _middlewares = toArray(middlewares)
-    console.log(_middlewares)
+    if (middlewares) {
+      const _middlewares = toArray(middlewares).map(m => {
+        // @TODO prepare the middleware
+        return m
+      })
+      // @TODO should this be a Set and check if already registered
+      this._middlewares = this._middlewares.length ?
+             this._middlewares.concat(_middlewares) :
+                                      _middlewares
+      console.log(this._middlewares)
+    }
   }
 
   // This is a global override for the status when validation failed
@@ -360,7 +391,7 @@ export class FastApi implements FastApiInterface {
             console.timeEnd('FastApiStartUp')
           }
         })
-        .catch(e => {
+        .catch((e: Error) => {
           rejecter(e)
         })
     })
