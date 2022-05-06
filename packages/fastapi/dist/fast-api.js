@@ -8,6 +8,7 @@ const server_2 = require("@velocejs/server");
 const bodyparser_1 = tslib_1.__importDefault(require("@velocejs/bodyparser"));
 const utils_1 = require("@jsonql/utils");
 // here
+const extract_1 = require("./lib/extract");
 const validator_1 = require("./lib/validator");
 const isDebug = process.env.DEBUG;
 // dummy stuff
@@ -20,7 +21,7 @@ class FastApi {
     _written = false;
     _headers = {};
     _status = placeholder;
-    _onConfigReady; // fucking any script 
+    _onConfigReady; // fucking any script
     _onConfigWait = placeholderFn;
     _onConfigError = placeholderFn;
     _middlewares = [];
@@ -67,7 +68,7 @@ class FastApi {
     // Mapping all the string name to method and supply to UwsServer run method
     prepareRoutes(meta) {
         return meta.map(m => {
-            const { path, type, propertyName, validation /*, onAbortedHandler */ } = m;
+            const { path, type, propertyName, validation } = m;
             switch (type) {
                 case server_2.STATIC_TYPE:
                     return {
@@ -106,16 +107,21 @@ class FastApi {
                 this._prepareCtx(propertyName, res),
                 this._handleProtectedRoute(propertyName),
                 async (ctx) => {
-                    const { params, type } = ctx;
-                    const args = this._applyArgs(argNames, params);
+                    const args = this._applyArgs(argNames, ctx.params);
+                    console.log('args for valdiation', args);
                     return validateFn(args)
-                        .then((validatedResult) => (
-                    // the validatedResult could have new props
-                    { args: this._applyArgs(argNames, validatedResult), type }));
+                        .then((validatedResult) => {
+                        console.log('validatedResult', validatedResult, argNames);
+                        // the validatedResult could have new props
+                        return (0, utils_1.assign)(ctx, {
+                            args: (0, extract_1.prepareArgs)(argNames, validatedResult)
+                        });
+                    });
                 },
                 // last of the calls
                 async (ctx) => {
                     const { type, args } = ctx;
+                    console.log(`Before handler call`, ctx);
                     // if we use the catch the server hang, if we call close the client hang
                     return this._handleContent(args, handler, type, propertyName);
                 }
@@ -128,6 +134,7 @@ class FastApi {
         return async (result) => {
             const ctx = (0, utils_1.assign)(result, { propertyName });
             this._setTemp(result, res);
+            console.log('VeloceCtx', ctx);
             return ctx;
         };
     }
@@ -150,6 +157,7 @@ class FastApi {
             }
         };
         console.log('errors', payload);
+        // @TODO should replace with the jsonWriter
         if (this.res) {
             this.res.writeStatus(this._validationErrStatus + '');
             /// console.log('this._status', this._status)
@@ -185,7 +193,8 @@ class FastApi {
         }
         catch (e) {
             console.log(`ERROR with`, propertyName, e);
-            this.res?.close();
+            this.res?.close(); // this will trigger the onAbortHandler
+            // @TODO have to rethink about this we want this to get handled
         }
     }
     // take the argument list and the input to create the correct arguments
@@ -263,6 +272,11 @@ class FastApi {
     ///////////////////////////////////////////
     //             PUBLIC                    //
     ///////////////////////////////////////////
+    // @TODO instead of using a old middleware or register style
+    // we create series of hooks that allow the dev to override
+    // also our Decorator will lock down on just the public method
+    // and the override methods will be protected methods
+    // this is good for unit testing just on the class itself
     /** register a method that will check the route */
     registerProtectedRouteMethod() {
         console.log(`@TODO registerProtectedRouteMethod`);

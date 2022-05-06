@@ -5,7 +5,7 @@
 // try the ts-morph facing the same situation. So we need to find away to
 // parse the file at TS stage to extract the Type info for Validation
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractArgs = void 0;
+exports.prepareArgs = exports.extractArgs = void 0;
 // ugly but simple and it works
 function extractArgs(fnStr) {
     return splitMethod(fnStr);
@@ -19,3 +19,8 @@ function splitMethod(fnStr) {
         .map(t => t.trim())
         .filter(t => t !== '');
 }
+/** The validate result now comes in an object, we need to turn into array for apply */
+function prepareArgs(argList, result) {
+    return argList.map(name => result[name]);
+}
+exports.prepareArgs = prepareArgs;

@@ -5,10 +5,14 @@ import {
   // OPTIONS_KEY,
   RULE_AUTOMATIC
 } from './constants'
-import { inArray } from '@jsonql/utils'
+import { inArray, assign } from '@jsonql/utils'
 import { VeloceError } from '../lib/errors'
 import debugFn from 'debug'
 const debug = debugFn('velocejs:fastapi:lib:validator')
+
+declare type GenericKeyValue = {
+  [key: string]: any
+}
 
 export function createValidator(
   propertyName: string,
@@ -19,8 +23,13 @@ export function createValidator(
   // first need to check if they actually apply the @Validate decorator
   if (validationInput === false) {
     debug(`${propertyName} skip validation`)
-    // return a dummy handler
-    return async (values: any) => values
+    const argNames = argsList.map((arg: any) => arg.name)
+    // return a dummy handler - we need to package it up for consistency!
+    return async (values: any) => {
+      return argNames.map((name: string, i: number) => {
+        return {[name]: values[i]}
+      }).reduce((a: GenericKeyValue , b: GenericKeyValue) => assign(a, b), {})
+    }
   }
 
   debug(`propertyName`, propertyName)
@@ -36,7 +45,7 @@ export function createValidator(
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
     vObj.createSchema(validationInput[RULES_KEY])
   }
-  // if we return it directly then it won't run 
+  // if we return it directly then it won't run
   return async (values: Array<any>) => vObj.validate(values)
 }
 

@@ -16,7 +16,7 @@ test.after(() => {
   myExampleObj.stop()
 })
 
-test.only(`Validation with Decorator and @jsonql/validator`, async t => {
+test(`Validation with Decorator and @jsonql/validator`, async t => {
   t.plan(1)
   const login = {username: 'John', password: '123456'}
 
