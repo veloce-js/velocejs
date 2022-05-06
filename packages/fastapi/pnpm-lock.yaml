@@ -2,16 +2,16 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ava/typescript': ^3.0.1
-  '@jsonql/ast': ^0.6.1
+  '@jsonql/ast': ^0.7.0
   '@jsonql/errors': ^0.6.0
   '@jsonql/utils': ^0.6.5
-  '@jsonql/validator': ^0.3.2
+  '@jsonql/validator': ^0.4.0
   '@types/fs-extra': ^9.0.13
   '@types/node': ^17.0.31
   '@typescript-eslint/eslint-plugin': ^5.22.0
   '@typescript-eslint/parser': ^5.22.0
   '@velocejs/bodyparser': workspace:^0.2.0
-  '@velocejs/server': workspace:^0.7.2
+  '@velocejs/server': workspace:^0.7.4
   ava: ^4.2.0
   debug: ^4.3.4
   esbuild: ^0.14.38
@@ -28,10 +28,10 @@ specifiers:
   typescript: ^4.6.4
 
 dependencies:
-  '@jsonql/ast': 0.6.1
+  '@jsonql/ast': 0.7.0
   '@jsonql/errors': 0.6.0
   '@jsonql/utils': 0.6.5
-  '@jsonql/validator': 0.3.2
+  '@jsonql/validator': 0.4.0
   '@velocejs/bodyparser': link:../bodyparser
   '@velocejs/server': link:../server
   debug: 4.3.4
@@ -336,10 +336,10 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.11
     dev: true
 
-  /@jsonql/ast/0.6.1:
-    resolution: {integrity: sha512-MnBYyn1pdKgTfJkXB9bVSbsyXEDJClDIB6EErUY5C4RD09ecaJOMIUGIXjS7+F9Z8jDI7zD9BBr/jWX7qRvE8Q==}
+  /@jsonql/ast/0.7.0:
+    resolution: {integrity: sha512-rFghLHFVFHjk6KidQzvjRaw7DjrqeFjwtEnr2NVCXpRx2Hr0HqJMF4rHHcDxxH60Osoo53qUJ9fp9T7xu3DFqQ==}
     dependencies:
-      '@jsonql/constants': 0.5.10
+      '@jsonql/constants': 0.6.1
     dev: false
 
   /@jsonql/constants/0.5.10:
@@ -348,6 +348,10 @@ packages:
 
   /@jsonql/constants/0.6.0:
     resolution: {integrity: sha512-TPzeakTNoifiBhRrT/TlrPFyldvHQjBmi+fuTWRjdrqXwQKAF+vw0Huho+fxprpJWmOSaxaFXrPZHlAQpL8moQ==}
+    dev: false
+
+  /@jsonql/constants/0.6.1:
+    resolution: {integrity: sha512-7imWb4xVQubUz2Iv5QMsQfMh4S9jZeKZWcovu32qUvgMTYbfMZjYO4Ze9pKdas9obshPIblaCGU6VY9cksurTQ==}
     dev: false
 
   /@jsonql/errors/0.6.0:
@@ -367,17 +371,17 @@ packages:
   /@jsonql/validator-core/0.7.0:
     resolution: {integrity: sha512-rSfoQLNkMIdtSt8coxPxhoJRf6K6yCyTKkdUiQIsKYJr4gdZnRS58qYqvOellZaI08j0sDsgP+k3cV0IsBl5rw==}
     dependencies:
-      '@jsonql/constants': 0.6.0
+      '@jsonql/constants': 0.6.1
       '@jsonql/errors': 0.6.0
       '@jsonql/utils': 0.6.5
       lodash-es: 4.17.21
     dev: false
 
-  /@jsonql/validator/0.3.2:
-    resolution: {integrity: sha512-T4x0txQ5RKxx/qxFDvKh0L+e6dpTK7xVVa+s9HIQRWmIZYkpG9mdHr8NAKa84O8UBtGVddSRuM+bR8j1lPa5PA==}
+  /@jsonql/validator/0.4.0:
+    resolution: {integrity: sha512-akpU2GRGOskplKisufLqCPZ+etTba7RueI3a0cSED8508Feu8GXsTtRIs6m7PT+UNkSnuvmxOSP77ukI7Nwy1Q==}
     dependencies:
-      '@jsonql/ast': 0.6.1
-      '@jsonql/constants': 0.6.0
+      '@jsonql/ast': 0.7.0
+      '@jsonql/constants': 0.6.1
       '@jsonql/errors': 0.6.0
       '@jsonql/utils': 0.6.5
       '@jsonql/validator-core': 0.7.0

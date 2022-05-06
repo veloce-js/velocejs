@@ -35,6 +35,7 @@ import bodyParser from '@velocejs/bodyparser'
 import { queuePromisesProcess, toArray, assign } from '@jsonql/utils'
 import { JsonqlValidationError } from '@jsonql/errors'
 // here
+import { prepareArgs } from './lib/extract'
 import { createValidator } from './lib/validator'
 import {
   FastApiInterface
@@ -154,9 +155,11 @@ export class FastApi implements FastApiInterface {
           console.log('args for valdiation', args)
           return validateFn(args)
                     .then((validatedResult: VeloceCtx) => {
-                      // console.log('validatedResult', validatedResult, argNames)
+                      console.log('validatedResult', validatedResult, argNames)
                       // the validatedResult could have new props
-                      return assign(ctx, { args: validatedResult })
+                      return assign(ctx, {
+                        args: prepareArgs(argNames, validatedResult)
+                      })
                     })
         },
         // last of the calls
@@ -209,6 +212,7 @@ export class FastApi implements FastApiInterface {
       }
     }
     console.log('errors', payload)
+    // @TODO should replace with the jsonWriter
     if (this.res) {
       this.res.writeStatus(this._validationErrStatus + '')
     /// console.log('this._status', this._status)
@@ -257,7 +261,8 @@ export class FastApi implements FastApiInterface {
       }
     } catch (e) {
       console.log(`ERROR with`, propertyName, e)
-      this.res?.close()
+      this.res?.close() // this will trigger the onAbortHandler
+      // @TODO have to rethink about this we want this to get handled
     }
   }
 
@@ -346,6 +351,12 @@ export class FastApi implements FastApiInterface {
   ///////////////////////////////////////////
   //             PUBLIC                    //
   ///////////////////////////////////////////
+
+  // @TODO instead of using a old middleware or register style
+  // we create series of hooks that allow the dev to override
+  // also our Decorator will lock down on just the public method
+  // and the override methods will be protected methods
+  // this is good for unit testing just on the class itself
 
   /** register a method that will check the route */
   public registerProtectedRouteMethod(): void {

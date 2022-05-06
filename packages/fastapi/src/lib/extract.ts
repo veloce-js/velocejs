@@ -19,3 +19,8 @@ function splitMethod(fnStr: string): Array<string> {
               .map(t => t.trim())
               .filter(t => t !== '')
 }
+
+/** The validate result now comes in an object, we need to turn into array for apply */
+export function prepareArgs(argList: string[], result: {[key: string]: any}) {
+  return argList.map(name => result[name])
+}
