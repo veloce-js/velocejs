@@ -41,6 +41,8 @@ import {
   FastApiInterface
 } from './lib/fast-api-interface'
 const isDebug = process.env.DEBUG
+import debugFn from 'debug'
+const debug = debugFn('velocejs:fast-api:main')
 // dummy stuff
 const placeholder = -1
 const placeholderFn = (...args: any[] ) => { console.log(args) }
@@ -152,10 +154,10 @@ export class FastApi implements FastApiInterface {
         this._handleProtectedRoute(propertyName),
         async (ctx: VeloceCtx) => {
           const args = this._applyArgs(argNames, ctx.params)
-          console.log('args for valdiation', args)
+
           return validateFn(args)
                     .then((validatedResult: VeloceCtx) => {
-                      console.log('validatedResult', validatedResult, argNames)
+                      debug('validatedResult', validatedResult, argNames)
                       // the validatedResult could have new props
                       return assign(ctx, {
                         args: prepareArgs(argNames, validatedResult)
@@ -165,7 +167,7 @@ export class FastApi implements FastApiInterface {
         // last of the calls
         async (ctx: VeloceCtx) => {
           const { type, args } = ctx
-          console.log(`Before handler call`, ctx)
+          // console.log(`Before handler call`, ctx)
           // if we use the catch the server hang, if we call close the client hang
           return this._handleContent(args, handler, type as string, propertyName)
         }
@@ -179,13 +181,12 @@ export class FastApi implements FastApiInterface {
     }
   }
 
-  /** get call after the bodyParser */
+  /** get call after the bodyParser, and prepare for the operation */
   private _prepareCtx(propertyName: string, res: HttpResponse) {
+
     return async (result: UwsRespondBody): Promise<VeloceCtx> => {
       const ctx: VeloceCtx = assign(result, { propertyName })
       this._setTemp(result, res)
-
-      console.log('VeloceCtx', ctx)
 
       return ctx
     }
@@ -211,7 +212,7 @@ export class FastApi implements FastApiInterface {
         detail: detail
       }
     }
-    console.log('errors', payload)
+    debug('errors', payload)
     // @TODO should replace with the jsonWriter
     if (this.res) {
       this.res.writeStatus(this._validationErrStatus + '')
@@ -236,10 +237,10 @@ export class FastApi implements FastApiInterface {
     )
   }
 
-  /** @TODO handle protected route */
+  /** @TODO handle protected route, also we need another library to destruct those pattern route */
   private _handleProtectedRoute(propertyName: string) {
     // need to check out the route info
-    console.info(`checking the route`, propertyName)
+    debug(`checking the route`, propertyName)
     return async (bodyParserProcessedResult: VeloceCtx): Promise<VeloceCtx> => {
       // the value is bodyParser processed result
       // console.info('@TODO handle protected route') //, bodyParserProcessedResult)
@@ -260,7 +261,7 @@ export class FastApi implements FastApiInterface {
         this._render(type, reply)
       }
     } catch (e) {
-      console.log(`ERROR with`, propertyName, e)
+      debug(`ERROR with`, propertyName, e)
       this.res?.close() // this will trigger the onAbortHandler
       // @TODO have to rethink about this we want this to get handled
     }
@@ -298,7 +299,6 @@ export class FastApi implements FastApiInterface {
     const _jsonWriter = jsonWriter(this.res)
     this.jsonWriter = (...args: Array<any>): void => {
       if (!this._written) {
-        console.log(`call jsonWriter here`)
         this._written = true
         Reflect.apply(_jsonWriter, null, args)
       }
@@ -360,7 +360,7 @@ export class FastApi implements FastApiInterface {
 
   /** register a method that will check the route */
   public registerProtectedRouteMethod(): void {
-    console.log(`@TODO registerProtectedRouteMethod`)
+    debug(`@TODO registerProtectedRouteMethod`)
   }
 
   /** dev can register their global middleware here */
@@ -376,7 +376,7 @@ export class FastApi implements FastApiInterface {
       this._middlewares = this._middlewares.length ?
              this._middlewares.concat(_middlewares) :
                                       _middlewares
-      console.log(this._middlewares)
+      debug(this._middlewares)
     }
   }
 
