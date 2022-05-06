@@ -32,7 +32,7 @@
   "license": "ISC",
   "homepage": "https://velocejs.com",
   "dependencies": {
-    "parse-url": "^5.0.7"
+    "url-pattern": "^1.0.3"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
