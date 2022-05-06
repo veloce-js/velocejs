@@ -1,5 +1,4 @@
 // bodyparser main
-import parseUrl from 'parse-url'
 import { onDataHandler } from './handle-upload'
 // @NOTE 2022-05-02 although the module has updated but it still not working correctly!
 import { parse, getBoundary } from './parse-multipart'
@@ -9,7 +8,7 @@ import {
   UwsRespondBody,
   UwsStringPairObj,
   UwsBodyParserMixEntry
-} from './types'
+} from '../index'
 import {
   CONTENT_TYPE,
   IS_FORM,
@@ -46,20 +45,15 @@ export async function bodyParser(
 
   // process the header
   const headers = getHeaders(req)
-
   const url = req.getUrl()
-  const parsedUrl = parseUrl(url)
-
   const query = req.getQuery()
   const params = parseQuery(query)
-
   const method = req.getMethod()
-
   // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
   // and we need to extract the params from the url and pass back as the ctx object
 
   // package it up
-  const body: UwsRespondBody = { url, parsedUrl, method, query, headers, params }
+  const body: UwsRespondBody = { url, method, query, headers, params }
 
   // we should only call this when the header is not GET?
   return new Promise(resolver => {
