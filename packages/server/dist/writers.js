@@ -12,9 +12,7 @@ const debugFn = (0, debug_1.default)('velocejs:server:writers');
 const jsonWriter = (res) => {
     const writer = (0, exports.getWriter)(res);
     return (jsonObj, status) => {
-        writer(JSON.stringify(jsonObj), { [constants_1.CONTENT_TYPE]: constants_1.JSON_HEADER }, 
-        // @ts-ignore another non-sense
-        status);
+        writer(JSON.stringify(jsonObj), { [constants_1.CONTENT_TYPE]: constants_1.JSON_HEADER }, status);
     };
 };
 exports.jsonWriter = jsonWriter;

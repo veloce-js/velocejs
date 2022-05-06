@@ -5,6 +5,7 @@ export interface UwsRouteSetup {
     type: string;
     path: string;
     handler: UwsRouteHandler;
+    dynamic: false;
 }
 export interface UwsParsedResult extends UwsRespondBody {
     res: HttpResponse;
