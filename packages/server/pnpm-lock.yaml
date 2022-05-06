@@ -24,6 +24,7 @@ specifiers:
   tslib: ^2.4.0
   typescript: ^4.6.4
   uWebSockets.js: github:uNetworking/uWebSockets.js#v20.10.0
+  url-pattern: ^1.0.3
 
 dependencies:
   '@jsonql/utils': 0.6.5
@@ -31,6 +32,7 @@ dependencies:
   mime-types: 2.1.35
   tslib: 2.4.0
   uWebSockets.js: github.com/uNetworking/uWebSockets.js/806df48c9da86af7b3341f3e443388c7cd15c3de
+  url-pattern: 1.0.3
 
 devDependencies:
   '@ava/typescript': 3.0.1
@@ -2703,6 +2705,11 @@ packages:
       punycode: 2.1.1
     dev: true
 
+  /url-pattern/1.0.3:
+    resolution: {integrity: sha1-BAkpJHGyTyPFDWWkeTF5PStaz8E=}
+    engines: {node: '>=0.12.0'}
+    dev: false
+
   /uuid/3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
     deprecated: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
@@ -2841,7 +2848,7 @@ packages:
     dev: true
 
   github.com/uNetworking/uWebSockets.js/806df48c9da86af7b3341f3e443388c7cd15c3de:
-    resolution: {commit: 806df48c9da86af7b3341f3e443388c7cd15c3de, repo: git+ssh://git@github.com/uNetworking/uWebSockets.js.git, type: git}
+    resolution: {tarball: https://codeload.github.com/uNetworking/uWebSockets.js/tar.gz/806df48c9da86af7b3341f3e443388c7cd15c3de}
     name: uWebSockets.js
     version: 20.10.0
     dev: false
