@@ -46,22 +46,20 @@ export async function bodyParser(
 
   // process the header
   const headers = getHeaders(req)
-  const url = req.getUrl()
 
-  const urlInfo = parseUrl(url)
+  const url = req.getUrl()
+  const parsedUrl = parseUrl(url)
 
   const query = req.getQuery()
+  const params = parseQuery(query)
+
   const method = req.getMethod()
-  let params = {}
-  if (method === 'get') {
-    params = parseQuery(query)
-  }
 
   // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
   // and we need to extract the params from the url and pass back as the ctx object
 
   // package it up
-  const body: UwsRespondBody = { url, urlInfo, method, query, headers, params }
+  const body: UwsRespondBody = { url, parsedUrl, method, query, headers, params }
 
   // we should only call this when the header is not GET?
   return new Promise(resolver => {

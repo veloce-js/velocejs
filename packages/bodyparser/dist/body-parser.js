@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processParams = exports.parseMultipart = exports.bodyParser = void 0;
 const tslib_1 = require("tslib");
+// bodyparser main
+const parse_url_1 = tslib_1.__importDefault(require("parse-url"));
 const handle_upload_1 = require("./handle-upload");
 // @NOTE 2022-05-02 although the module has updated but it still not working correctly!
 const parse_multipart_1 = require("./parse-multipart");
@@ -21,14 +23,14 @@ function bodyParser(res, req, onAborted) {
         // process the header
         const headers = (0, utils_1.getHeaders)(req);
         const url = req.getUrl();
+        const parsedUrl = (0, parse_url_1.default)(url);
         const query = req.getQuery();
+        const params = (0, utils_1.parseQuery)(query);
         const method = req.getMethod();
-        let params = {};
-        if (method === 'get') {
-            params = (0, utils_1.parseQuery)(query);
-        }
+        // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
+        // and we need to extract the params from the url and pass back as the ctx object
         // package it up
-        const body = { url, method, query, headers, params };
+        const body = { url, parsedUrl, method, query, headers, params };
         // we should only call this when the header is not GET?
         return new Promise(resolver => {
             (0, handle_upload_1.onDataHandler)(res, buffer => {
