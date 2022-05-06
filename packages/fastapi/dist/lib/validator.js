@@ -14,8 +14,13 @@ function createValidator(propertyName, argsList, validationInput, plugins // @TO
     // first need to check if they actually apply the @Validate decorator
     if (validationInput === false) {
         debug(`${propertyName} skip validation`);
-        // return a dummy handler
-        return async (values) => values;
+        const argNames = argsList.map((arg) => arg.name);
+        // return a dummy handler - we need to package it up for consistency!
+        return async (values) => {
+            return argNames.map((name, i) => {
+                return { [name]: values[i] };
+            }).reduce((a, b) => (0, utils_1.assign)(a, b), {});
+        };
     }
     debug(`propertyName`, propertyName);
     debug('argsList', argsList);
@@ -29,7 +34,7 @@ function createValidator(propertyName, argsList, validationInput, plugins // @TO
     if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
         vObj.createSchema(validationInput[constants_1.RULES_KEY]);
     }
-    // if we return it directly then it won't run 
+    // if we return it directly then it won't run
     return async (values) => vObj.validate(values);
 }
 exports.createValidator = createValidator;

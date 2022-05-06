@@ -21,14 +21,14 @@ export declare class FastApi implements FastApiInterface {
     protected prepare(routes: Array<RouteMetaInfo>): void;
     private prepareRoutes;
     private _mapMethodToHandler;
-    /** get call after the bodyParser */
+    /** get call after the bodyParser, and prepare for the operation */
     private _prepareCtx;
     /** split out from above because we still need to handle the user provide middlewares */
     private _handleMiddlewares;
     private _handleValidationError;
     /** wrap the _createValidator with additoinal property */
     private _createValidator;
-    /** @TODO handle protected route */
+    /** @TODO handle protected route, also we need another library to destruct those pattern route */
     private _handleProtectedRoute;
     private _handleContent;
     private _applyArgs;

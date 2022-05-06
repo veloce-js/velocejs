@@ -11,6 +11,8 @@ const utils_1 = require("@jsonql/utils");
 const extract_1 = require("./lib/extract");
 const validator_1 = require("./lib/validator");
 const isDebug = process.env.DEBUG;
+const debug_1 = tslib_1.__importDefault(require("debug"));
+const debug = (0, debug_1.default)('velocejs:fast-api:main');
 // dummy stuff
 const placeholder = -1;
 const placeholderFn = (...args) => { console.log(args); };
@@ -108,10 +110,9 @@ class FastApi {
                 this._handleProtectedRoute(propertyName),
                 async (ctx) => {
                     const args = this._applyArgs(argNames, ctx.params);
-                    console.log('args for valdiation', args);
                     return validateFn(args)
                         .then((validatedResult) => {
-                        console.log('validatedResult', validatedResult, argNames);
+                        debug('validatedResult', validatedResult, argNames);
                         // the validatedResult could have new props
                         return (0, utils_1.assign)(ctx, {
                             args: (0, extract_1.prepareArgs)(argNames, validatedResult)
@@ -121,7 +122,7 @@ class FastApi {
                 // last of the calls
                 async (ctx) => {
                     const { type, args } = ctx;
-                    console.log(`Before handler call`, ctx);
+                    // console.log(`Before handler call`, ctx)
                     // if we use the catch the server hang, if we call close the client hang
                     return this._handleContent(args, handler, type, propertyName);
                 }
@@ -129,12 +130,11 @@ class FastApi {
             this._handleMiddlewares(stacks, res, req, () => console.log(`@TODO`, 'define our own onAbortedHandler'));
         };
     }
-    /** get call after the bodyParser */
+    /** get call after the bodyParser, and prepare for the operation */
     _prepareCtx(propertyName, res) {
         return async (result) => {
             const ctx = (0, utils_1.assign)(result, { propertyName });
             this._setTemp(result, res);
-            console.log('VeloceCtx', ctx);
             return ctx;
         };
     }
@@ -156,7 +156,7 @@ class FastApi {
                 detail: detail
             }
         };
-        console.log('errors', payload);
+        debug('errors', payload);
         // @TODO should replace with the jsonWriter
         if (this.res) {
             this.res.writeStatus(this._validationErrStatus + '');
@@ -172,10 +172,10 @@ class FastApi {
     ) {
         return (0, validator_1.createValidator)(propertyName, argsList, validationInput, this.validatorPlugins);
     }
-    /** @TODO handle protected route */
+    /** @TODO handle protected route, also we need another library to destruct those pattern route */
     _handleProtectedRoute(propertyName) {
         // need to check out the route info
-        console.info(`checking the route`, propertyName);
+        debug(`checking the route`, propertyName);
         return async (bodyParserProcessedResult) => {
             // the value is bodyParser processed result
             // console.info('@TODO handle protected route') //, bodyParserProcessedResult)
@@ -192,7 +192,7 @@ class FastApi {
             }
         }
         catch (e) {
-            console.log(`ERROR with`, propertyName, e);
+            debug(`ERROR with`, propertyName, e);
             this.res?.close(); // this will trigger the onAbortHandler
             // @TODO have to rethink about this we want this to get handled
         }
@@ -224,7 +224,6 @@ class FastApi {
         const _jsonWriter = (0, server_1.jsonWriter)(this.res);
         this.jsonWriter = (...args) => {
             if (!this._written) {
-                console.log(`call jsonWriter here`);
                 this._written = true;
                 Reflect.apply(_jsonWriter, null, args);
             }
@@ -279,7 +278,7 @@ class FastApi {
     // this is good for unit testing just on the class itself
     /** register a method that will check the route */
     registerProtectedRouteMethod() {
-        console.log(`@TODO registerProtectedRouteMethod`);
+        debug(`@TODO registerProtectedRouteMethod`);
     }
     /** dev can register their global middleware here */
     use(middlewares) {
@@ -292,7 +291,7 @@ class FastApi {
             this._middlewares = this._middlewares.length ?
                 this._middlewares.concat(_middlewares) :
                 _middlewares;
-            console.log(this._middlewares);
+            debug(this._middlewares);
         }
     }
     // This is a global override for the status when validation failed
