@@ -52,7 +52,7 @@ test(`Take out the validator to test it alone with the method`, async (t) => {
 })
 */
 
-test.only(`Testing the post method handler`, async (t) => {
+test(`Testing the post method handler`, async (t) => {
   t.plan(1)
   const todo = {name: 'John', value: 'something'}
   const endpoint = `${hostname}/submit`
