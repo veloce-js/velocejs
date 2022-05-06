@@ -60,7 +60,8 @@ export type UwsRespondBody = {
   method: string
   query: string,
   headers: UwsStringPairObj
-  params: object,
+  params: UwsStringPairObj,
+  urlInfo: UwsStringPairObj, 
   type?: string,
   payload?: Buffer
 }
