@@ -3,7 +3,12 @@ import {
   UwsServer,
   serveStatic,
   getWriter,
-  jsonWriter
+  jsonWriter,
+  STATIC_TYPE,
+  STATIC_ROUTE,
+  RAW_TYPE,
+  IS_OTHER,
+  CONTENT_TYPE
 } from '@velocejs/server'
 import {
   AppOptions,
@@ -17,13 +22,6 @@ import {
   UwsStringPairObj,
   // RecognizedString
 } from '@velocejs/server/index' // point to the source ts
-import {
-  STATIC_TYPE,
-  STATIC_ROUTE,
-  RAW_TYPE,
-  IS_OTHER,
-  CONTENT_TYPE
-} from '@velocejs/server'
 // our deps
 import {
   RouteMetaInfo,
@@ -59,6 +57,7 @@ export class FastApi implements FastApiInterface {
   private _onConfigError: (value: unknown) => void = placeholderFn
   private _middlewares: Array<VeloceMiddleware> = []
   private _validationErrStatus = 417
+  private _dynamicRoutes = new Map()
   // protected properties
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
@@ -101,18 +100,22 @@ export class FastApi implements FastApiInterface {
 
   // Mapping all the string name to method and supply to UwsServer run method
   private prepareRoutes(meta: RouteMetaInfo[]): Array<UwsRouteSetup> {
-    const tmpSet = new Set() // use this to check if there is duplicated route
+    const tmpSet = new WeakSet() // use this to check if there is duplicated route
+    let _route = ''
 
     return meta.map(m => {
         const { path, type, propertyName, validation } = m
-        let _route = null
+
         if (UrlPattern.check(path)) {
           const upObj = new UrlPattern(path)
-          _route = upObj.route
-          if (tmpSet.has(_route)) {
+          _route = upObj.route as string
+          if (tmpSet.has(_route as unknown as object)) {
             throw new Error(`${_route} already existed!`)
           }
-          tmpSet.add(_route)
+          tmpSet.add(_route as unknown as object)
+          this._dynamicRoutes.set(_route, upObj)
+        } else {
+          _route = ''
         }
 
         switch (type) {
@@ -138,7 +141,7 @@ export class FastApi implements FastApiInterface {
                 propertyName,
                 m.args,
                 validation,
-                // onAbortedHandler
+                _route
               )
             }
           }
@@ -150,6 +153,7 @@ export class FastApi implements FastApiInterface {
     propertyName: string,
     argsList: Array<any>,
     validationInput: any, // this is the raw rules input by dev
+    route?: string
     // onAbortedHandler?: string // take out
   ): UwsRouteHandler {
     const handler = this[propertyName]
@@ -161,7 +165,7 @@ export class FastApi implements FastApiInterface {
       // @0.3.0 we change the whole thing into one middlewares stack
       const stacks = [
         bodyParser,
-        this._prepareCtx(propertyName, res),
+        this._prepareCtx(propertyName, route, res),
         this._handleProtectedRoute(propertyName),
         async (ctx: VeloceCtx) => {
           const args = this._applyArgs(argNames, ctx.params)
@@ -193,10 +197,19 @@ export class FastApi implements FastApiInterface {
   }
 
   /** get call after the bodyParser, and prepare for the operation */
-  private _prepareCtx(propertyName: string, res: HttpResponse) {
+  private _prepareCtx(
+    propertyName: string,
+    route: string,
+    res: HttpResponse
+  ) {
 
     return async (result: UwsRespondBody): Promise<VeloceCtx> => {
       const ctx: VeloceCtx = assign(result, { propertyName })
+      // 0.3.0 handle dynamic route
+      if (route !== '') {
+        const obj = this._dynamicRoutes.get(route)
+        ctx.urlParams = obj.parse(obj.url)
+      }
       this._setTemp(result, res)
 
       return ctx

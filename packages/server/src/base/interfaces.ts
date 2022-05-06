@@ -9,7 +9,7 @@ export interface UwsRouteSetup {
   type: string
   path: string
   handler: UwsRouteHandler,
-  dynamic: false
+  dynamic?: boolean
 }
 
 // this interface is for the result pass to the fast-api callback
