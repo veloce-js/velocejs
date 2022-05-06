@@ -20,7 +20,7 @@ class UrlPattern {
     }
     _validate(url) {
         url = url.substring(0, 1) === '/' ? url.substring(1) : url;
-        console.log(url);
+        // console.log(url)
         const parts = url.split('/');
         if (parts[0].indexOf(':') > -1) {
             throw new Error(`The first part of the dynamic url must be a full string!`);
