@@ -101,9 +101,20 @@ export class FastApi implements FastApiInterface {
 
   // Mapping all the string name to method and supply to UwsServer run method
   private prepareRoutes(meta: RouteMetaInfo[]): Array<UwsRouteSetup> {
+    const tmpSet = new Set() // use this to check if there is duplicated route
 
     return meta.map(m => {
         const { path, type, propertyName, validation } = m
+        let _route = null
+        if (UrlPattern.check(path)) {
+          const upObj = new UrlPattern(path)
+          _route = upObj.route
+          if (tmpSet.has(_route)) {
+            throw new Error(`${_route} already existed!`)
+          }
+          tmpSet.add(_route)
+        }
+
         switch (type) {
           case STATIC_TYPE:
             return {
