@@ -29,6 +29,10 @@ class UrlPattern {
         this._transformUrl = '/' + parts[0] + '/*';
         return this._originalUrl;
     }
+    /** super simple check */
+    static check(url) {
+        return url.indexOf(':') > -1;
+    }
     /** parse the var from url */
     parse(url) {
         return this._libObj.match(url);

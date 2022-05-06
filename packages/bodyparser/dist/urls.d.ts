@@ -7,6 +7,8 @@ export declare class UrlPattern {
     get route(): string;
     get orginal(): string;
     private _validate;
+    /** super simple check */
+    static check(url: string): boolean;
     /** parse the var from url */
     parse(url: string): any;
     /** construct a url */

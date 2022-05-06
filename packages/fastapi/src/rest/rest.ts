@@ -29,8 +29,8 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
           const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
           const validations = Reflect.getOwnMetadata(validationKey, target) || []
           const protectedRoute = Reflect.getOwnMetadata(protectedKey, target) || []
-          // @ts-ignore: prepare does not exist on Anonymous class (it does on FastApi)
-          this.prepare && this.prepare(
+          // little trick to get rip of the warning 
+          this['prepare'](
             mergeInfo(map, existingRoutes, validations, protectedRoute)
           )
         })

@@ -84,7 +84,8 @@ export const Head = routeDecoratorFactory('head')
 
 // this decorator is going to pass as the onAbortHandler
 // @BUG there is a problem here how to id this aborter with the route
-// May be we should only allow one aborter to handle all 
+// May be we should only allow one aborter to handle all
+/** @deprecated it will move to the override hook */
 export function Aborted(type: string, path: string) {
 
   return (

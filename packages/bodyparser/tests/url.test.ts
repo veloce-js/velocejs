@@ -2,6 +2,13 @@
 import test from 'ava'
 import { UrlPattern } from '../src/urls'
 
+test(`Simple check url is dynamic or not`, t => {
+
+  t.true(UrlPattern.check('/post/:id'))
+
+  t.false(UrlPattern.check('/posts/something'))
+})
+
 test(`it will throw if we pass a wrong pattern url`, t => {
   t.throws(() => new UrlPattern('/:something/:id'))
 })

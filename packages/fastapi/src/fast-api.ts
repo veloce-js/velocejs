@@ -31,7 +31,7 @@ import {
   VeloceMiddleware,
   // JsonValidationEntry,
 } from './types'
-import bodyParser from '@velocejs/bodyparser'
+import bodyParser, { UrlPattern } from '@velocejs/bodyparser'
 import { queuePromisesProcess, toArray, assign } from '@jsonql/utils'
 import { JsonqlValidationError } from '@jsonql/errors'
 // here
