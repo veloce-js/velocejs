@@ -124,7 +124,8 @@ export class FastApi implements FastApiInterface {
               path,
               type: STATIC_ROUTE,
               // the method just return the path to the files
-              // We change this to be a accessor decorator which a getter
+              // We require the method to be a getter that returns a path
+              // @TODO should we allow them to use dynamic route to perform url rewrite?
               handler: serveStatic(this[propertyName])
             }
           case RAW_TYPE:
@@ -152,38 +153,21 @@ export class FastApi implements FastApiInterface {
   private _mapMethodToHandler(
     propertyName: string,
     argsList: Array<any>,
-    validationInput: any, // this is the raw rules input by dev
+    validationInput: any, // this is the rules provide via Decorator
     route?: string
     // onAbortedHandler?: string // take out
   ): UwsRouteHandler {
     const handler = this[propertyName]
-    // the args now using the info from ast map , we strip one array only contains names for user here
-    const argNames = argsList.map(arg => arg.name)
-    const validateFn = this._createValidator(propertyName, argsList, validationInput)
     // @TODO need to rethink about how this work
     return async (res: HttpResponse, req: HttpRequest) => {
       // @0.3.0 we change the whole thing into one middlewares stack
       const stacks = [
         bodyParser,
-        this._prepareCtx(propertyName, route, res),
+        this._prepareCtx(propertyName, res, route),
         this._handleProtectedRoute(propertyName),
-        async (ctx: VeloceCtx) => {
-          const args = this._applyArgs(argNames, ctx.params)
-
-          return validateFn(args)
-                    .then((validatedResult: VeloceCtx) => {
-                      debug('validatedResult', validatedResult, argNames)
-                      // the validatedResult could have new props
-                      return assign(ctx, {
-                        args: prepareArgs(argNames, validatedResult)
-                      })
-                    })
-        },
-        // last of the calls
+        this._prepareValidator(propertyName, argsList, validationInput),
         async (ctx: VeloceCtx) => {
           const { type, args } = ctx
-          // console.log(`Before handler call`, ctx)
-          // if we use the catch the server hang, if we call close the client hang
           return this._handleContent(args, handler, type as string, propertyName)
         }
       ]
@@ -196,11 +180,35 @@ export class FastApi implements FastApiInterface {
     }
   }
 
+  /** take this out from above to keep related code in one place */
+  private _prepareValidator(
+    propertyName: string,
+    argsList: Array<any>,
+    validationInput: any, // this is the raw rules input by dev
+  ) {
+    // the args now using the info from ast map , we strip one array only contains names for user here
+    const argNames = argsList.map(arg => arg.name)
+    const validateFn = this._createValidator(propertyName, argsList, validationInput)
+
+    return async (ctx: VeloceCtx) => {
+      const args = this._applyArgs(argNames, ctx.params)
+
+      return validateFn(args)
+                .then((validatedResult: VeloceCtx) => {
+                  debug('validatedResult', validatedResult, argNames)
+                  // the validatedResult could have new props
+                  return assign(ctx, {
+                    args: prepareArgs(argNames, validatedResult)
+                  })
+                })
+    }
+  }
+
   /** get call after the bodyParser, and prepare for the operation */
   private _prepareCtx(
     propertyName: string,
-    route: string,
-    res: HttpResponse
+    res: HttpResponse,
+    route?: string,
   ) {
 
     return async (result: UwsRespondBody): Promise<VeloceCtx> => {

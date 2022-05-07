@@ -2,9 +2,9 @@
 import 'reflect-metadata'
 // re-export
 export * from './fast-api'
-export * from './rest/routes'
-export * from './rest/rest'
-export * from './rest/validator'
+export * from './decorator/routes'
+export * from './decorator/rest'
+export * from './decorator/validator'
 // re-export some of the methods that is useful here
 export {
   getWriter,
