@@ -31,11 +31,9 @@ export function createValidator(
       }).reduce((a: GenericKeyValue , b: GenericKeyValue) => assign(a, b), {})
     }
   }
-
   debug(`propertyName`, propertyName)
   debug('argsList', argsList)
   debug('input', validationInput)
-
   assert(propertyName, argsList, validationInput)
   // @TODO we might need to subclass this and create a set global plugin
   const vObj = new ValidatorFactory(argsList)
