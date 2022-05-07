@@ -4,6 +4,7 @@ import {
   // DescriptorMeta,
   // RouteOptions next when develop protected route
 } from '../types'
+import { UrlPattern } from '@velocejs/bodyparser'
 import {
   STATIC_TYPE,
   STATIC_ROUTE,
@@ -12,10 +13,19 @@ import {
 import { routeKey } from './keys'
 // import { extractArgs } from '../lib/extract'
 import { FastApiInterface } from '../lib/fast-api-interface'
-// The inner decorator factory method
+
+/** make sure the dynamic route only apply on GET route */
+const assert = (type: string, path: string) => {
+  if (type !== 'get' && UrlPattern.check(path)) {
+    throw new Error(`Dynamic route is not allow with ${type} route`)
+  }
+}
+
+/** The actual factory metod to generate the call **/
 function innerDecoratorFactory(type: string, path: string, routeType?: string) {
-  // this is the actual api facing the class method
-  // @TODO create a type fo a generic class instance
+  // validate the url here then we won't get problem later in the class
+  assert(type, path)
+
   return (
     target: FastApiInterface,
     propertyName: string
@@ -38,8 +48,6 @@ function innerDecoratorFactory(type: string, path: string, routeType?: string) {
         meta.route = STATIC_ROUTE
         break
       default:
-        // this get replace by the AST map
-        // meta.args = extractArgs(descriptor.value.toString())
         meta.type = type
     }
     existingRoutes.push(meta)
@@ -63,7 +71,7 @@ export function ServeStatic(path: string) {
 
 // Factory method to create factory method
 function routeDecoratorFactory(routeType: string) {
-  // @TODO if they didn't provide a path then we should just use the propertyName as path
+  // @TODO if they didn't provide a path then we could use the propertyName as path
   return (path: string /*, opts?: RouteOptions*/) => {
 
     return innerDecoratorFactory(routeType, path /*, opts */)
