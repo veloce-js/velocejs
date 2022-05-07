@@ -109,10 +109,10 @@ export class FastApi implements FastApiInterface {
         if (UrlPattern.check(path)) {
           const upObj = new UrlPattern(path)
           _route = upObj.route as string
-          if (tmpSet.has(_route as unknown as object)) {
+          if (tmpSet.has({ _route })) {
             throw new Error(`${_route} already existed!`)
           }
-          tmpSet.add(_route as unknown as object)
+          tmpSet.add({ _route })
           this._dynamicRoutes.set(_route, upObj)
         } else {
           _route = ''
@@ -215,7 +215,7 @@ export class FastApi implements FastApiInterface {
       // 0.3.0 handle dynamic route
       if (route !== '') {
         const obj = this._dynamicRoutes.get(route)
-        // the data extracted will become the argument 
+        // the data extracted will become the argument
         ctx.params = obj.parse(obj.url)
       }
       this._setTemp(result, res)

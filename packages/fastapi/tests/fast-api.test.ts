@@ -2,7 +2,7 @@
 import test from 'ava'
 
 import Fetch from 'node-fetch'
-import { ValidatorFactory } from '@jsonql/validator'
+// import { ValidatorFactory } from '@jsonql/validator'
 import { MyApi, msg1, msg2, msg3 } from './fixtures/my-api'
 
 let api: MyApi

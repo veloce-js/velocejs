@@ -1,9 +1,10 @@
-import { FastApi, Rest, Get } from '../../src'
+
+import { FastApi, Rest, Post } from '../../src'
 
 @Rest
-export class MyDynamicRoute extends FastApi {
+export class MyWrongDynamicRoute extends FastApi {
 
-  @Get('/posts/:year/:month/:day(/:slug)')
+  @Post('/posts/:year/:month/:day(/:slug)')
   public posts(year: number, month: number, day: number, slug?: string) {
 
     return {
