@@ -186,7 +186,6 @@ export class FastApi implements FastApiInterface {
     argsList: Array<any>,
     validationInput: any, // this is the raw rules input by dev
   ) {
-    // the args now using the info from ast map , we strip one array only contains names for user here
     const argNames = argsList.map(arg => arg.name)
     const validateFn = this._createValidator(propertyName, argsList, validationInput)
 
@@ -216,7 +215,8 @@ export class FastApi implements FastApiInterface {
       // 0.3.0 handle dynamic route
       if (route !== '') {
         const obj = this._dynamicRoutes.get(route)
-        ctx.urlParams = obj.parse(obj.url)
+        // the data extracted will become the argument 
+        ctx.params = obj.parse(obj.url)
       }
       this._setTemp(result, res)
 
