@@ -100,24 +100,11 @@ export class FastApi implements FastApiInterface {
 
   // Mapping all the string name to method and supply to UwsServer run method
   private prepareRoutes(meta: RouteMetaInfo[]): Array<UwsRouteSetup> {
-    const tmpSet = new WeakSet() // use this to check if there is duplicated route
-    let _route = ''
+    const checkFn = this._prepareDynamicRoute(new WeakSet())
 
     return meta.map(m => {
         const { path, type, propertyName, validation } = m
-
-        if (UrlPattern.check(path)) {
-          const upObj = new UrlPattern(path)
-          _route = upObj.route as string
-          if (tmpSet.has({ _route })) {
-            throw new Error(`${_route} already existed!`)
-          }
-          tmpSet.add({ _route })
-          this._dynamicRoutes.set(_route, upObj)
-        } else {
-          _route = ''
-        }
-
+        const _route = checkFn(path)
         switch (type) {
           case STATIC_TYPE:
             return {
@@ -147,6 +134,25 @@ export class FastApi implements FastApiInterface {
             }
           }
       })
+  }
+
+  /** check if there is a dynamic route and prepare it */
+  private _prepareDynamicRoute(tmpSet: WeakSet<object>) {
+    let _route = ''
+    return (path: string) => {
+      if (UrlPattern.check(path)) {
+        const upObj = new UrlPattern(path)
+        _route = upObj.route as string
+        if (tmpSet.has({ _route })) {
+          throw new Error(`${_route} already existed!`)
+        }
+        tmpSet.add({ _route })
+        this._dynamicRoutes.set(_route, upObj)
+      } else {
+        _route = ''
+      }
+      return _route
+    }
   }
 
   // transform the string name to actual method
@@ -217,6 +223,8 @@ export class FastApi implements FastApiInterface {
         const obj = this._dynamicRoutes.get(route)
         // the data extracted will become the argument
         ctx.params = obj.parse(obj.url)
+        // we need to process the params as well
+        console.log('ctx.params', ctx.params)
       }
       this._setTemp(result, res)
 
