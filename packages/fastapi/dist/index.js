@@ -6,9 +6,9 @@ const tslib_1 = require("tslib");
 require("reflect-metadata");
 // re-export
 tslib_1.__exportStar(require("./fast-api"), exports);
-tslib_1.__exportStar(require("./rest/routes"), exports);
-tslib_1.__exportStar(require("./rest/rest"), exports);
-tslib_1.__exportStar(require("./rest/validator"), exports);
+tslib_1.__exportStar(require("./decorator/routes"), exports);
+tslib_1.__exportStar(require("./decorator/rest"), exports);
+tslib_1.__exportStar(require("./decorator/validator"), exports);
 // re-export some of the methods that is useful here
 var server_1 = require("@velocejs/server");
 Object.defineProperty(exports, "getWriter", { enumerable: true, get: function () { return server_1.getWriter; } });

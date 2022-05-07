@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/ast': ^0.7.0
+  '@jsonql/constants': ^0.6.1
   '@jsonql/errors': ^0.6.0
   '@jsonql/utils': ^0.6.5
   '@jsonql/validator': ^0.4.0
@@ -11,8 +12,8 @@ specifiers:
   '@types/node': ^17.0.31
   '@typescript-eslint/eslint-plugin': ^5.22.0
   '@typescript-eslint/parser': ^5.22.0
-  '@velocejs/bodyparser': workspace:^0.2.0
-  '@velocejs/server': workspace:^0.7.4
+  '@velocejs/bodyparser': workspace:^0.3.1
+  '@velocejs/server': workspace:^0.7.6
   ava: ^4.2.0
   debug: ^4.3.4
   esbuild: ^0.14.38
@@ -30,6 +31,7 @@ specifiers:
 
 dependencies:
   '@jsonql/ast': 0.7.0
+  '@jsonql/constants': 0.6.1
   '@jsonql/errors': 0.6.0
   '@jsonql/utils': 0.6.5
   '@jsonql/validator': 0.4.0
@@ -348,10 +350,6 @@ packages:
     resolution: {integrity: sha512-L7sx3pGgfxMQD/7WLBdX/lxO6n0RDKEJMwm0cncLO+Fx9uF+8+EaoclszciAPbM7zqPO/hBZnq/OPsEmaXFd5A==}
     dev: false
 
-  /@jsonql/constants/0.6.0:
-    resolution: {integrity: sha512-TPzeakTNoifiBhRrT/TlrPFyldvHQjBmi+fuTWRjdrqXwQKAF+vw0Huho+fxprpJWmOSaxaFXrPZHlAQpL8moQ==}
-    dev: false
-
   /@jsonql/constants/0.6.1:
     resolution: {integrity: sha512-7imWb4xVQubUz2Iv5QMsQfMh4S9jZeKZWcovu32qUvgMTYbfMZjYO4Ze9pKdas9obshPIblaCGU6VY9cksurTQ==}
     dev: false
@@ -365,7 +363,7 @@ packages:
   /@jsonql/utils/0.6.5:
     resolution: {integrity: sha512-ISIwnx6Q2SRHAoic1Djcr6fy2abEE+WG1T1vWqZRhgsOjvwtMVGbESVowcWHB8c8GHG1+T2bjtACRkpRaz1H/A==}
     dependencies:
-      '@jsonql/constants': 0.6.0
+      '@jsonql/constants': 0.6.1
       '@jsonql/errors': 0.6.0
       lodash-es: 4.17.21
     dev: false

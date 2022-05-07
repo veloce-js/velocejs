@@ -11,6 +11,7 @@ export declare class FastApi implements FastApiInterface {
     private _onConfigError;
     private _middlewares;
     private _validationErrStatus;
+    private _dynamicRoutes;
     protected payload: UwsRespondBody | undefined;
     protected res: HttpResponse | undefined;
     protected req: HttpRequest | undefined;
@@ -20,7 +21,13 @@ export declare class FastApi implements FastApiInterface {
     constructor(config?: AppOptions);
     protected prepare(routes: Array<RouteMetaInfo>): void;
     private prepareRoutes;
+    /** TS script force it to make it looks so damn bad for all their non-sense rules */
+    private _prepareNormalRoute;
+    /** check if there is a dynamic route and prepare it */
+    private _prepareDynamicRoute;
     private _mapMethodToHandler;
+    /** take this out from above to keep related code in one place */
+    private _prepareValidator;
     /** get call after the bodyParser, and prepare for the operation */
     private _prepareCtx;
     /** split out from above because we still need to handle the user provide middlewares */
@@ -34,6 +41,9 @@ export declare class FastApi implements FastApiInterface {
     private _applyArgs;
     private _setTemp;
     private _unsetTemp;
+    /** Write the output
+    @BUG if the payload is not a string that could lead to lots of strange behaivor
+    */
     private _render;
     protected writeHeader(key: string, value: string): void;
     protected writeStatus(status: number): void;

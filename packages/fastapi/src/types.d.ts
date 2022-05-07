@@ -35,6 +35,16 @@ export type DescriptorMeta = {
 export type RouteOptions = {
   protected?: boolean
 }
+/*
+export type ArgsListType = {
+  name: string
+  required: boolean
+  type: string
+  tstype?: string
+  types?: string
+  typeParams?: any
+}
+*/
 
 export * from './lib/validate-types'
 // just stub this for now

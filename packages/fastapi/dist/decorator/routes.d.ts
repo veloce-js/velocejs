@@ -9,4 +9,5 @@ export declare const Options: (path: string) => (target: FastApiInterface, prope
 export declare const Del: (path: string) => (target: FastApiInterface, propertyName: string) => void;
 export declare const Patch: (path: string) => (target: FastApiInterface, propertyName: string) => void;
 export declare const Head: (path: string) => (target: FastApiInterface, propertyName: string) => void;
+/** @deprecated it will move to the override hook */
 export declare function Aborted(type: string, path: string): (target: FastApiInterface, propertyName: string) => void;

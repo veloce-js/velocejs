@@ -1,12 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Aborted = exports.Head = exports.Patch = exports.Del = exports.Options = exports.Put = exports.Post = exports.Get = exports.Any = exports.ServeStatic = exports.Raw = void 0;
+const bodyparser_1 = require("@velocejs/bodyparser");
 const server_1 = require("@velocejs/server");
 const keys_1 = require("./keys");
-// The inner decorator factory method
+/** make sure the dynamic route only apply on GET route */
+const assert = (type, path) => {
+    if (type !== 'get' && bodyparser_1.UrlPattern.check(path)) {
+        throw new Error(`Dynamic route is not allow with ${type} route`);
+    }
+};
+/** The actual factory metod to generate the call **/
 function innerDecoratorFactory(type, path, routeType) {
-    // this is the actual api facing the class method
-    // @TODO create a type fo a generic class instance
+    // validate the url here then we won't get problem later in the class
+    assert(type, path);
     return (target, propertyName
     /*, descriptor: DescriptorMeta*/
     ) => {
@@ -27,8 +34,6 @@ function innerDecoratorFactory(type, path, routeType) {
                 meta.route = server_1.STATIC_ROUTE;
                 break;
             default:
-                // this get replace by the AST map
-                // meta.args = extractArgs(descriptor.value.toString())
                 meta.type = type;
         }
         existingRoutes.push(meta);
@@ -49,7 +54,7 @@ function ServeStatic(path) {
 exports.ServeStatic = ServeStatic;
 // Factory method to create factory method
 function routeDecoratorFactory(routeType) {
-    // @TODO if they didn't provide a path then we should just use the propertyName as path
+    // @TODO if they didn't provide a path then we could use the propertyName as path
     return (path /*, opts?: RouteOptions*/) => {
         return innerDecoratorFactory(routeType, path /*, opts */);
     };
@@ -68,7 +73,8 @@ exports.Head = routeDecoratorFactory('head');
 // export const TRACE = routeDecoratorFactory('trace')
 // this decorator is going to pass as the onAbortHandler
 // @BUG there is a problem here how to id this aborter with the route
-// May be we should only allow one aborter to handle all 
+// May be we should only allow one aborter to handle all
+/** @deprecated it will move to the override hook */
 function Aborted(type, path) {
     return (target, propertyName
     // descriptor: TypedPropertyDescriptor<(meta: RouteMetaInfo[]) => void>

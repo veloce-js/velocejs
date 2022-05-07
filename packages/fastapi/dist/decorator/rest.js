@@ -23,8 +23,8 @@ function Rest(constructor) {
                 const existingRoutes = Reflect.getOwnMetadata(keys_1.routeKey, target) || [];
                 const validations = Reflect.getOwnMetadata(keys_1.validationKey, target) || [];
                 const protectedRoute = Reflect.getOwnMetadata(keys_1.protectedKey, target) || [];
-                // @ts-ignore: prepare does not exist on Anonymous class (it does on FastApi)
-                this.prepare && this.prepare(mergeInfo(map, existingRoutes, validations, protectedRoute));
+                // little trick to get rip of the warning 
+                this['prepare'](mergeInfo(map, existingRoutes, validations, protectedRoute));
             });
         }
     };

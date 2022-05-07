@@ -11,6 +11,10 @@ import {
   CONTENT_TYPE
 } from '@velocejs/server'
 import {
+  SPREAD_ARG_TYPE,
+  TS_TYPE_NAME,
+} from '@jsonql/constants'
+import {
   AppOptions,
   HttpResponse,
   HttpRequest,
@@ -88,7 +92,9 @@ export class FastApi implements FastApiInterface {
     this._uwsInstance.autoStart = false
     try {
       // @TODO prepare the validation rules before as pass arg
-      this._uwsInstance.run(this.prepareRoutes(routes))
+      this._uwsInstance.run(
+        this.prepareRoutes(routes)
+      )
       // create a nextTick effect
       setTimeout(() => {
         this._onConfigWait(true)
@@ -104,7 +110,7 @@ export class FastApi implements FastApiInterface {
 
     return meta.map(m => {
         const { path, type, propertyName, validation } = m
-        const _route = checkFn(path)
+
         switch (type) {
           case STATIC_TYPE:
             return {
@@ -122,36 +128,51 @@ export class FastApi implements FastApiInterface {
               handler: this[propertyName] // pass it straight through
             }
           default:
-            return {
-              type,
-              path,
-              handler: this._mapMethodToHandler(
-                propertyName,
-                m.args,
-                validation,
-                _route
-              )
-            }
+            return this._prepareNormalRoute(type, path, propertyName, m.args, validation, checkFn)
           }
       })
   }
 
+  /** TS script force it to make it looks so damn bad for all their non-sense rules */
+  private _prepareNormalRoute(
+    type: string,
+    path: string,
+    propertyName: string,
+    args: any,
+    validation: any,
+    checkFn: (t: string, p: string) => string
+  ) {
+    const _route = checkFn(type, path)
+
+    return {
+      type,
+      path: _route !== '' ? _route : path,
+      handler: this._mapMethodToHandler(
+        propertyName,
+        args,
+        validation,
+        _route
+      )
+    }
+  }
+
   /** check if there is a dynamic route and prepare it */
   private _prepareDynamicRoute(tmpSet: WeakSet<object>) {
-    let _route = ''
-    return (path: string) => {
-      if (UrlPattern.check(path)) {
-        const upObj = new UrlPattern(path)
-        _route = upObj.route as string
-        if (tmpSet.has({ _route })) {
-          throw new Error(`${_route} already existed!`)
-        }
-        tmpSet.add({ _route })
-        this._dynamicRoutes.set(_route, upObj)
-      } else {
-        _route = ''
+
+    return (type: string, path: string): string => {
+      let route = '', upObj
+      if (type === 'get' && UrlPattern.check(path)) {
+        upObj = new UrlPattern(path)
+        route = upObj.route
       }
-      return _route
+      if (tmpSet.has({ route })) {
+        throw new Error(`${route} already existed!`)
+      }
+      tmpSet.add({ route: route === '' ? path : route })
+      if (upObj) {
+        this._dynamicRoutes.set(route, upObj)
+      }
+      return route
     }
   }
 
@@ -196,7 +217,7 @@ export class FastApi implements FastApiInterface {
     const validateFn = this._createValidator(propertyName, argsList, validationInput)
 
     return async (ctx: VeloceCtx) => {
-      const args = this._applyArgs(argNames, ctx.params)
+      const args = this._applyArgs(argNames, ctx.params, argsList)
 
       return validateFn(args)
                 .then((validatedResult: VeloceCtx) => {
@@ -219,15 +240,15 @@ export class FastApi implements FastApiInterface {
     return async (result: UwsRespondBody): Promise<VeloceCtx> => {
       const ctx: VeloceCtx = assign(result, { propertyName })
       // 0.3.0 handle dynamic route
-      if (route !== '') {
+      if (route) {
         const obj = this._dynamicRoutes.get(route)
         // the data extracted will become the argument
-        ctx.params = obj.parse(obj.url)
-        // we need to process the params as well
-        console.log('ctx.params', ctx.params)
+        const urlParams = obj.parse(ctx.url)
+        ctx.params = urlParams === null ? {} : urlParams
+        // @TODO we need to process the params as well
       }
-      this._setTemp(result, res)
-
+      this._setTemp(ctx, res)
+      debug('ctx', ctx)
       return ctx
     }
   }
@@ -235,8 +256,6 @@ export class FastApi implements FastApiInterface {
   /** split out from above because we still need to handle the user provide middlewares */
   private _handleMiddlewares(...args: any[]) {
     // @TODO if there is any middleware we insert that before the validation pos 1
-
-    // run the middleware stacks
     return Reflect.apply(queuePromisesProcess, null, args)
               .catch(this._handleValidationError.bind(this))
               .finally(() => {
@@ -256,9 +275,7 @@ export class FastApi implements FastApiInterface {
     // @TODO should replace with the jsonWriter
     if (this.res) {
       this.res.writeStatus(this._validationErrStatus + '')
-    /// console.log('this._status', this._status)
       this.res.write(JSON.stringify(payload))
-    // this._render(type, payload)
       this.res.end()
     }
   }
@@ -308,8 +325,17 @@ export class FastApi implements FastApiInterface {
   }
 
   // take the argument list and the input to create the correct arguments
-  private _applyArgs(args: Array<string>, params: object) {
-    return args.map(arg => params[arg])
+  private _applyArgs(argNames: Array<string>, params: object, argsList: Array<UwsStringPairObj>) {
+    // spread argument
+    if (argsList[0] && argsList[0][TS_TYPE_NAME] && argsList[0][TS_TYPE_NAME] === SPREAD_ARG_TYPE) {
+      const _args: any[] = []
+      for (const key in params) {
+        _args.push(params[key])
+      }
+      return _args
+    }
+    // the normal key value pair
+    return argNames.map(argName => params[argName])
   }
 
   // When we call the user provided method, we will pass them the payload.params pass instead of
@@ -358,22 +384,24 @@ export class FastApi implements FastApiInterface {
     }, 0)
   }
 
-  // write to the client
+  /** Write the output
+  @BUG if the payload is not a string that could lead to lots of strange behaivor
+  */
   private _render(type: string, payload: any): void {
     switch (type) {
       case IS_OTHER:
-          this.writer(payload, this._headers, this._status)
+        this.writer(payload, this._headers, this._status)
         break
       default:
-          // check if they set a different content-type header
-          // if so we don't use the jsonWriter
-          for (const key in this._headers) {
-            if (key.toLowerCase() === CONTENT_TYPE) {
-              // exit here
-              return this.writer(payload, this._headers, this._status)
-            }
+        // check if they set a different content-type header
+        // if so we don't use the jsonWriter
+        for (const key in this._headers) {
+          if (key.toLowerCase() === CONTENT_TYPE) {
+            // exit here
+            return this.writer(payload, this._headers, this._status)
           }
-          this.jsonWriter(payload, this._status)
+        }
+        this.jsonWriter(payload, this._status)
     }
   }
 

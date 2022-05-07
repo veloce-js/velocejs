@@ -19,16 +19,27 @@ test.after(() => {
   classInstance.stop()
 })
 
+test.only(`Just test a normal url /news/* first`, async t => {
+  t.plan(1)
+  const _url = `${url}/news/2022/may/six/whatever-shit-that-is`
+  return Fetch(_url)
+          .then(res => res.text())
+          .then(text => {
+            console.log(_url, text)
+            t.pass()
+          })
+})
+
 test(`Should able to use dynamic route on GET route with correct type on method`, async t => {
-
-  const result = await Fetch(`${url}/2022/5/7`)
-
-  const json = await result.json()
-
-  console.log(json)
-
-  t.truthy(json)
-
+  t.plan(1)
+  const _url = `${url}/posts/2022/5/7`
+  console.log('calling', _url)
+  return Fetch(_url)
+            .then(res => res.json())
+            .then(json => {
+              console.log(json)
+              t.truthy(json)
+            })
 })
 
 test.todo(`Should able to use dynamic route on GET route with spread arguments`)

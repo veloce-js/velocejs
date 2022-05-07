@@ -4,8 +4,8 @@ exports.FastApi = void 0;
 const tslib_1 = require("tslib");
 // this will allow you to create a series of API in no time
 const server_1 = require("@velocejs/server");
-const server_2 = require("@velocejs/server");
-const bodyparser_1 = tslib_1.__importDefault(require("@velocejs/bodyparser"));
+const constants_1 = require("@jsonql/constants");
+const bodyparser_1 = tslib_1.__importStar(require("@velocejs/bodyparser"));
 const utils_1 = require("@jsonql/utils");
 // here
 const extract_1 = require("./lib/extract");
@@ -28,6 +28,7 @@ class FastApi {
     _onConfigError = placeholderFn;
     _middlewares = [];
     _validationErrStatus = 417;
+    _dynamicRoutes = new Map();
     // protected properties
     payload;
     res;
@@ -69,79 +70,115 @@ class FastApi {
     }
     // Mapping all the string name to method and supply to UwsServer run method
     prepareRoutes(meta) {
+        const checkFn = this._prepareDynamicRoute(new WeakSet());
         return meta.map(m => {
             const { path, type, propertyName, validation } = m;
             switch (type) {
-                case server_2.STATIC_TYPE:
+                case server_1.STATIC_TYPE:
                     return {
                         path,
-                        type: server_2.STATIC_ROUTE,
+                        type: server_1.STATIC_ROUTE,
                         // the method just return the path to the files
-                        // We change this to be a accessor decorator which a getter
+                        // We require the method to be a getter that returns a path
+                        // @TODO should we allow them to use dynamic route to perform url rewrite?
                         handler: (0, server_1.serveStatic)(this[propertyName])
                     };
-                case server_2.RAW_TYPE:
+                case server_1.RAW_TYPE:
                     return {
                         path,
                         type: m.route,
                         handler: this[propertyName] // pass it straight through
                     };
                 default:
-                    return {
-                        type,
-                        path,
-                        handler: this._mapMethodToHandler(propertyName, m.args, validation)
-                    };
+                    return this._prepareNormalRoute(type, path, propertyName, m.args, validation, checkFn);
             }
         });
     }
+    /** TS script force it to make it looks so damn bad for all their non-sense rules */
+    _prepareNormalRoute(type, path, propertyName, args, validation, checkFn) {
+        const _route = checkFn(type, path);
+        return {
+            type,
+            path: _route !== '' ? _route : path,
+            handler: this._mapMethodToHandler(propertyName, args, validation, _route)
+        };
+    }
+    /** check if there is a dynamic route and prepare it */
+    _prepareDynamicRoute(tmpSet) {
+        return (type, path) => {
+            let route = '', upObj;
+            if (type === 'get' && bodyparser_1.UrlPattern.check(path)) {
+                upObj = new bodyparser_1.UrlPattern(path);
+                route = upObj.route;
+            }
+            if (tmpSet.has({ route })) {
+                throw new Error(`${route} already existed!`);
+            }
+            tmpSet.add({ route: route === '' ? path : route });
+            if (upObj) {
+                this._dynamicRoutes.set(route, upObj);
+            }
+            return route;
+        };
+    }
     // transform the string name to actual method
-    _mapMethodToHandler(propertyName, argsList, validationInput) {
+    _mapMethodToHandler(propertyName, argsList, validationInput, // this is the rules provide via Decorator
+    route
+    // onAbortedHandler?: string // take out
+    ) {
         const handler = this[propertyName];
-        // the args now using the info from ast map , we strip one array only contains names for user here
-        const argNames = argsList.map(arg => arg.name);
-        const validateFn = this._createValidator(propertyName, argsList, validationInput);
         // @TODO need to rethink about how this work
         return async (res, req) => {
             // @0.3.0 we change the whole thing into one middlewares stack
             const stacks = [
                 bodyparser_1.default,
-                this._prepareCtx(propertyName, res),
+                this._prepareCtx(propertyName, res, route),
                 this._handleProtectedRoute(propertyName),
-                async (ctx) => {
-                    const args = this._applyArgs(argNames, ctx.params);
-                    return validateFn(args)
-                        .then((validatedResult) => {
-                        debug('validatedResult', validatedResult, argNames);
-                        // the validatedResult could have new props
-                        return (0, utils_1.assign)(ctx, {
-                            args: (0, extract_1.prepareArgs)(argNames, validatedResult)
-                        });
-                    });
-                },
-                // last of the calls
+                this._prepareValidator(propertyName, argsList, validationInput),
                 async (ctx) => {
                     const { type, args } = ctx;
-                    // console.log(`Before handler call`, ctx)
-                    // if we use the catch the server hang, if we call close the client hang
                     return this._handleContent(args, handler, type, propertyName);
                 }
             ];
             this._handleMiddlewares(stacks, res, req, () => console.log(`@TODO`, 'define our own onAbortedHandler'));
         };
     }
+    /** take this out from above to keep related code in one place */
+    _prepareValidator(propertyName, argsList, validationInput) {
+        const argNames = argsList.map(arg => arg.name);
+        const validateFn = this._createValidator(propertyName, argsList, validationInput);
+        return async (ctx) => {
+            const args = this._applyArgs(argNames, ctx.params, argsList);
+            return validateFn(args)
+                .then((validatedResult) => {
+                debug('validatedResult', validatedResult, argNames);
+                // the validatedResult could have new props
+                return (0, utils_1.assign)(ctx, {
+                    args: (0, extract_1.prepareArgs)(argNames, validatedResult)
+                });
+            });
+        };
+    }
     /** get call after the bodyParser, and prepare for the operation */
-    _prepareCtx(propertyName, res) {
+    _prepareCtx(propertyName, res, route) {
         return async (result) => {
             const ctx = (0, utils_1.assign)(result, { propertyName });
-            this._setTemp(result, res);
+            // 0.3.0 handle dynamic route
+            if (route) {
+                const obj = this._dynamicRoutes.get(route);
+                // the data extracted will become the argument
+                const urlParams = obj.parse(ctx.url);
+                ctx.params = urlParams === null ? {} : urlParams;
+                // @TODO we need to process the params as well
+            }
+            this._setTemp(ctx, res);
+            debug('ctx', ctx);
             return ctx;
         };
     }
     /** split out from above because we still need to handle the user provide middlewares */
     _handleMiddlewares(...args) {
         // @TODO if there is any middleware we insert that before the validation pos 1
-        // run the middleware stacks
         return Reflect.apply(utils_1.queuePromisesProcess, null, args)
             .catch(this._handleValidationError.bind(this))
             .finally(() => {
@@ -160,9 +197,7 @@ class FastApi {
         // @TODO should replace with the jsonWriter
         if (this.res) {
             this.res.writeStatus(this._validationErrStatus + '');
-            /// console.log('this._status', this._status)
             this.res.write(JSON.stringify(payload));
-            // this._render(type, payload)
             this.res.end();
         }
     }
@@ -198,8 +233,17 @@ class FastApi {
         }
     }
     // take the argument list and the input to create the correct arguments
-    _applyArgs(args, params) {
-        return args.map(arg => params[arg]);
+    _applyArgs(argNames, params, argsList) {
+        // spread argument
+        if (argsList[0] && argsList[0][constants_1.TS_TYPE_NAME] && argsList[0][constants_1.TS_TYPE_NAME] === constants_1.SPREAD_ARG_TYPE) {
+            const _args = [];
+            for (const key in params) {
+                _args.push(params[key]);
+            }
+            return _args;
+        }
+        // the normal key value pair
+        return argNames.map(argName => params[argName]);
     }
     // When we call the user provided method, we will pass them the payload.params pass instead of
     // the whole payload, and we keep them in a temporary place, and destroy it once the call is over
@@ -241,17 +285,19 @@ class FastApi {
             this._status = placeholder;
         }, 0);
     }
-    // write to the client
+    /** Write the output
+    @BUG if the payload is not a string that could lead to lots of strange behaivor
+    */
     _render(type, payload) {
         switch (type) {
-            case server_2.IS_OTHER:
+            case server_1.IS_OTHER:
                 this.writer(payload, this._headers, this._status);
                 break;
             default:
                 // check if they set a different content-type header
                 // if so we don't use the jsonWriter
                 for (const key in this._headers) {
-                    if (key.toLowerCase() === server_2.CONTENT_TYPE) {
+                    if (key.toLowerCase() === server_1.CONTENT_TYPE) {
                         // exit here
                         return this.writer(payload, this._headers, this._status);
                     }
