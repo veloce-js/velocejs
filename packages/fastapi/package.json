@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/fastapi",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Built on top of @velocejs/server that let you build your API in no time",
   "main": "dist/index.js",
   "module": "dist/index.ts",
