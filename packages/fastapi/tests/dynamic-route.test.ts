@@ -15,9 +15,12 @@ test.after(() => {
   classInstance.stop()
 })
 
-test(`Should able to use dynamic route on GET route with correct type on method`, t => {
+test(`Should able to use dynamic route on GET route with correct type on method`, async t => {
+
+  console.log(classInstance.fastApiInfo)
 
   t.pass()
+
 })
 
 test.todo(`Should able to use dynamic route on GET route with spread arguments`)
