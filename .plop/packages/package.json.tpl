@@ -7,7 +7,8 @@
   "typings": "dist/types.d.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "index.d.ts"
   ],
   "scripts": {
     "test:ava": "ava",
@@ -28,7 +29,7 @@
     "minor": "npm version minor",
     "major": "npm version major"
   },
-  "author": "{{author}}",
+  "author": "{{{author}}}",
   "license": "{{license}}",
   "homepage": "{{homepage}}",
   "dependencies": {

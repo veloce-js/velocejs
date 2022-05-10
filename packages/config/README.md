@@ -6,7 +6,7 @@ Reading the project configuration files in various format and provide to differe
 
 This is the default file name; we also support `veloce.config.ts`
 
-For compatib
+For example:
 
 ```js
 // cjs style
@@ -24,6 +24,8 @@ export default {
   }
 }
 ```
+
+This module is aim to use internally with our Veloce platform, not for general use.
 
 ---
 
