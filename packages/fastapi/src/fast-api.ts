@@ -100,7 +100,7 @@ export class FastApi implements FastApiInterface {
       // @0.4.0 we change this to a chain promise start up sequence
       // check the config to see if there is one to generate contract
       this._configurator = new VeloceConfig(PATH_TO_VELOCE_CONFIG)
-
+      
       // actually setting up the server to run
       this._uwsInstance.run(
         this.prepareRoutes(routes)
