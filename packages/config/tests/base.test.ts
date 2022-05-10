@@ -18,7 +18,7 @@ test(`Should throw error if the dev provide file doesn't exist`, async (t) => {
   const configX = new VeloceConfig(nonExistConfigFile)
 
   configX.isReady.catch((e: Error) => {
-    console.info(e)
+    
     t.truthy(e)
   })
 

@@ -22,7 +22,7 @@ export class VeloceConfig {
     if (pathToConfigFile) {
       if (!fsx.existsSync(pathToConfigFile)) {
         const msg = `${pathToConfigFile} does not exist!`
-        this._configReject(msg)
+        this._configReject(new Error(msg))
         // throw new Error(msg)
       } else {
         this._readContent(pathToConfigFile)

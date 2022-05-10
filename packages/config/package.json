@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/config",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "@velocejs/config for reading veloce.config.{js,ts} and provide config data to various modules",
   "main": "dist/index.js",
   "module": "dist/index.ts",
