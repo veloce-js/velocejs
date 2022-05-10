@@ -14,6 +14,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.22.0
   '@typescript-eslint/parser': ^5.22.0
   '@velocejs/bodyparser': workspace:^0.3.1
+  '@velocejs/config': workspace:^0.1.0
   '@velocejs/server': workspace:^0.7.6
   ava: ^4.2.0
   debug: ^4.3.4
@@ -38,6 +39,7 @@ dependencies:
   '@jsonql/utils': 0.6.5
   '@jsonql/validator': 0.4.0
   '@velocejs/bodyparser': link:../bodyparser
+  '@velocejs/config': link:../config
   '@velocejs/server': link:../server
   debug: 4.3.4
   fs-extra: 10.1.0
