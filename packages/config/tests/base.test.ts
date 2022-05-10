@@ -1,13 +1,13 @@
 import test from 'ava'
 import { join } from 'node:path'
-import { VeloceConfig } from '../src'
+import { VeloceConfig } from '../dist'
 
 let config1: VeloceConfig
 let config2: VeloceConfig
 
 test.before(async () => {
   config1 = new VeloceConfig()
-  config2 = new VeloceConfig(join(__dirname, 'fixtures', 'jsonql.config.mjs'))
+  config2 = new VeloceConfig(join(__dirname, 'fixtures', 'jsonql.config.cjs'))
 })
 
 test(`Should able to automatically discover the config file`, async (t) => {
