@@ -1,7 +1,7 @@
 // setup a dummy API for test
 
 import { HttpResponse } from '@velocejs/server/src/types'
-import { FastApi, Get, Post, Raw, Aborted, Rest, Validate } from '../../src'
+import { FastApi, Get, Post, Raw, Rest } from '../../src'
 
 export const msg1 = `doing the route handling thing`
 export const msg2 = `Here is my own message`
@@ -14,7 +14,7 @@ export class MyApi extends FastApi {
   myFunc() {
     return msg1
   }
-  @Aborted('get', '/some-where')
+
   myFuncOnAborted() {
     console.log(`Just log something`)
   }

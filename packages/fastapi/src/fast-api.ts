@@ -13,6 +13,7 @@ import {
 import {
   SPREAD_ARG_TYPE,
   TS_TYPE_NAME,
+  REST_NAME,
 } from '@jsonql/constants'
 import {
   AppOptions,
@@ -35,8 +36,14 @@ import {
 } from './types'
 import bodyParser, { UrlPattern } from '@velocejs/bodyparser'
 import { VeloceConfig } from '@velocejs/config'
-import { queuePromisesProcess, toArray, assign } from '@jsonql/utils'
 import { JsonqlValidationError } from '@jsonql/errors'
+import { JsonqlContract } from '@jsonql/contract'
+import {
+  chainProcessPromises,
+  queuePromisesProcess,
+  toArray,
+  assign
+} from '@jsonql/utils'
 // here
 import {
   isDebug,
@@ -58,7 +65,9 @@ const placeholderFn = (...args: any[] ) => { console.log(args) }
 // instead we create an instance of it
 export class FastApi implements FastApiInterface {
   private _uwsInstance: UwsServer
-  private _configurator!: VeloceConfig
+  private _config: any
+  private _contract!: JsonqlContract
+  private _routeForContract = {}
   private _written = false
   private _headers: UwsStringPairObj = {}
   private _status: number = placeholder
@@ -91,58 +100,95 @@ export class FastApi implements FastApiInterface {
   // instead of using a Prepare decorator and ugly call the super.run
   // we use a class decorator to call this method on init
   // Dev can do @Rest(config)
-  protected prepare(routes: Array<RouteMetaInfo>):void {
+  protected prepare(routes: Array<RouteMetaInfo>, apiType: string = REST_NAME):void {
     if (isDebug) {
       console.time('FastApiStartUp')
     }
     this._uwsInstance.autoStart = false
-    try {
-      // @0.4.0 we change this to a chain promise start up sequence
-      // check the config to see if there is one to generate contract
-      this._configurator = new VeloceConfig(PATH_TO_VELOCE_CONFIG)
-      this._configurator.isReady.then(() => {
-        // actually setting up the server to run
-        this._uwsInstance.run(
-          this.prepareRoutes(routes)
-        )
-        // create a nextTick effect
-        setTimeout(() => {
-          this._onConfigWait(true)
-        }, 0)
-      })
+    // @0.4.0 we change this to a chain promise start up sequence
+    // check the config to see if there is one to generate contract
+    const c = new VeloceConfig(PATH_TO_VELOCE_CONFIG)
+    this._config = c // for re-use later
+    const ex = chainProcessPromises(
+      (routes) => c.isReady.then(() => routes),
+      this._prepareRoutes,
+      this._prepareContract(apiType),
+      this._run
+    )
 
-    } catch(e) {
-      this._onConfigError(e)
-    }
+    ex(routes)
+      .then(() => {
+        this._onConfigWait(true)
+      })
+      .catch((e) => {
+        this._onConfigError(e)
+      })
   }
 
-  // Mapping all the string name to method and supply to UwsServer run method
-  private prepareRoutes(meta: RouteMetaInfo[]): Array<UwsRouteSetup> {
+  private _run(routes) {
+    this._uwsInstance.run(routes)
+    return Promise.resolve(routes)
+  }
+
+  /** just wrap this together to make it look neater */
+  private _prepareRouteForContract(
+    propertyName: string,
+    args: any[],
+    validation: any,
+    type: string,
+    path: string
+  ): void {
+    const entry = {[propertyName]: { params: args, validation, type, path}}
+
+    this._routeForContract = assign(this._routeForContract, entry)
+  }
+
+  /** whether to setup a contract or not, if there is contract setup then we return a new route */
+  private async _prepareContract(
+    apiType: string
+  ): Promise<void> {
+    return this._config.getConfig('contract')
+    .then((config: {[key: string]: string}) => {
+      if (config && config.cacheDir) {
+        console.log(apiType, this._routeForContract)
+        this._contract = new JsonqlContract(
+          this._routeForContract,
+          apiType
+        )
+        // return a new route info here
+      }
+
+    })
+  }
+
+  /** Mapping all the string name to method and supply to UwsServer run method */
+  private async _prepareRoutes(
+    meta: RouteMetaInfo[]
+  ): Promise<Array<UwsRouteSetup>> {
     const checkFn = this._prepareDynamicRoute(new WeakSet())
 
     return meta.map(m => {
-        const { path, type, propertyName, validation } = m
-
-        switch (type) {
-          case STATIC_TYPE:
-            return {
-              path,
-              type: STATIC_ROUTE,
-              // the method just return the path to the files
-              // We require the method to be a getter that returns a path
-              // @TODO should we allow them to use dynamic route to perform url rewrite?
-              handler: serveStatic(this[propertyName])
-            }
-          case RAW_TYPE:
-            return {
-              path,
-              type: m.route,
-              handler: this[propertyName] // pass it straight through
-            }
-          default:
-            return this._prepareNormalRoute(type, path, propertyName, m.args, validation, checkFn)
+      const { path, type, propertyName, validation } = m
+      switch (type) {
+        case STATIC_TYPE:
+          return {
+            path,
+            type: STATIC_ROUTE,
+            // the method just return the path to the files
+            // We require the method to be a getter that returns a path
+            // @TODO should we allow them to use dynamic route to perform url rewrite?
+            handler: serveStatic(this[propertyName])
           }
-      })
+        case RAW_TYPE:
+          return {
+            path,
+            type: m.route,
+            handler: this[propertyName] // pass it straight through
+          }
+        default:
+          return this._prepareNormalRoute(type, path, propertyName, m.args, validation, checkFn)
+        }
+    })
   }
 
   /** TS script force it to make it looks so damn bad for all their non-sense rules */
@@ -155,10 +201,13 @@ export class FastApi implements FastApiInterface {
     checkFn: (t: string, p: string) => string
   ) {
     const _route = checkFn(type, path)
+    // also add this to the route that can create contract - if we need it
+    const _path = _route !== '' ? _route : path
+    this._prepareRouteForContract(propertyName, args, validation, type, _path)
 
     return {
       type,
-      path: _route !== '' ? _route : path,
+      path: _path,
       handler: this._mapMethodToHandler(
         propertyName,
         args,
