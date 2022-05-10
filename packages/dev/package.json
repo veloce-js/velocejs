@@ -39,5 +39,8 @@
       "esbuild-register"
     ]
   },
-  "homepage": "https://velocejs.com"
+  "homepage": "https://velocejs.com",
+  "dependencies": {
+    "@velocejs/config": "workspace:^0.2.0"
+  }
 }
