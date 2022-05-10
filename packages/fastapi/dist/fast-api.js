@@ -6,11 +6,13 @@ const tslib_1 = require("tslib");
 const server_1 = require("@velocejs/server");
 const constants_1 = require("@jsonql/constants");
 const bodyparser_1 = tslib_1.__importStar(require("@velocejs/bodyparser"));
+const config_1 = require("@velocejs/config");
 const utils_1 = require("@jsonql/utils");
 // here
+const constants_2 = require("./lib/constants");
 const extract_1 = require("./lib/extract");
 const validator_1 = require("./lib/validator");
-const isDebug = process.env.DEBUG;
+// setup
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fast-api:main');
 // dummy stuff
@@ -20,6 +22,7 @@ const placeholderFn = (...args) => { console.log(args); };
 // instead we create an instance of it
 class FastApi {
     _uwsInstance;
+    _configurator;
     _written = false;
     _headers = {};
     _status = placeholder;
@@ -52,17 +55,22 @@ class FastApi {
     // we use a class decorator to call this method on init
     // Dev can do @Rest(config)
     prepare(routes) {
-        if (isDebug) {
+        if (constants_2.isDebug) {
             console.time('FastApiStartUp');
         }
         this._uwsInstance.autoStart = false;
         try {
-            // @TODO prepare the validation rules before as pass arg
-            this._uwsInstance.run(this.prepareRoutes(routes));
-            // create a nextTick effect
-            setTimeout(() => {
-                this._onConfigWait(true);
-            }, 0);
+            // @0.4.0 we change this to a chain promise start up sequence
+            // check the config to see if there is one to generate contract
+            this._configurator = new config_1.VeloceConfig(constants_2.PATH_TO_VELOCE_CONFIG);
+            this._configurator.isReady.then(() => {
+                // actually setting up the server to run
+                this._uwsInstance.run(this.prepareRoutes(routes));
+                // create a nextTick effect
+                setTimeout(() => {
+                    this._onConfigWait(true);
+                }, 0);
+            });
         }
         catch (e) {
             this._onConfigError(e);
@@ -361,7 +369,7 @@ class FastApi {
             this._onConfigReady
                 .then(() => {
                 this._uwsInstance.start();
-                if (isDebug) {
+                if (constants_2.isDebug) {
                     console.timeEnd('FastApiStartUp');
                 }
             })

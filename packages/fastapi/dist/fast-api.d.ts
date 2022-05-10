@@ -3,6 +3,7 @@ import { RouteMetaInfo, VeloceMiddleware } from './types';
 import { FastApiInterface } from './lib/fast-api-interface';
 export declare class FastApi implements FastApiInterface {
     private _uwsInstance;
+    private _configurator;
     private _written;
     private _headers;
     private _status;

@@ -4,6 +4,7 @@ exports.Rest = void 0;
 const keys_1 = require("./keys");
 const ast_1 = require("@jsonql/ast");
 const server_1 = require("@velocejs/server");
+const constants_1 = require("../lib/constants");
 // import debug from 'debug'
 // const debugFn = debug('velocejs:fastapi:decorator:Rest')
 /** This should be generic that could apply to different Decorator init */
@@ -23,8 +24,8 @@ function Rest(constructor) {
                 const existingRoutes = Reflect.getOwnMetadata(keys_1.routeKey, target) || [];
                 const validations = Reflect.getOwnMetadata(keys_1.validationKey, target) || [];
                 const protectedRoute = Reflect.getOwnMetadata(keys_1.protectedKey, target) || [];
-                // little trick to get rip of the warning 
-                this['prepare'](mergeInfo(map, existingRoutes, validations, protectedRoute));
+                // little trick to get rip of the warning
+                this[constants_1.METHOD_TO_RUN](mergeInfo(map, existingRoutes, validations, protectedRoute));
             });
         }
     };

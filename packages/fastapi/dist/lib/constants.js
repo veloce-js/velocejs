@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isDebug = exports.RULE_FULL = exports.RULE_SIMPLE = exports.RULE_LIST = exports.RULE_AUTOMATIC = exports.PARAMS_KEY = exports.OPTIONS_KEY = exports.RULES_KEY = exports.NIL = exports.BOUNDARY = void 0;
+exports.PATH_TO_VELOCE_CONFIG = exports.METHOD_TO_RUN = exports.isDebug = exports.RULE_FULL = exports.RULE_SIMPLE = exports.RULE_LIST = exports.RULE_AUTOMATIC = exports.PARAMS_KEY = exports.OPTIONS_KEY = exports.RULES_KEY = exports.NIL = exports.BOUNDARY = void 0;
 exports.BOUNDARY = 'boundary';
 exports.NIL = 'NIL';
 exports.RULES_KEY = 'rules';
@@ -12,6 +12,10 @@ exports.RULE_LIST = 'rule-list';
 exports.RULE_SIMPLE = 'rule-simple';
 exports.RULE_FULL = 'rule-full';
 exports.isDebug = process.env.DEBUG;
+// this is the method that we need to call in the Top Decorator
+exports.METHOD_TO_RUN = 'prepare';
+// allow the dev to override this in the command line
+exports.PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG;
 /*
 export const CLASS_TYPE = 'ClassDeclaration'
 export const EXPORT_TYPE = 'ExportDeclaration'

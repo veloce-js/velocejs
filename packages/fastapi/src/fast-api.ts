@@ -58,7 +58,7 @@ const placeholderFn = (...args: any[] ) => { console.log(args) }
 // instead we create an instance of it
 export class FastApi implements FastApiInterface {
   private _uwsInstance: UwsServer
-  private _configurator: VeloceConfig
+  private _configurator!: VeloceConfig
   private _written = false
   private _headers: UwsStringPairObj = {}
   private _status: number = placeholder
@@ -100,15 +100,17 @@ export class FastApi implements FastApiInterface {
       // @0.4.0 we change this to a chain promise start up sequence
       // check the config to see if there is one to generate contract
       this._configurator = new VeloceConfig(PATH_TO_VELOCE_CONFIG)
-      
-      // actually setting up the server to run
-      this._uwsInstance.run(
-        this.prepareRoutes(routes)
-      )
-      // create a nextTick effect
-      setTimeout(() => {
-        this._onConfigWait(true)
-      }, 0)
+      this._configurator.isReady.then(() => {
+        // actually setting up the server to run
+        this._uwsInstance.run(
+          this.prepareRoutes(routes)
+        )
+        // create a nextTick effect
+        setTimeout(() => {
+          this._onConfigWait(true)
+        }, 0)
+      })
+
     } catch(e) {
       this._onConfigError(e)
     }

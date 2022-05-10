@@ -8,3 +8,5 @@ export declare const RULE_LIST = "rule-list";
 export declare const RULE_SIMPLE = "rule-simple";
 export declare const RULE_FULL = "rule-full";
 export declare const isDebug: string | undefined;
+export declare const METHOD_TO_RUN = "prepare";
+export declare const PATH_TO_VELOCE_CONFIG: string | undefined;
