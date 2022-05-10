@@ -14,7 +14,7 @@ export class VeloceConfig {
   private _isConfigReady!: Promise<VeloceConfigEntry>
   private _isConfigResolve!: PromiseCallback
   private _isConfigReject!: PromiseCallback
-  
+
   constructor(pathToConfigFile?: string) {
     this._setupCallback()
 
@@ -26,14 +26,22 @@ export class VeloceConfig {
       }
       this._readContent(pathToConfigFile)
     } else {
+      let found = false
       SUPPORT_EXT.forEach(ext => {
         if (!this._src) {
           const file = join(cwd, [ FILE_NAME, ext].join('.') )
-          if ( fsx.existsSync(file)) {
+          console.log(file)
+          if ( fsx.existsSync(file) ) {
+
+            found = true
             this._readContent(file)
           }
         }
       })
+      if (!found) {
+        // if there is no config file then we just reject it
+        this._isConfigReject(`No config file`)
+      }
     }
   }
 

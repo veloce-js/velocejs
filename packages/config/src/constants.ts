@@ -1,4 +1,4 @@
 
 
-export const FILE_NAME = 'veloce.confg'
-export const SUPPORT_EXT = ['js', 'ts']
+export const FILE_NAME = 'veloce.config'
+export const SUPPORT_EXT = ['js', 'mjs']
