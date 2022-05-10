@@ -4,7 +4,7 @@ Reading the project configuration files in various format and provide to differe
 
 ## veloce.config.js
 
-This is the default file name; we also support `veloce.config.ts`
+This is the default file name; we also support `veloce.config.cjs` (Must be in commonJs format)
 
 For example:
 
@@ -16,16 +16,21 @@ module.exports = {
   }
 }
 ```
-or in ts
+
+**This module is aim to use internally with our Veloce platform, not for general use.**
+
+## Use it
+
 ```ts
-export default {
-  contract: {
-    cacheDir: '/path/to/cacheDir'
-  }
-}
+import { VeloceConfig } from '@jsonql/config'
+const c = new VeloceConfig()
+const contractConfig = c.getConfig('contract')
+// alos support dot notation path style
+const cacheDir = c.getConfig('contract.cacheDir')
+
 ```
 
-This module is aim to use internally with our Veloce platform, not for general use.
+@TODO add the full matching of all Veloce Config options then add the `@jsonql/config-check` module 
 
 ---
 

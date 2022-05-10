@@ -43,6 +43,20 @@ export class VeloceConfig {
     }
   }
 
+  /** The main method to get config */
+  public async getConfig(moduleName?: string) {
+    if (this._content) {
+      const config = this._getByPath(this._content, moduleName)
+      return config ?
+        Promise.resolve(config) :
+        Promise.reject(`${moduleName} not found in config`)
+    }
+    return this._isConfigReady
+            .then((config: VeloceConfigEntry) =>
+              this._getByPath(config, moduleName)
+            )
+  }
+
   private _readContent(pathToFile: string) {
     this._src = pathToFile
     import(pathToFile)
@@ -57,19 +71,6 @@ export class VeloceConfig {
       this._isConfigResolve = resolver
       this._isConfigReject = rejecter
     })
-  }
-
-  public async getConfig(moduleName?: string) {
-    if (this._content) {
-      const config = this._getByPath(this._content, moduleName)
-      return config ?
-        Promise.resolve(config) :
-        Promise.reject(`${moduleName} not found in config`)
-    }
-    return this._isConfigReady
-            .then((config: VeloceConfigEntry) =>
-              this._getByPath(config, moduleName)
-            )
   }
 
   /** allow using dot notation path to extract content */
