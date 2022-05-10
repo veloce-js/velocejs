@@ -36,11 +36,11 @@ test(`Should able to read the config using a path to the content custom path`, a
   t.true(config.cacheDir !== undefined)
 })
 
-test.only(`Should able to use dot notation path to access the content directly`, async (t) => {
+test(`Should able to use dot notation path to access the content directly`, async (t) => {
 
   const config = await config2.getConfig('contract.cacheDir')
 
-  console.log(config)
+  // console.log(config)
 
   t.truthy(config)
 })

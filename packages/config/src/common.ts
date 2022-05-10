@@ -3,6 +3,6 @@
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'url'
 
-export const __dirname = (import_meta_url: string) => (
+export const getDirname = (import_meta_url: string) => (
   dirname(fileURLToPath(import_meta_url))
 )
