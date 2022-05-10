@@ -30,7 +30,9 @@
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "ISC",
   "homepage": "https://velocejs.com",
-  "dependencies": {},
+  "dependencies": {
+    "tslib": "^2.4.0"
+  },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
     "@types/debug": "^4.1.7",

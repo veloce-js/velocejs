@@ -33,7 +33,7 @@
   "license": "{{license}}",
   "homepage": "{{homepage}}",
   "dependencies": {
-
+    "tslib": "^2.4.0"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
