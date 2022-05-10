@@ -1,17 +1,20 @@
 import * as fsx from 'fs-extra'
 import { join } from 'node:path'
-import { FILE_NAME, SUPPRT_EXT } from './constants'
-
-
+import {
+  FILE_NAME,
+  SUPPORT_EXT
+} from './constants'
+import { VeloceConfigEntry, PromiseCallback } from './types'
+// main
 export class VeloceConfig {
 
-  private _dir!: string
-  private _content?: {[key: string]: any}
+  private _src!: string
+  private _content?: VeloceConfigEntry
 
-  private _isConfigReady: any
-  private _isConfigResolve: any
-  private _isConfigReject: any
-
+  private _isConfigReady!: Promise<VeloceConfigEntry>
+  private _isConfigResolve!: PromiseCallback
+  private _isConfigReject!: PromiseCallback
+  
   constructor(pathToConfigFile?: string) {
     this._setupCallback()
 
@@ -21,17 +24,26 @@ export class VeloceConfig {
         this._isConfigReject(true)
         throw new Error(`${pathToConfigFile} does not exist!`)
       }
-      import(pathToConfigFile)
-        .then(content => {
-          this._content = content
-          this._isConfigReady(content)
-        })
+      this._readContent(pathToConfigFile)
     } else {
-      this._dir = pathToConfig ? join(cwd, pathToConfig) : cwd
-      const file = SUPPORT_EXT.filter(ext => {
-
+      SUPPORT_EXT.forEach(ext => {
+        if (!this._src) {
+          const file = join(cwd, [ FILE_NAME, ext].join('.') )
+          if ( fsx.existsSync(file)) {
+            this._readContent(file)
+          }
+        }
       })
     }
+  }
+
+  private _readContent(pathToFile: string) {
+    this._src = pathToFile
+    import(pathToFile)
+      .then((content: VeloceConfigEntry) => {
+        this._content = content
+        this._isConfigResolve(content)
+      })
   }
 
   private _setupCallback() {
@@ -41,8 +53,16 @@ export class VeloceConfig {
     })
   }
 
-  public async getConfig() {
+  public async getConfig(moduleName?: string) {
+    if (this._content) {
+      const config = moduleName ? this._content[moduleName] : this._content
+      return config ?
+        Promise.resolve(config) :
+        Promise.reject(`${moduleName} not found in config`)
+    }
     return this._isConfigReady
+            .then((config: VeloceConfigEntry) =>
+              moduleName ? config[moduleName] : config
+            )
   }
-
 }
