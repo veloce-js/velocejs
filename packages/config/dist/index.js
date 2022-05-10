@@ -6,4 +6,3 @@ const tslib_1 = require("tslib");
 var veloce_config_1 = require("./veloce-config");
 Object.defineProperty(exports, "VeloceConfig", { enumerable: true, get: function () { return veloce_config_1.VeloceConfig; } });
 tslib_1.__exportStar(require("./constants"), exports);
-tslib_1.__exportStar(require("./common"), exports);

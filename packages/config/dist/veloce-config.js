@@ -34,6 +34,19 @@ class VeloceConfig {
             }
         }
     }
+    /** The main method to get config */
+    getConfig(moduleName) {
+        return tslib_1.__awaiter(this, void 0, void 0, function* () {
+            if (this._content) {
+                const config = this._getByPath(this._content, moduleName);
+                return config ?
+                    Promise.resolve(config) :
+                    Promise.reject(`${moduleName} not found in config`);
+            }
+            return this._isConfigReady
+                .then((config) => this._getByPath(config, moduleName));
+        });
+    }
     _readContent(pathToFile) {
         this._src = pathToFile;
         Promise.resolve().then(() => tslib_1.__importStar(require(pathToFile))).then((content) => {
@@ -45,18 +58,6 @@ class VeloceConfig {
         this._isConfigReady = new Promise((resolver, rejecter) => {
             this._isConfigResolve = resolver;
             this._isConfigReject = rejecter;
-        });
-    }
-    getConfig(moduleName) {
-        return tslib_1.__awaiter(this, void 0, void 0, function* () {
-            if (this._content) {
-                const config = this._getByPath(this._content, moduleName);
-                return config ?
-                    Promise.resolve(config) :
-                    Promise.reject(`${moduleName} not found in config`);
-            }
-            return this._isConfigReady
-                .then((config) => this._getByPath(config, moduleName));
         });
     }
     /** allow using dot notation path to extract content */
