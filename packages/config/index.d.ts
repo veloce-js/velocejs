@@ -1,7 +1,5 @@
 // specify your types here
 
-export type VeloceConfigEntry = {
-  [key: string]: any
+declare module "@velocejs/config" {
+  // just declare an empty one to get TS warning off my back 
 }
-
-export type PromiseCallback = (value?: T) => void
