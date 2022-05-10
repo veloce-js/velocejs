@@ -15,6 +15,11 @@ export const RULE_SIMPLE = 'rule-simple'
 export const RULE_FULL = 'rule-full'
 
 export const isDebug = process.env.DEBUG
+// this is the method that we need to call in the Top Decorator
+export const METHOD_TO_RUN = 'prepare'
+// allow the dev to override this in the command line
+export const PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG 
+
 /*
 export const CLASS_TYPE = 'ClassDeclaration'
 export const EXPORT_TYPE = 'ExportDeclaration'

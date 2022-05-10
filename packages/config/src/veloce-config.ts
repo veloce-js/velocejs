@@ -12,19 +12,21 @@ export class VeloceConfig {
   private _content?: VeloceConfigEntry
 
   private _isConfigReady!: Promise<VeloceConfigEntry>
-  private _isConfigResolve!: PromiseCallback
-  private _isConfigReject!: PromiseCallback
+  private _configResolve!: PromiseCallback
+  private _configReject!: PromiseCallback
 
   constructor(pathToConfigFile?: string) {
     this._setupCallback()
-
     const cwd = process.cwd()
+    // we only throw error when dev provide a file that doesn't exist
     if (pathToConfigFile) {
       if (!fsx.existsSync(pathToConfigFile)) {
-        this._isConfigReject(true)
-        throw new Error(`${pathToConfigFile} does not exist!`)
+        const msg = `${pathToConfigFile} does not exist!`
+        this._configReject(msg)
+        // throw new Error(msg)
+      } else {
+        this._readContent(pathToConfigFile)
       }
-      this._readContent(pathToConfigFile)
     } else {
       let found = false
       SUPPORT_EXT.forEach(ext => {
@@ -37,10 +39,16 @@ export class VeloceConfig {
         }
       })
       if (!found) {
-        // if there is no config file then we just reject it
-        this._isConfigReject(`No config file`)
+        // Even if there is no config file we just resolve with an empty object
+        // means there is no config
+        this._configResolve({})
       }
     }
+  }
+
+  /** this let us to able to tell if the system is ready or not */
+  public get isReady() {
+    return this._isConfigReady
   }
 
   /** The main method to get config */
@@ -62,14 +70,14 @@ export class VeloceConfig {
     import(pathToFile)
       .then((content: VeloceConfigEntry) => {
         this._content = content.default // there is a default before the config
-        this._isConfigResolve(this._content)
+        this._configResolve(this._content)
       })
   }
 
   private _setupCallback() {
     this._isConfigReady = new Promise((resolver, rejecter) => {
-      this._isConfigResolve = resolver
-      this._isConfigReject = rejecter
+      this._configResolve = resolver
+      this._configReject = rejecter
     })
   }
 

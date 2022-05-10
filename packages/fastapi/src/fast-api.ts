@@ -34,15 +34,20 @@ import {
   // JsonValidationEntry,
 } from './types'
 import bodyParser, { UrlPattern } from '@velocejs/bodyparser'
+import { VeloceConfig } from '@velocejs/config'
 import { queuePromisesProcess, toArray, assign } from '@jsonql/utils'
 import { JsonqlValidationError } from '@jsonql/errors'
 // here
+import {
+  isDebug,
+  PATH_TO_VELOCE_CONFIG
+} from './lib/constants'
 import { prepareArgs } from './lib/extract'
 import { createValidator } from './lib/validator'
 import {
   FastApiInterface
 } from './lib/fast-api-interface'
-const isDebug = process.env.DEBUG
+// setup
 import debugFn from 'debug'
 const debug = debugFn('velocejs:fast-api:main')
 // dummy stuff
@@ -53,6 +58,7 @@ const placeholderFn = (...args: any[] ) => { console.log(args) }
 // instead we create an instance of it
 export class FastApi implements FastApiInterface {
   private _uwsInstance: UwsServer
+  private _configurator: VeloceConfig
   private _written = false
   private _headers: UwsStringPairObj = {}
   private _status: number = placeholder
@@ -91,7 +97,11 @@ export class FastApi implements FastApiInterface {
     }
     this._uwsInstance.autoStart = false
     try {
-      // @TODO prepare the validation rules before as pass arg
+      // @0.4.0 we change this to a chain promise start up sequence
+      // check the config to see if there is one to generate contract
+      this._configurator = new VeloceConfig(PATH_TO_VELOCE_CONFIG)
+
+      // actually setting up the server to run
       this._uwsInstance.run(
         this.prepareRoutes(routes)
       )

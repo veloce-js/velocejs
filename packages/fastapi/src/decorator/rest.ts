@@ -10,6 +10,7 @@ import { RouteMetaInfo /*, JsonValidationEntry*/ } from '../types'
 import { routeKey, validationKey, protectedKey } from './keys'
 import { pickInputFile, tsClassParser } from '@jsonql/ast'
 import { STATIC_TYPE, RAW_TYPE } from '@velocejs/server'
+import { METHOD_TO_RUN } from '../lib/constants'
 // import debug from 'debug'
 // const debugFn = debug('velocejs:fastapi:decorator:Rest')
 /** This should be generic that could apply to different Decorator init */
@@ -29,8 +30,8 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
           const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
           const validations = Reflect.getOwnMetadata(validationKey, target) || []
           const protectedRoute = Reflect.getOwnMetadata(protectedKey, target) || []
-          // little trick to get rip of the warning 
-          this['prepare'](
+          // little trick to get rip of the warning
+          this[METHOD_TO_RUN](
             mergeInfo(map, existingRoutes, validations, protectedRoute)
           )
         })

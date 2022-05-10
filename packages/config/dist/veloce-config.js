@@ -10,12 +10,16 @@ class VeloceConfig {
     constructor(pathToConfigFile) {
         this._setupCallback();
         const cwd = process.cwd();
+        // we only throw error when dev provide a file that doesn't exist
         if (pathToConfigFile) {
             if (!fsx.existsSync(pathToConfigFile)) {
-                this._isConfigReject(true);
-                throw new Error(`${pathToConfigFile} does not exist!`);
+                const msg = `${pathToConfigFile} does not exist!`;
+                this._configReject(msg);
+                // throw new Error(msg)
             }
-            this._readContent(pathToConfigFile);
+            else {
+                this._readContent(pathToConfigFile);
+            }
         }
         else {
             let found = false;
@@ -29,10 +33,15 @@ class VeloceConfig {
                 }
             });
             if (!found) {
-                // if there is no config file then we just reject it
-                this._isConfigReject(`No config file`);
+                // Even if there is no config file we just resolve with an empty object
+                // means there is no config
+                this._configResolve({});
             }
         }
+    }
+    /** this let us to able to tell if the system is ready or not */
+    get isReady() {
+        return this._isConfigReady;
     }
     /** The main method to get config */
     getConfig(moduleName) {
@@ -51,13 +60,13 @@ class VeloceConfig {
         this._src = pathToFile;
         Promise.resolve().then(() => tslib_1.__importStar(require(pathToFile))).then((content) => {
             this._content = content.default; // there is a default before the config
-            this._isConfigResolve(this._content);
+            this._configResolve(this._content);
         });
     }
     _setupCallback() {
         this._isConfigReady = new Promise((resolver, rejecter) => {
-            this._isConfigResolve = resolver;
-            this._isConfigReject = rejecter;
+            this._configResolve = resolver;
+            this._configReject = rejecter;
         });
     }
     /** allow using dot notation path to extract content */
