@@ -1,10 +1,9 @@
 // this use a different name
 import { join } from 'node:path'
-
-const __dirname = import.meta.url
+import { __dirname } from '../../src'
 
 export default {
   contract: {
-    cacheDir: join(__dirname, 'cache')
+    cacheDir: join(__dirname(import.meta.url), 'cache')
   }
 }

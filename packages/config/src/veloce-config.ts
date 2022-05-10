@@ -30,9 +30,7 @@ export class VeloceConfig {
       SUPPORT_EXT.forEach(ext => {
         if (!this._src) {
           const file = join(cwd, [ FILE_NAME, ext].join('.') )
-          console.log(file)
           if ( fsx.existsSync(file) ) {
-
             found = true
             this._readContent(file)
           }
@@ -49,8 +47,8 @@ export class VeloceConfig {
     this._src = pathToFile
     import(pathToFile)
       .then((content: VeloceConfigEntry) => {
-        this._content = content
-        this._isConfigResolve(content)
+        this._content = content.default // there is a default before the config
+        this._isConfigResolve(this._content)
       })
   }
 
@@ -63,14 +61,36 @@ export class VeloceConfig {
 
   public async getConfig(moduleName?: string) {
     if (this._content) {
-      const config = moduleName ? this._content[moduleName] : this._content
+      const config = this._getByPath(this._content, moduleName)
       return config ?
         Promise.resolve(config) :
         Promise.reject(`${moduleName} not found in config`)
     }
     return this._isConfigReady
             .then((config: VeloceConfigEntry) =>
-              moduleName ? config[moduleName] : config
+              this._getByPath(config, moduleName)
             )
+  }
+
+  /** allow using dot notation path to extract content */
+  private _getByPath(content: VeloceConfigEntry, moduleName?: string) {
+    if (moduleName && moduleName.indexOf('.')) {
+      const parts = moduleName.split('.')
+      const ctn = parts.length
+      let _tmp: any
+      for (let i = 0; i < ctn; ++i) {
+        const key = parts[i]
+        if (_tmp && _tmp[key]) {
+          _tmp = _tmp[key]
+        } else {
+          _tmp = content[key]
+        }
+        if (i === ctn - 1) {
+          return _tmp
+        }
+      }
+    } else {
+      return moduleName ? content[moduleName] : content
+    }
   }
 }
