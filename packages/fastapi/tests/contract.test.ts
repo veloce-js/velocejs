@@ -26,7 +26,7 @@ test.after(() => {
 })
 
 
-test(`Testing API with config and contract`, async  t => {
+test.skip(`Testing API with config and contract`, async  t => {
 
   const res = await Fetch(`${url}${VELOCE_DEFAULTS.contract.path}`)
 

@@ -139,9 +139,9 @@ export class FastApi implements FastApiInterface {
 
       return this._config.getConfig(CONTRACT_KEY)
         .then((config: {[key: string]: string}) => {
-          console.log('config', config)
+          debug('config', config)
           if (config && config.cacheDir) {
-            console.log(apiType, this._routeForContract)
+            debug(apiType, this._routeForContract)
             this._contract = new JsonqlContract(
               this._routeForContract
             ) // we didn't provde the apiType here @TODO when we add jsonql
@@ -209,7 +209,7 @@ export class FastApi implements FastApiInterface {
     const _route = checkFn(type, path)
     // also add this to the route that can create contract - if we need it
     const _path = _route !== '' ? _route : path
-    this._prepareRouteForContract(propertyName, args, validation, type, _path)
+    this._prepareRouteForContract(propertyName, args)
 
     return {
       type,
@@ -226,12 +226,9 @@ export class FastApi implements FastApiInterface {
   /** just wrap this together to make it look neater */
   private _prepareRouteForContract(
     propertyName: string,
-    args: any[],
-    validation: any,
-    type: string,
-    path: string
+    args: any[]
   ): void {
-    const entry = {[propertyName]: { params: args, validation, type, path}}
+    const entry = {[propertyName]: toArray(args)}
 
     this._routeForContract = assign(this._routeForContract, entry)
   }

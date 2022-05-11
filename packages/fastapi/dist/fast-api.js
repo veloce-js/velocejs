@@ -7,6 +7,7 @@ const server_1 = require("@velocejs/server");
 const constants_1 = require("@jsonql/constants");
 const bodyparser_1 = tslib_1.__importStar(require("@velocejs/bodyparser"));
 const config_1 = require("@velocejs/config");
+const contract_1 = require("@jsonql/contract");
 const utils_1 = require("@jsonql/utils");
 // here
 const constants_2 = require("./lib/constants");
@@ -22,7 +23,9 @@ const placeholderFn = (...args) => { console.log(args); };
 // instead we create an instance of it
 class FastApi {
     _uwsInstance;
-    _configurator;
+    _config;
+    _contract;
+    _routeForContract = {};
     _written = false;
     _headers = {};
     _status = placeholder;
@@ -54,30 +57,54 @@ class FastApi {
     // instead of using a Prepare decorator and ugly call the super.run
     // we use a class decorator to call this method on init
     // Dev can do @Rest(config)
-    prepare(routes) {
+    prepare(routes, apiType = constants_1.REST_NAME) {
         if (constants_2.isDebug) {
             console.time('FastApiStartUp');
         }
         this._uwsInstance.autoStart = false;
-        try {
-            // @0.4.0 we change this to a chain promise start up sequence
-            // check the config to see if there is one to generate contract
-            this._configurator = new config_1.VeloceConfig(constants_2.PATH_TO_VELOCE_CONFIG);
-            this._configurator.isReady.then(() => {
-                // actually setting up the server to run
-                this._uwsInstance.run(this.prepareRoutes(routes));
-                // create a nextTick effect
-                setTimeout(() => {
-                    this._onConfigWait(true);
-                }, 0);
-            });
-        }
-        catch (e) {
+        // @0.4.0 we change this to a chain promise start up sequence
+        // check the config to see if there is one to generate contract
+        const vc = new config_1.VeloceConfig();
+        this._config = vc; // for re-use later
+        (0, utils_1.chainProcessPromises)((routes) => vc.isReady.then(() => routes), // this is just pause for the isReady
+        this._prepareRoutes.bind(this), // repare the normal route as well as the contract route
+        this._prepareContract(apiType), // here if we have setup the contract then insert route as well
+        this._run.bind(this) // actually run it
+        )(routes)
+            .then(() => {
+            this._onConfigWait(true);
+        })
+            .catch((e) => {
             this._onConfigError(e);
-        }
+        });
     }
-    // Mapping all the string name to method and supply to UwsServer run method
-    prepareRoutes(meta) {
+    /** whether to setup a contract or not, if there is contract setup then we return a new route */
+    _prepareContract(apiType) {
+        return async (routes) => {
+            return this._config.getConfig(config_1.CONTRACT_KEY)
+                .then((config) => {
+                debug('config', config);
+                if (config && config.cacheDir) {
+                    debug(apiType, this._routeForContract);
+                    this._contract = new contract_1.JsonqlContract(this._routeForContract); // we didn't provde the apiType here @TODO when we add jsonql
+                    return this._createContractRoute(routes, config);
+                    // return a new route info here
+                }
+                return routes; // just return it if there is none
+            });
+        };
+    }
+    /** generate an additonal route for the contract */
+    _createContractRoute(routes, config) {
+        routes.push({
+            path: config.path,
+            type: config.method,
+            handler: this._serveContract
+        });
+        return routes;
+    }
+    /** Mapping all the string name to method and supply to UwsServer run method */
+    async _prepareRoutes(meta) {
         const checkFn = this._prepareDynamicRoute(new WeakSet());
         return meta.map(m => {
             const { path, type, propertyName, validation } = m;
@@ -105,11 +132,19 @@ class FastApi {
     /** TS script force it to make it looks so damn bad for all their non-sense rules */
     _prepareNormalRoute(type, path, propertyName, args, validation, checkFn) {
         const _route = checkFn(type, path);
+        // also add this to the route that can create contract - if we need it
+        const _path = _route !== '' ? _route : path;
+        this._prepareRouteForContract(propertyName, args, validation, type, _path);
         return {
             type,
-            path: _route !== '' ? _route : path,
+            path: _path,
             handler: this._mapMethodToHandler(propertyName, args, validation, _route)
         };
+    }
+    /** just wrap this together to make it look neater */
+    _prepareRouteForContract(propertyName, args, validation, type, path) {
+        const entry = { [propertyName]: { params: args, validation, type, path } };
+        this._routeForContract = (0, utils_1.assign)(this._routeForContract, entry);
     }
     /** check if there is a dynamic route and prepare it */
     _prepareDynamicRoute(tmpSet) {
@@ -184,6 +219,11 @@ class FastApi {
             return ctx;
         };
     }
+    /** binding method to the uws server */
+    async _run(routes) {
+        console.log('routes', routes);
+        return this._uwsInstance.run(routes);
+    }
     /** split out from above because we still need to handle the user provide middlewares */
     _handleMiddlewares(...args) {
         // @TODO if there is any middleware we insert that before the validation pos 1
@@ -243,7 +283,9 @@ class FastApi {
     // take the argument list and the input to create the correct arguments
     _applyArgs(argNames, params, argsList) {
         // spread argument
-        if (argsList[0] && argsList[0][constants_1.TS_TYPE_NAME] && argsList[0][constants_1.TS_TYPE_NAME] === constants_1.SPREAD_ARG_TYPE) {
+        if (argsList[0] &&
+            argsList[0][constants_1.TS_TYPE_NAME] &&
+            argsList[0][constants_1.TS_TYPE_NAME] === constants_1.SPREAD_ARG_TYPE) {
             const _args = [];
             for (const key in params) {
                 _args.push(params[key]);
@@ -351,6 +393,15 @@ class FastApi {
     // This is a global override for the status when validation failed
     set validationErrorStatus(status) {
         this._validationErrStatus = status || 417;
+    }
+    /**
+     * The interface to serve up the contract, it's public but prefix underscore to avoid override
+     */
+    _serveContract() {
+        const json = constants_2.isDev ?
+            this._contract.output() :
+            this._contract.serve(this._config.getConfig(`${config_1.CONTRACT_KEY}.${config_1.CACHE_DIR}`));
+        this._render('json', json);
     }
     /**
      * We remap some of the methods from UwsServer to here for easier to use

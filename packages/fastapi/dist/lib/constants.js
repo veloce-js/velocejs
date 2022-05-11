@@ -1,31 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PATH_TO_VELOCE_CONFIG = exports.METHOD_TO_RUN = exports.isDebug = exports.RULE_FULL = exports.RULE_SIMPLE = exports.RULE_LIST = exports.RULE_AUTOMATIC = exports.PARAMS_KEY = exports.OPTIONS_KEY = exports.RULES_KEY = exports.NIL = exports.BOUNDARY = void 0;
+exports.METHOD_TO_RUN = exports.isDebug = exports.isDev = exports.RULE_FULL = exports.RULE_SIMPLE = exports.RULE_LIST = exports.RULE_AUTOMATIC = exports.PARAMS_KEY = exports.OPTIONS_KEY = exports.RULES_KEY = exports.NIL = exports.BOUNDARY = void 0;
+// this has moved to bodyparser @TODO remove later
 exports.BOUNDARY = 'boundary';
 exports.NIL = 'NIL';
 exports.RULES_KEY = 'rules';
 exports.OPTIONS_KEY = 'options';
 exports.PARAMS_KEY = 'params';
 exports.RULE_AUTOMATIC = 'rule-automatic';
-// they might not be needed anymore
+// they might not be needed anymore @TODO remove later
 exports.RULE_LIST = 'rule-list';
 exports.RULE_SIMPLE = 'rule-simple';
 exports.RULE_FULL = 'rule-full';
-exports.isDebug = process.env.DEBUG;
+exports.isDev = process.env.NODE_ENV === 'development';
+exports.isDebug = process.env.DEBUG !== undefined;
 // this is the method that we need to call in the Top Decorator
 exports.METHOD_TO_RUN = 'prepare';
-// allow the dev to override this in the command line
-exports.PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG;
-/*
-export const CLASS_TYPE = 'ClassDeclaration'
-export const EXPORT_TYPE = 'ExportDeclaration'
-export const CLASS_METHOD = 'ClassMethod'
-export const ASSIGN_PATTERN = 'AssignmentPattern'
-export const OBJ_EXP = 'ObjectExpression'
-export const ARR_EXP = 'ArrayExpression'
-export const BOO_LIT = 'BooleanLiteral'
-export const NUM_LIT = 'NumericLiteral'
-export const STR_LIT = 'StringLiteral'
-export const KEY_TYPE = 'TsKeywordType'
-export const UNION_TYPE = 'TsUnionType'
-*/

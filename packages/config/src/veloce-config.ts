@@ -40,6 +40,7 @@ export class VeloceConfig {
       SUPPORT_EXT.forEach(ext => {
         if (!this._src) {
           const file = join(cwd, [ FILE_NAME, ext].join('.') )
+          debug('search for file', file)
           if ( fsx.existsSync(file) ) {
             found = true
             this._readContent(file)

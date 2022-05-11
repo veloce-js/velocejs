@@ -3,7 +3,9 @@ import { RouteMetaInfo, VeloceMiddleware } from './types';
 import { FastApiInterface } from './lib/fast-api-interface';
 export declare class FastApi implements FastApiInterface {
     private _uwsInstance;
-    private _configurator;
+    private _config;
+    private _contract;
+    private _routeForContract;
     private _written;
     private _headers;
     private _status;
@@ -20,10 +22,17 @@ export declare class FastApi implements FastApiInterface {
     protected jsonWriter: UwsJsonWriter;
     validatorPlugins: Array<any>;
     constructor(config?: AppOptions);
-    protected prepare(routes: Array<RouteMetaInfo>): void;
-    private prepareRoutes;
+    protected prepare(routes: Array<RouteMetaInfo>, apiType?: string): void;
+    /** whether to setup a contract or not, if there is contract setup then we return a new route */
+    private _prepareContract;
+    /** generate an additonal route for the contract */
+    private _createContractRoute;
+    /** Mapping all the string name to method and supply to UwsServer run method */
+    private _prepareRoutes;
     /** TS script force it to make it looks so damn bad for all their non-sense rules */
     private _prepareNormalRoute;
+    /** just wrap this together to make it look neater */
+    private _prepareRouteForContract;
     /** check if there is a dynamic route and prepare it */
     private _prepareDynamicRoute;
     private _mapMethodToHandler;
@@ -31,6 +40,8 @@ export declare class FastApi implements FastApiInterface {
     private _prepareValidator;
     /** get call after the bodyParser, and prepare for the operation */
     private _prepareCtx;
+    /** binding method to the uws server */
+    private _run;
     /** split out from above because we still need to handle the user provide middlewares */
     private _handleMiddlewares;
     private _handleValidationError;
@@ -53,6 +64,10 @@ export declare class FastApi implements FastApiInterface {
     /** dev can register their global middleware here */
     use(middlewares: VeloceMiddleware | Array<VeloceMiddleware>): void;
     set validationErrorStatus(status: number);
+    /**
+     * The interface to serve up the contract, it's public but prefix underscore to avoid override
+     */
+    _serveContract(): void;
     /**
      * We remap some of the methods from UwsServer to here for easier to use
      */
