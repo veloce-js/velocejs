@@ -18,7 +18,7 @@ test(`Should throw error if the dev provide file doesn't exist`, async (t) => {
   const configX = new VeloceConfig(nonExistConfigFile)
 
   configX.isReady.catch((e: Error) => {
-    
+
     t.truthy(e)
   })
 
@@ -48,6 +48,8 @@ test(`Should able to read the config using a path to the content custom path`, a
   const config = await config2.getConfig('contract')
 
   t.true(config.cacheDir !== undefined)
+
+  t.is(config.method, 'get', `We should also able to get the default value`)
 })
 
 test(`Should able to use dot notation path to access the content directly`, async (t) => {

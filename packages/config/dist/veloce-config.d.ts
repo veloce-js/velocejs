@@ -10,7 +10,11 @@ export declare class VeloceConfig {
     get isReady(): Promise<VeloceConfigEntry>;
     /** The main method to get config */
     getConfig(moduleName?: string): Promise<any>;
+    /** storing the content of the config file */
     private _readContent;
+    /** merge default info into the dev provide one */
+    private _prepareConfig;
+    /** setup the api internal callback to know if it's ready to use  */
     private _setupCallback;
     /** allow using dot notation path to extract content */
     private _getByPath;

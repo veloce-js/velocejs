@@ -2,7 +2,8 @@ import * as fsx from 'fs-extra'
 import { join } from 'node:path'
 import {
   FILE_NAME,
-  SUPPORT_EXT
+  SUPPORT_EXT,
+  VELOCE_DEFAULTS,
 } from './constants'
 import { VeloceConfigEntry, PromiseCallback } from './types'
 // main
@@ -63,15 +64,28 @@ export class VeloceConfig {
             )
   }
 
+  /** storing the content of the config file */
   private _readContent(pathToFile: string) {
     this._src = pathToFile
     import(pathToFile)
       .then((content: VeloceConfigEntry) => {
-        this._content = content.default // there is a default before the config
+        this._content = this._prepareConfig(content.default) // there is a default before the config
         this._configResolve(this._content)
       })
   }
 
+  /** merge default info into the dev provide one */
+  private _prepareConfig(content: VeloceConfigEntry) {
+    const _config = {}
+    for (const key in content) {
+      _config[key] = VELOCE_DEFAULTS[key] !== undefined ?
+                     Object.assign({}, VELOCE_DEFAULTS[key], content[key]) :
+                     content[key]
+    }
+    return _config
+  }
+
+  /** setup the api internal callback to know if it's ready to use  */
   private _setupCallback() {
     this._isConfigReady = new Promise((resolver, rejecter) => {
       this._configResolve = resolver

@@ -54,13 +54,25 @@ class VeloceConfig {
                 .then((config) => this._getByPath(config, moduleName));
         });
     }
+    /** storing the content of the config file */
     _readContent(pathToFile) {
         this._src = pathToFile;
         Promise.resolve().then(() => tslib_1.__importStar(require(pathToFile))).then((content) => {
-            this._content = content.default; // there is a default before the config
+            this._content = this._prepareConfig(content.default); // there is a default before the config
             this._configResolve(this._content);
         });
     }
+    /** merge default info into the dev provide one */
+    _prepareConfig(content) {
+        const _config = {};
+        for (const key in content) {
+            _config[key] = constants_1.VELOCE_DEFAULTS[key] !== undefined ?
+                Object.assign({}, constants_1.VELOCE_DEFAULTS[key], content[key]) :
+                content[key];
+        }
+        return _config;
+    }
+    /** setup the api internal callback to know if it's ready to use  */
     _setupCallback() {
         this._isConfigReady = new Promise((resolver, rejecter) => {
             this._configResolve = resolver;

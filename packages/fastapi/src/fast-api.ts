@@ -386,9 +386,16 @@ export class FastApi implements FastApiInterface {
   }
 
   // take the argument list and the input to create the correct arguments
-  private _applyArgs(argNames: Array<string>, params: object, argsList: Array<UwsStringPairObj>) {
+  private _applyArgs(
+    argNames: Array<string>,
+    params: object,
+    argsList: Array<UwsStringPairObj>
+  ) {
     // spread argument
-    if (argsList[0] && argsList[0][TS_TYPE_NAME] && argsList[0][TS_TYPE_NAME] === SPREAD_ARG_TYPE) {
+    if (argsList[0] &&
+        argsList[0][TS_TYPE_NAME] &&
+        argsList[0][TS_TYPE_NAME] === SPREAD_ARG_TYPE
+    ) {
       const _args: any[] = []
       for (const key in params) {
         _args.push(params[key])
@@ -512,6 +519,13 @@ export class FastApi implements FastApiInterface {
   // This is a global override for the status when validation failed
   public set validationErrorStatus(status: number) {
     this._validationErrStatus = status || 417
+  }
+
+  /**
+   * The interface to serve up the contract, it's public but prefix underscore to avoid override
+   */
+  public _serveContract() {
+    return '@TODO'
   }
 
   /**
