@@ -95,10 +95,17 @@ class FastApi {
     }
     /** generate an additonal route for the contract */
     _createContractRoute(routes, config) {
+        const name = '_serveContract';
+        const params = [];
+        /*
+        it doesn't make much sense to include the contract route
+        because the client needs to know where to find it first
+        this._contract.data(name, { name, params, route: config.path, method: config.method})
+        */
         routes.push({
             path: config.path,
             type: config.method,
-            handler: this._mapMethodToHandler('_serveContract', [], false)
+            handler: this._mapMethodToHandler(name, params, false)
         });
         return routes;
     }
@@ -133,7 +140,7 @@ class FastApi {
         const _route = checkFn(type, path);
         // also add this to the route that can create contract - if we need it
         const _path = _route !== '' ? _route : path;
-        this._prepareRouteForContract(propertyName, args);
+        this._prepareRouteForContract(propertyName, args, type, path);
         return {
             type,
             path: _path,
@@ -141,8 +148,12 @@ class FastApi {
         };
     }
     /** just wrap this together to make it look neater */
-    _prepareRouteForContract(propertyName, args) {
-        const entry = { [propertyName]: (0, utils_1.toArray)(args) };
+    _prepareRouteForContract(propertyName, args, type, path) {
+        const entry = { [propertyName]: {
+                params: (0, utils_1.toArray)(args),
+                method: type,
+                route: path
+            } };
         this._routeForContract = (0, utils_1.assign)(this._routeForContract, entry);
     }
     /** check if there is a dynamic route and prepare it */
@@ -220,7 +231,7 @@ class FastApi {
     }
     /** binding method to the uws server */
     async _run(routes) {
-        console.log('routes', routes);
+        debug('routes', routes);
         return this._uwsInstance.run(routes);
     }
     /** split out from above because we still need to handle the user provide middlewares */
@@ -397,10 +408,13 @@ class FastApi {
      * The interface to serve up the contract, it's public but prefix underscore to avoid override
      */
     _serveContract() {
-        const json = constants_2.isDev ?
+        debug('call _serveContract'); // if I remove this then it doens't work??? @BUG
+        Promise.resolve(constants_2.isDev ?
             this._contract.output() :
-            this._contract.serve(this._config.getConfig(`${config_1.CONTRACT_KEY}.${config_1.CACHE_DIR}`));
-        this._render('json', json);
+            this._config.getConfig(`${config_1.CONTRACT_KEY}.${config_1.CACHE_DIR}`)
+                .then((cacheDir) => this._contract.serve(cacheDir))).then((json) => {
+            this._render('json', json);
+        });
     }
     /**
      * We remap some of the methods from UwsServer to here for easier to use

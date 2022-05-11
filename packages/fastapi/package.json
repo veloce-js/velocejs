@@ -35,7 +35,7 @@
   "dependencies": {
     "@jsonql/ast": "^0.8.3",
     "@jsonql/constants": "^0.7.2",
-    "@jsonql/contract": "^0.4.0",
+    "@jsonql/contract": "^0.4.1",
     "@jsonql/errors": "^0.6.1",
     "@jsonql/utils": "^0.6.5",
     "@jsonql/validator": "^0.4.0",

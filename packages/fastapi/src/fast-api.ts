@@ -159,14 +159,11 @@ export class FastApi implements FastApiInterface {
   ): Array<UwsRouteSetup> {
     const name: string = '_serveContract'
     const params: Array<null> = []
-    // we also need to add back the route info to the contract object
     /*
-    routes.forEach((route: any) => {
-      console.log('route', route)
-      this._contract.data(route.name, { route: route.path, method: route.type})
-    }) */
+    it doesn't make much sense to include the contract route
+    because the client needs to know where to find it first
     this._contract.data(name, { name, params, route: config.path, method: config.method})
-
+    */
     routes.push({
       path: config.path,
       type: config.method,
@@ -217,8 +214,8 @@ export class FastApi implements FastApiInterface {
     const _route = checkFn(type, path)
     // also add this to the route that can create contract - if we need it
     const _path = _route !== '' ? _route : path
-    this._prepareRouteForContract(propertyName, args)
-    
+    this._prepareRouteForContract(propertyName, args, type, path)
+
     return {
       type,
       path: _path,
@@ -234,10 +231,15 @@ export class FastApi implements FastApiInterface {
   /** just wrap this together to make it look neater */
   private _prepareRouteForContract(
     propertyName: string,
-    args: any[]
+    args: any[],
+    type: string,
+    path: string,
   ): void {
-    const entry = {[propertyName]: toArray(args)}
-
+    const entry = {[propertyName]: {
+      params: toArray(args),
+      method: type,
+      route: path
+    }}
     this._routeForContract = assign(this._routeForContract, entry)
   }
 
@@ -340,7 +342,7 @@ export class FastApi implements FastApiInterface {
 
   /** binding method to the uws server */
   private async _run(routes: Array<UwsRouteSetup>) {
-    console.log('routes', routes)
+    debug('routes', routes)
     return this._uwsInstance.run(routes)
   }
 
@@ -555,6 +557,7 @@ export class FastApi implements FastApiInterface {
    * The interface to serve up the contract, it's public but prefix underscore to avoid override
    */
   public _serveContract() {
+    debug('call _serveContract') // if I remove this then it doens't work??? @BUG
     Promise.resolve(
       isDev ?
           this._contract.output() :

@@ -9,7 +9,6 @@ import { join } from 'node:path'
 import { VELOCE_DEFAULTS } from '@velocejs/config'
 import { ApiWithContract } from './fixtures/contract/api-with-contract'
 
-
 const veloceConfig = process.env.VELOCE_CONFIG
 
 let api: ApiWithContract
@@ -34,14 +33,13 @@ test.after(() => {
   }
 })
 
-test(`Testing API with config and contract`, async  t => {
+test.skip(`Testing API with config and contract`, async  t => {
   t.plan(1)
   if (veloceConfig) {
     const res = await Fetch(`${url}${VELOCE_DEFAULTS.contract.path}`)
     const json = await res.json()
     // console.dir(json, { depth: null })
     t.truthy(json)
-
   } else {
     t.pass()
   }
