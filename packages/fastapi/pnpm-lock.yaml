@@ -4,7 +4,7 @@ specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/ast': ^0.8.3
   '@jsonql/constants': ^0.7.2
-  '@jsonql/contract': ^0.3.1
+  '@jsonql/contract': ^0.4.0
   '@jsonql/errors': ^0.6.1
   '@jsonql/utils': ^0.6.5
   '@jsonql/validator': ^0.4.0
@@ -34,7 +34,7 @@ specifiers:
 dependencies:
   '@jsonql/ast': 0.8.3
   '@jsonql/constants': 0.7.2
-  '@jsonql/contract': 0.3.1
+  '@jsonql/contract': 0.4.0
   '@jsonql/errors': 0.6.1
   '@jsonql/utils': 0.6.5
   '@jsonql/validator': 0.4.0
@@ -365,8 +365,8 @@ packages:
     resolution: {integrity: sha512-1matJKybfmSIZp8eoSsq7463QHkYymAXZ4OzZKd6evPMT931E6XQbXqHU7F5R9UzsdLIQ4myDM309Tb7i4ceBw==}
     dev: false
 
-  /@jsonql/contract/0.3.1:
-    resolution: {integrity: sha512-MXJcU4d+Fm2/oN892yGCoEoqJN9ptiFFBut17437VAoQHCYG+AyR300I5iKTUdlJ9+7SLLkamU9CF2FBj7dasg==}
+  /@jsonql/contract/0.4.0:
+    resolution: {integrity: sha512-oCe1hkzlSnZfX2UA1PJcCPuXcdn2bWx16typmFW795CpjgH7MrgKXwPxUf5hucQwu6kM2w4fliSpUvqNS/BvQg==}
     dependencies:
       '@jsonql/ast': 0.8.3
       '@jsonql/constants': 0.7.2

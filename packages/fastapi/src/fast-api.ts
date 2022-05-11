@@ -157,12 +157,21 @@ export class FastApi implements FastApiInterface {
     routes: Array<UwsRouteSetup>,
     config: {[key: string]: string}
   ): Array<UwsRouteSetup> {
+    const name: string = '_serveContract'
+    const params: Array<null> = []
+    // we also need to add back the route info to the contract object
+    /*
+    routes.forEach((route: any) => {
+      console.log('route', route)
+      this._contract.data(route.name, { route: route.path, method: route.type})
+    }) */
+    this._contract.data(name, { name, params, route: config.path, method: config.method})
+
     routes.push({
       path: config.path,
       type: config.method,
-      handler: this._mapMethodToHandler('_serveContract', [], false)
+      handler: this._mapMethodToHandler(name, params, false)
     })
-
     return routes
   }
 
@@ -209,7 +218,7 @@ export class FastApi implements FastApiInterface {
     // also add this to the route that can create contract - if we need it
     const _path = _route !== '' ? _route : path
     this._prepareRouteForContract(propertyName, args)
-
+    
     return {
       type,
       path: _path,
@@ -546,13 +555,14 @@ export class FastApi implements FastApiInterface {
    * The interface to serve up the contract, it's public but prefix underscore to avoid override
    */
   public _serveContract() {
-    const json = isDev ?
-                 this._contract.output() :
-                 this._contract.serve(
-                   this._config.getConfig(`${CONTRACT_KEY}.${CACHE_DIR}`)
-                 )
-
-    this._render('json', json)
+    Promise.resolve(
+      isDev ?
+          this._contract.output() :
+          this._config.getConfig(`${CONTRACT_KEY}.${CACHE_DIR}`)
+            .then((cacheDir: string) => this._contract.serve(cacheDir))
+    ).then((json: any) => {
+      this._render('json', json)
+    })
   }
 
   /**
