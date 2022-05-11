@@ -114,10 +114,9 @@ export class FastApi implements FastApiInterface {
     this._uwsInstance.autoStart = false
     // @0.4.0 we change this to a chain promise start up sequence
     // check the config to see if there is one to generate contract
-    const vc = new VeloceConfig()
-    this._config = vc // for re-use later
+    this._config = new VeloceConfig()
     chainProcessPromises(
-      (routes) => vc.isReady.then(() => routes), // this is just pause for the isReady
+      (routes) => this._config.isReady.then(() => routes), // this is just pause for the isReady
       this._prepareRoutes.bind(this),  // repare the normal route as well as the contract route
       this._prepareContract(apiType), // here if we have setup the contract then insert route as well
       this._run.bind(this) // actually run it
@@ -161,7 +160,7 @@ export class FastApi implements FastApiInterface {
     routes.push({
       path: config.path,
       type: config.method,
-      handler: this._serveContract
+      handler: this._mapMethodToHandler('_serveContract', [], false)
     })
 
     return routes
