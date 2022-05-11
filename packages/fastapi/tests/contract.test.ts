@@ -1,11 +1,15 @@
 // testing the contract generator
+// override the default
+process.env.VELOCE_CONFIG = join(__dirname, 'fixtures', 'veloce.config.js')
+
 import test from 'ava'
 import Fetch from 'node-fetch'
 import { removeSync } from 'fs-extra'
+
+import { VELOCE_DEFAULTS } from '@velocejs/config'
+
 import { ApiWithContract } from './fixtures/contract/api-with-contract'
 import { join } from 'node:path'
-// override the default
-process.env.VELOCE_CONFIG = join(__dirname, 'fixtures', 'veloce.config.js')
 
 let api: ApiWithContract
 let url: string
@@ -18,8 +22,17 @@ test.before(async () => {
 
 test.after(() => {
   console.log('afterward')
-  
+
 })
 
 
-test.todo(`Testing API with config and contract`)
+test(`Testing API with config and contract`, async  t => {
+
+  const res = await Fetch(`${url}${VELOCE_DEFAULTS.contract.path}`)
+
+  const json = await res.json()
+
+  console.dir(json, { depth: null })
+
+  t.truthy(json)
+})

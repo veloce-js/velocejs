@@ -1,5 +1,5 @@
 import * as fsx from 'fs-extra'
-import { join } from 'node:path'
+import { join, resolve } from 'node:path'
 import {
   FILE_NAME,
   SUPPORT_EXT,
@@ -10,6 +10,8 @@ import {
   VeloceConfigEntry,
   PromiseCallback
 } from './types'
+import debugFn from 'debug'
+const debug = debugFn('velocejs:config:class')
 // main
 export class VeloceConfig {
 
@@ -23,9 +25,11 @@ export class VeloceConfig {
   constructor(pathToConfigFile?: string) {
     this._setupCallback()
     const cwd = process.cwd()
+    let _path = pathToConfigFile || PATH_TO_VELOCE_CONFIG
     // we only throw error when dev provide a file that doesn't exist
-    if (pathToConfigFile || PATH_TO_VELOCE_CONFIG) {
-      const _path = pathToConfigFile || PATH_TO_VELOCE_CONFIG
+    if (_path) {
+      _path = resolve(_path)
+      debug('pathToConfigFile', _path)
       if (!fsx.existsSync(_path as string)) {
         this._configReject(new Error(`${_path} does not exist!`))
       } else {

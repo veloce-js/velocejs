@@ -116,14 +116,12 @@ export class FastApi implements FastApiInterface {
     // check the config to see if there is one to generate contract
     const vc = new VeloceConfig()
     this._config = vc // for re-use later
-    const ex = chainProcessPromises(
+    chainProcessPromises(
       (routes) => vc.isReady.then(() => routes), // this is just pause for the isReady
-      this._prepareRoutes,  // repare the normal route as well as the contract route
+      this._prepareRoutes.bind(this),  // repare the normal route as well as the contract route
       this._prepareContract(apiType), // here if we have setup the contract then insert route as well
-      this._run // actually run it
-    )
-
-    ex(routes)
+      this._run.bind(this) // actually run it
+    )(routes)
       .then(() => {
         this._onConfigWait(true)
       })
@@ -131,7 +129,6 @@ export class FastApi implements FastApiInterface {
         this._onConfigError(e)
       })
   }
-
 
   /** whether to setup a contract or not, if there is contract setup then we return a new route */
   private _prepareContract(
@@ -142,6 +139,7 @@ export class FastApi implements FastApiInterface {
 
       return this._config.getConfig(CONTRACT_KEY)
         .then((config: {[key: string]: string}) => {
+          console.log('config', config)
           if (config && config.cacheDir) {
             console.log(apiType, this._routeForContract)
             this._contract = new JsonqlContract(
@@ -337,6 +335,7 @@ export class FastApi implements FastApiInterface {
 
   /** binding method to the uws server */
   private async _run(routes: Array<UwsRouteSetup>) {
+    console.log('routes', routes)
     return this._uwsInstance.run(routes)
   }
 
