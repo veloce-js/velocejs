@@ -51,6 +51,7 @@ import {
 // here
 import {
   isDebug,
+  isDev,
 } from './lib/constants'
 import { prepareArgs } from './lib/extract'
 import { createValidator } from './lib/validator'
@@ -552,7 +553,13 @@ export class FastApi implements FastApiInterface {
    * The interface to serve up the contract, it's public but prefix underscore to avoid override
    */
   public _serveContract() {
-    return '@TODO'
+    const json = isDev ?
+                 this._contract.output() :
+                 this._contract.serve(
+                   this._config.getConfig(`${CONTRACT_KEY}.${CACHE_DIR}`)
+                 )
+
+    this._render('json', json)
   }
 
   /**
