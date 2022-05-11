@@ -8,6 +8,8 @@ export const PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG
 export const CONTRACT_KEY = 'contract'
 export const CACHE_DIR = 'cacheDir'
 
+export const SERVER_KEY = 'server'
+
 /*
   provide some of the default values for config
   For example:
@@ -25,8 +27,11 @@ export const CACHE_DIR = 'cacheDir'
 */
 
 export const VELOCE_DEFAULTS = {
-  contract: {
+  [CONTRACT_KEY]: {
     method: 'get',
     path: `${VELOCE_DEFAULT_URL}/contract`
+  },
+  [SERVER_KEY]: {
+    port: 0
   }
 }
