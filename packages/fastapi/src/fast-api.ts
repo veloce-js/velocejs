@@ -47,7 +47,9 @@ import {
 // here
 import {
   isDebug,
-  PATH_TO_VELOCE_CONFIG
+  PATH_TO_VELOCE_CONFIG,
+  CONTRACT_KEY,
+  CACHE_DIR,
 } from './lib/constants'
 import { prepareArgs } from './lib/extract'
 import { createValidator } from './lib/validator'
@@ -107,13 +109,13 @@ export class FastApi implements FastApiInterface {
     this._uwsInstance.autoStart = false
     // @0.4.0 we change this to a chain promise start up sequence
     // check the config to see if there is one to generate contract
-    const c = new VeloceConfig(PATH_TO_VELOCE_CONFIG)
-    this._config = c // for re-use later
+    const vc = new VeloceConfig(PATH_TO_VELOCE_CONFIG)
+    this._config = vc // for re-use later
     const ex = chainProcessPromises(
-      (routes) => c.isReady.then(() => routes),
-      this._prepareRoutes,
-      this._prepareContract(apiType),
-      this._run
+      (routes) => vc.isReady.then(() => routes), // this is just pause for the isReady
+      this._prepareRoutes,  // repare the normal route as well as the contract route
+      this._prepareContract(apiType), // here if we have setup the contract then insert route as well
+      this._run // actually run it
     )
 
     ex(routes)
@@ -125,40 +127,41 @@ export class FastApi implements FastApiInterface {
       })
   }
 
-  private _run(routes) {
-    this._uwsInstance.run(routes)
-    return Promise.resolve(routes)
-  }
-
-  /** just wrap this together to make it look neater */
-  private _prepareRouteForContract(
-    propertyName: string,
-    args: any[],
-    validation: any,
-    type: string,
-    path: string
-  ): void {
-    const entry = {[propertyName]: { params: args, validation, type, path}}
-
-    this._routeForContract = assign(this._routeForContract, entry)
-  }
 
   /** whether to setup a contract or not, if there is contract setup then we return a new route */
-  private async _prepareContract(
+  private _prepareContract(
     apiType: string
-  ): Promise<void> {
-    return this._config.getConfig('contract')
-    .then((config: {[key: string]: string}) => {
-      if (config && config.cacheDir) {
-        console.log(apiType, this._routeForContract)
-        this._contract = new JsonqlContract(
-          this._routeForContract,
-          apiType
-        )
-        // return a new route info here
-      }
+  ): (routes: Array<UwsRouteSetup>) => Promise<any> {
 
+    return async(routes: Array<UwsRouteSetup>) => {
+
+      return this._config.getConfig('contract')
+        .then((config: {[key: string]: string}) => {
+          if (config && config.cacheDir) {
+            console.log(apiType, this._routeForContract)
+            this._contract = new JsonqlContract(
+              this._routeForContract
+            ) // we didn't provde the apiType here @TODO when we add jsonql
+            return this._createContractRoute(routes, config)
+            // return a new route info here
+          }
+          return routes // just return it if there is none
+      })
+    }
+  }
+
+  /** generate an additonal route for the contract */
+  private _createContractRoute(
+    routes: Array<UwsRouteSetup>,
+    config: {[key: string]: string}
+  ): Array<UwsRouteSetup> {
+    routes.push({
+      path: config.path,
+      type: config.method,
+      handler: this._serveContract
     })
+
+    return routes
   }
 
   /** Mapping all the string name to method and supply to UwsServer run method */
@@ -215,6 +218,19 @@ export class FastApi implements FastApiInterface {
         _route
       )
     }
+  }
+
+  /** just wrap this together to make it look neater */
+  private _prepareRouteForContract(
+    propertyName: string,
+    args: any[],
+    validation: any,
+    type: string,
+    path: string
+  ): void {
+    const entry = {[propertyName]: { params: args, validation, type, path}}
+
+    this._routeForContract = assign(this._routeForContract, entry)
   }
 
   /** check if there is a dynamic route and prepare it */
@@ -291,6 +307,8 @@ export class FastApi implements FastApiInterface {
     }
   }
 
+
+
   /** get call after the bodyParser, and prepare for the operation */
   private _prepareCtx(
     propertyName: string,
@@ -312,6 +330,11 @@ export class FastApi implements FastApiInterface {
       debug('ctx', ctx)
       return ctx
     }
+  }
+
+  /** binding method to the uws server */
+  private async _run(routes: Array<UwsRouteSetup>) {
+    return this._uwsInstance.run(routes)
   }
 
   /** split out from above because we still need to handle the user provide middlewares */

@@ -18,18 +18,8 @@ export const isDebug = process.env.DEBUG
 // this is the method that we need to call in the Top Decorator
 export const METHOD_TO_RUN = 'prepare'
 // allow the dev to override this in the command line
-export const PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG 
+export const PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG
 
-/*
-export const CLASS_TYPE = 'ClassDeclaration'
-export const EXPORT_TYPE = 'ExportDeclaration'
-export const CLASS_METHOD = 'ClassMethod'
-export const ASSIGN_PATTERN = 'AssignmentPattern'
-export const OBJ_EXP = 'ObjectExpression'
-export const ARR_EXP = 'ArrayExpression'
-export const BOO_LIT = 'BooleanLiteral'
-export const NUM_LIT = 'NumericLiteral'
-export const STR_LIT = 'StringLiteral'
-export const KEY_TYPE = 'TsKeywordType'
-export const UNION_TYPE = 'TsUnionType'
-*/
+// tmp move somewhere else later
+export const CONTRACT_KEY = 'contract'
+export const CACHE_DIR = 'cacheDir'

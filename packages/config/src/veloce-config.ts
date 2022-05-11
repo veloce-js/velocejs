@@ -4,8 +4,12 @@ import {
   FILE_NAME,
   SUPPORT_EXT,
   VELOCE_DEFAULTS,
+  PATH_TO_VELOCE_CONFIG,
 } from './constants'
-import { VeloceConfigEntry, PromiseCallback } from './types'
+import {
+  VeloceConfigEntry,
+  PromiseCallback
+} from './types'
 // main
 export class VeloceConfig {
 
@@ -20,11 +24,12 @@ export class VeloceConfig {
     this._setupCallback()
     const cwd = process.cwd()
     // we only throw error when dev provide a file that doesn't exist
-    if (pathToConfigFile) {
-      if (!fsx.existsSync(pathToConfigFile)) {
-        this._configReject(new Error(`${pathToConfigFile} does not exist!`))
+    if (pathToConfigFile || PATH_TO_VELOCE_CONFIG) {
+      const _path = pathToConfigFile || PATH_TO_VELOCE_CONFIG
+      if (!fsx.existsSync(_path as string)) {
+        this._configReject(new Error(`${_path} does not exist!`))
       } else {
-        this._readContent(pathToConfigFile)
+        this._readContent(_path as string)
       }
     } else {
       let found = false
