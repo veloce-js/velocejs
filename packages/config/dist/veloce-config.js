@@ -11,12 +11,13 @@ class VeloceConfig {
         this._setupCallback();
         const cwd = process.cwd();
         // we only throw error when dev provide a file that doesn't exist
-        if (pathToConfigFile) {
-            if (!fsx.existsSync(pathToConfigFile)) {
-                this._configReject(new Error(`${pathToConfigFile} does not exist!`));
+        if (pathToConfigFile || constants_1.PATH_TO_VELOCE_CONFIG) {
+            const _path = pathToConfigFile || constants_1.PATH_TO_VELOCE_CONFIG;
+            if (!fsx.existsSync(_path)) {
+                this._configReject(new Error(`${_path} does not exist!`));
             }
             else {
-                this._readContent(pathToConfigFile);
+                this._readContent(_path);
             }
         }
         else {
