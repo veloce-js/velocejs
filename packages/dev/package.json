@@ -41,6 +41,7 @@
   },
   "homepage": "https://velocejs.com",
   "dependencies": {
-    "@velocejs/config": "workspace:^0.3.1"
+    "@velocejs/config": "workspace:^0.3.2",
+    "@velocejs/fastapi": "workspace:^0.3.0"
   }
 }
