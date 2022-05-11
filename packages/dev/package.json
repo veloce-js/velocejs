@@ -41,6 +41,6 @@
   },
   "homepage": "https://velocejs.com",
   "dependencies": {
-    "@velocejs/config": "workspace:^0.3.0"
+    "@velocejs/config": "workspace:^0.3.1"
   }
 }
