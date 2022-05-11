@@ -127,7 +127,7 @@ export class FastApi implements FastApiInterface {
       .then(() => {
         this._onConfigWait(true)
       })
-      .catch((e) => {
+      .catch((e: Error) => {
         this._onConfigError(e)
       })
   }
@@ -311,8 +311,6 @@ export class FastApi implements FastApiInterface {
                 })
     }
   }
-
-
 
   /** get call after the bodyParser, and prepare for the operation */
   private _prepareCtx(

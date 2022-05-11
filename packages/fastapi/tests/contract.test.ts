@@ -1,30 +1,25 @@
 // testing the contract generator
 import test from 'ava'
-import { chainPromises } from '@jsonql/utils'
+import Fetch from 'node-fetch'
+import { removeSync } from 'fs-extra'
+import { ApiWithContract } from './fixtures/contract/api-with-contract'
+import { join } from 'node:path'
+// override the default
+process.env.VELOCE_CONFIG = join(__dirname, 'fixtures', 'veloce.config.js')
 
-/*
-test.before(() => {
-
+let api: ApiWithContract
+let url: string
+test.before(async () => {
+  api = new ApiWithContract()
+  await api.start()
+  const info = api.fastApiInfo
+  url = `http://localhost:${info.port}`
 })
 
 test.after(() => {
-
-})
-*/
-
-test(`Try the chainPromises without any param`, async t => {
-  t.plan(1)
-  const promise1 = Promise.resolve(1)
-  const promise2 = Promise.reject(2)
-  const promise3 = Promise.resolve(3)
-
-  return chainPromises([promise1, promise2, promise3])
-    .then(result => {
-      t.deepEqual(result, [1,2,3])
-    })
-    .catch(error => {
-      t.is(error, 2)
-    })
+  console.log('afterward')
+  
 })
 
-test.todo(`Testing the contract generator`)
+
+test.todo(`Testing API with config and contract`)
