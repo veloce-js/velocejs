@@ -15,7 +15,7 @@
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",
     "clean:dist": "rimraf ./dist",
-    "prepublishOnly": "pnpm clean:dist && pnpm build:tsc && pnpm test"
+    "test:api": "pnpm ts ./start.ts"
   },
   "author": "NEWBRAN LTD & TO1SOURCE",
   "license": "ISC",

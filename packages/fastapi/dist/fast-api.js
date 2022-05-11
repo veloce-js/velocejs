@@ -64,9 +64,8 @@ class FastApi {
         this._uwsInstance.autoStart = false;
         // @0.4.0 we change this to a chain promise start up sequence
         // check the config to see if there is one to generate contract
-        const vc = new config_1.VeloceConfig();
-        this._config = vc; // for re-use later
-        (0, utils_1.chainProcessPromises)((routes) => vc.isReady.then(() => routes), // this is just pause for the isReady
+        this._config = new config_1.VeloceConfig();
+        (0, utils_1.chainProcessPromises)((routes) => this._config.isReady.then(() => routes), // this is just pause for the isReady
         this._prepareRoutes.bind(this), // repare the normal route as well as the contract route
         this._prepareContract(apiType), // here if we have setup the contract then insert route as well
         this._run.bind(this) // actually run it
@@ -99,7 +98,7 @@ class FastApi {
         routes.push({
             path: config.path,
             type: config.method,
-            handler: this._serveContract
+            handler: this._mapMethodToHandler('_serveContract', [], false)
         });
         return routes;
     }
@@ -134,7 +133,7 @@ class FastApi {
         const _route = checkFn(type, path);
         // also add this to the route that can create contract - if we need it
         const _path = _route !== '' ? _route : path;
-        this._prepareRouteForContract(propertyName, args, validation, type, _path);
+        this._prepareRouteForContract(propertyName, args);
         return {
             type,
             path: _path,
@@ -142,8 +141,8 @@ class FastApi {
         };
     }
     /** just wrap this together to make it look neater */
-    _prepareRouteForContract(propertyName, args, validation, type, path) {
-        const entry = { [propertyName]: { params: args, validation, type, path } };
+    _prepareRouteForContract(propertyName, args) {
+        const entry = { [propertyName]: (0, utils_1.toArray)(args) };
         this._routeForContract = (0, utils_1.assign)(this._routeForContract, entry);
     }
     /** check if there is a dynamic route and prepare it */
