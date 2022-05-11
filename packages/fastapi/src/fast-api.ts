@@ -35,7 +35,11 @@ import {
   // JsonValidationEntry,
 } from './types'
 import bodyParser, { UrlPattern } from '@velocejs/bodyparser'
-import { VeloceConfig } from '@velocejs/config'
+import {
+  VeloceConfig,
+  CONTRACT_KEY,
+  CACHE_DIR,
+} from '@velocejs/config'
 import { JsonqlValidationError } from '@jsonql/errors'
 import { JsonqlContract } from '@jsonql/contract'
 import {
@@ -47,9 +51,6 @@ import {
 // here
 import {
   isDebug,
-  PATH_TO_VELOCE_CONFIG,
-  CONTRACT_KEY,
-  CACHE_DIR,
 } from './lib/constants'
 import { prepareArgs } from './lib/extract'
 import { createValidator } from './lib/validator'
@@ -102,14 +103,17 @@ export class FastApi implements FastApiInterface {
   // instead of using a Prepare decorator and ugly call the super.run
   // we use a class decorator to call this method on init
   // Dev can do @Rest(config)
-  protected prepare(routes: Array<RouteMetaInfo>, apiType: string = REST_NAME):void {
+  protected prepare(
+    routes: Array<RouteMetaInfo>,
+    apiType: string = REST_NAME
+  ):void {
     if (isDebug) {
       console.time('FastApiStartUp')
     }
     this._uwsInstance.autoStart = false
     // @0.4.0 we change this to a chain promise start up sequence
     // check the config to see if there is one to generate contract
-    const vc = new VeloceConfig(PATH_TO_VELOCE_CONFIG)
+    const vc = new VeloceConfig()
     this._config = vc // for re-use later
     const ex = chainProcessPromises(
       (routes) => vc.isReady.then(() => routes), // this is just pause for the isReady
@@ -135,7 +139,7 @@ export class FastApi implements FastApiInterface {
 
     return async(routes: Array<UwsRouteSetup>) => {
 
-      return this._config.getConfig('contract')
+      return this._config.getConfig(CONTRACT_KEY)
         .then((config: {[key: string]: string}) => {
           if (config && config.cacheDir) {
             console.log(apiType, this._routeForContract)
