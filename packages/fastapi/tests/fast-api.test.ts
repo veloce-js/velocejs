@@ -22,13 +22,9 @@ test.after(() => {
 
 test(`Testing the class extends from FastApi`, async (t) => {
   t.plan(1)
-
   const response = await Fetch(`${hostname}/some-where`)
-
-  console.log('HEADERS',  response.headers)
-
+  // console.log('HEADERS',  response.headers)
   const text = await response.text()
-
   t.is(text, msg1)
 })
 
@@ -41,18 +37,6 @@ test(`Should able to respond with their own custom method`, async (t) => {
   t.is(text, msg2)
 })
 
-/*
-test(`Take out the validator to test it alone with the method`, async (t) => {
-  const validateObj = new ValidatorFactory([
-    {name: 'name', type: 'string', required: true},
-    { name: 'value', type: 'string', required: true}
-  ])
-
-  validateObj.
-
-})
-*/
-
 test(`Testing the post method handler`, async (t) => {
   t.plan(1)
   const todo = {name: 'John', value: 'something'}
@@ -64,13 +48,9 @@ test(`Testing the post method handler`, async (t) => {
     headers: { 'Content-Type': 'application/json' }
   })
   .then(res => {
-    console.log(res.status)
     return res.json()
   })
   .then(text => {
-
-      console.log(text)
-
     t.deepEqual(text, {msg: `John is doing something`})
   })
 })

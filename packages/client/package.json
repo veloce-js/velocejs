@@ -1,23 +1,27 @@
 {
   "name": "@velocejs/client",
   "version": "0.0.0",
-  "description": "@velocejs/client connector using Fetch",
+  "description": "@velocejs/client generate client code using contract",
   "main": "dist/index.js",
   "module": "dist/index.ts",
-  "typings": "dist/types.d.ts",
+  "browser": "./dist/velocejs-client.min.js",
   "files": [
     "dist",
     "src",
-    "index.d.ts"
+    "index.d.ts",
+    "fetch.js",
+    "fetch.js.map"
   ],
   "scripts": {
-    "dev": "pnpm build:dev:browser && VELOCE_CONFIG=./dev/veloce.config.js pnpm ts ./dev/start.ts"
+    "dev": "pnpm build:dev:browser && VELOCE_CONFIG=./dev/veloce.config.js pnpm ts ./dev/start.ts",
     "test:ava": "ava",
     "test:nyc": "nyc ava",
     "test": "pnpm build && pnpm test:ava",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
     "build:browser": "esbuild ./src/index.ts --bundle --minify --sourcemap --outfile=./dist/velocejs-client.min.js",
+    "build:fetch": "esbuild ./src/fetch.ts --bundle --minify --sourcemap --outfile=./fetch.js",
+    "build:fetch:dev": "esbuild ./src/fetch.ts --bundle --sourcemap --outfile=./fetch.js",
     "build:dev:browser": "esbuild ./src/index.ts --bundle --sourcemap --outfile=./dev/httpdocs/velocejs-client.js",
     "ts:check": "tsc -noEmit",
     "docs": "typedoc --entryPoints src/main.ts",
@@ -36,6 +40,7 @@
   "license": "ISC",
   "homepage": "https://velocejs.com",
   "dependencies": {
+    "@jsonql/constants": "^0.7.2",
     "@jsonql/contract": "^0.5.0",
     "@jsonql/utils": "^0.6.8",
     "@velocejs/config": "workspace:^0.4.0",

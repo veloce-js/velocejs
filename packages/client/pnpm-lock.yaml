@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ava/typescript': ^3.0.1
+  '@jsonql/constants': ^0.7.2
   '@jsonql/contract': ^0.5.0
   '@jsonql/utils': ^0.6.8
   '@types/debug': ^4.1.7
@@ -25,6 +26,7 @@ specifiers:
   typescript: ^4.6.4
 
 dependencies:
+  '@jsonql/constants': 0.7.2
   '@jsonql/contract': 0.5.0
   '@jsonql/utils': 0.6.8
   '@velocejs/config': link:../config

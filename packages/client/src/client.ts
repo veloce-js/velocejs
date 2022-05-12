@@ -4,11 +4,13 @@ import { TransportAsyncFunc, GenericKeyValue } from './types'
 import {
   VELOCE_DEFAULT_URL,
   CONTRACT_KEY
-} from '@velocejs/config'
+} from '@velocejs/config/dist/constants'
 import {
   JsonqlContractReader,
+} from '@jsonql/contract/dist/reader'
+import {
   CONTRACT_REQUEST_METHODS
-} from '@jsonql/contract'
+} from '@jsonql/constants'
 
 export class VeloceClient {
   private _options: GenericKeyValue

@@ -1,4 +1,5 @@
 // built-in fetch client
+import { VeloceClient } from './client'
 import { GenericKeyValue } from './types'
 /** Fetch Wrapper */
 export async function f(
@@ -27,4 +28,11 @@ export async function f(
     options ? Object.assign(opts, options) : opts
   )
   .then((res: any) => res.json()) // always return a json
+}
+/** Supply out fetch client here */
+export class VeloceFetchClient extends VeloceClient {
+
+  constructor(options?: GenericKeyValue) {
+    super(f, options)
+  }
 }
