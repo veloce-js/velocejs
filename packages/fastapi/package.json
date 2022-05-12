@@ -24,7 +24,9 @@
     "test:vali": "DEBUG=velocejs:* pnpm ts -- ./examples/validation/my-example.ts",
     "ts-node": "ts-node",
     "clean:dist": "rimraf ./dist",
+    "update:version": "node ../../update-devs.js fastapi",
     "prepublishOnly": "pnpm prepare:types && pnpm test",
+    "postpublish": "pnpm update:version",
     "patch": "npm version patch",
     "minor": "npm version minor",
     "major": "npm version major"
