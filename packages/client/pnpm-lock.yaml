@@ -8,6 +8,7 @@ specifiers:
   '@types/node': ^17.0.32
   '@typescript-eslint/eslint-plugin': ^5.23.0
   '@typescript-eslint/parser': ^5.23.0
+  '@velocejs/fastapi': workspace:^0.4.0
   ava: ^4.2.0
   esbuild: ^0.14.39
   esbuild-register: ^3.3.2
@@ -31,6 +32,7 @@ devDependencies:
   '@types/node': 17.0.32
   '@typescript-eslint/eslint-plugin': 5.23.0_c63nfttrfhylg3zmgcxfslaw44
   '@typescript-eslint/parser': 5.23.0_hcfsmds2fshutdssjqluwm76uu
+  '@velocejs/fastapi': link:../fastapi
   ava: 4.2.0_@ava+typescript@3.0.1
   esbuild: 0.14.39
   esbuild-register: 3.3.2_esbuild@0.14.39
