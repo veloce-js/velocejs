@@ -13,6 +13,7 @@ test.before(async () => {
   api = new MyApi()
   // start up
   await api.start(port)
+  //console.log('start up info', info)
 })
 
 test.after(() => {

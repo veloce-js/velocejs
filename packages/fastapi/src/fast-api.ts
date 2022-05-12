@@ -571,7 +571,10 @@ export class FastApi implements FastApiInterface {
   /**
    * We remap some of the methods from UwsServer to here for easier to use
    */
-  public async start(port?: number, host?: string): Promise<string> {
+  public async start(
+    port?: number,
+    host?: string
+  ): Promise<string> {
     if (port) {
       this._uwsInstance.portNum = port
     }
