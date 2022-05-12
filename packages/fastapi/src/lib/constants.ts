@@ -17,3 +17,7 @@ export const isDev = process.env.NODE_ENV === 'development'
 export const isDebug = process.env.DEBUG !== undefined
 // this is the method that we need to call in the Top Decorator
 export const METHOD_TO_RUN = 'prepare'
+
+export const CONTRACT_METHOD_NAME = '_serveContract'
+
+export const DEFAULT_CONTRACT_METHOD = 'get'

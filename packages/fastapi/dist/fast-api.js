@@ -85,7 +85,7 @@ class FastApi {
                 debug('config', config);
                 if (config && config.cacheDir) {
                     debug(apiType, this._routeForContract);
-                    this._contract = new contract_1.JsonqlContract(this._routeForContract); // we didn't provde the apiType here @TODO when we add jsonql
+                    this._contract = new contract_1.JsonqlContractWriter(this._routeForContract); // we didn't provde the apiType here @TODO when we add jsonql
                     return this._createContractRoute(routes, config);
                     // return a new route info here
                 }
@@ -95,17 +95,13 @@ class FastApi {
     }
     /** generate an additonal route for the contract */
     _createContractRoute(routes, config) {
-        const name = '_serveContract';
-        const params = [];
-        /*
-        it doesn't make much sense to include the contract route
+        /* it doesn't make much sense to include the contract route
         because the client needs to know where to find it first
-        this._contract.data(name, { name, params, route: config.path, method: config.method})
-        */
+        this._contract.data(name, { name, params, route: config.path, method: config.method}) */
         routes.push({
             path: config.path,
             type: config.method,
-            handler: this._mapMethodToHandler(name, params, false)
+            handler: this._mapMethodToHandler(constants_2.CONTRACT_METHOD_NAME, [], false)
         });
         return routes;
     }
@@ -160,7 +156,7 @@ class FastApi {
     _prepareDynamicRoute(tmpSet) {
         return (type, path) => {
             let route = '', upObj;
-            if (type === 'get' && bodyparser_1.UrlPattern.check(path)) {
+            if (type === constants_2.DEFAULT_CONTRACT_METHOD && bodyparser_1.UrlPattern.check(path)) {
                 upObj = new bodyparser_1.UrlPattern(path);
                 route = upObj.route;
             }

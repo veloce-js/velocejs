@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.METHOD_TO_RUN = exports.isDebug = exports.isDev = exports.RULE_FULL = exports.RULE_SIMPLE = exports.RULE_LIST = exports.RULE_AUTOMATIC = exports.PARAMS_KEY = exports.OPTIONS_KEY = exports.RULES_KEY = exports.NIL = exports.BOUNDARY = void 0;
+exports.DEFAULT_CONTRACT_METHOD = exports.CONTRACT_METHOD_NAME = exports.METHOD_TO_RUN = exports.isDebug = exports.isDev = exports.RULE_FULL = exports.RULE_SIMPLE = exports.RULE_LIST = exports.RULE_AUTOMATIC = exports.PARAMS_KEY = exports.OPTIONS_KEY = exports.RULES_KEY = exports.NIL = exports.BOUNDARY = void 0;
 // this has moved to bodyparser @TODO remove later
 exports.BOUNDARY = 'boundary';
 exports.NIL = 'NIL';
@@ -16,3 +16,5 @@ exports.isDev = process.env.NODE_ENV === 'development';
 exports.isDebug = process.env.DEBUG !== undefined;
 // this is the method that we need to call in the Top Decorator
 exports.METHOD_TO_RUN = 'prepare';
+exports.CONTRACT_METHOD_NAME = '_serveContract';
+exports.DEFAULT_CONTRACT_METHOD = 'get';

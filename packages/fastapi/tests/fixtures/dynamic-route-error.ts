@@ -1,5 +1,5 @@
 
-import { FastApi, Rest, Post } from '../../src'
+import { FastApi, Rest, Post } from '../../dist'
 
 @Rest
 export class MyWrongDynamicRoute extends FastApi {

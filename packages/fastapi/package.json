@@ -6,7 +6,6 @@
   "module": "dist/index.ts",
   "files": [
     "dist",
-    "src",
     "index.d.ts"
   ],
   "scripts": {
@@ -40,7 +39,7 @@
     "@jsonql/utils": "^0.6.8",
     "@jsonql/validator": "^0.4.0",
     "@velocejs/bodyparser": "workspace:^0.3.1",
-    "@velocejs/config": "workspace:^0.3.2",
+    "@velocejs/config": "workspace:^0.4.0",
     "@velocejs/server": "workspace:^0.7.6",
     "debug": "^4.3.4",
     "fs-extra": "^10.1.0",

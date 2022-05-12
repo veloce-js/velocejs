@@ -10,3 +10,5 @@ export declare const RULE_FULL = "rule-full";
 export declare const isDev: boolean;
 export declare const isDebug: boolean;
 export declare const METHOD_TO_RUN = "prepare";
+export declare const CONTRACT_METHOD_NAME = "_serveContract";
+export declare const DEFAULT_CONTRACT_METHOD = "get";

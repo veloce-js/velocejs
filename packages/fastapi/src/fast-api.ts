@@ -34,14 +34,16 @@ import {
   VeloceMiddleware,
   // JsonValidationEntry,
 } from './types'
-import bodyParser, { UrlPattern } from '@velocejs/bodyparser'
+import bodyParser, {
+  UrlPattern
+} from '@velocejs/bodyparser'
 import {
   VeloceConfig,
   CONTRACT_KEY,
   CACHE_DIR,
 } from '@velocejs/config'
 import { JsonqlValidationError } from '@jsonql/errors'
-import { JsonqlContract } from '@jsonql/contract'
+import { JsonqlContractWriter } from '@jsonql/contract'
 import {
   chainProcessPromises,
   queuePromisesProcess,
@@ -52,6 +54,8 @@ import {
 import {
   isDebug,
   isDev,
+  CONTRACT_METHOD_NAME,
+  DEFAULT_CONTRACT_METHOD,
 } from './lib/constants'
 import { prepareArgs } from './lib/extract'
 import { createValidator } from './lib/validator'
@@ -70,7 +74,7 @@ const placeholderFn = (...args: any[] ) => { console.log(args) }
 export class FastApi implements FastApiInterface {
   private _uwsInstance: UwsServer
   private _config: any
-  private _contract!: JsonqlContract
+  private _contract!: JsonqlContractWriter
   private _routeForContract = {}
   private _written = false
   private _headers: UwsStringPairObj = {}
@@ -141,7 +145,7 @@ export class FastApi implements FastApiInterface {
           debug('config', config)
           if (config && config.cacheDir) {
             debug(apiType, this._routeForContract)
-            this._contract = new JsonqlContract(
+            this._contract = new JsonqlContractWriter(
               this._routeForContract
             ) // we didn't provde the apiType here @TODO when we add jsonql
             return this._createContractRoute(routes, config)
@@ -157,17 +161,13 @@ export class FastApi implements FastApiInterface {
     routes: Array<UwsRouteSetup>,
     config: {[key: string]: string}
   ): Array<UwsRouteSetup> {
-    const name: string = '_serveContract'
-    const params: Array<null> = []
-    /*
-    it doesn't make much sense to include the contract route
+    /* it doesn't make much sense to include the contract route
     because the client needs to know where to find it first
-    this._contract.data(name, { name, params, route: config.path, method: config.method})
-    */
+    this._contract.data(name, { name, params, route: config.path, method: config.method}) */
     routes.push({
       path: config.path,
       type: config.method,
-      handler: this._mapMethodToHandler(name, params, false)
+      handler: this._mapMethodToHandler(CONTRACT_METHOD_NAME, [], false)
     })
     return routes
   }
@@ -247,8 +247,8 @@ export class FastApi implements FastApiInterface {
   private _prepareDynamicRoute(tmpSet: WeakSet<object>) {
 
     return (type: string, path: string): string => {
-      let route = '', upObj
-      if (type === 'get' && UrlPattern.check(path)) {
+      let route = '', upObj: any
+      if (type === DEFAULT_CONTRACT_METHOD && UrlPattern.check(path)) {
         upObj = new UrlPattern(path)
         route = upObj.route
       }

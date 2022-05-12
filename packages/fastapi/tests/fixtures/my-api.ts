@@ -1,7 +1,7 @@
 // setup a dummy API for test
 
 import { HttpResponse } from '@velocejs/server/src/types'
-import { FastApi, Get, Post, Raw, Rest } from '../../src'
+import { FastApi, Get, Post, Raw, Rest } from '../../dist'
 
 export const msg1 = `doing the route handling thing`
 export const msg2 = `Here is my own message`

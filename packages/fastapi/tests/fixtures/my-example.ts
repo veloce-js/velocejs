@@ -4,7 +4,7 @@ import {
   Post,
   Get,
   Validate
-} from '../../src'
+} from '../../dist'
 
 @Rest
 export class MyExample extends FastApi {
