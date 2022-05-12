@@ -4,6 +4,7 @@ exports.VeloceConfig = void 0;
 const tslib_1 = require("tslib");
 const fsx = tslib_1.__importStar(require("fs-extra"));
 const node_path_1 = require("node:path");
+const utils_1 = require("@jsonql/utils");
 const constants_1 = require("./constants");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:config:class');
@@ -29,6 +30,7 @@ class VeloceConfig {
             constants_1.SUPPORT_EXT.forEach(ext => {
                 if (!this._src) {
                     const file = (0, node_path_1.join)(cwd, [constants_1.FILE_NAME, ext].join('.'));
+                    debug('search for file', file);
                     if (fsx.existsSync(file)) {
                         found = true;
                         this._readContent(file);
@@ -86,26 +88,13 @@ class VeloceConfig {
     }
     /** allow using dot notation path to extract content */
     _getByPath(content, moduleName) {
-        if (moduleName && moduleName.indexOf('.')) {
-            const parts = moduleName.split('.');
-            const ctn = parts.length;
-            let _tmp;
-            for (let i = 0; i < ctn; ++i) {
-                const key = parts[i];
-                if (_tmp && _tmp[key]) {
-                    _tmp = _tmp[key];
-                }
-                else {
-                    _tmp = content[key];
-                }
-                if (i === ctn - 1) {
-                    return _tmp;
-                }
+        if (moduleName) {
+            if (moduleName.indexOf('.') > -1) {
+                return (0, utils_1.accessByPath)(content, moduleName);
             }
+            return content[moduleName];
         }
-        else {
-            return moduleName ? content[moduleName] : content;
-        }
+        return content;
     }
 }
 exports.VeloceConfig = VeloceConfig;

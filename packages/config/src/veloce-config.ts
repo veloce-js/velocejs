@@ -1,5 +1,6 @@
 import * as fsx from 'fs-extra'
 import { join, resolve } from 'node:path'
+import { accessByPath } from '@jsonql/utils'
 import {
   FILE_NAME,
   SUPPORT_EXT,
@@ -105,23 +106,12 @@ export class VeloceConfig {
 
   /** allow using dot notation path to extract content */
   private _getByPath(content: VeloceConfigEntry, moduleName?: string) {
-    if (moduleName && moduleName.indexOf('.')) {
-      const parts = moduleName.split('.')
-      const ctn = parts.length
-      let _tmp: any
-      for (let i = 0; i < ctn; ++i) {
-        const key = parts[i]
-        if (_tmp && _tmp[key]) {
-          _tmp = _tmp[key]
-        } else {
-          _tmp = content[key]
-        }
-        if (i === ctn - 1) {
-          return _tmp
-        }
+    if (moduleName) {
+      if (moduleName.indexOf('.') > -1) {
+        return accessByPath(content, moduleName as string)
       }
-    } else {
-      return moduleName ? content[moduleName] : content
+      return content[moduleName]
     }
+    return content 
   }
 }
