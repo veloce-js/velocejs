@@ -2,7 +2,7 @@
 import test from 'ava'
 import fetch from 'node-fetch'
 import app from './fixtures/server'
-
+import { CONTENT_TYPE } from '@jsonql/constants'
 let url = 'http://localhost:'
 
 test.before(() => {
@@ -17,13 +17,15 @@ test.after(() => {
 
 
 test(`Should able to fix the buffer.toString() problem with a post`,async t => {
-
-  const res = await fetch(url + '/whatever?key=1&b=2', {
-    headers: { 'Content-Type': 'application/json'}
+  // + '/whatever?key=1&b=2'
+  const res = await fetch(url  + '/whatever?key=1&b=2', {
+    headers: {
+      'Content-Type': CONTENT_TYPE 
+      // 'application/json'
+    },
+    // method: 'HEAD' // <-- this will cause a unexpected end of JSON imput, but this is todo with node-fetch
   })
   const json = await res.json()
-
-  console.log(json)
 
   t.truthy(json)
 })

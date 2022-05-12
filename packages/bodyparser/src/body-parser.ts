@@ -64,7 +64,6 @@ export async function bodyParser(
         case isJson(headers):
           body.type = IS_JSON
           body.params = handleJsonRequestParams(buffer, params)
-          // body.params = buffer.toString() ? JSON.parse(buffer.toString()) : params
           break;
         case isForm(headers):
           body.type = IS_FORM
@@ -84,14 +83,14 @@ export async function bodyParser(
 
 /**
  we could get some strange result here
-when we set a json header with a GET
+ when we set a json header with a GET
  */
 function handleJsonRequestParams(
   buffer: Buffer,
   params: UwsStringPairObj
 ) {
   const payload = buffer.toString()
-
+  // @TODO this could still be problematic in some edge case, waiting for that to happen
   return payload ? JSON.parse(payload) : (isEmptyObj(params) ? {} : params)
 }
 

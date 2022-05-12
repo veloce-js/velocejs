@@ -38,7 +38,7 @@ export const isEmptyObj = (obj: any): boolean => (
   obj && Object.keys(obj).length === 0 && obj.constructor === Object
 )
 
-// check if the header 'Content-Type' is a json
+// check if the header 'Content-Type' is a json like 
 export const isJson = (headers: UwsStringPairObj): boolean => (
   headers[CONTENT_TYPE] !== undefined && headers[CONTENT_TYPE].indexOf('json') > -1
 )
@@ -60,6 +60,6 @@ export function parseQuery(query: string): UwsStringPairObj {
   for (const pair of params.entries()) {
    result[ pair[0] ] = pair[1]
   }
-  
+
   return result
 }

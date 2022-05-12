@@ -9,7 +9,7 @@ let url = 'http://localhost:'
 test.before(() => {
   app.start()
   url = url + app.getPortNum()
-  console.log(`server started on ${url}`)
+  // console.log(`server started on ${url}`)
 })
 
 test.after(() => {
