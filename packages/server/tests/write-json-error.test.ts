@@ -4,7 +4,7 @@ import { createApp, shutdownServer, jsonWriter } from '../src'
 import Fetch from 'node-fetch'
 import { HttpResponse } from '../dist/types'
 
-const port = 9003
+const port = 9013
 const payload = {data: [1,2,3]}
 const reply = { OK: false }
 

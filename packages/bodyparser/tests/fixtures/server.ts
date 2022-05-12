@@ -2,12 +2,12 @@
 import {
   UwsServer,
   jsonWriter
-} from '../../dist'
+} from '@velocejs/server'
 import {
   HttpResponse,
   HttpRequest
-} from '../../index'
-import bodyParser from '@velocejs/bodyparser'
+} from '@velocejs/server/index'
+import bodyParser from '../../src'
 
 const app = new UwsServer()
 app.autoStart = false

@@ -62,7 +62,7 @@ export async function bodyParser(
       switch (true) {
         case isJson(headers):
           body.type = IS_JSON
-          body.params = JSON.parse(buffer.toString())
+          body.params = buffer.toString() ? JSON.parse(buffer.toString()) : {}
           break;
         case isForm(headers):
           body.type = IS_FORM

@@ -32,6 +32,8 @@
   "license": "ISC",
   "homepage": "https://velocejs.com",
   "dependencies": {
+    "@jsonql/utils": "^0.6.8",
+    "@velocejs/server": "workspace:^0.7.6",
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {

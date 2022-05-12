@@ -6,10 +6,14 @@ export class DevApi extends FastApi {
 
   // static folder
 
+  @Get('/simple')
+  public simple() {
+    return {Hello: 'World'}
+  }
+
   @Get('/update/:id')
   public update(id: string) {
-
-    return `You send ${id} to fetch update`
+    return {msg: `You send ${id} to fetch update`}
   }
 
   @Post('/test')
