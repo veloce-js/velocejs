@@ -30,7 +30,7 @@ exports.takeApartName = takeApartName;
 // check if the object is empty for the init run
 const isEmptyObj = (obj) => (obj && Object.keys(obj).length === 0 && obj.constructor === Object);
 exports.isEmptyObj = isEmptyObj;
-// check if the header 'Content-Type' is a json
+// check if the header 'Content-Type' is a json like 
 const isJson = (headers) => (headers[constants_1.CONTENT_TYPE] !== undefined && headers[constants_1.CONTENT_TYPE].indexOf('json') > -1);
 exports.isJson = isJson;
 // check if it's regular post form

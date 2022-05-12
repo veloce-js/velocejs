@@ -36,7 +36,7 @@ function bodyParser(res, req, onAborted) {
                 switch (true) {
                     case (0, utils_1.isJson)(headers):
                         body.type = constants_1.IS_JSON;
-                        body.params = JSON.parse(buffer.toString());
+                        body.params = handleJsonRequestParams(buffer, params);
                         break;
                     case (0, utils_1.isForm)(headers):
                         body.type = constants_1.IS_FORM;
@@ -55,6 +55,15 @@ function bodyParser(res, req, onAborted) {
     });
 }
 exports.bodyParser = bodyParser;
+/**
+ we could get some strange result here
+ when we set a json header with a GET
+ */
+function handleJsonRequestParams(buffer, params) {
+    const payload = buffer.toString();
+    // @TODO this could still be problematic in some edge case, waiting for that to happen
+    return payload ? JSON.parse(payload) : ((0, utils_1.isEmptyObj)(params) ? {} : params);
+}
 // all-in-one to parse and post process the multipart-formdata input
 function parseMultipart(headers, body) {
     const boundary = (0, parse_multipart_1.getBoundary)(headers[constants_1.CONTENT_TYPE]);
