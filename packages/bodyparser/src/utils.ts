@@ -60,6 +60,6 @@ export function parseQuery(query: string): UwsStringPairObj {
   for (const pair of params.entries()) {
    result[ pair[0] ] = pair[1]
   }
-
+  
   return result
 }

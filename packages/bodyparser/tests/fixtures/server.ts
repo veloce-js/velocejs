@@ -17,7 +17,7 @@ app.run([
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
       const result = await bodyParser(res, req)
-      // console.log(`got called`, result)
+      console.log(`got called`, result)
       const { params } = result
       // we only return the result.params
       jsonWriter(res)(params)
