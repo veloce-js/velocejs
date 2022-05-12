@@ -29,7 +29,7 @@ export const SERVER_KEY = 'server'
 export const VELOCE_DEFAULTS = {
   [CONTRACT_KEY]: {
     method: 'get',
-    path: `${VELOCE_DEFAULT_URL}/contract`
+    path: `${VELOCE_DEFAULT_URL}/${CONTRACT_KEY}`
   },
   [SERVER_KEY]: {
     port: 0

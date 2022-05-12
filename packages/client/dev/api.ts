@@ -6,10 +6,26 @@ export class DevApi extends FastApi {
 
   // static folder
 
-  @ServeStatic
-  get staticPath() {
+  @Get('/update/:id')
+  public update(id: string) {
+
+    return `You send ${id} to fetch update`
+  }
+
+  @Post('/test')
+  public testPost(id: number, title: string, content?: string) {
+
+    return {
+      id, title, content
+    }
+  }
+
+
+  @ServeStatic('/*')
+  get httpdocs() {
     return join(__dirname, 'dev', 'httpdocs')
   }
+
 
 
 }

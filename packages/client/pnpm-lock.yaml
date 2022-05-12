@@ -2,13 +2,16 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ava/typescript': ^3.0.1
+  '@jsonql/contract': ^0.5.0
+  '@jsonql/utils': ^0.6.8
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
   '@types/node': ^17.0.32
   '@typescript-eslint/eslint-plugin': ^5.23.0
   '@typescript-eslint/parser': ^5.23.0
-  '@velocejs/fastapi': workspace:^0.4.0
+  '@velocejs/config': workspace:^0.4.0
+  '@velocejs/fastapi': workspace:^0.5.0
   ava: ^4.2.0
   esbuild: ^0.14.39
   esbuild-register: ^3.3.2
@@ -22,6 +25,9 @@ specifiers:
   typescript: ^4.6.4
 
 dependencies:
+  '@jsonql/contract': 0.5.0
+  '@jsonql/utils': 0.6.8
+  '@velocejs/config': link:../config
   tslib: 2.4.0
 
 devDependencies:
@@ -325,6 +331,45 @@ packages:
       '@jridgewell/resolve-uri': 3.0.7
       '@jridgewell/sourcemap-codec': 1.4.13
     dev: true
+
+  /@jsonql/ast/0.8.3:
+    resolution: {integrity: sha512-vnmbT9El3BpxcT9H9FlzWkpmlPDpO3mB9gxxT2p1RxgbA9oUaeOxVHTxpSGwFmes8I7H9RODkN8YhTUfJ3Ctiw==}
+    dependencies:
+      '@jsonql/constants': 0.7.2
+      tslib: 2.4.0
+    dev: false
+
+  /@jsonql/constants/0.7.2:
+    resolution: {integrity: sha512-1matJKybfmSIZp8eoSsq7463QHkYymAXZ4OzZKd6evPMT931E6XQbXqHU7F5R9UzsdLIQ4myDM309Tb7i4ceBw==}
+    dev: false
+
+  /@jsonql/contract/0.5.0:
+    resolution: {integrity: sha512-CTeCxvDm3Dlocrz8QCduQur7IsoeQJRL0dv0xNjnYw5q5IYXFFgJGtAhdu7lacM46VI0+Bxw5Mtig4ShPnVBrw==}
+    dependencies:
+      '@jsonql/ast': 0.8.3
+      '@jsonql/constants': 0.7.2
+      '@jsonql/errors': 0.6.1
+      '@jsonql/utils': 0.6.8
+      debug: 4.3.4
+      fs-extra: 10.1.0
+      tslib: 2.4.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /@jsonql/errors/0.6.1:
+    resolution: {integrity: sha512-NuSDjMlwFTSGop2aAGnKN7QujJ7XxzgCGWrKn7DKZuIg/T4qIdnktYE9C2KaxQTAjifKTRtBex833bdKwEOFjw==}
+    dependencies:
+      '@jsonql/constants': 0.7.2
+    dev: false
+
+  /@jsonql/utils/0.6.8:
+    resolution: {integrity: sha512-Suush0Rl8sXn003ne4ldPx7imV9v/C6zKw3N1bbeFkSeq0PZU6YagNCxL7+bRKbMn3fBomYV7jApbCnDWEsW7w==}
+    dependencies:
+      '@jsonql/constants': 0.7.2
+      '@jsonql/errors': 0.6.1
+      lodash-es: 4.17.21
+    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -951,7 +996,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-    dev: true
 
   /decamelize/1.2.0:
     resolution: {integrity: sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=}
@@ -1533,7 +1577,6 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: true
 
   /fs.realpath/1.0.0:
     resolution: {integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=}
@@ -1633,7 +1676,6 @@ packages:
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
-    dev: true
 
   /has-flag/3.0.0:
     resolution: {integrity: sha1-tdRU3CGZriJWmfNGfloH87lVuv0=}
@@ -1919,7 +1961,6 @@ packages:
       universalify: 2.0.0
     optionalDependencies:
       graceful-fs: 4.2.10
-    dev: true
 
   /levn/0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -1947,6 +1988,10 @@ packages:
     dependencies:
       p-locate: 6.0.0
     dev: true
+
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
+    dev: false
 
   /lodash.flattendeep/4.4.0:
     resolution: {integrity: sha1-+wMJF/hqMTTlvJvsDWngAT3f7bI=}
@@ -2038,7 +2083,6 @@ packages:
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
-    dev: true
 
   /ms/2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -2651,7 +2695,6 @@ packages:
   /universalify/2.0.0:
     resolution: {integrity: sha512-hAZsKq7Yy11Zu1DE0OzWjw7nnLZmJZYTDZZyEFHZdUhV8FkH5MCfoU1XMaxXovpyW5nq5scPqq0ZDP9Zyl04oQ==}
     engines: {node: '>= 10.0.0'}
-    dev: true
 
   /uri-js/4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}

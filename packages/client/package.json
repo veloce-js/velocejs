@@ -11,12 +11,14 @@
     "index.d.ts"
   ],
   "scripts": {
+    "dev": "pnpm build:dev:browser && VELOCE_CONFIG=./dev/veloce.config.js pnpm ts ./dev/start.ts"
     "test:ava": "ava",
     "test:nyc": "nyc ava",
     "test": "pnpm build && pnpm test:ava",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
-    "build:browser": "echo '@todo'",
+    "build:browser": "esbuild ./src/index.ts --bundle --minify --sourcemap --outfile=./dist/velocejs-client.min.js",
+    "build:dev:browser": "esbuild ./src/index.ts --bundle --sourcemap --outfile=./dev/httpdocs/velocejs-client.js",
     "ts:check": "tsc -noEmit",
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",
@@ -34,6 +36,9 @@
   "license": "ISC",
   "homepage": "https://velocejs.com",
   "dependencies": {
+    "@jsonql/contract": "^0.5.0",
+    "@jsonql/utils": "^0.6.8",
+    "@velocejs/config": "workspace:^0.4.0",
     "tslib": "^2.4.0"
   },
   "devDependencies": {
