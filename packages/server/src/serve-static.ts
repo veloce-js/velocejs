@@ -1,11 +1,10 @@
 // server static methods
-
 import fs from 'node:fs'
 import path from 'node:path'
 import { HttpResponse, HttpRequest } from './types'
-import { DEFAULT_FILE, CONTENT_TYPE } from './base/constants'
+import { DEFAULT_FILE, CONTENT_TYPE } from './lib/constants'
 import { getWriter, write404 } from './writers'
-import { lookup } from './base/mime'
+import { lookup } from './lib/mime'
 import { isFunction, toArray } from '@jsonql/utils'
 // import { toArray } from '@jsonql/utils'
 // import { toArr } from '@velocejs/bodyparser/utils'

@@ -1,9 +1,21 @@
 // We now make it class to create the complete server
-import { AppOptions, TemplatedApp, RecognizedString, us_listen_socket } from './types'
-import { UwsRouteSetup } from './base/interfaces'
-import { createApp, shutdownServer, getPort } from './create-app'
-import { SUPPORT_REST_ROUTES } from './base/constants'
-
+import {
+  AppOptions,
+  TemplatedApp,
+  RecognizedString,
+  us_listen_socket
+} from './types'
+import {
+  UwsRouteSetup
+} from './lib/interfaces'
+import {
+  SUPPORT_REST_ROUTES
+} from './lib/constants'
+import {
+  createApp,
+  shutdownServer,
+  getPort
+} from './create-app'
 import debug from 'debug'
 const debugFn = debug(`velocejs:server:uws-server-class`)
 
@@ -20,7 +32,7 @@ export class UwsServer {
 
   constructor(private opts?: AppOptions) {}
 
-  // stock start function
+  /** stock start function */
   private onStartFn = (url: string): void => {
     debugFn(`Server started at ${url}`)
   }
@@ -29,7 +41,7 @@ export class UwsServer {
     throw new Error(`Server could not start!`)
   }
 
-  // Taking the app.listen out because there are more options to deal with now
+  /** Taking the app.listen out because there are more options to deal with now */
   private listen(app: TemplatedApp): void {
     const cb = (token: us_listen_socket): void => {
       if (token) {
@@ -40,45 +52,53 @@ export class UwsServer {
         this.onStartErrorFn()
       }
     }
-    const params: Array<RecognizedString | number | ((listenSocket: us_listen_socket) => void)> = [this.portNum, cb]
+    const params: Array<RecognizedString |
+                                  number |
+                  ((listenSocket: us_listen_socket) => void)> = [this.portNum, cb]
     if (this.host) {
       params.unshift(this.host)
     }
-
     Reflect.apply(app.listen, app, params)
   }
 
-  // overwrite the port number via the start up env
+  /** overwrite the port number via the start up env */
   public get portNum() {
     const p = process.env.PORT
 
     return p ? parseInt(p) : this.port
   }
-  // setter for post number
+
+  /** setter for post number */
   public set portNum(port: number) {
     this.port = port
   }
-  // we could specify the host like 0.0.0.0
-  // listen(host: RecognizedString, port: number, cb: (listenSocket: us_listen_socket) => void): TemplatedApp;
+
+  /**
+    we could specify the host like 0.0.0.0
+    listen(host: RecognizedString, port: number, cb: (listenSocket: us_listen_socket) => void): TemplatedApp;
+  */
   public get hostName() {
     const h = process.env.HOST
 
     return h ? h : this.host
   }
-  // setter for host name
+
+  /** setter for host name */
   public set hostName(host: RecognizedString) {
     this.host = host
   }
-  // set a custom on start callback
+
+  /** set a custom on start callback */
   public set onStart(cb: (url: string) => void) {
     this.onStartFn = cb
   }
-  // allow to pass a callback when server couldn't start
+
+  /** allow to pass a callback when server couldn't start */
   public set onError(cb: () => void){
     this.onStartErrorFn = cb
   }
 
-  // this doesn't do anything just for overwrite or display a debug message
+  /** this doesn't do anything just for overwrite or display a debug message */
   public onStartCb() {
     const portNum = this.portNum || this.getPortNum()
     const hostName = this.getHostName()
@@ -86,14 +106,12 @@ export class UwsServer {
     this.onStartFn(`${hostName}:${portNum}`)
   }
 
-  // to init, bind handlers and then start up the UWS Server
+  /** to init, bind handlers and then start up the UWS Server */
   public run(handlers: UwsRouteSetup[]): void {
     const app = createApp(this.opts)
-
     if (!handlers.length) {
-      throw new Error(`You must have at least 1 handler!`)
+      throw new Error(`You must provide at least 1 handler!`)
     }
-
     handlers.forEach(o => {
       const { type, path, handler } = o
       // @BUG if we use Reflect.apply here, uws throw a string out of bound error
@@ -112,14 +130,14 @@ export class UwsServer {
     }
   }
 
-  // manually start the server
+  /** manually start the server */
   public start(): void {
     if (!this.running) {
       this.listen(this.app as TemplatedApp)
     }
   }
 
-  // gracefully shutdown the server
+  /** gracefully shutdown the server */
   public shutdown(): void {
     if (this.running) {
       shutdownServer(this.token)
@@ -131,7 +149,7 @@ export class UwsServer {
   public getPortNum(): number {
     return this.token ? getPort(this.token) : -1
   }
-  
+
   /** get fully constructed hostname */
   public getHostName(): string {
     const s = this.opts ? 's' : ''

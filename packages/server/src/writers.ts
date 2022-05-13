@@ -7,8 +7,8 @@ import {
   UwsWriter,
   UwsJsonWriter
 } from './types'
-import { CONTENT_TYPE, JSON_HEADER } from './base/constants'
-import { C200, C404, lookupStatus } from './base/status'
+import { CONTENT_TYPE, JSON_HEADER } from './lib/constants'
+import { C200, C404, lookupStatus } from './lib/status'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:writers')
 
@@ -17,7 +17,7 @@ export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
   const writer = getWriter(res)
 
   return (jsonObj: any, status?: number): void => {
-    
+
 
 
     writer(
