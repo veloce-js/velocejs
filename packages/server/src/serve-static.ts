@@ -4,7 +4,7 @@ import path from 'node:path'
 import { HttpResponse, HttpRequest } from './types'
 import { DEFAULT_FILE, CONTENT_TYPE } from './lib/constants'
 import { getWriter, write404 } from './writers'
-import { lookup } from './lib/mime'
+import { lookupMimeType } from './lib/mime'
 import { isFunction, toArray } from '@jsonql/utils'
 // import { toArray } from '@jsonql/utils'
 // import { toArr } from '@velocejs/bodyparser/utils'
@@ -17,7 +17,7 @@ export function serveStatic(
   onAbortedHandler?: () => void
 ) {
   const dirs: Array<string> = toArray(assetDir)
-  // return handler 
+  // return handler
   return function(res: HttpResponse, req: HttpRequest) {
     // we need to provide a onAbortedHandler here
     res.onAborted(() => {
@@ -37,7 +37,7 @@ export function serveStatic(
       .map((dir: string) => fs.readFileSync(path.join(dir, url)))
 
     if (file.length) {
-      const mimeType = lookup(url)
+      const mimeType = lookupMimeType(url)
       const writer = getWriter(res)
       writer(file[0], {[CONTENT_TYPE]: mimeType})
     } else {

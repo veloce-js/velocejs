@@ -15,7 +15,7 @@ fs.copy(src, join(__dirname, 'dist', 'types.d.ts'))
         console.error('ERROR:', err)
         return
       }
-      const output = txt.toString().replace(/\/base\//gi, '/src/base/')
+      const output = txt.toString().replace(/\/lib\//gi, '/src/lib/')
       fs.writeFile(indexFile, output, (err) => {
         if (err) {
           console.error(`Error on write:`, err)
