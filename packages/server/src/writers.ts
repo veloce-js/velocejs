@@ -17,6 +17,9 @@ export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
   const writer = getWriter(res)
 
   return (jsonObj: any, status?: number): void => {
+    
+
+
     writer(
       JSON.stringify(jsonObj),
       { [CONTENT_TYPE]: JSON_HEADER},
