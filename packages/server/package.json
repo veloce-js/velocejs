@@ -41,7 +41,6 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@jsonql/utils": "^0.6.8",
-    "arraybuffer-to-string": "^1.0.2",
     "debug": "^4.3.4",
     "mime-types": "^2.1.35",
     "tslib": "^2.4.0",

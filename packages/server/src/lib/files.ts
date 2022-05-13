@@ -1,6 +1,13 @@
 import { HttpResponse } from '../types'
 import fs from 'node:fs'
 
+/** this is from that stupid module arraybuffer-to-string really? */
+export function arrayBufferToString (buffer: ArrayBuffer, encoding = 'utf8') {
+
+	return Buffer.from(buffer).toString(encoding as BufferEncoding)
+}
+
+
 /** get the file size */
 export function getFileSize(fileName: string) {
   return fs.statSync(fileName).size

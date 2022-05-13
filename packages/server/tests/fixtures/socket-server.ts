@@ -1,13 +1,13 @@
 // we setup a socket server here for testing
 // We build this up as close to the original as possible to
 // understand more about their inner operation first
-import arrayBufferToString from 'arraybuffer-to-string'
+import { arrayBufferToString } from '../../src/lib/files'
 import { join } from 'node:path'
 import {
   WebSocket,
   RecognizedString,
-  HttpResponse,
-  HttpRequest,
+  // HttpResponse,
+  // HttpRequest,
   us_socket
 } from '../../src/types'
 import {
@@ -26,7 +26,7 @@ createApp()
     open: (ws: WebSocket) => {
       console.log('A WebSocket connected!', ws)
     },
-    message: (ws: WebSocket, message: RecognizedString, isBinary: boolean) => {
+    message: (ws: WebSocket, message: ArrayBuffer, isBinary: boolean) => {
       const msg = arrayBufferToString(message)
       console.log('receive:', msg)
       /* Ok is false if backpressure was built up, wait for drain */
