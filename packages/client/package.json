@@ -17,6 +17,7 @@
     "test:ava": "ava",
     "test:nyc": "nyc ava",
     "test": "pnpm build && pnpm test:ava",
+    "test:v": "VELOCE_CONFIG=./dev/veloce.config.js ava",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
     "build:browser": "esbuild ./src/index.ts --bundle --minify --sourcemap --outfile=./dist/velocejs-client.min.js",

@@ -1,5 +1,5 @@
 import test from 'ava'
-// import { f } from '../src/fetch'
+import { f } from '../src/fetch'
 import Fetch from 'node-fetch'
 import { DevApi } from '../dev/api'
 
@@ -18,12 +18,22 @@ test.after(() => {
 
 test(`Test to see if our fetch works or not`, async t => {
   t.plan(1)
-  //const result = await f(url + '/simple', 'get')
+  /*
+  const json = await f(
+    url + '/simple',
+    'get'
+  )
+  */
 
-  const result = await Fetch(url + '/simple', {headers: { 'Content-Type': 'application/json' }})
-  const json = await result.json()
 
-  console.log(json)
+  return Fetch(url + '/veloce/contract')
+          .then(res => res.json())
+          .catch(err => console.log(err))
+          .then(json => {
+            console.log(json)
 
-  t.truthy(json)
+            t.truthy(json)
+
+          })
+
 })

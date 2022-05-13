@@ -1,0 +1,47 @@
+{
+  "data": [
+    {
+      "name": "simple",
+      "params": [],
+      "method": "get",
+      "route": "/simple"
+    },
+    {
+      "name": "update",
+      "params": [
+        {
+          "name": "id",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "method": "get",
+      "route": "/update/:id"
+    },
+    {
+      "name": "testPost",
+      "params": [
+        {
+          "name": "id",
+          "required": true,
+          "type": "number"
+        },
+        {
+          "name": "title",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "content",
+          "required": false,
+          "type": "string"
+        }
+      ],
+      "method": "post",
+      "route": "/test"
+    }
+  ],
+  "meta": {
+    "type": "rest"
+  }
+}

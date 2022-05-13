@@ -37,7 +37,6 @@ export const getWriter = (res: HttpResponse): UwsWriter => {
     // then we fill it with 200 OK by default because it's hard to check
     const _status = status ? lookupStatus(status) : C200
     debugFn(`status: ${_status}`)
-
     res.cork(() => {
       res.writeStatus(_status as string)
       if (headers) {
@@ -45,7 +44,6 @@ export const getWriter = (res: HttpResponse): UwsWriter => {
           res.writeHeader(key, headers[key])
         }
       }
-
       res.end(payload)
     })
   }

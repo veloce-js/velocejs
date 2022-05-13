@@ -1,6 +1,7 @@
 // built-in fetch client
 import { VeloceClient } from './client'
 import { GenericKeyValue } from './types'
+
 /** Fetch Wrapper */
 export async function f(
   url: string,
@@ -8,6 +9,7 @@ export async function f(
   params?: GenericKeyValue,
   options?: GenericKeyValue
 ) {
+
   const opts = {
     method,
     headers: { 'Content-Type': 'application/json' }, // @TODO change to jsonql next
@@ -23,11 +25,11 @@ export async function f(
   } else {
     opts.body = JSON.stringify(params)
   }
-  return fetch(
-    url,
-    options ? Object.assign(opts, options) : opts
-  )
-  .then((res: any) => res.json()) // always return a json
+
+  const _opt = options ? Object.assign(opts, options) : opts
+
+  return fetch(url, _opt)
+            .then((res: any) => res.json()) // always return a json
 }
 /** Supply out fetch client here */
 export class VeloceFetchClient extends VeloceClient {

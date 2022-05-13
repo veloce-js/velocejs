@@ -1,0 +1,354 @@
+[
+  {
+    type: 'ClassMethod',
+    span: { start: 218, end: 273, ctxt: 0 },
+    key: {
+      type: 'Identifier',
+      span: { start: 228, end: 249, ctxt: 0 },
+      value: 'protectedRouteHandler',
+      optional: false
+    },
+    function: {
+      params: [],
+      decorators: [],
+      span: { start: 218, end: 273, ctxt: 0 },
+      body: {
+        type: 'BlockStatement',
+        span: { start: 252, end: 273, ctxt: 0 },
+        stmts: [
+          {
+            type: 'ReturnStatement',
+            span: { start: 258, end: 269, ctxt: 0 },
+            argument: {
+              type: 'BooleanLiteral',
+              span: { start: 265, end: 269, ctxt: 0 },
+              value: true
+            }
+          }
+        ]
+      },
+      generator: false,
+      async: false,
+      typeParameters: null,
+      returnType: null
+    },
+    kind: 'method',
+    isStatic: false,
+    accessibility: 'protected',
+    isAbstract: false,
+    isOptional: false,
+    isOverride: false
+  },
+  {
+    type: 'ClassMethod',
+    span: { start: 277, end: 383, ctxt: 0 },
+    key: {
+      type: 'Identifier',
+      span: { start: 277, end: 281, ctxt: 0 },
+      value: 'post',
+      optional: false
+    },
+    function: {
+      params: [
+        {
+          type: 'Parameter',
+          span: { start: 282, end: 294, ctxt: 0 },
+          decorators: [],
+          pat: {
+            type: 'Identifier',
+            span: { start: 282, end: 294, ctxt: 0 },
+            value: 'year',
+            optional: false,
+            typeAnnotation: {
+              type: 'TsTypeAnnotation',
+              span: { start: 286, end: 294, ctxt: 0 },
+              typeAnnotation: {
+                type: 'TsKeywordType',
+                span: { start: 288, end: 294, ctxt: 0 },
+                kind: 'string'
+              }
+            }
+          }
+        },
+        {
+          type: 'Parameter',
+          span: { start: 296, end: 309, ctxt: 0 },
+          decorators: [],
+          pat: {
+            type: 'Identifier',
+            span: { start: 296, end: 309, ctxt: 0 },
+            value: 'month',
+            optional: false,
+            typeAnnotation: {
+              type: 'TsTypeAnnotation',
+              span: { start: 301, end: 309, ctxt: 0 },
+              typeAnnotation: {
+                type: 'TsKeywordType',
+                span: { start: 303, end: 309, ctxt: 0 },
+                kind: 'string'
+              }
+            }
+          }
+        },
+        {
+          type: 'Parameter',
+          span: { start: 311, end: 322, ctxt: 0 },
+          decorators: [],
+          pat: {
+            type: 'Identifier',
+            span: { start: 311, end: 322, ctxt: 0 },
+            value: 'day',
+            optional: false,
+            typeAnnotation: {
+              type: 'TsTypeAnnotation',
+              span: { start: 314, end: 322, ctxt: 0 },
+              typeAnnotation: {
+                type: 'TsKeywordType',
+                span: { start: 316, end: 322, ctxt: 0 },
+                kind: 'string'
+              }
+            }
+          }
+        }
+      ],
+      decorators: [],
+      span: { start: 277, end: 383, ctxt: 0 },
+      body: {
+        type: 'BlockStatement',
+        span: { start: 324, end: 383, ctxt: 0 },
+        stmts: [
+          {
+            type: 'ReturnStatement',
+            span: { start: 331, end: 379, ctxt: 0 },
+            argument: {
+              type: 'TemplateLiteral',
+              span: { start: 338, end: 379, ctxt: 0 },
+              expressions: [
+                {
+                  type: 'CallExpression',
+                  span: { start: 349, end: 377, ctxt: 0 },
+                  callee: {
+                    type: 'MemberExpression',
+                    span: { start: 349, end: 372, ctxt: 0 },
+                    object: {
+                      type: 'ArrayExpression',
+                      span: { start: 349, end: 367, ctxt: 0 },
+                      elements: [
+                        {
+                          spread: null,
+                          expression: {
+                            type: 'Identifier',
+                            span: { start: 350, end: 354, ctxt: 0 },
+                            value: 'year',
+                            optional: false
+                          }
+                        },
+                        {
+                          spread: null,
+                          expression: {
+                            type: 'Identifier',
+                            span: { start: 356, end: 361, ctxt: 0 },
+                            value: 'month',
+                            optional: false
+                          }
+                        },
+                        {
+                          spread: null,
+                          expression: {
+                            type: 'Identifier',
+                            span: { start: 363, end: 366, ctxt: 0 },
+                            value: 'day',
+                            optional: false
+                          }
+                        }
+                      ]
+                    },
+                    property: {
+                      type: 'Identifier',
+                      span: { start: 368, end: 372, ctxt: 0 },
+                      value: 'join',
+                      optional: false
+                    }
+                  },
+                  arguments: [
+                    {
+                      spread: null,
+                      expression: {
+                        type: 'StringLiteral',
+                        span: { start: 373, end: 376, ctxt: 0 },
+                        value: '-',
+                        raw: "'-'"
+                      }
+                    }
+                  ],
+                  typeArguments: null
+                }
+              ],
+              quasis: [
+                {
+                  type: 'TemplateElement',
+                  span: { start: 339, end: 347, ctxt: 0 },
+                  tail: false,
+                  cooked: 'This is ',
+                  raw: 'This is '
+                },
+                {
+                  type: 'TemplateElement',
+                  span: { start: 378, end: 378, ctxt: 0 },
+                  tail: true,
+                  cooked: '',
+                  raw: ''
+                }
+              ]
+            }
+          }
+        ]
+      },
+      generator: false,
+      async: false,
+      typeParameters: null,
+      returnType: null
+    },
+    kind: 'method',
+    isStatic: false,
+    accessibility: null,
+    isAbstract: false,
+    isOptional: false,
+    isOverride: false
+  },
+  {
+    type: 'ClassMethod',
+    span: { start: 387, end: 443, ctxt: 0 },
+    key: {
+      type: 'Identifier',
+      span: { start: 394, end: 406, ctxt: 0 },
+      value: 'someEndpoint',
+      optional: false
+    },
+    function: {
+      params: [],
+      decorators: [],
+      span: { start: 387, end: 443, ctxt: 0 },
+      body: {
+        type: 'BlockStatement',
+        span: { start: 409, end: 443, ctxt: 0 },
+        stmts: [
+          {
+            type: 'ReturnStatement',
+            span: { start: 416, end: 439, ctxt: 0 },
+            argument: {
+              type: 'StringLiteral',
+              span: { start: 423, end: 439, ctxt: 0 },
+              value: 'some end point',
+              raw: "'some end point'"
+            }
+          }
+        ]
+      },
+      generator: false,
+      async: false,
+      typeParameters: null,
+      returnType: null
+    },
+    kind: 'method',
+    isStatic: false,
+    accessibility: 'public',
+    isAbstract: false,
+    isOptional: false,
+    isOverride: false
+  },
+  {
+    type: 'ClassMethod',
+    span: { start: 447, end: 535, ctxt: 0 },
+    key: {
+      type: 'Identifier',
+      span: { start: 454, end: 459, ctxt: 0 },
+      value: 'login',
+      optional: false
+    },
+    function: {
+      params: [
+        {
+          type: 'Parameter',
+          span: { start: 460, end: 476, ctxt: 0 },
+          decorators: [],
+          pat: {
+            type: 'Identifier',
+            span: { start: 460, end: 476, ctxt: 0 },
+            value: 'username',
+            optional: false,
+            typeAnnotation: {
+              type: 'TsTypeAnnotation',
+              span: { start: 468, end: 476, ctxt: 0 },
+              typeAnnotation: {
+                type: 'TsKeywordType',
+                span: { start: 470, end: 476, ctxt: 0 },
+                kind: 'string'
+              }
+            }
+          }
+        },
+        {
+          type: 'Parameter',
+          span: { start: 478, end: 494, ctxt: 0 },
+          decorators: [],
+          pat: {
+            type: 'Identifier',
+            span: { start: 478, end: 494, ctxt: 0 },
+            value: 'password',
+            optional: false,
+            typeAnnotation: {
+              type: 'TsTypeAnnotation',
+              span: { start: 486, end: 494, ctxt: 0 },
+              typeAnnotation: {
+                type: 'TsKeywordType',
+                span: { start: 488, end: 494, ctxt: 0 },
+                kind: 'string'
+              }
+            }
+          }
+        }
+      ],
+      decorators: [],
+      span: { start: 447, end: 535, ctxt: 0 },
+      body: {
+        type: 'BlockStatement',
+        span: { start: 496, end: 535, ctxt: 0 },
+        stmts: [
+          {
+            type: 'ReturnStatement',
+            span: { start: 502, end: 531, ctxt: 0 },
+            argument: {
+              type: 'ObjectExpression',
+              span: { start: 509, end: 531, ctxt: 0 },
+              properties: [
+                {
+                  type: 'Identifier',
+                  span: { start: 511, end: 519, ctxt: 0 },
+                  value: 'username',
+                  optional: false
+                },
+                {
+                  type: 'Identifier',
+                  span: { start: 521, end: 529, ctxt: 0 },
+                  value: 'password',
+                  optional: false
+                }
+              ]
+            }
+          }
+        ]
+      },
+      generator: false,
+      async: false,
+      typeParameters: null,
+      returnType: null
+    },
+    kind: 'method',
+    isStatic: false,
+    accessibility: 'public',
+    isAbstract: false,
+    isOptional: false,
+    isOverride: false
+  }
+]
