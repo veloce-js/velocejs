@@ -11,15 +11,13 @@ import { isFunction, toArray } from '@jsonql/utils'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:serve-static')
 
-/**
- * serve static files from assetDir
- */
+/** serve static files from assetDir */
 export function serveStatic(
   assetDir: string | string[],
   onAbortedHandler?: () => void
 ) {
   const dirs: Array<string> = toArray(assetDir)
-
+  // return handler 
   return function(res: HttpResponse, req: HttpRequest) {
     // we need to provide a onAbortedHandler here
     res.onAborted(() => {
@@ -31,7 +29,7 @@ export function serveStatic(
     })
     let url = req.getUrl()
     if (url === '/') {
-      url = DEFAULT_FILE
+      url = DEFAULT_FILE // @TODO should we allow change this
     }
     debugFn(url)
     const file = dirs
