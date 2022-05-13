@@ -16,7 +16,7 @@ const debugFn = (0, debug_1.default)('velocejs:server:serve-static');
 /** serve static files from assetDir */
 function serveStatic(assetDir, onAbortedHandler) {
     const dirs = (0, utils_1.toArray)(assetDir);
-    // return handler 
+    // return handler
     return function (res, req) {
         // we need to provide a onAbortedHandler here
         res.onAborted(() => {
@@ -36,7 +36,7 @@ function serveStatic(assetDir, onAbortedHandler) {
             .filter((dir) => node_fs_1.default.existsSync(node_path_1.default.join(dir, url)))
             .map((dir) => node_fs_1.default.readFileSync(node_path_1.default.join(dir, url)));
         if (file.length) {
-            const mimeType = (0, mime_1.lookup)(url);
+            const mimeType = (0, mime_1.lookupMimeType)(url);
             const writer = (0, writers_1.getWriter)(res);
             writer(file[0], { [constants_1.CONTENT_TYPE]: mimeType });
         }
