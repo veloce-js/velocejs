@@ -9,7 +9,7 @@ specifiers:
   '@types/node': ^17.0.32
   '@typescript-eslint/eslint-plugin': ^5.23.0
   '@typescript-eslint/parser': ^5.23.0
-  '@velocejs/bodyparser': workspace:^0.3.1
+  '@velocejs/bodyparser': workspace:^0.4.0
   ava: ^4.2.0
   debug: ^4.3.4
   esbuild: ^0.14.39
@@ -24,6 +24,7 @@ specifiers:
   tslib: ^2.4.0
   typescript: ^4.6.4
   uWebSockets.js: github:uNetworking/uWebSockets.js#v20.10.0
+  ws: ^8.6.0
 
 dependencies:
   '@jsonql/utils': 0.6.8
@@ -51,6 +52,7 @@ devDependencies:
   open: 8.4.0
   rimraf: 3.0.2
   typescript: 4.6.4
+  ws: 8.6.0
 
 packages:
 
@@ -220,6 +222,8 @@ packages:
     resolution: {integrity: sha512-n2Q6i+fnJqzOaq2VkdXxy2TCPCWQZHiCo0XqmrCvDWcZQKRyZzYi4Z0yxlBuN0w+r2ZHmre+Q087DSrw3pbJDQ==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+    dependencies:
+      '@babel/types': 7.17.10
     dev: true
 
   /@babel/template/7.16.7:
@@ -2773,6 +2777,19 @@ packages:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 3.0.7
+    dev: true
+
+  /ws/8.6.0:
+    resolution: {integrity: sha512-AzmM3aH3gk0aX7/rZLYvjdvZooofDu3fFOzGqcSnQ1tOcTWwhM/o+q++E8mAyVVIyUdajrkzWUGftaVSDLn1bw==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
     dev: true
 
   /y18n/4.0.3:
