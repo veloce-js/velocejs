@@ -4,19 +4,26 @@ exports.writeBufferToFile = exports.write404 = exports.getWriter = exports.jsonW
 const tslib_1 = require("tslib");
 // from write-json and change the interface to be the same
 const fs_extra_1 = tslib_1.__importDefault(require("fs-extra"));
-const constants_1 = require("./base/constants");
-const status_1 = require("./base/status");
+const constants_1 = require("./lib/constants");
+const status_1 = require("./lib/status");
+const utils_1 = require("@jsonql/utils");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)('velocejs:server:writers');
-// just write the header and encode the JSON to string
+/** just write the header and encode the JSON to string */
 const jsonWriter = (res) => {
     const writer = (0, exports.getWriter)(res);
+    // return fn
     return (jsonObj, status) => {
-        writer(JSON.stringify(jsonObj), { [constants_1.CONTENT_TYPE]: constants_1.JSON_HEADER }, status);
+        const json = (0, utils_1.parseJson)(jsonObj, true);
+        if (!json) {
+            debugFn('jsonObj', jsonObj);
+            throw new Error(`input is not in correct json format!`);
+        }
+        writer(JSON.stringify(json), { [constants_1.CONTENT_TYPE]: constants_1.JSON_HEADER }, status);
     };
 };
 exports.jsonWriter = jsonWriter;
-// break this out for re-use
+/** create a writer for output to respond */
 const getWriter = (res) => {
     return (payload, headers, status) => {
         // this could create a bug - if they pass the wrong status code
@@ -35,13 +42,14 @@ const getWriter = (res) => {
     };
 };
 exports.getWriter = getWriter;
+/** just issue a 404 */
 const write404 = (res) => {
     res.cork(() => {
         res.writeStatus(status_1.C404).end();
     });
 };
 exports.write404 = write404;
-// writing the Buffer to a file
+/** writing the Buffer to a file */
 function writeBufferToFile(buffer, path, permission = 0o666) {
     let fileDescriptor;
     try {

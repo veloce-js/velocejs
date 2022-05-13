@@ -14,3 +14,6 @@ export declare const IS_FORM = "form";
 export declare const IS_MULTI = "multipart";
 export declare const IS_JSON = "json";
 export declare const IS_OTHER = "other";
+export declare const BACK_PRESSURE = 1024;
+export declare const MAX_PAYLOAD_LENGTH: number;
+export declare const SHARED_COMPRESSOR: number;

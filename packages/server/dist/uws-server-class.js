@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UwsServer = void 0;
 const tslib_1 = require("tslib");
+const constants_1 = require("./lib/constants");
 const create_app_1 = require("./create-app");
-const constants_1 = require("./base/constants");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)(`velocejs:server:uws-server-class`);
 // main
@@ -20,14 +20,14 @@ class UwsServer {
     constructor(opts) {
         this.opts = opts;
     }
-    // stock start function
+    /** stock start function */
     onStartFn = (url) => {
         debugFn(`Server started at ${url}`);
     };
     onStartErrorFn = () => {
         throw new Error(`Server could not start!`);
     };
-    // Taking the app.listen out because there are more options to deal with now
+    /** Taking the app.listen out because there are more options to deal with now */
     listen(app) {
         const cb = (token) => {
             if (token) {
@@ -45,44 +45,46 @@ class UwsServer {
         }
         Reflect.apply(app.listen, app, params);
     }
-    // overwrite the port number via the start up env
+    /** overwrite the port number via the start up env */
     get portNum() {
         const p = process.env.PORT;
         return p ? parseInt(p) : this.port;
     }
-    // setter for post number
+    /** setter for post number */
     set portNum(port) {
         this.port = port;
     }
-    // we could specify the host like 0.0.0.0
-    // listen(host: RecognizedString, port: number, cb: (listenSocket: us_listen_socket) => void): TemplatedApp;
+    /**
+      we could specify the host like 0.0.0.0
+      listen(host: RecognizedString, port: number, cb: (listenSocket: us_listen_socket) => void): TemplatedApp;
+    */
     get hostName() {
         const h = process.env.HOST;
         return h ? h : this.host;
     }
-    // setter for host name
+    /** setter for host name */
     set hostName(host) {
         this.host = host;
     }
-    // set a custom on start callback
+    /** set a custom on start callback */
     set onStart(cb) {
         this.onStartFn = cb;
     }
-    // allow to pass a callback when server couldn't start
+    /** allow to pass a callback when server couldn't start */
     set onError(cb) {
         this.onStartErrorFn = cb;
     }
-    // this doesn't do anything just for overwrite or display a debug message
+    /** this doesn't do anything just for overwrite or display a debug message */
     onStartCb() {
         const portNum = this.portNum || this.getPortNum();
         const hostName = this.getHostName();
         this.onStartFn(`${hostName}:${portNum}`);
     }
-    // to init, bind handlers and then start up the UWS Server
+    /** to init, bind handlers and then start up the UWS Server */
     run(handlers) {
         const app = (0, create_app_1.createApp)(this.opts);
         if (!handlers.length) {
-            throw new Error(`You must have at least 1 handler!`);
+            throw new Error(`You must provide at least 1 handler!`);
         }
         handlers.forEach(o => {
             const { type, path, handler } = o;
@@ -103,13 +105,13 @@ class UwsServer {
             this.app = app;
         }
     }
-    // manually start the server
+    /** manually start the server */
     start() {
         if (!this.running) {
             this.listen(this.app);
         }
     }
-    // gracefully shutdown the server
+    /** gracefully shutdown the server */
     shutdown() {
         if (this.running) {
             (0, create_app_1.shutdownServer)(this.token);

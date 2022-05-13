@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/server",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "description": "Server core using uWebsocket.js with additional helpers",
   "main": "dist/index.js",
   "module": "dist/index.d.ts",
