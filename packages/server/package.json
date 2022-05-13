@@ -33,12 +33,15 @@
     "postpublish": "pnpm update:version",
     "patch": "npm version patch",
     "minor": "npm version minor",
-    "major": "npm version major"
+    "major": "npm version major",
+    "start:socket": "pnpm ts ./tests/fixtures/socket-server.ts",
+    "start:client": "node ./tests/fixtures/socket-client.js"
   },
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "UNLICENSED",
   "dependencies": {
     "@jsonql/utils": "^0.6.8",
+    "arraybuffer-to-string": "^1.0.2",
     "debug": "^4.3.4",
     "mime-types": "^2.1.35",
     "tslib": "^2.4.0",

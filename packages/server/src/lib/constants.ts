@@ -1,3 +1,4 @@
+import uWS from 'uWebSockets.js'
 // This is move to src root level for export as well
 // as this will be share between different packages
 export const SUPPORT_REST_ROUTES = ['any', 'get', 'post', 'put', 'options' ,'del', 'patch', 'head', 'connect', 'trace']
@@ -24,3 +25,8 @@ export const IS_FORM = 'form' // could be get could be post or anything with the
 export const IS_MULTI = 'multipart'
 export const IS_JSON = 'json'
 export const IS_OTHER = 'other'
+// For socket operation
+export const BACK_PRESSURE = 1024
+export const MAX_PAYLOAD_LENGTH = 16 * 1024 * 1024
+
+export const SHARED_COMPRESSOR = uWS.SHARED_COMPRESSOR
