@@ -1,8 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pipeStreamOverResponse = exports.onAbortedOrFinishedResponse = exports.toArrayBuffer = exports.getFileSize = void 0;
+exports.pipeStreamOverResponse = exports.onAbortedOrFinishedResponse = exports.toArrayBuffer = exports.getFileSize = exports.arrayBufferToString = void 0;
 const tslib_1 = require("tslib");
 const node_fs_1 = tslib_1.__importDefault(require("node:fs"));
+/** this is from that stupid module arraybuffer-to-string really? */
+function arrayBufferToString(buffer, encoding = 'utf8') {
+    return Buffer.from(buffer).toString(encoding);
+}
+exports.arrayBufferToString = arrayBufferToString;
 /** get the file size */
 function getFileSize(fileName) {
     return node_fs_1.default.statSync(fileName).size;
