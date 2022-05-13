@@ -9,26 +9,29 @@ import {
 } from './types'
 import { CONTENT_TYPE, JSON_HEADER } from './lib/constants'
 import { C200, C404, lookupStatus } from './lib/status'
+import { parseJson } from '@jsonql/utils'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:writers')
 
-// just write the header and encode the JSON to string
+/** just write the header and encode the JSON to string */
 export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
   const writer = getWriter(res)
-
+  // return fn
   return (jsonObj: any, status?: number): void => {
-
-
-
+    const json = parseJson(jsonObj, true)
+    if (!json) {
+      debugFn('jsonObj', jsonObj)
+      throw new Error(`input is not in correct json format!`)
+    }
     writer(
-      JSON.stringify(jsonObj),
-      { [CONTENT_TYPE]: JSON_HEADER},
+      JSON.stringify(json),
+      { [CONTENT_TYPE]: JSON_HEADER },
       status
     )
   }
 }
 
-// break this out for re-use
+/** create a writer for output to respond */
 export const getWriter = (res: HttpResponse): UwsWriter => {
 
   return (
@@ -52,13 +55,14 @@ export const getWriter = (res: HttpResponse): UwsWriter => {
   }
 }
 
+/** just issue a 404 */
 export const write404 = (res: HttpResponse): void => {
   res.cork(() => {
     res.writeStatus(C404).end()
   })
 }
 
-// writing the Buffer to a file
+/** writing the Buffer to a file */
 export function writeBufferToFile(buffer: Buffer, path: string, permission=0o666): boolean {
   let fileDescriptor: any
   try {
