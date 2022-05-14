@@ -51,5 +51,3 @@ glob(join(pkgsDir, '**!(node_modules)', 'package.json'), function(err, files) {
     )
     .then(console.info)
 })
-
-function updatePackageJson() {}

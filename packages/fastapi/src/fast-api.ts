@@ -72,7 +72,6 @@ const placeholderFn = (...args: any[] ) => { console.log(args) }
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 export class FastApi implements FastApiInterface {
-  private _isContract! = '' // rest / jsonql or nothing
   private _uwsInstance: UwsServer
   private _config: any
   private _contract!: JsonqlContractWriter
@@ -444,10 +443,14 @@ export class FastApi implements FastApiInterface {
   }
 
   /** Write the output
-  @BUG if the payload is not a string that could lead to lots of strange behaivor
+  This will be only output
   */
   private _render(type: string, payload: any): void {
-    const writer = getWriter(this.res as HttpResponse)
+    const res = this.res as HttpResponse
+    const writer = getWriter(res)
+    
+
+
     switch (type) {
       case IS_OTHER:
         writer(payload, this._headers, this._status)
@@ -461,7 +464,7 @@ export class FastApi implements FastApiInterface {
             // return this.writer(payload, this._headers, this._status)
           }
         }
-        // this.jsonWriter(payload, this._status)
+        jsonWriter(res)(payload, this._status)
     }
   }
 
@@ -568,6 +571,11 @@ export class FastApi implements FastApiInterface {
 
   }
 
+  /** @TODO for generate ssr content, should provide options via config but they could override here */
+  protected ssr(data: any, options?: any) {
+
+  }
+
   ///////////////////////////////////////////
   //             PUBLIC                    //
   ///////////////////////////////////////////
@@ -600,7 +608,7 @@ export class FastApi implements FastApiInterface {
     }
   }
 
-  // This is a global override for the status when validation failed
+  /* This is a global override for the status when validation failed */
   public set validationErrorStatus(status: number) {
     this._validationErrStatus = status || 417
   }

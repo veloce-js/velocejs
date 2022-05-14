@@ -17,7 +17,8 @@
     "clean": "rm -rf node_modules **/*/node_modules",
     "build:server": "pnpm -C ./packages/server build:tsc",
     "plop": "plop",
-    "update:pkg": "node ./update-devs.js"
+    "update:pkg": "node ./update-devs.js",
+    "gen:types": "node ./gen-types.js"
   },
   "repository": {
     "type": "git",

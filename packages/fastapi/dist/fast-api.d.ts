@@ -1,7 +1,8 @@
-import { AppOptions, HttpResponse, HttpRequest, UwsRespondBody, UwsWriter, UwsJsonWriter } from '@velocejs/server/index';
+import { AppOptions, HttpResponse, HttpRequest, UwsRespondBody } from '@velocejs/server/index';
 import { RouteMetaInfo, VeloceMiddleware } from './types';
 import { FastApiInterface } from './lib/fast-api-interface';
 export declare class FastApi implements FastApiInterface {
+    private _isContract;
     private _uwsInstance;
     private _config;
     private _contract;
@@ -18,11 +19,9 @@ export declare class FastApi implements FastApiInterface {
     protected payload: UwsRespondBody | undefined;
     protected res: HttpResponse | undefined;
     protected req: HttpRequest | undefined;
-    protected writer: UwsWriter;
-    protected jsonWriter: UwsJsonWriter;
     validatorPlugins: Array<any>;
     constructor(config?: AppOptions);
-    protected prepare(routes: Array<RouteMetaInfo>, apiType?: string): void;
+    /**                 PRIVATE METHODS                   */
     /** whether to setup a contract or not, if there is contract setup then we return a new route */
     private _prepareContract;
     /** generate an additonal route for the contract */
@@ -57,15 +56,44 @@ export declare class FastApi implements FastApiInterface {
     @BUG if the payload is not a string that could lead to lots of strange behaivor
     */
     private _render;
+    /**           PROTECTED METHODS               */
+    /**
+      instead of using a Prepare decorator and ugly call the super.run
+      we use a class decorator to call this method on init
+      Dev can do @Rest(config), also for none-TS env dev can
+      subclass then call this method to arhive the same effects
+    */
+    protected prepare(routes: Array<RouteMetaInfo>, apiType?: string): void;
+    /**         HOOKS                */
+    /**
+      We are not going to implement this tranditional middleware system
+      instead we provide several hooks for the dev to customize how the
+      input / output will be and they just have to overwrite this hooks to
+      get the result
+    */
     protected writeHeader(key: string, value: string): void;
     protected writeStatus(status: number): void;
+    /**
+      We have experience a lot of problem when delivery the content try to intercept
+      the content type, instead we now force the finally output to use one of the following
+  
+    */
+    /** Apart from serving the standard html, when using the json contract system
+    this will get wrap inside the delivery format - next protobuf as well */
+    protected json(content: any): void;
+    /** just a string */
+    protected text(content: string): void;
+    /** serving up the html content with correct html header */
+    protected html(content: string): void;
+    /** for serving up image / video or any none-textual content */
+    protected binary(content: any): void;
     /** register a method that will check the route */
     registerProtectedRouteMethod(): void;
     /** dev can register their global middleware here */
     use(middlewares: VeloceMiddleware | Array<VeloceMiddleware>): void;
     set validationErrorStatus(status: number);
     /**
-     * The interface to serve up the contract, it's public but prefix underscore to avoid override
+     The interface to serve up the contract, it's public but prefix underscore to avoid override
      */
     _serveContract(): void;
     /**

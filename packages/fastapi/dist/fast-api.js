@@ -17,18 +17,19 @@ const validator_1 = require("./lib/validator");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fast-api:main');
 // dummy stuff
-const placeholder = -1;
+const placeholderVal = -1;
 const placeholderFn = (...args) => { console.log(args); };
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 class FastApi {
+    _isContract = ''; // rest / jsonql or nothing
     _uwsInstance;
     _config;
     _contract;
     _routeForContract = {};
     _written = false;
     _headers = {};
-    _status = placeholder;
+    _status = placeholderVal;
     _onConfigReady; // fucking any script
     _onConfigWait = placeholderFn;
     _onConfigError = placeholderFn;
@@ -39,8 +40,6 @@ class FastApi {
     payload;
     res;
     req;
-    writer = placeholderFn;
-    jsonWriter = () => placeholderFn;
     // override this then we could use this to add to the plugin list
     validatorPlugins = []; // @TODO fix type
     // store the UWS server instance when init
@@ -54,29 +53,9 @@ class FastApi {
             this._onConfigError = rejecter;
         });
     }
-    // instead of using a Prepare decorator and ugly call the super.run
-    // we use a class decorator to call this method on init
-    // Dev can do @Rest(config)
-    prepare(routes, apiType = constants_1.REST_NAME) {
-        if (constants_2.isDebug) {
-            console.time('FastApiStartUp');
-        }
-        this._uwsInstance.autoStart = false;
-        // @0.4.0 we change this to a chain promise start up sequence
-        // check the config to see if there is one to generate contract
-        this._config = new config_1.VeloceConfig();
-        (0, utils_1.chainProcessPromises)((routes) => this._config.isReady.then(() => routes), // this is just pause for the isReady
-        this._prepareRoutes.bind(this), // repare the normal route as well as the contract route
-        this._prepareContract(apiType), // here if we have setup the contract then insert route as well
-        this._run.bind(this) // actually run it
-        )(routes)
-            .then(() => {
-            this._onConfigWait(true);
-        })
-            .catch((e) => {
-            this._onConfigError(e);
-        });
-    }
+    ////////////////////////////////////////////////////////
+    /**                 PRIVATE METHODS                   */
+    ////////////////////////////////////////////////////////
     /** whether to setup a contract or not, if there is contract setup then we return a new route */
     _prepareContract(apiType) {
         return async (routes) => {
@@ -307,47 +286,32 @@ class FastApi {
     /*, req?: HttpRequest */
     ) {
         this._headers = {};
-        this._status = placeholder;
+        this._status = placeholderVal;
         this._written = false;
         this.payload = payload;
         this.res = res;
-        // this.req = req
-        // create a jsonWriter and a writer
-        // add a guard to prevent accidental double write
-        const _writer = (0, server_1.getWriter)(this.res);
-        this.writer = (...args) => {
-            if (!this._written) {
-                this._written = true;
-                Reflect.apply(_writer, null, args);
-            }
-        };
-        const _jsonWriter = (0, server_1.jsonWriter)(this.res);
-        this.jsonWriter = (...args) => {
-            if (!this._written) {
-                this._written = true;
-                Reflect.apply(_jsonWriter, null, args);
-            }
-        };
+        // we have the dynamic generate _writer _jsonWriter they are useless
     }
     // call this after the call finish
     _unsetTemp() {
         // create a nextTick effect
         setTimeout(() => {
-            ['res', 'payload', 'writer', 'jsonWriter'].forEach(fn => {
+            ['res', 'payload'].forEach(fn => {
                 this[fn] = undefined;
             });
             this._written = false;
             this._headers = {};
-            this._status = placeholder;
+            this._status = placeholderVal;
         }, 0);
     }
     /** Write the output
     @BUG if the payload is not a string that could lead to lots of strange behaivor
     */
     _render(type, payload) {
+        const writer = (0, server_1.getWriter)(this.res);
         switch (type) {
             case server_1.IS_OTHER:
-                this.writer(payload, this._headers, this._status);
+                writer(payload, this._headers, this._status);
                 break;
             default:
                 // check if they set a different content-type header
@@ -355,12 +319,67 @@ class FastApi {
                 for (const key in this._headers) {
                     if (key.toLowerCase() === server_1.CONTENT_TYPE) {
                         // exit here
-                        return this.writer(payload, this._headers, this._status);
+                        // return this.writer(payload, this._headers, this._status)
                     }
                 }
-                this.jsonWriter(payload, this._status);
+            // this.jsonWriter(payload, this._status)
         }
     }
+    /*
+    REF
+    const _writer = (0, server_1.getWriter)(this.res);
+    this.writer = (...args) => {
+        if (!this._written) {
+            this._written = true;
+            Reflect.apply(_writer, null, args);
+        }
+    };
+    const _jsonWriter = (0, server_1.jsonWriter)(this.res);
+    this.jsonWriter = (...args) => {
+        if (!this._written) {
+            this._written = true;
+            Reflect.apply(_jsonWriter, null, args);
+        }
+    };
+    */
+    ////////////////////////////////////////////////
+    /**           PROTECTED METHODS               */
+    ////////////////////////////////////////////////
+    /**
+      instead of using a Prepare decorator and ugly call the super.run
+      we use a class decorator to call this method on init
+      Dev can do @Rest(config), also for none-TS env dev can
+      subclass then call this method to arhive the same effects
+    */
+    prepare(routes, apiType = constants_1.REST_NAME) {
+        if (constants_2.isDebug) {
+            console.time('FastApiStartUp');
+        }
+        this._uwsInstance.autoStart = false;
+        // @0.4.0 we change this to a chain promise start up sequence
+        // check the config to see if there is one to generate contract
+        this._config = new config_1.VeloceConfig();
+        (0, utils_1.chainProcessPromises)((routes) => this._config.isReady.then(() => routes), // this is just pause for the isReady
+        this._prepareRoutes.bind(this), // repare the normal route as well as the contract route
+        this._prepareContract(apiType), // here if we have setup the contract then insert route as well
+        this._run.bind(this) // actually run it
+        )(routes)
+            .then(() => {
+            this._onConfigWait(true);
+        })
+            .catch((e) => {
+            this._onConfigError(e);
+        });
+    }
+    ///////////////////////////////////
+    /**         HOOKS                */
+    ////////////////////////////////////
+    /**
+      We are not going to implement this tranditional middleware system
+      instead we provide several hooks for the dev to customize how the
+      input / output will be and they just have to overwrite this hooks to
+      get the result
+    */
     // if the dev use this to provide an extra header
     // then we can check if the contentType is already provided
     // if so then we don't use the default one
@@ -369,6 +388,24 @@ class FastApi {
     }
     writeStatus(status) {
         this._status = status;
+    }
+    /**
+      We have experience a lot of problem when delivery the content try to intercept
+      the content type, instead we now force the finally output to use one of the following
+  
+    */
+    /** Apart from serving the standard html, when using the json contract system
+    this will get wrap inside the delivery format - next protobuf as well */
+    json(content) {
+    }
+    /** just a string */
+    text(content) {
+    }
+    /** serving up the html content with correct html header */
+    html(content) {
+    }
+    /** for serving up image / video or any none-textual content */
+    binary(content) {
     }
     ///////////////////////////////////////////
     //             PUBLIC                    //
@@ -401,7 +438,7 @@ class FastApi {
         this._validationErrStatus = status || 417;
     }
     /**
-     * The interface to serve up the contract, it's public but prefix underscore to avoid override
+     The interface to serve up the contract, it's public but prefix underscore to avoid override
      */
     _serveContract() {
         debug('call _serveContract'); // if I remove this then it doens't work??? @BUG
