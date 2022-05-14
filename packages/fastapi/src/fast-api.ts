@@ -74,7 +74,7 @@ const placeholderFn = (...args: any[] ) => { console.log(args) }
 // instead we create an instance of it
 export class FastApi implements FastApiInterface {
   private _uwsInstance: UwsServer
-  private _config: any
+  private _config!: VeloceConfig
   private _contract!: JsonqlContractWriter
   private _routeForContract = {}
   private _written = false
@@ -343,7 +343,7 @@ export class FastApi implements FastApiInterface {
     debug('errors', payload)
     // @TODO should replace with the jsonWriter
     if (this.res && !this._written) {
-      return jsonWriter(this.res)(payload, this._validationErrStatus + '')
+      return jsonWriter(this.res)(payload, this._validationErrStatus)
     }
     debug(`error json already written?`)
   }
@@ -515,50 +515,58 @@ export class FastApi implements FastApiInterface {
   // if the dev use this to provide an extra header
   // then we can check if the contentType is already provided
   // if so then we don't use the default one
-  protected writeHeader(key: string, value: string) {
+  protected $writeHeader(key: string, value: string) {
     this._headers[key] = value
   }
 
-  protected writeStatus(status: number) {
+  protected $writeStatus(status: number) {
     this._status = status
   }
 
   /**
     We have experience a lot of problem when delivery the content try to intercept
     the content type, instead we now force the finally output to use one of the following
-
+    all with a $ to start to make sure no conflict with the regular public names
   */
 
   /** Apart from serving the standard html, when using the json contract system
   this will get wrap inside the delivery format - next protobuf as well */
-  protected json(content: any) {
+  protected $json(content: any) {
     if (this.res && !this._written) {
       return jsonWriter(this.res)(content)
     }
   }
 
   /** just a string */
-  protected text(content: string) {
+  protected $text(content: string | Buffer, type = 'text') {
     if (this.res && !this._written) {
-      return getRenderer(this.res)('text', content)
+      return getRenderer(this.res)(type, content)
     }
   }
 
   /** serving up the html content with correct html header */
-  protected html(content: string) {
+  protected $html(content: string | Buffer) {
     if (this.res && !this._written) {
       return getRenderer(this.res)('html', content)
     }
   }
 
   /** for serving up image / video or any none-textual content */
-  protected binary(content: any) {
+  protected $binary(content: Buffer) {
     debug('@TODO binary method', content)
+    throw new Error(`binary is not implemented`)
+  }
+
+  /** streaming content */
+  protected $stream(type: string, content: Buffer) {
+    debug('@TODO streaming content', type, content)
+    throw new Error(`stream is not implemented`)
   }
 
   /** @TODO for generate ssr content, should provide options via config but they could override here */
-  protected ssr(data: any, options?: any) {
+  protected $ssr(data: any, options?: any) {
     debug('@TODO ssr method', data, options)
+    throw new Error(`ssr is not implemented`)
   }
 
   ///////////////////////////////////////////

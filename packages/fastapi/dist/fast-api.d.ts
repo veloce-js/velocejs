@@ -2,7 +2,6 @@ import { AppOptions, HttpResponse, HttpRequest, UwsRespondBody } from '@velocejs
 import { RouteMetaInfo, VeloceMiddleware } from './types';
 import { FastApiInterface } from './lib/fast-api-interface';
 export declare class FastApi implements FastApiInterface {
-    private _isContract;
     private _uwsInstance;
     private _config;
     private _contract;
@@ -53,7 +52,7 @@ export declare class FastApi implements FastApiInterface {
     private _setTemp;
     private _unsetTemp;
     /** Write the output
-    @BUG if the payload is not a string that could lead to lots of strange behaivor
+    This will be only output
     */
     private _render;
     /**           PROTECTED METHODS               */
@@ -87,6 +86,10 @@ export declare class FastApi implements FastApiInterface {
     protected html(content: string): void;
     /** for serving up image / video or any none-textual content */
     protected binary(content: any): void;
+    /** streaming content */
+    protected stream(type: string, content: any): void;
+    /** @TODO for generate ssr content, should provide options via config but they could override here */
+    protected ssr(data: any, options?: any): void;
     /** register a method that will check the route */
     registerProtectedRouteMethod(): void;
     /** dev can register their global middleware here */
@@ -102,7 +105,10 @@ export declare class FastApi implements FastApiInterface {
     start(port?: number, host?: string): Promise<string>;
     stop(): void;
     get fastApiInfo(): {
+        dev: boolean;
         port: number;
         host: import("@velocejs/server/index").RecognizedString;
+        useContract: boolean;
+        hasConfig: boolean;
     };
 }

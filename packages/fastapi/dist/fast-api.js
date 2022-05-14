@@ -22,7 +22,6 @@ const placeholderFn = (...args) => { console.log(args); };
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
 class FastApi {
-    _isContract = ''; // rest / jsonql or nothing
     _uwsInstance;
     _config;
     _contract;
@@ -228,11 +227,10 @@ class FastApi {
         };
         debug('errors', payload);
         // @TODO should replace with the jsonWriter
-        if (this.res) {
-            this.res.writeStatus(this._validationErrStatus + '');
-            this.res.write(JSON.stringify(payload));
-            this.res.end();
+        if (this.res && !this._written) {
+            return (0, server_1.jsonWriter)(this.res)(payload, this._validationErrStatus);
         }
+        debug(`error json already written?`);
     }
     /** wrap the _createValidator with additoinal property */
     _createValidator(propertyName, argsList, // @TODO fix type
@@ -251,7 +249,8 @@ class FastApi {
         };
     }
     // break out from above to make the code cleaner
-    async _handleContent(args, handler, type, propertyName) {
+    async _handleContent(args, handler, // Function
+    type, propertyName) {
         // const args2 = this._applyArgs(argNames, params)
         try {
             const reply = await Reflect.apply(handler, this, args);
@@ -305,10 +304,11 @@ class FastApi {
         }, 0);
     }
     /** Write the output
-    @BUG if the payload is not a string that could lead to lots of strange behaivor
+    This will be only output
     */
     _render(type, payload) {
-        const writer = (0, server_1.getWriter)(this.res);
+        const res = this.res;
+        const writer = (0, server_1.getWriter)(res);
         switch (type) {
             case server_1.IS_OTHER:
                 writer(payload, this._headers, this._status);
@@ -319,29 +319,12 @@ class FastApi {
                 for (const key in this._headers) {
                     if (key.toLowerCase() === server_1.CONTENT_TYPE) {
                         // exit here
-                        // return this.writer(payload, this._headers, this._status)
+                        return writer(payload, this._headers, this._status);
                     }
                 }
-            // this.jsonWriter(payload, this._status)
+                (0, server_1.jsonWriter)(res)(payload, this._status);
         }
     }
-    /*
-    REF
-    const _writer = (0, server_1.getWriter)(this.res);
-    this.writer = (...args) => {
-        if (!this._written) {
-            this._written = true;
-            Reflect.apply(_writer, null, args);
-        }
-    };
-    const _jsonWriter = (0, server_1.jsonWriter)(this.res);
-    this.jsonWriter = (...args) => {
-        if (!this._written) {
-            this._written = true;
-            Reflect.apply(_jsonWriter, null, args);
-        }
-    };
-    */
     ////////////////////////////////////////////////
     /**           PROTECTED METHODS               */
     ////////////////////////////////////////////////
@@ -397,15 +380,36 @@ class FastApi {
     /** Apart from serving the standard html, when using the json contract system
     this will get wrap inside the delivery format - next protobuf as well */
     json(content) {
+        if (this.res && !this._written) {
+            return (0, server_1.jsonWriter)(this.res)(content);
+        }
     }
     /** just a string */
     text(content) {
+        if (this.res && !this._written) {
+            return (0, server_1.getRenderer)(this.res)('text', content);
+        }
     }
     /** serving up the html content with correct html header */
     html(content) {
+        if (this.res && !this._written) {
+            return (0, server_1.getRenderer)(this.res)('html', content);
+        }
     }
     /** for serving up image / video or any none-textual content */
     binary(content) {
+        debug('@TODO binary method', content);
+        throw new Error(`binary is not implemented`);
+    }
+    /** streaming content */
+    stream(type, content) {
+        debug('@TODO streaming content', type, content);
+        throw new Error(`stream is not implemented`);
+    }
+    /** @TODO for generate ssr content, should provide options via config but they could override here */
+    ssr(data, options) {
+        debug('@TODO ssr method', data, options);
+        throw new Error(`ssr is not implemented`);
     }
     ///////////////////////////////////////////
     //             PUBLIC                    //
@@ -433,7 +437,7 @@ class FastApi {
             debug(this._middlewares);
         }
     }
-    // This is a global override for the status when validation failed
+    /* This is a global override for the status when validation failed */
     set validationErrorStatus(status) {
         this._validationErrStatus = status || 417;
     }
@@ -479,11 +483,15 @@ class FastApi {
     stop() {
         this._uwsInstance.shutdown();
     }
-    /* return stuff about the server */
+    /* return stuff about the server,
+      we don't really need it but good for debug */
     get fastApiInfo() {
         return {
+            dev: constants_2.isDev,
             port: this._uwsInstance.getPortNum(),
-            host: this._uwsInstance.hostName
+            host: this._uwsInstance.hostName,
+            useContract: this._contract !== undefined,
+            hasConfig: this._config !== undefined,
         };
     }
 }
