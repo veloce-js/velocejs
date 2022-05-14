@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRenderer = exports.fileRender = void 0;
+const fs_extra_1 = require("fs-extra");
 const writers_1 = require("./writers");
 const mime_1 = require("./lib/mime");
 const constants_1 = require("./lib/constants");
@@ -10,6 +11,10 @@ function fileRender(res) {
     /** url is the request url, file is the actual read content */
     return (url, file) => {
         const mimeType = (0, mime_1.lookupMimeType)(url);
+        // if they didn't provide the read content then we read it
+        if (!file) {
+            file = (0, fs_extra_1.readFileSync)(url);
+        }
         writer(file, { [constants_1.CONTENT_TYPE]: mimeType });
     };
 }

@@ -1,7 +1,7 @@
 // testing the serveStatic
 import test from 'ava'
-import { UwsServer, serveStatic, getRenderer } from '../dist'
-import { HttpResponse } from '../dist/types'
+import { UwsServer, serveStatic, getRenderer, fileRender } from '../dist'
+import { HttpResponse, HttpRequest } from '../dist/types'
 import Fetch from 'node-fetch'
 import { join } from 'path'
 import { readFileSync } from 'fs-extra'
@@ -19,6 +19,14 @@ test.before(() => {
         const writer = getRenderer(res)
         const content = readFileSync(join(dir, 'README.md'))
         writer('markdown', content)
+      }
+    },
+    {
+      type: 'get',
+      path: '/jpeg/*',
+      handler: (res: HttpResponse, req: HttpRequest) => {
+        const url = req.getUrl().replace('/jpeg/', '')
+        fileRender(res)(join(dir, url))
       }
     },
     {
@@ -44,6 +52,13 @@ test(`Quick test the getRenderer method`, async t => {
   // console.log(md)
   // @TODO why is this return as undefined?
   // console.log(res.headers['content-type'], 'text/markdown')
+})
+
+test(`Test the fileRender method`, async t => {
+  t.plan(1)
+  const res = await Fetch(`${url}/jpeg/test.jpg`)
+
+  t.is(res.headers.get('content-type'), 'image/jpeg')
 })
 
 test(`Test the serveStatic function`, async (t) => {
