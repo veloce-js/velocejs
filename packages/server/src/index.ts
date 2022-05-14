@@ -14,6 +14,7 @@ export { lookupMimeType, getContentType } from './lib/mime'
 // @TODO not tested and not in use
 // export * from './rate-limit'
 export * from './writers'
+export * from './render'
 // extended
 export { UwsServer } from './uws-server-class'
 export * from './lib/status'

@@ -448,8 +448,6 @@ export class FastApi implements FastApiInterface {
   private _render(type: string, payload: any): void {
     const res = this.res as HttpResponse
     const writer = getWriter(res)
-    
-
 
     switch (type) {
       case IS_OTHER:
@@ -461,7 +459,7 @@ export class FastApi implements FastApiInterface {
         for (const key in this._headers) {
           if (key.toLowerCase() === CONTENT_TYPE) {
             // exit here
-            // return this.writer(payload, this._headers, this._status)
+            return writer(payload, this._headers, this._status)
           }
         }
         jsonWriter(res)(payload, this._status)
@@ -553,12 +551,14 @@ export class FastApi implements FastApiInterface {
   /** Apart from serving the standard html, when using the json contract system
   this will get wrap inside the delivery format - next protobuf as well */
   protected json(content: any) {
-
+    if (this.res && !this._written) {
+      return jsonWriter(this.res)(content)
+    }
   }
 
   /** just a string */
   protected text(content: string) {
-
+    
   }
 
   /** serving up the html content with correct html header */
