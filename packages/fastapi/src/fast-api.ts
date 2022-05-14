@@ -4,6 +4,7 @@ import {
   serveStatic,
   getWriter,
   jsonWriter,
+  getRenderer,
   STATIC_TYPE,
   STATIC_ROUTE,
   RAW_TYPE,
@@ -22,8 +23,8 @@ import {
   UwsRouteSetup,
   UwsRouteHandler,
   UwsRespondBody,
-  UwsWriter,
-  UwsJsonWriter,
+  // UwsWriter,
+  // UwsJsonWriter,
   UwsStringPairObj,
   // RecognizedString
 } from '@velocejs/server/index' // point to the source ts
@@ -103,7 +104,6 @@ export class FastApi implements FastApiInterface {
       this._onConfigError = rejecter
     })
   }
-
 
   ////////////////////////////////////////////////////////
   /**                 PRIVATE METHODS                   */
@@ -342,11 +342,10 @@ export class FastApi implements FastApiInterface {
     }
     debug('errors', payload)
     // @TODO should replace with the jsonWriter
-    if (this.res) {
-      this.res.writeStatus(this._validationErrStatus + '')
-      this.res.write(JSON.stringify(payload))
-      this.res.end()
+    if (this.res && !this._written) {
+      return jsonWriter(this.res)(payload, this._validationErrStatus + '')
     }
+    debug(`error json already written?`)
   }
 
   /** wrap the _createValidator with additoinal property */
@@ -376,7 +375,7 @@ export class FastApi implements FastApiInterface {
   // break out from above to make the code cleaner
   private async _handleContent(
     args: any[],
-    handler: any,
+    handler: any, // Function
     type: string,
     propertyName: string
   ) {
@@ -466,24 +465,6 @@ export class FastApi implements FastApiInterface {
     }
   }
 
-  /*
-  REF
-  const _writer = (0, server_1.getWriter)(this.res);
-  this.writer = (...args) => {
-      if (!this._written) {
-          this._written = true;
-          Reflect.apply(_writer, null, args);
-      }
-  };
-  const _jsonWriter = (0, server_1.jsonWriter)(this.res);
-  this.jsonWriter = (...args) => {
-      if (!this._written) {
-          this._written = true;
-          Reflect.apply(_jsonWriter, null, args);
-      }
-  };
-  */
-
   ////////////////////////////////////////////////
   /**           PROTECTED METHODS               */
   ////////////////////////////////////////////////
@@ -558,22 +539,26 @@ export class FastApi implements FastApiInterface {
 
   /** just a string */
   protected text(content: string) {
-    
+    if (this.res && !this._written) {
+      return getRenderer(this.res)('text', content)
+    }
   }
 
   /** serving up the html content with correct html header */
   protected html(content: string) {
-
+    if (this.res && !this._written) {
+      return getRenderer(this.res)('html', content)
+    }
   }
 
   /** for serving up image / video or any none-textual content */
   protected binary(content: any) {
-
+    debug('@TODO binary method', content)
   }
 
   /** @TODO for generate ssr content, should provide options via config but they could override here */
   protected ssr(data: any, options?: any) {
-
+    debug('@TODO ssr method', data, options)
   }
 
   ///////////////////////////////////////////
@@ -663,11 +648,15 @@ export class FastApi implements FastApiInterface {
     this._uwsInstance.shutdown()
   }
 
-  /* return stuff about the server */
+  /* return stuff about the server,
+    we don't really need it but good for debug */
   public get fastApiInfo() {
     return {
+      dev: isDev,
       port: this._uwsInstance.getPortNum(),
-      host: this._uwsInstance.hostName
+      host: this._uwsInstance.hostName,
+      useContract: this._contract !== undefined,
+      hasConfig: this._config !== undefined,
     }
   }
 }
