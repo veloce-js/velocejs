@@ -15,20 +15,18 @@ test.after(() => {
 })
 
 test(`Testing the render text render`, async t => {
-
   const res = await Fetch(`${url}/stuff/text`)
   const text = await res.text()
-
-  console.log(text)
-
   t.truthy(text)
-
 })
 
 test('Test the get markdown content', async t => {
-
   const res = await Fetch(`${url}/stuff/markdown`)
   // const text = await res.text()
-
   t.is(res.headers.get('content-type'), 'text/markdown')
+})
+
+test(`Test the get html content`, async t => {
+  const res = await Fetch(`${url}/stuff/html`)
+  t.is(res.headers.get('content-type'), 'text/html')
 })
