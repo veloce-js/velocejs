@@ -1,7 +1,7 @@
 
 import { join } from 'node:path'
 import { readFileSync } from 'fs-extra'
-import { FastApi, Rest, Post } from '../../src'
+import { FastApi, Rest, Post, Get } from '../../src'
 const baseDir = join(__dirname, 'files')
 
 const getContent = (name: string) => readFileSync(join(baseDir, name))
@@ -30,7 +30,7 @@ export class RenderTest extends FastApi {
     this.$html(content)
   }
 
-  @Post('/posts/:year/:month/:day(/:slug)')
+  @Post('/posts-test')
   public posts(year: number, month: number, day: number, slug?: string) {
 
     this.$json({
