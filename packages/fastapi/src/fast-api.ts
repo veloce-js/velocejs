@@ -5,6 +5,7 @@ import {
   getWriter,
   jsonWriter,
   getRenderer,
+  fileRender,
   STATIC_TYPE,
   STATIC_ROUTE,
   RAW_TYPE,
@@ -552,9 +553,10 @@ export class FastApi implements FastApiInterface {
   }
 
   /** for serving up image / video or any none-textual content */
-  protected $binary(content: Buffer) {
-    debug('@TODO binary method', content)
-    throw new Error(`binary is not implemented`)
+  protected $binary(url: string, content?: Buffer) {
+    if (this.res && !this._written) {
+      return fileRender(this.res)(url, content)
+    }
   }
 
   /** streaming content */
