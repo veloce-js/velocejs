@@ -13,34 +13,29 @@ const veloceConfig = process.env.VELOCE_CONFIG
 
 let api: ApiWithContract
 let url: string
+// although this can show but the config class didn't see it
+console.log('veloceConfig', veloceConfig)
+
 test.before(async () => {
-  if (veloceConfig) {
     api = new ApiWithContract()
     await api.$start()
-    const info = api.fastApiInfo
+    const info = api.$fastApiInfo
     url = `http://localhost:${info.port}`
-  }
 })
 
 test.after(() => {
-  if (veloceConfig) {
-    api.$stop()
-    const base = join(__dirname, 'fixtures', 'contract', 'tmp')
-    const list = ['contract.json', 'public-contract.json']
-    list.forEach((contract: string) => {
-      removeSync(join(base, contract))
-    })
-  }
+  api.$stop()
+  removeSync(join(__dirname, 'fixtures', 'contract', 'tmp'))
 })
 
-test.skip(`Testing API with config and contract`, async  t => {
+test(`Testing API with config and contract`, async  t => {
   t.plan(1)
-  if (veloceConfig) {
-    const res = await Fetch(`${url}${VELOCE_DEFAULTS.contract.path}`)
-    const json = await res.json()
-    // console.dir(json, { depth: null })
-    t.truthy(json)
-  } else {
-    t.pass()
-  }
+  const contractUrl = `${url}${VELOCE_DEFAULTS.contract.path}`
+  // console.log('contract url', contractUrl)
+  // t.pass()
+  const res = await Fetch(contractUrl)
+  const json = await res.json()
+  console.dir(json, { depth: null })
+  t.truthy(json)
+
 })

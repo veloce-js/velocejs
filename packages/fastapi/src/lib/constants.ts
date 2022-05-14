@@ -13,7 +13,7 @@ export const RULE_LIST = 'rule-list'
 export const RULE_SIMPLE = 'rule-simple'
 export const RULE_FULL = 'rule-full'
 
-export const isDev = process.env.NODE_ENV === 'development'
+export const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
 export const isDebug = process.env.DEBUG !== undefined
 // this is the method that we need to call in the Top Decorator
 export const METHOD_TO_RUN = '$prepare'

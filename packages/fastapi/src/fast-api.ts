@@ -612,14 +612,15 @@ export class FastApi implements FastApiInterface {
    The interface to serve up the contract, it's public but prefix underscore to avoid override
    */
   public _serveContract() {
-    debug('call _serveContract') // @BUG if I remove this then it doens't work???
+    // debug('call _serveContract') // @BUG if I remove this then it doens't work???
     Promise.resolve(
       isDev ?
           this._contract.output() :
           this._config.getConfig(`${CONTRACT_KEY}.${CACHE_DIR}`)
             .then((cacheDir: string) => this._contract.serve(cacheDir))
     ).then((json: any) => {
-      this._render('json', json)
+      debug('contract', json)
+      this.$json(json)
     })
   }
 
