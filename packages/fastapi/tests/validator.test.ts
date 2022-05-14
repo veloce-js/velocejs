@@ -9,11 +9,11 @@ const hostname = `http://localhost:${port}`
 const logigEndpoint = `${hostname}/login`
 test.before(async () => {
   myExampleObj = new MyExample()
-  await myExampleObj.start(port)
+  await myExampleObj.$start(port)
 })
 
 test.after(() => {
-  myExampleObj.stop()
+  myExampleObj.$stop()
 })
 
 test(`Validation with Decorator and @jsonql/validator`, async t => {

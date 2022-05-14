@@ -9,7 +9,7 @@ let url: string
 
 test.before(async () => {
   classInstance = new MyDynamicRoute()
-  await classInstance.start()
+  await classInstance.$start()
 
   url = 'http://localhost:' + classInstance.fastApiInfo.port
 

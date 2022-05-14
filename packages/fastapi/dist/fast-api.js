@@ -334,7 +334,7 @@ class FastApi {
       Dev can do @Rest(config), also for none-TS env dev can
       subclass then call this method to arhive the same effects
     */
-    prepare(routes, apiType = constants_1.REST_NAME) {
+    $prepare(routes, apiType = constants_1.REST_NAME) {
         if (constants_2.isDebug) {
             console.time('FastApiStartUp');
         }
@@ -366,48 +366,49 @@ class FastApi {
     // if the dev use this to provide an extra header
     // then we can check if the contentType is already provided
     // if so then we don't use the default one
-    writeHeader(key, value) {
+    $writeHeader(key, value) {
         this._headers[key] = value;
     }
-    writeStatus(status) {
+    $writeStatus(status) {
         this._status = status;
     }
     /**
       We have experience a lot of problem when delivery the content try to intercept
       the content type, instead we now force the finally output to use one of the following
-  
+      all with a $ to start to make sure no conflict with the regular public names
     */
     /** Apart from serving the standard html, when using the json contract system
     this will get wrap inside the delivery format - next protobuf as well */
-    json(content) {
+    $json(content) {
         if (this.res && !this._written) {
             return (0, server_1.jsonWriter)(this.res)(content);
         }
     }
     /** just a string */
-    text(content) {
+    $text(content, type = 'text') {
         if (this.res && !this._written) {
-            return (0, server_1.getRenderer)(this.res)('text', content);
+            return (0, server_1.getRenderer)(this.res)(type, content);
         }
     }
     /** serving up the html content with correct html header */
-    html(content) {
+    $html(content) {
         if (this.res && !this._written) {
             return (0, server_1.getRenderer)(this.res)('html', content);
         }
     }
     /** for serving up image / video or any none-textual content */
-    binary(content) {
-        debug('@TODO binary method', content);
-        throw new Error(`binary is not implemented`);
+    $binary(url, content) {
+        if (this.res && !this._written) {
+            return (0, server_1.fileRender)(this.res)(url, content);
+        }
     }
     /** streaming content */
-    stream(type, content) {
+    $stream(type, content) {
         debug('@TODO streaming content', type, content);
         throw new Error(`stream is not implemented`);
     }
     /** @TODO for generate ssr content, should provide options via config but they could override here */
-    ssr(data, options) {
+    $ssr(data, options) {
         debug('@TODO ssr method', data, options);
         throw new Error(`ssr is not implemented`);
     }
@@ -420,11 +421,11 @@ class FastApi {
     // and the override methods will be protected methods
     // this is good for unit testing just on the class itself
     /** register a method that will check the route */
-    registerProtectedRouteMethod() {
+    $registerProtectedRouteMethod() {
         debug(`@TODO registerProtectedRouteMethod`);
     }
     /** dev can register their global middleware here */
-    use(middlewares) {
+    $use(middlewares) {
         if (middlewares) {
             const _middlewares = (0, utils_1.toArray)(middlewares).map(m => {
                 // @TODO prepare the middleware
@@ -445,7 +446,7 @@ class FastApi {
      The interface to serve up the contract, it's public but prefix underscore to avoid override
      */
     _serveContract() {
-        debug('call _serveContract'); // if I remove this then it doens't work??? @BUG
+        debug('call _serveContract'); // @BUG if I remove this then it doens't work???
         Promise.resolve(constants_2.isDev ?
             this._contract.output() :
             this._config.getConfig(`${config_1.CONTRACT_KEY}.${config_1.CACHE_DIR}`)
@@ -456,7 +457,7 @@ class FastApi {
     /**
      * We remap some of the methods from UwsServer to here for easier to use
      */
-    async start(port, host) {
+    async $start(port, host) {
         if (port) {
             this._uwsInstance.portNum = port;
         }
@@ -480,12 +481,12 @@ class FastApi {
         });
     }
     // wrapper around the shutdown
-    stop() {
+    $stop() {
         this._uwsInstance.shutdown();
     }
     /* return stuff about the server,
       we don't really need it but good for debug */
-    get fastApiInfo() {
+    get $fastApiInfo() {
         return {
             dev: constants_2.isDev,
             port: this._uwsInstance.getPortNum(),

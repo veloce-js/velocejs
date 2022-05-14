@@ -16,7 +16,7 @@ let url: string
 test.before(async () => {
   if (veloceConfig) {
     api = new ApiWithContract()
-    await api.start()
+    await api.$start()
     const info = api.fastApiInfo
     url = `http://localhost:${info.port}`
   }
@@ -24,11 +24,11 @@ test.before(async () => {
 
 test.after(() => {
   if (veloceConfig) {
-    api.stop()
+    api.$stop()
     const base = join(__dirname, 'fixtures', 'contract', 'tmp')
     const list = ['contract.json', 'public-contract.json']
     list.forEach((contract: string) => {
-        removeSync(join(base, contract))
+      removeSync(join(base, contract))
     })
   }
 })

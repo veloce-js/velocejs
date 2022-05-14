@@ -12,12 +12,12 @@ const hostname = `http://localhost:${port}`
 test.before(async () => {
   api = new MyApi()
   // start up
-  await api.start(port)
+  await api.$start(port)
   //console.log('start up info', info)
 })
 
 test.after(() => {
-  api.stop()
+  api.$stop()
 })
 
 test(`Testing the class extends from FastApi`, async (t) => {

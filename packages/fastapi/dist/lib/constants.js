@@ -15,6 +15,6 @@ exports.RULE_FULL = 'rule-full';
 exports.isDev = process.env.NODE_ENV === 'development';
 exports.isDebug = process.env.DEBUG !== undefined;
 // this is the method that we need to call in the Top Decorator
-exports.METHOD_TO_RUN = 'prepare';
+exports.METHOD_TO_RUN = '$prepare';
 exports.CONTRACT_METHOD_NAME = '_serveContract';
 exports.DEFAULT_CONTRACT_METHOD = 'get';

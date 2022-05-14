@@ -7,11 +7,11 @@ let api: RenderTest
 
 test.before(async () => {
   api = new RenderTest()
-  url = await api.start()
+  url = await api.$start()
 })
 
 test.after(() => {
-  api.stop()
+  api.$stop()
 })
 
 test(`Testing the render text render with $text`, async t => {

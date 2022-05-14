@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { AppOptions, HttpResponse, HttpRequest, UwsRespondBody } from '@velocejs/server/index';
 import { RouteMetaInfo, VeloceMiddleware } from './types';
 import { FastApiInterface } from './lib/fast-api-interface';
@@ -62,7 +63,7 @@ export declare class FastApi implements FastApiInterface {
       Dev can do @Rest(config), also for none-TS env dev can
       subclass then call this method to arhive the same effects
     */
-    protected prepare(routes: Array<RouteMetaInfo>, apiType?: string): void;
+    protected $prepare(routes: Array<RouteMetaInfo>, apiType?: string): void;
     /**         HOOKS                */
     /**
       We are not going to implement this tranditional middleware system
@@ -70,30 +71,30 @@ export declare class FastApi implements FastApiInterface {
       input / output will be and they just have to overwrite this hooks to
       get the result
     */
-    protected writeHeader(key: string, value: string): void;
-    protected writeStatus(status: number): void;
+    protected $writeHeader(key: string, value: string): void;
+    protected $writeStatus(status: number): void;
     /**
       We have experience a lot of problem when delivery the content try to intercept
       the content type, instead we now force the finally output to use one of the following
-  
+      all with a $ to start to make sure no conflict with the regular public names
     */
     /** Apart from serving the standard html, when using the json contract system
     this will get wrap inside the delivery format - next protobuf as well */
-    protected json(content: any): void;
+    protected $json(content: any): void;
     /** just a string */
-    protected text(content: string): void;
+    protected $text(content: string | Buffer, type?: string): void;
     /** serving up the html content with correct html header */
-    protected html(content: string): void;
+    protected $html(content: string | Buffer): void;
     /** for serving up image / video or any none-textual content */
-    protected binary(content: any): void;
+    protected $binary(url: string, content?: Buffer): void;
     /** streaming content */
-    protected stream(type: string, content: any): void;
+    protected $stream(type: string, content: Buffer): void;
     /** @TODO for generate ssr content, should provide options via config but they could override here */
-    protected ssr(data: any, options?: any): void;
+    protected $ssr(data: any, options?: any): void;
     /** register a method that will check the route */
-    registerProtectedRouteMethod(): void;
+    $registerProtectedRouteMethod(): void;
     /** dev can register their global middleware here */
-    use(middlewares: VeloceMiddleware | Array<VeloceMiddleware>): void;
+    $use(middlewares: VeloceMiddleware | Array<VeloceMiddleware>): void;
     set validationErrorStatus(status: number);
     /**
      The interface to serve up the contract, it's public but prefix underscore to avoid override
@@ -102,9 +103,9 @@ export declare class FastApi implements FastApiInterface {
     /**
      * We remap some of the methods from UwsServer to here for easier to use
      */
-    start(port?: number, host?: string): Promise<string>;
-    stop(): void;
-    get fastApiInfo(): {
+    $start(port?: number, host?: string): Promise<string>;
+    $stop(): void;
+    get $fastApiInfo(): {
         dev: boolean;
         port: number;
         host: import("@velocejs/server/index").RecognizedString;

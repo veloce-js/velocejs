@@ -476,7 +476,7 @@ export class FastApi implements FastApiInterface {
     Dev can do @Rest(config), also for none-TS env dev can
     subclass then call this method to arhive the same effects
   */
-  protected prepare(
+  protected $prepare(
     routes: Array<RouteMetaInfo>,
     apiType: string = REST_NAME
   ):void {
@@ -582,12 +582,12 @@ export class FastApi implements FastApiInterface {
   // this is good for unit testing just on the class itself
 
   /** register a method that will check the route */
-  public registerProtectedRouteMethod(): void {
+  public $registerProtectedRouteMethod(): void {
     debug(`@TODO registerProtectedRouteMethod`)
   }
 
   /** dev can register their global middleware here */
-  public use(
+  public $use(
     middlewares: VeloceMiddleware | Array<VeloceMiddleware>
   ): void {
     if (middlewares) {
@@ -612,7 +612,7 @@ export class FastApi implements FastApiInterface {
    The interface to serve up the contract, it's public but prefix underscore to avoid override
    */
   public _serveContract() {
-    debug('call _serveContract') // if I remove this then it doens't work??? @BUG
+    debug('call _serveContract') // @BUG if I remove this then it doens't work???
     Promise.resolve(
       isDev ?
           this._contract.output() :
@@ -626,7 +626,7 @@ export class FastApi implements FastApiInterface {
   /**
    * We remap some of the methods from UwsServer to here for easier to use
    */
-  public async start(
+  public async $start(
     port?: number,
     host?: string
   ): Promise<string> {
@@ -654,13 +654,13 @@ export class FastApi implements FastApiInterface {
     })
   }
   // wrapper around the shutdown
-  public stop(): void {
+  public $stop(): void {
     this._uwsInstance.shutdown()
   }
 
   /* return stuff about the server,
     we don't really need it but good for debug */
-  public get fastApiInfo() {
+  public get $fastApiInfo() {
     return {
       dev: isDev,
       port: this._uwsInstance.getPortNum(),
