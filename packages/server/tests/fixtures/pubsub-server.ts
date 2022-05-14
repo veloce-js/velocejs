@@ -10,14 +10,16 @@ import {
 } from '../../src/types'
 import {
   createApp,
-  getPort,
+  // getPort,
   SHARED_COMPRESSOR,
   MAX_PAYLOAD_LENGTH,
   serveStatic,
 } from '../../src'
 let x: any
-const port = 56789
-createApp()
+// just export both
+export const port = 56789
+export function run() {
+  createApp()
   .ws('/*', {
     compression: SHARED_COMPRESSOR,
     maxPayloadLength: MAX_PAYLOAD_LENGTH,
@@ -29,7 +31,7 @@ createApp()
       x = setInterval(()  => {
         ++y
         ws.send(y + ' round')
-        if (y === 0) {
+        if (y === 20) {
           clearInterval(x)
         }
       }, 1000)
@@ -48,9 +50,9 @@ createApp()
   .any('/*', serveStatic(join(__dirname, 'httpdocs')))
   .listen(port, (token: us_socket) => {
     if (token) {
-      const _port = getPort(token)
-      console.log(`Listening to port:`, _port)
+      console.log(`Listening to port:`, port)
     } else {
       console.log(`Failed to start up!`)
     }
   })
+}

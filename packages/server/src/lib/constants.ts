@@ -28,5 +28,10 @@ export const IS_OTHER = 'other'
 // For socket operation
 export const BACK_PRESSURE = 1024
 export const MAX_PAYLOAD_LENGTH = 16 * 1024 * 1024
-
 export const SHARED_COMPRESSOR = uWS.SHARED_COMPRESSOR
+// export the above 3 together as a default config
+export const SOCKET_DEFAULT_PROPS = {
+  compression: SHARED_COMPRESSOR,
+  maxPayloadLength: MAX_PAYLOAD_LENGTH,
+  idleTimeout: 32, // this need to be multiple of 4
+}
