@@ -23,6 +23,7 @@ glob(join(projectDir, 'dist', '**', '*.d.ts'), function(err, files) {
     output += content
   }
   output += '\n}\n'
+  // @TODO need to fix those import paths as well 
   // write it out
-  console.log(output)
+  fs.writeFileSync(join(projectDir, 'index.d.ts'), output)
 })
