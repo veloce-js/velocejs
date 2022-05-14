@@ -5,6 +5,7 @@ export * from './read-json-async';
 export { serveStatic } from './serve-static';
 export { lookupMimeType, getContentType } from './lib/mime';
 export * from './writers';
+export * from './render';
 export { UwsServer } from './uws-server-class';
 export * from './lib/status';
 export * from './lib/constants';

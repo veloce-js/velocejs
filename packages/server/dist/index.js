@@ -20,6 +20,7 @@ Object.defineProperty(exports, "getContentType", { enumerable: true, get: functi
 // @TODO not tested and not in use
 // export * from './rate-limit'
 tslib_1.__exportStar(require("./writers"), exports);
+tslib_1.__exportStar(require("./render"), exports);
 // extended
 var uws_server_class_1 = require("./uws-server-class");
 Object.defineProperty(exports, "UwsServer", { enumerable: true, get: function () { return uws_server_class_1.UwsServer; } });

@@ -1,8 +1,10 @@
 // testing the serveStatic
 import test from 'ava'
-import { UwsServer, serveStatic } from '../dist'
+import { UwsServer, serveStatic, getRenderer } from '../dist'
+import { HttpResponse } from '../dist/types'
 import Fetch from 'node-fetch'
 import { join } from 'path'
+import { readFileSync } from 'fs-extra'
 
 const dir = join(__dirname, 'fixtures', 'tmp')
 let app, url
@@ -10,6 +12,15 @@ let app, url
 test.before(() => {
   app = new UwsServer()
   app.run([
+    {
+      type: 'get',
+      path: '/markdown',
+      handler: (res: HttpResponse) => {
+        const writer = getRenderer(res)
+        const content = readFileSync(join(dir, 'README.md'))
+        writer('markdown', content)
+      }
+    },
     {
       type: 'get',
       path: '/*',
@@ -22,6 +33,17 @@ test.before(() => {
 
 test.after(() => {
   app.shutdown()
+})
+
+test(`Quick test the getRenderer method`, async t => {
+  t.plan(1)
+  const res = await Fetch(`${url}/markdown`)
+  // console.log(res.headers)
+  const md = await res.text()
+  t.truthy(md)
+  // console.log(md)
+  // @TODO why is this return as undefined?
+  // console.log(res.headers['content-type'], 'text/markdown')
 })
 
 test(`Test the serveStatic function`, async (t) => {
