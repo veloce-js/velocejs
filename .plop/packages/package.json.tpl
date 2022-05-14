@@ -21,7 +21,6 @@
     "ts": "node -r esbuild-register",
     "prepare:types": "cp ./src/types.d.ts ./index.d.ts && cp ./src/types.d.ts ./dist/types.d.ts",
     "update:version": "node ../../update-devs.js {{projectName}}",
-    "update:types": "node ../../gen-types.js {{projectName}}",
     "clean:dist": "rimraf ./dist",
     "build": "pnpm clean:dist && pnpm build:tsc",
     "prepublishOnly": "pnpm build && pnpm test:nyc",

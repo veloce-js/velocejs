@@ -2,10 +2,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { HttpResponse, HttpRequest } from './types'
-import { DEFAULT_FILE, CONTENT_TYPE } from './lib/constants'
-import { getWriter, write404 } from './writers'
-import { lookupMimeType } from './lib/mime'
+import { DEFAULT_FILE } from './lib/constants'
+import { write404 } from './writers'
+import { fileRender } from './render'
 import { isFunction, toArray } from '@jsonql/utils'
+
 // import { toArray } from '@jsonql/utils'
 // import { toArr } from '@velocejs/bodyparser/utils'
 import debug from 'debug'
@@ -37,9 +38,7 @@ export function serveStatic(
       .map((dir: string) => fs.readFileSync(path.join(dir, url)))
 
     if (file.length) {
-      const mimeType = lookupMimeType(url)
-      const writer = getWriter(res)
-      writer(file[0], {[CONTENT_TYPE]: mimeType})
+      fileRender(res)(url, file[0])
     } else {
       write404(res)
     }
