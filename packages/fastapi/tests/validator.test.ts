@@ -63,7 +63,6 @@ test(`Validation with wrong property to cause a throw`, async t => {
     t.pass()
   })
   .catch(error => {
-
     // should get a non 200 respond
     console.log('catch server error here', error)
     t.pass()
