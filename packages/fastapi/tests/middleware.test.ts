@@ -22,7 +22,7 @@ test(`first test out the processing queue engine`, async t => {
   return Reflect.apply(queuePromisesProcess, null, [[a, b, c], { value: 'OK' }])
               .then((result: any) => {
                 t.truthy(result)
-                console.log(result)
+                // console.log(result)
               })
 
 })

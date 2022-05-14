@@ -12,7 +12,7 @@ exports.RULE_AUTOMATIC = 'rule-automatic';
 exports.RULE_LIST = 'rule-list';
 exports.RULE_SIMPLE = 'rule-simple';
 exports.RULE_FULL = 'rule-full';
-exports.isDev = process.env.NODE_ENV === 'development';
+exports.isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
 exports.isDebug = process.env.DEBUG !== undefined;
 // this is the method that we need to call in the Top Decorator
 exports.METHOD_TO_RUN = '$prepare';
