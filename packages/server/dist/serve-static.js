@@ -7,7 +7,7 @@ const node_fs_1 = tslib_1.__importDefault(require("node:fs"));
 const node_path_1 = tslib_1.__importDefault(require("node:path"));
 const constants_1 = require("./lib/constants");
 const writers_1 = require("./writers");
-const mime_1 = require("./lib/mime");
+const render_1 = require("./render");
 const utils_1 = require("@jsonql/utils");
 // import { toArray } from '@jsonql/utils'
 // import { toArr } from '@velocejs/bodyparser/utils'
@@ -36,9 +36,7 @@ function serveStatic(assetDir, onAbortedHandler) {
             .filter((dir) => node_fs_1.default.existsSync(node_path_1.default.join(dir, url)))
             .map((dir) => node_fs_1.default.readFileSync(node_path_1.default.join(dir, url)));
         if (file.length) {
-            const mimeType = (0, mime_1.lookupMimeType)(url);
-            const writer = (0, writers_1.getWriter)(res);
-            writer(file[0], { [constants_1.CONTENT_TYPE]: mimeType });
+            (0, render_1.fileRender)(res)(url, file[0]);
         }
         else {
             (0, writers_1.write404)(res);

@@ -11,7 +11,7 @@ export function fileRender(
 ) {
   const writer = getWriter(res)
   /** url is the request url, file is the actual read content */
-  return (url: string, file: string): void => {
+  return (url: string, file: any): void => {
     const mimeType = lookupMimeType(url)
     writer(file, {[CONTENT_TYPE]: mimeType})
   }
@@ -27,7 +27,7 @@ export function getRenderer(res: HttpResponse) {
     const mimeType = lookupMimeType(type)
     // here we make sure this is a string
     const output = Buffer.from(content).toString()
-    
+
     writer(output, {[CONTENT_TYPE]: mimeType})
   }
 }
