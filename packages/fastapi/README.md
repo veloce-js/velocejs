@@ -32,6 +32,16 @@ class MyExample extends FastApi {
     this.$text('markdown', content)
   }
 
+  // support dynamic route
+  @Get('/posts/:year/:month/:day(:/slug)')
+  public posts(year: string, month: string, day: string, slug?: string) {
+
+    this.$json({
+      date: [year, month, day].join('-')
+    })
+  }
+
+
   // Method decorator
   @Post('/submit')
   @Validate({ // validate provide by @jsonql/validator
@@ -51,10 +61,10 @@ class MyExample extends FastApi {
 
 const myForm = new MyFormExample()
 myForm.$start()
-  .then(url => {
+  .then((url: string) => {
     console.log(`Server started on ${url}`)
   })
-  .catch(err => {
+  .catch((err: Error) => {
     console.error(`Server could not start`, err)
   })
 ```

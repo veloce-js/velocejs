@@ -560,7 +560,7 @@ export class FastApi implements FastApiInterface {
   }
 
   /** streaming content */
-  protected $stream(type: string, content: Buffer) {
+  protected $stream(content: Buffer, type: string) {
     debug('@TODO streaming content', type, content)
     throw new Error(`stream is not implemented`)
   }

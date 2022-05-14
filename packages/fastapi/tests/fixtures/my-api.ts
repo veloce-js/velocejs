@@ -33,7 +33,7 @@ export class MyApi extends FastApi {
     console.log('myPostFunc', name, value)
 
     // console.log('hanlder got call with', params)
-    return {msg: `${name} is doing ${value}`}
+    this.$json({msg: `${name} is doing ${value}`})
   }
 
   @Raw('any', '/fall-back-route')

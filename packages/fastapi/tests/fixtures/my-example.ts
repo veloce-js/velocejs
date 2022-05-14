@@ -22,19 +22,19 @@ export class MyExample extends FastApi {
   @Post('/login')
   login(username: string, password: string) {
     console.log(password)
-    return { username: username.toLowerCase() }
+    this.$json({ username: username.toLowerCase() })
   }
 
   @Validate()
   @Post('/other')
   someOtherApi(x: number, y: number | string) {
-    return { x , y }
+    this.$json({ x , y })
   }
 
 
   // @Validate() // this one should throw an error
   @Get('/')
   defaultHandler() {
-    return 'some text'
+    this.$text('some text')
   }
 }

@@ -403,7 +403,7 @@ class FastApi {
         }
     }
     /** streaming content */
-    $stream(type, content) {
+    $stream(content, type) {
         debug('@TODO streaming content', type, content);
         throw new Error(`stream is not implemented`);
     }

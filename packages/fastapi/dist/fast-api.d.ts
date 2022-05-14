@@ -88,7 +88,7 @@ export declare class FastApi implements FastApiInterface {
     /** for serving up image / video or any none-textual content */
     protected $binary(url: string, content?: Buffer): void;
     /** streaming content */
-    protected $stream(type: string, content: Buffer): void;
+    protected $stream(content: Buffer, type: string): void;
     /** @TODO for generate ssr content, should provide options via config but they could override here */
     protected $ssr(data: any, options?: any): void;
     /** register a method that will check the route */

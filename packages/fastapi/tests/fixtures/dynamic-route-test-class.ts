@@ -6,7 +6,7 @@ export class MyDynamicRoute extends FastApi {
   @Get('/posts/:year/:month/:day')
   public posts(year: string, month: string, day: string) {
 
-    return JSON.stringify({
+    this.$json({
       date: [year, month, day].join('-')
     })
   }
@@ -14,7 +14,7 @@ export class MyDynamicRoute extends FastApi {
   @Get('/news/:year/:month/:day(/:slug)')
   public news(...args: any[]) {
     console.log('news args', args)
-    return args.join('_')
+    this.$text(args.join('_'))
   }
 
 }
