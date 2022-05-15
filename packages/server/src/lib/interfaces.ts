@@ -35,7 +35,7 @@ export interface WebSocketBehavior {
     pong?: (ws: WebSocket, message: ArrayBuffer) => void;
 }
 
-export type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => void | WebSocketBehavior
+export type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => WebSocketBehavior | Promise<any> | void
 
 export interface UwsRouteSetup {
   type: string

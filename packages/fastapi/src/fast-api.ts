@@ -260,7 +260,6 @@ export class FastApi implements FastApiInterface {
   ): UwsRouteHandler {
     const handler = this[propertyName]
     // @TODO need to rethink about how this work
-    // @ts-ignore need to fix the server accepted type 
     return async (res: HttpResponse, req: HttpRequest) => {
       // @0.3.0 we change the whole thing into one middlewares stack
       const stacks = [
