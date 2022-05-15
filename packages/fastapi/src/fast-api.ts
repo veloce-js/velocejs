@@ -4,13 +4,14 @@ import {
   serveStatic,
   getWriter,
   jsonWriter,
-  getRenderer,
-  fileRender,
+  getRenderFn,
+  renderFile,
   STATIC_TYPE,
   STATIC_ROUTE,
   RAW_TYPE,
   IS_OTHER,
-  CONTENT_TYPE
+  CONTENT_TYPE,
+  WEBSOCKET_ROUTE_NAME,
 } from '@velocejs/server'
 import {
   SPREAD_ARG_TYPE,
@@ -167,6 +168,10 @@ export class FastApi implements FastApiInterface {
             // @TODO should we allow them to use dynamic route to perform url rewrite?
             handler: serveStatic(this[propertyName])
           }
+        case WEBSOCKET_ROUTE_NAME: // socket route just return the value from getter for now
+          return {
+            path, type, handler: this._prepareSocketRoute(propertyName)
+          }
         case RAW_TYPE:
           return {
             path,
@@ -177,6 +182,11 @@ export class FastApi implements FastApiInterface {
           return this._prepareNormalRoute(type, path, propertyName, m.args, validation, checkFn)
         }
     })
+  }
+
+  /** create this wrapper for future development */
+  private _prepareSocketRoute(propertyName: string) { 
+    return this[propertyName]
   }
 
   /** TS script force it to make it looks so damn bad for all their non-sense rules */
@@ -541,21 +551,21 @@ export class FastApi implements FastApiInterface {
   /** just a string */
   protected $text(content: string | Buffer, type = 'text') {
     if (this.res && !this._written) {
-      return getRenderer(this.res)(type, content)
+      return getRenderFn(this.res)(type, content)
     }
   }
 
   /** serving up the html content with correct html header */
   protected $html(content: string | Buffer) {
     if (this.res && !this._written) {
-      return getRenderer(this.res)('html', content)
+      return getRenderFn(this.res)('html', content)
     }
   }
 
   /** for serving up image / video or any none-textual content */
   protected $binary(url: string, content?: Buffer) {
     if (this.res && !this._written) {
-      return fileRender(this.res)(url, content)
+      return renderFile(this.res)(url, content)
     }
   }
 

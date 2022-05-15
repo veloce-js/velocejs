@@ -15,6 +15,9 @@ export class WebsocketServer extends FastApi {
       message: function(ws: WebSocket, message: ArrayBuffer) {
         const msg = arrayBufferToString(message)
         ws.send(`Got your message: ${msg}`)
+      },
+      close: (_: WebSocket, code: number) => {
+        console.log('connection is closed', code)
       }
     }
   }

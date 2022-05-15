@@ -1,12 +1,36 @@
 // this will return an object with the props required for setup the socket
 import { SOCKET_DEFAULT_PROPS } from './lib/constants'
 import { WebSocketBehavior } from './lib/interfaces'
+import { WebSocket } from './types'
+import debugFn from 'debug'
+const debug = debugFn('velocejs:server:socket')
+
+const DEFAULT_PROPS = Object.assign(
+  SOCKET_DEFAULT_PROPS,
+  {
+    drain: (ws: WebSocket) => {
+      debug('WebSocket backpressure: ', ws.getBufferedAmount())
+      // @TODO should be in the FastApi
+      /*
+      we might have to setup an Observable to intercept the message first
+      then pipe it to different places to send 
+      while (ws.getBufferedAmount() < backpressure) {
+        ws.send("This is a message, let's call it " + messageNumber);
+        messageNumber++;
+        messages++;
+      }
+      */
+    },
+    close: (_: WebSocket, code: number /*, message: ArrayBuffer */) => {
+      debug(`WebSocket is closed`, code)
+    }
+  }
+)
 
 /** basically just provide some of the default props */
 export function createSocketHandler(setup: WebSocketBehavior): WebSocketBehavior {
-  return Object.assign({}, SOCKET_DEFAULT_PROPS, setup)
+  return Object.assign({}, DEFAULT_PROPS, setup)
 }
-
 
 /** A WebSocket connection that is valid from open to close event.
  * Read more about this in the user manual.

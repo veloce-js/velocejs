@@ -11,7 +11,7 @@ test.before(async () => {
 
   api = new WebsocketServer()
   url = await api.$start()
-  client = new WebSocketClient(url.replace('http', 'ws'))
+  client = new WebSocketClient(url.replace('http', 'ws') + '/realtime/hello')
 
 })
 
@@ -21,9 +21,15 @@ test.after(() => {
 
 
 test(`Testing the basic websocket rouote`, async t => {
-  t.plan(1)
+  t.plan(2)
+
   return new Promise((resolver) => {
-    client.on('open', function(msg: ArrayBuffer) {
+    client.on('open', function open() {
+      t.pass()
+      console.log('openned')
+    })
+
+    client.on('message', function message(msg: ArrayBuffer) {
       const m = arrayBufferToString(msg)
       t.is(m, 'Hello')
       resolver()
