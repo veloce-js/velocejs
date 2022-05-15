@@ -1,4 +1,23 @@
 // this will allow you to create a series of API in no time
+import type {
+  AppOptions,
+  HttpResponse,
+  HttpRequest,
+  UwsRouteSetup,
+  UwsRouteHandler,
+  UwsRespondBody,
+  // UwsWriter,
+  // UwsJsonWriter,
+  UwsStringPairObj,
+  // RecognizedString
+} from '@velocejs/server/index' // point to the source ts
+// our deps
+import type {
+  RouteMetaInfo,
+  VeloceCtx,
+  VeloceMiddleware,
+  // JsonValidationEntry,
+} from './types'
 import {
   UwsServer,
   serveStatic,
@@ -18,25 +37,7 @@ import {
   TS_TYPE_NAME,
   REST_NAME,
 } from '@jsonql/constants'
-import {
-  AppOptions,
-  HttpResponse,
-  HttpRequest,
-  UwsRouteSetup,
-  UwsRouteHandler,
-  UwsRespondBody,
-  // UwsWriter,
-  // UwsJsonWriter,
-  UwsStringPairObj,
-  // RecognizedString
-} from '@velocejs/server/index' // point to the source ts
-// our deps
-import {
-  RouteMetaInfo,
-  VeloceCtx,
-  VeloceMiddleware,
-  // JsonValidationEntry,
-} from './types'
+
 import bodyParser, {
   UrlPattern
 } from '@velocejs/bodyparser'

@@ -6,7 +6,7 @@
   Here we will try to apply the Decorator at the Class level
   and see if we could do it with just init the new class and everything should run
 */
-import { RouteMetaInfo /*, JsonValidationEntry*/ } from '../types'
+import type { RouteMetaInfo /*, JsonValidationEntry*/ } from '../types'
 import { routeKey, validationKey, protectedKey } from './keys'
 import { pickInputFile, tsClassParser } from '@jsonql/ast'
 import { STATIC_TYPE, RAW_TYPE } from '@velocejs/server'

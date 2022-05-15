@@ -1,11 +1,11 @@
 // Validator Decorator
-import { validationKey } from './keys'
-import {
+import type {
   // JsonValidationEntry,
   JsonValidationOption,
   // ValidationObjectRule,
   // ValidationObjectSimpleRule
 } from '../types'
+import { validationKey } from './keys'
 import {
   RULES_KEY,
   OPTIONS_KEY,
