@@ -50,9 +50,17 @@ function innerDecoratorFactory(type: string, path: string, routeType?: string) {
       default:
         meta.type = type
     }
-    existingRoutes.push(meta)
-    // console.log('existingRoutes', existingRoutes)
-    Reflect.defineMetadata(routeKey, existingRoutes, target)
+    // we should check if the same type already defined the same path
+    const found = !!existingRoutes.filter(
+      (route: RouteMetaInfo) => route.type === type && route.path === path
+    ).length
+    if (!found) {
+      existingRoutes.push(meta)
+      // console.log('existingRoutes', existingRoutes)
+      Reflect.defineMetadata(routeKey, existingRoutes, target)
+    } else {
+      throw new Error(`${path} already defined with ${type}!`)
+    }
   }
 }
 

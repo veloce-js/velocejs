@@ -1,5 +1,6 @@
 // WebSocket related decorator
 import { websocketKey } from './keys'
+import { RouteMetaInfo } from '../types'
 import { FastApiInterface } from '../lib/fast-api-interface'
 import { WEBSOCKET_ROUTE_NAME } from '@velocejs/server'
 /*
@@ -23,13 +24,17 @@ export function Socket(path: string) {
     propertyName: string
   ): void => {
     const existingWsRoutes = Reflect.getOwnMetadata(websocketKey, target) || []
-    // check if the route already existed
-    
-    existingWsRoutes.push({
-      path,
-      propertyName,
-      type: WEBSOCKET_ROUTE_NAME
-    })
-
+    // check if the route already existed this is not like http route which can be the same with different type
+    const found = !!existingWsRoutes.filter((route: RouteMetaInfo) => route.path === path).length
+    if (!found) {
+      existingWsRoutes.push({
+        path,
+        propertyName,
+        type: WEBSOCKET_ROUTE_NAME
+      })
+      Reflect.defineMetadata(websocketKey, existingWsRoutes, target)
+    } else {
+      throw new Error(`${path} already existed in your websocket defintion!`)
+    }
   }
 }
