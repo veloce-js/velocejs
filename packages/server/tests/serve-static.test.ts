@@ -1,6 +1,6 @@
 // testing the serveStatic
 import test from 'ava'
-import { UwsServer, serveStatic, getRenderer, fileRender } from '../dist'
+import { UwsServer, serveStatic, getRenderFn, renderFile } from '../dist'
 import { HttpResponse, HttpRequest } from '../dist/types'
 import Fetch from 'node-fetch'
 import { join } from 'path'
@@ -16,7 +16,7 @@ test.before(() => {
       type: 'get',
       path: '/markdown',
       handler: (res: HttpResponse) => {
-        const writer = getRenderer(res)
+        const writer = getRenderFn(res)
         const content = readFileSync(join(dir, 'README.md'))
         writer('markdown', content)
       }
@@ -26,7 +26,7 @@ test.before(() => {
       path: '/jpeg/*',
       handler: (res: HttpResponse, req: HttpRequest) => {
         const url = req.getUrl().replace('/jpeg/', '')
-        fileRender(res)(join(dir, url))
+        renderFile(res)(join(dir, url))
       }
     },
     {

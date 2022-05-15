@@ -1,4 +1,5 @@
 export declare const SUPPORT_REST_ROUTES: string[];
+export declare const WEBSOCKET_ROUTE_NAME = "ws";
 export declare const STATIC_TYPE = "static";
 export declare const STATIC_ROUTE = "get";
 export declare const DEFAULT_FILE = "index.html";
@@ -17,3 +18,8 @@ export declare const IS_OTHER = "other";
 export declare const BACK_PRESSURE = 1024;
 export declare const MAX_PAYLOAD_LENGTH: number;
 export declare const SHARED_COMPRESSOR: number;
+export declare const SOCKET_DEFAULT_PROPS: {
+    compression: number;
+    maxPayloadLength: number;
+    idleTimeout: number;
+};

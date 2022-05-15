@@ -1,13 +1,10 @@
-// this will return an object with the props required for setup the socket
-import { SOCKET_DEFAULT_PROPS } from './lib/constants'
-import { UwsSocketSetupParial } from './types'
-
+import { UwsSocketSetupParial } from './types';
 /** basically just provide some of the default props */
-export function createSocketHandler(setup: UwsSocketSetupParial) {
-  return Object.assign({}, SOCKET_DEFAULT_PROPS, setup)
-}
-
-
+export declare function createSocketHandler(setup: UwsSocketSetupParial): {
+    compression: number;
+    maxPayloadLength: number;
+    idleTimeout: number;
+} & UwsSocketSetupParial;
 /** A WebSocket connection that is valid from open to close event.
  * Read more about this in the user manual.
 

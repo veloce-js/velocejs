@@ -7,12 +7,12 @@ import { lookupMimeType } from './lib/mime'
 import { CONTENT_TYPE } from './lib/constants'
 
 /** taken out from server-static for re-use */
-export function fileRender(
+export function renderFile(
   res: HttpResponse
 ) {
   const writer = getWriter(res)
   /** url is the request url, file is the actual read content */
-  return (url: string, file?: any): void => {
+  return (url: string, file?: Buffer): void => {
     const mimeType = lookupMimeType(url)
     // if they didn't provide the read content then we read it
     if (!file) {
@@ -24,7 +24,7 @@ export function fileRender(
 /** we are going to have several different type
 such as html markdown etc
 */
-export function getRenderer(res: HttpResponse) {
+export function getRenderFn(res: HttpResponse) {
 
   const writer = getWriter(res)
 

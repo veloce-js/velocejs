@@ -1,5 +1,5 @@
 /* A quite detailed WebSockets example */
-
+/** THIS IS FOR HTTP 1.1 ONLY therefore we are not going to support it in the core */
 const uWS = require('../dist/uws.js');
 const port = 9001;
 

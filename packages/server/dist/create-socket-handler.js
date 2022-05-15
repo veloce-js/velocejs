@@ -1,13 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.createSocketHandler = void 0;
 // this will return an object with the props required for setup the socket
-import { SOCKET_DEFAULT_PROPS } from './lib/constants'
-import { UwsSocketSetupParial } from './types'
-
+const constants_1 = require("./lib/constants");
 /** basically just provide some of the default props */
-export function createSocketHandler(setup: UwsSocketSetupParial) {
-  return Object.assign({}, SOCKET_DEFAULT_PROPS, setup)
+function createSocketHandler(setup) {
+    return Object.assign({}, constants_1.SOCKET_DEFAULT_PROPS, setup);
 }
-
-
+exports.createSocketHandler = createSocketHandler;
 /** A WebSocket connection that is valid from open to close event.
  * Read more about this in the user manual.
 

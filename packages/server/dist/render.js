@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRenderer = exports.fileRender = void 0;
+exports.getRenderFn = exports.renderFile = void 0;
 const fs_extra_1 = require("fs-extra");
 const writers_1 = require("./writers");
 const mime_1 = require("./lib/mime");
 const constants_1 = require("./lib/constants");
 /** taken out from server-static for re-use */
-function fileRender(res) {
+function renderFile(res) {
     const writer = (0, writers_1.getWriter)(res);
     /** url is the request url, file is the actual read content */
     return (url, file) => {
@@ -18,11 +18,11 @@ function fileRender(res) {
         writer(file, { [constants_1.CONTENT_TYPE]: mimeType });
     };
 }
-exports.fileRender = fileRender;
+exports.renderFile = renderFile;
 /** we are going to have several different type
 such as html markdown etc
 */
-function getRenderer(res) {
+function getRenderFn(res) {
     const writer = (0, writers_1.getWriter)(res);
     return (type, content) => {
         const mimeType = (0, mime_1.lookupMimeType)(type);
@@ -31,4 +31,4 @@ function getRenderer(res) {
         writer(output, { [constants_1.CONTENT_TYPE]: mimeType });
     };
 }
-exports.getRenderer = getRenderer;
+exports.getRenderFn = getRenderFn;

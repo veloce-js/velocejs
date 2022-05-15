@@ -36,7 +36,7 @@ function serveStatic(assetDir, onAbortedHandler) {
             .filter((dir) => node_fs_1.default.existsSync(node_path_1.default.join(dir, url)))
             .map((dir) => node_fs_1.default.readFileSync(node_path_1.default.join(dir, url)));
         if (file.length) {
-            (0, render_1.fileRender)(res)(url, file[0]);
+            (0, render_1.renderFile)(res)(url, file[0]);
         }
         else {
             (0, writers_1.write404)(res);

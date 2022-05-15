@@ -4,7 +4,7 @@ import path from 'node:path'
 import { HttpResponse, HttpRequest } from './types'
 import { DEFAULT_FILE } from './lib/constants'
 import { write404 } from './writers'
-import { fileRender } from './render'
+import { renderFile } from './render'
 import { isFunction, toArray } from '@jsonql/utils'
 
 // import { toArray } from '@jsonql/utils'
@@ -38,7 +38,7 @@ export function serveStatic(
       .map((dir: string) => fs.readFileSync(path.join(dir, url)))
 
     if (file.length) {
-      fileRender(res)(url, file[0])
+      renderFile(res)(url, file[0])
     } else {
       write404(res)
     }
