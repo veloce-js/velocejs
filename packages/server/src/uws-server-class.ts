@@ -9,13 +9,17 @@ import {
   UwsRouteSetup
 } from './lib/interfaces'
 import {
-  SUPPORT_REST_ROUTES
+  SUPPORT_REST_ROUTES,
+  WEBSOCKET_ROUTE_NAME,
 } from './lib/constants'
 import {
   createApp,
   shutdownServer,
   getPort
 } from './create-app'
+import {
+  createSocketHandler
+} from './create-socket-handler'
 import debug from 'debug'
 const debugFn = debug(`velocejs:server:uws-server-class`)
 
@@ -108,14 +112,18 @@ export class UwsServer {
 
   /** to init, bind handlers and then start up the UWS Server */
   public run(handlers: UwsRouteSetup[]): void {
-    const app = createApp(this.opts)
+    const app: TemplatedApp = createApp(this.opts)
     if (!handlers.length) {
       throw new Error(`You must provide at least 1 handler!`)
     }
     handlers.forEach(o => {
       const { type, path, handler } = o
       // @BUG if we use Reflect.apply here, uws throw a string out of bound error
-      if (SUPPORT_REST_ROUTES.includes(type)) {
+      if (type === WEBSOCKET_ROUTE_NAME) {
+        // @ts-ignore lots of incompatible setting between two different version? 
+        app[type](path, createSocketHandler(handler))
+      }
+      else if (SUPPORT_REST_ROUTES.includes(type)) {
         debugFn(`Create ${type} route for ${path}`)
         app[type](path, handler)
       } else {

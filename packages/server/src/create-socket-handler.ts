@@ -1,9 +1,9 @@
 // this will return an object with the props required for setup the socket
 import { SOCKET_DEFAULT_PROPS } from './lib/constants'
-import { UwsSocketSetupParial } from './types'
+import { WebSocketBehavior } from './lib/interfaces'
 
 /** basically just provide some of the default props */
-export function createSocketHandler(setup: UwsSocketSetupParial) {
+export function createSocketHandler(setup: WebSocketBehavior): WebSocketBehavior {
   return Object.assign({}, SOCKET_DEFAULT_PROPS, setup)
 }
 
