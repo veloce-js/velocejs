@@ -1,5 +1,5 @@
 import { WebsocketServer } from './socket-server'
-import * as open from 'open'
+import open from 'open'
 
 const server = new WebsocketServer()
 

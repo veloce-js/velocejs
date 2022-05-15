@@ -2,6 +2,9 @@ import { FastApi, Rest, ServeStatic, Websocket } from '../../src'
 import { WebSocket } from '@velocejs/server/index'
 import { arrayBufferToString } from '@velocejs/server'
 import { join } from 'node:path'
+
+let count = 0
+
 // main
 @Rest
 export class WebsocketServer extends FastApi {
@@ -14,7 +17,9 @@ export class WebsocketServer extends FastApi {
       },
       message: function(ws: WebSocket, message: ArrayBuffer) {
         const msg = arrayBufferToString(message)
-        ws.send(`Got your message: ${msg}`)
+        ++count
+        ws.send(`Got your message: ${msg} ${count}`)
+        console.log(`${msg} ${count}`)
       },
       close: (_: WebSocket, code: number) => {
         console.log('connection is closed', code)
