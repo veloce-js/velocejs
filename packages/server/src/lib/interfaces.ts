@@ -40,7 +40,7 @@ export type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => void | We
 export interface UwsRouteSetup {
   type: string
   path: string
-  handler: UwsRouteHandler
+  handler: UwsRouteHandler | WebSocketBehavior
 }
 
 // this interface is for the result pass to the fast-api callback

@@ -6,7 +6,8 @@ import {
   us_listen_socket
 } from './types'
 import {
-  UwsRouteSetup
+  UwsRouteSetup,
+  WebSocketBehavior
 } from './lib/interfaces'
 import {
   SUPPORT_REST_ROUTES,
@@ -114,7 +115,7 @@ export class UwsServer {
     this.onStartFn(`${hostName}:${portNum}`)
   }
 
-  /** to init, bind handlers and then start up the UWS Server */
+  /** to init, bind handlers and then optionally start up the UWS Server */
   public run(handlers: UwsRouteSetup[]): void {
     const app: TemplatedApp = createApp(this.opts)
     if (!handlers.length) {
@@ -124,13 +125,14 @@ export class UwsServer {
       const { type, path, handler } = o
       // @BUG if we use Reflect.apply here, uws throw a string out of bound error
       if (type === WEBSOCKET_ROUTE_NAME) {
-        // @ts-ignore lots of incompatible setting between two different version?
-        app[type](path, createSocketHandler(handler))
+        debugFn(`Create ${WEBSOCKET_ROUTE_NAME} for ${path} with `, handler)
+        Reflect.apply(app[type], app, [path, createSocketHandler(handler as WebSocketBehavior)])
       }
       else if (SUPPORT_REST_ROUTES.includes(type)) {
         debugFn(`Create ${type} route for ${path}`)
         app[type](path, handler)
-      } else {
+      }
+      else {
         throw new Error(`Route ${type} is not supported!`)
       }
     })
