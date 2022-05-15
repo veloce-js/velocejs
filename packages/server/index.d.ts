@@ -54,9 +54,3 @@ import { UwsStringPairObj } from './src/lib/types'
 export type UwsWriter = (payload: RecognizedString, headers?: UwsStringPairObj, status?: number) => void
 
 export type UwsJsonWriter = (jsonObj: object | RecognizedString, status?: number) => void
-
-export type UwsSocketSetupParial = {
-  open: (ws: WebSocket) => void
-  message: (ws: WebSocket, message: RecognizedString, isBinary: boolean) => void
-  [key: string]: any
-}

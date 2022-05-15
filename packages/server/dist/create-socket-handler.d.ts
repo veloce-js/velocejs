@@ -1,10 +1,6 @@
-import { UwsSocketSetupParial } from './types';
+import { WebSocketBehavior } from './lib/interfaces';
 /** basically just provide some of the default props */
-export declare function createSocketHandler(setup: UwsSocketSetupParial): {
-    compression: number;
-    maxPayloadLength: number;
-    idleTimeout: number;
-} & UwsSocketSetupParial;
+export declare function createSocketHandler(setup: WebSocketBehavior): WebSocketBehavior;
 /** A WebSocket connection that is valid from open to close event.
  * Read more about this in the user manual.
 

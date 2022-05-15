@@ -4,6 +4,7 @@ exports.UwsServer = void 0;
 const tslib_1 = require("tslib");
 const constants_1 = require("./lib/constants");
 const create_app_1 = require("./create-app");
+const create_socket_handler_1 = require("./create-socket-handler");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)(`velocejs:server:uws-server-class`);
 // main
@@ -56,7 +57,11 @@ class UwsServer {
     }
     /**
       we could specify the host like 0.0.0.0
-      listen(host: RecognizedString, port: number, cb: (listenSocket: us_listen_socket) => void): TemplatedApp;
+      listen(
+        host: RecognizedString,
+        port: number,
+        cb: (listenSocket: us_listen_socket) => void
+      ): TemplatedApp;
     */
     get hostName() {
         const h = process.env.HOST;
@@ -89,7 +94,11 @@ class UwsServer {
         handlers.forEach(o => {
             const { type, path, handler } = o;
             // @BUG if we use Reflect.apply here, uws throw a string out of bound error
-            if (constants_1.SUPPORT_REST_ROUTES.includes(type)) {
+            if (type === constants_1.WEBSOCKET_ROUTE_NAME) {
+                // @ts-ignore lots of incompatible setting between two different version?
+                app[type](path, (0, create_socket_handler_1.createSocketHandler)(handler));
+            }
+            else if (constants_1.SUPPORT_REST_ROUTES.includes(type)) {
                 debugFn(`Create ${type} route for ${path}`);
                 app[type](path, handler);
             }

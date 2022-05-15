@@ -79,7 +79,11 @@ export class UwsServer {
 
   /**
     we could specify the host like 0.0.0.0
-    listen(host: RecognizedString, port: number, cb: (listenSocket: us_listen_socket) => void): TemplatedApp;
+    listen(
+      host: RecognizedString,
+      port: number,
+      cb: (listenSocket: us_listen_socket) => void
+    ): TemplatedApp;
   */
   public get hostName() {
     const h = process.env.HOST
@@ -120,7 +124,7 @@ export class UwsServer {
       const { type, path, handler } = o
       // @BUG if we use Reflect.apply here, uws throw a string out of bound error
       if (type === WEBSOCKET_ROUTE_NAME) {
-        // @ts-ignore lots of incompatible setting between two different version? 
+        // @ts-ignore lots of incompatible setting between two different version?
         app[type](path, createSocketHandler(handler))
       }
       else if (SUPPORT_REST_ROUTES.includes(type)) {

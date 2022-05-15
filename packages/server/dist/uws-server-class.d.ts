@@ -20,7 +20,11 @@ export declare class UwsServer {
     set portNum(port: number);
     /**
       we could specify the host like 0.0.0.0
-      listen(host: RecognizedString, port: number, cb: (listenSocket: us_listen_socket) => void): TemplatedApp;
+      listen(
+        host: RecognizedString,
+        port: number,
+        cb: (listenSocket: us_listen_socket) => void
+      ): TemplatedApp;
     */
     get hostName(): RecognizedString;
     /** setter for host name */
