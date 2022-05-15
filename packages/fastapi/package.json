@@ -42,7 +42,7 @@
     "@jsonql/validator": "^0.4.0",
     "@velocejs/bodyparser": "workspace:^0.4.0",
     "@velocejs/config": "workspace:^0.4.0",
-    "@velocejs/server": "workspace:^0.8.0",
+    "@velocejs/server": "workspace:^0.8.1",
     "debug": "^4.3.4",
     "fs-extra": "^10.1.0",
     "mime-types": "^2.1.35",
