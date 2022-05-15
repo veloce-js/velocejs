@@ -7,8 +7,7 @@ export const abortFnKey = Symbol('FastApiAbortFnKey')
 export const validationKey = Symbol('FastApiValidationKey')
 // protected route
 export const protectedKey = Symbol('FastApiProtectedKey')
-// web socket
-export const websocketKey = Symbol('FastApiWebSocketKey')
+
 
 // for extracting argument names
 // export const argsKey = Symbol("FastApiArgsKey")

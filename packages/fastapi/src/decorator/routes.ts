@@ -13,6 +13,7 @@ import {
 import { routeKey } from './keys'
 // import { extractArgs } from '../lib/extract'
 import { FastApiInterface } from '../lib/fast-api-interface'
+import { WEBSOCKET_ROUTE_NAME } from '@velocejs/server'
 
 /** make sure the dynamic route only apply on GET route */
 const assert = (type: string, path: string) => {
@@ -94,6 +95,9 @@ export const Options = routeDecoratorFactory('options')
 export const Del = routeDecoratorFactory('del')
 export const Patch = routeDecoratorFactory('patch')
 export const Head = routeDecoratorFactory('head')
+// WebSocket
+export const WebSocket = routeDecoratorFactory(WEBSOCKET_ROUTE_NAME)
+
 // TBC what these two for
 // export const CONNECT = routeDecoratorFactory('connect')
 // export const TRACE = routeDecoratorFactory('trace')

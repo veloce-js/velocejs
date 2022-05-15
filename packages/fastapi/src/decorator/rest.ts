@@ -28,8 +28,10 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
         .then(map => {
           const target = constructor.prototype
           const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
+          
           const validations = Reflect.getOwnMetadata(validationKey, target) || []
           const protectedRoute = Reflect.getOwnMetadata(protectedKey, target) || []
+
           // little trick to get rip of the warning
           this[METHOD_TO_RUN](
             mergeInfo(map, existingRoutes, validations, protectedRoute)
@@ -43,7 +45,7 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
 function mergeInfo(
   map: object,
   existingRoutes: Array<RouteMetaInfo>,
-  validations: any,
+  validations: any, // @TODO fix this type
   protectedRoutes?: string[]
 ) {
   return existingRoutes.map(route => {
