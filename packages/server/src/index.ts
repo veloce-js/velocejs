@@ -5,8 +5,6 @@
 import uWS from 'uWebSockets.js'
 // default export
 export default uWS
-
-
 // named
 export {
   createApp,
@@ -34,6 +32,7 @@ export {
 } from './render'
 // extended
 export { UwsServer } from './uws-server-class'
+// constants 
 export {
   C100,
   C101,
