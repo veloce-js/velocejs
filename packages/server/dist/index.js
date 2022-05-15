@@ -3,8 +3,8 @@
 // everything from the uWebSocket.js
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.C415 = exports.C414 = exports.C413 = exports.C412 = exports.C411 = exports.C410 = exports.C409 = exports.C408 = exports.C407 = exports.C406 = exports.C405 = exports.C404 = exports.C403 = exports.C402 = exports.C401 = exports.C400 = exports.C308 = exports.C307 = exports.C304 = exports.C303 = exports.C302 = exports.C301 = exports.C300 = exports.C226 = exports.C208 = exports.C207 = exports.C206 = exports.C205 = exports.C204 = exports.C203 = exports.C201 = exports.C200 = exports.C103 = exports.C102 = exports.C101 = exports.C100 = exports.UwsServer = exports.getRenderFn = exports.renderFile = exports.writeBufferToFile = exports.write404 = exports.getWriter = exports.jsonWriter = exports.getContentType = exports.lookupMimeType = exports.serveStatic = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createApp = void 0;
-exports.DEDICATED_COMPRESSOR_16KB = exports.DEDICATED_COMPRESSOR_4KB = exports.DEDICATED_COMPRESSOR_3KB = exports.SHARED_DECOMPRESSOR = exports.SHARED_COMPRESSOR = exports.DISABLED = exports.SUPPORT_REST_ROUTES = exports.STATIC_TYPE = exports.STATIC_ROUTE = exports.SOCKET_DEFAULT_PROPS = exports.RAW_TYPE = exports.MAX_PAYLOAD_LENGTH = exports.JSON_HEADER = exports.IS_OTHER = exports.IS_MULTI = exports.IS_JSON = exports.IS_FORM = exports.FILE_POST_HEADER = exports.DEFAULT_MIME_TYPE = exports.DEFAULT_FORM_HEADER = exports.DEFAULT_FILE_TYPE = exports.DEFAULT_FILE = exports.CONTENT_TYPE = exports.BOUNDARY = exports.BACK_PRESSURE = exports.lookupStatus = exports.C511 = exports.C510 = exports.C508 = exports.C507 = exports.C506 = exports.C505 = exports.C504 = exports.C503 = exports.C502 = exports.C501 = exports.C500 = exports.C451 = exports.C431 = exports.C429 = exports.C428 = exports.C426 = exports.C425 = exports.C424 = exports.C423 = exports.C422 = exports.C421 = exports.C418 = exports.C417 = exports.C416 = void 0;
-exports.createSocketHandler = exports.DEDICATED_DECOMPRESSOR = exports.DEDICATED_DECOMPRESSOR_512B = exports.DEDICATED_DECOMPRESSOR_1KB = exports.DEDICATED_DECOMPRESSOR_2KB = exports.DEDICATED_DECOMPRESSOR_4KB = exports.DEDICATED_DECOMPRESSOR_8KB = exports.DEDICATED_DECOMPRESSOR_16KB = exports.DEDICATED_DECOMPRESSOR_32KB = exports.DEDICATED_COMPRESSOR_256KB = exports.DEDICATED_COMPRESSOR_128KB = exports.DEDICATED_COMPRESSOR_64KB = exports.DEDICATED_COMPRESSOR_32KB = void 0;
+exports.SHARED_DECOMPRESSOR = exports.SHARED_COMPRESSOR = exports.DISABLED = exports.SUPPORT_REST_ROUTES = exports.STATIC_TYPE = exports.STATIC_ROUTE = exports.SOCKET_DEFAULT_PROPS = exports.RAW_TYPE = exports.MAX_PAYLOAD_LENGTH = exports.JSON_HEADER = exports.IS_OTHER = exports.IS_MULTI = exports.IS_JSON = exports.IS_FORM = exports.FILE_POST_HEADER = exports.DEFAULT_MIME_TYPE = exports.DEFAULT_FORM_HEADER = exports.DEFAULT_FILE_TYPE = exports.DEFAULT_FILE = exports.CONTENT_TYPE = exports.BOUNDARY = exports.BACK_PRESSURE = exports.toArrayBuffer = exports.getFileSize = exports.arrayBufferToString = exports.lookupStatus = exports.C511 = exports.C510 = exports.C508 = exports.C507 = exports.C506 = exports.C505 = exports.C504 = exports.C503 = exports.C502 = exports.C501 = exports.C500 = exports.C451 = exports.C431 = exports.C429 = exports.C428 = exports.C426 = exports.C425 = exports.C424 = exports.C423 = exports.C422 = exports.C421 = exports.C418 = exports.C417 = exports.C416 = void 0;
+exports.createSocketHandler = exports.DEDICATED_DECOMPRESSOR = exports.DEDICATED_DECOMPRESSOR_512B = exports.DEDICATED_DECOMPRESSOR_1KB = exports.DEDICATED_DECOMPRESSOR_2KB = exports.DEDICATED_DECOMPRESSOR_4KB = exports.DEDICATED_DECOMPRESSOR_8KB = exports.DEDICATED_DECOMPRESSOR_16KB = exports.DEDICATED_DECOMPRESSOR_32KB = exports.DEDICATED_COMPRESSOR_256KB = exports.DEDICATED_COMPRESSOR_128KB = exports.DEDICATED_COMPRESSOR_64KB = exports.DEDICATED_COMPRESSOR_32KB = exports.DEDICATED_COMPRESSOR_16KB = exports.DEDICATED_COMPRESSOR_4KB = exports.DEDICATED_COMPRESSOR_3KB = void 0;
 const tslib_1 = require("tslib");
 // Main entry point
 const uWebSockets_js_1 = tslib_1.__importDefault(require("uWebSockets.js"));
@@ -36,7 +36,7 @@ Object.defineProperty(exports, "getRenderFn", { enumerable: true, get: function 
 // extended
 var uws_server_class_1 = require("./uws-server-class");
 Object.defineProperty(exports, "UwsServer", { enumerable: true, get: function () { return uws_server_class_1.UwsServer; } });
-// constants 
+// constants
 var status_1 = require("./lib/status");
 Object.defineProperty(exports, "C100", { enumerable: true, get: function () { return status_1.C100; } });
 Object.defineProperty(exports, "C101", { enumerable: true, get: function () { return status_1.C101; } });
@@ -99,6 +99,11 @@ Object.defineProperty(exports, "C508", { enumerable: true, get: function () { re
 Object.defineProperty(exports, "C510", { enumerable: true, get: function () { return status_1.C510; } });
 Object.defineProperty(exports, "C511", { enumerable: true, get: function () { return status_1.C511; } });
 Object.defineProperty(exports, "lookupStatus", { enumerable: true, get: function () { return status_1.lookupStatus; } });
+// useful methods
+var files_1 = require("./lib/files");
+Object.defineProperty(exports, "arrayBufferToString", { enumerable: true, get: function () { return files_1.arrayBufferToString; } });
+Object.defineProperty(exports, "getFileSize", { enumerable: true, get: function () { return files_1.getFileSize; } });
+Object.defineProperty(exports, "toArrayBuffer", { enumerable: true, get: function () { return files_1.toArrayBuffer; } });
 // if we use the * then we keep having problem with editor said its not export
 // export * from './lib/constants
 var constants_1 = require("./lib/constants");
