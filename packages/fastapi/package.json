@@ -23,6 +23,7 @@
     "test:form": "DEBUG=velocejs:* pnpm ts -- ./examples/form/index.ts",
     "test:upload": "DEBUG=velocejs:* pnpm ts -- ./examples/upload/index.ts",
     "test:vali": "DEBUG=velocejs:* pnpm ts -- ./examples/validation/my-example.ts",
+    "test:socket": "pnpm ts ./tests/fixtures/run-websocket.ts",
     "ts-node": "ts-node",
     "clean:dist": "rimraf ./dist",
     "update:version": "node ../../update-devs.js fastapi",
