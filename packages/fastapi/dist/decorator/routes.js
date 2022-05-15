@@ -50,14 +50,14 @@ function innerDecoratorFactory(type, path, routeType) {
     };
 }
 // allow dev to define a raw handler - we don't do any processing
-function Raw(route, path) {
-    return innerDecoratorFactory(server_1.RAW_TYPE, path, route);
+function Raw(routeType, path) {
+    return innerDecoratorFactory(server_1.RAW_TYPE, path, routeType);
 }
 exports.Raw = Raw;
-// special decorator to create a serveStatic method
+/** special decorator to create a serveStatic method, you could specify a routeType default to GET */
 // Accessor Decorator
-function ServeStatic(path) {
-    return innerDecoratorFactory(server_1.STATIC_TYPE, path);
+function ServeStatic(path, routeType) {
+    return innerDecoratorFactory(server_1.STATIC_TYPE, path, routeType);
 }
 exports.ServeStatic = ServeStatic;
 // Factory method to create factory method
@@ -76,7 +76,7 @@ exports.Options = routeDecoratorFactory('options');
 exports.Del = routeDecoratorFactory('del');
 exports.Patch = routeDecoratorFactory('patch');
 exports.Head = routeDecoratorFactory('head');
-// Websocket - the s is lowercase to avoid the WebSocket type 
+// Websocket - the s is lowercase to avoid the WebSocket type
 exports.Websocket = routeDecoratorFactory(server_2.WEBSOCKET_ROUTE_NAME);
 // TBC what these two for
 // export const CONNECT = routeDecoratorFactory('connect')

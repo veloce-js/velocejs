@@ -1,6 +1,6 @@
 /// <reference types="node" />
-import { AppOptions, HttpResponse, HttpRequest, UwsRespondBody } from '@velocejs/server/index';
-import { RouteMetaInfo, VeloceMiddleware } from './types';
+import type { AppOptions, HttpResponse, HttpRequest, UwsRespondBody } from '@velocejs/server/index';
+import type { RouteMetaInfo, VeloceMiddleware } from './types';
 import { FastApiInterface } from './lib/fast-api-interface';
 export declare class FastApi implements FastApiInterface {
     private _uwsInstance;
@@ -16,6 +16,7 @@ export declare class FastApi implements FastApiInterface {
     private _middlewares;
     private _validationErrStatus;
     private _dynamicRoutes;
+    private _staticRouteIndex;
     protected payload: UwsRespondBody | undefined;
     protected res: HttpResponse | undefined;
     protected req: HttpRequest | undefined;

@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FastApi = void 0;
 const tslib_1 = require("tslib");
-// this will allow you to create a series of API in no time
 const server_1 = require("@velocejs/server");
 const constants_1 = require("@jsonql/constants");
 const bodyparser_1 = tslib_1.__importStar(require("@velocejs/bodyparser"));
@@ -35,6 +34,7 @@ class FastApi {
     _middlewares = [];
     _validationErrStatus = 417;
     _dynamicRoutes = new Map();
+    _staticRouteIndex = [];
     // protected properties
     payload;
     res;
@@ -86,10 +86,11 @@ class FastApi {
     /** Mapping all the string name to method and supply to UwsServer run method */
     async _prepareRoutes(meta) {
         const checkFn = this._prepareDynamicRoute(new WeakSet());
-        return meta.map(m => {
+        return meta.map((m, i) => {
             const { path, type, propertyName, validation } = m;
             switch (type) {
                 case server_1.STATIC_TYPE:
+                    this._staticRouteIndex.push(i);
                     return {
                         path,
                         type: server_1.STATIC_ROUTE,
@@ -131,11 +132,13 @@ class FastApi {
     }
     /** just wrap this together to make it look neater */
     _prepareRouteForContract(propertyName, args, type, path) {
-        const entry = { [propertyName]: {
+        const entry = {
+            [propertyName]: {
                 params: (0, utils_1.toArray)(args),
                 method: type,
                 route: path
-            } };
+            }
+        };
         this._routeForContract = (0, utils_1.assign)(this._routeForContract, entry);
     }
     /** check if there is a dynamic route and prepare it */
@@ -163,7 +166,6 @@ class FastApi {
     ) {
         const handler = this[propertyName];
         // @TODO need to rethink about how this work
-        // @ts-ignore need to fix the server accepted type 
         return async (res, req) => {
             // @0.3.0 we change the whole thing into one middlewares stack
             const stacks = [
@@ -214,8 +216,23 @@ class FastApi {
     }
     /** binding method to the uws server */
     async _run(routes) {
-        debug('routes', routes);
-        return this._uwsInstance.run(routes);
+        let _routes = routes;
+        if (this._staticRouteIndex.length > 0) { // we have a static route
+            const a = [];
+            const b = [];
+            const c = routes.length;
+            for (let i = 0; i < c; ++i) {
+                if (this._staticRouteIndex.includes(i)) {
+                    b.push(routes[i]);
+                }
+                else {
+                    a.push(routes[i]);
+                }
+            }
+            _routes = a.concat(b);
+        }
+        debug('routes', _routes);
+        return this._uwsInstance.run(_routes);
     }
     /** split out from above because we still need to handle the user provide middlewares */
     _handleMiddlewares(...args) {

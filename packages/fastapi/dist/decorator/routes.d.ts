@@ -1,6 +1,7 @@
 import { FastApiInterface } from '../lib/fast-api-interface';
-export declare function Raw(route: string, path: string): (target: FastApiInterface, propertyName: string) => void;
-export declare function ServeStatic(path: string): (target: FastApiInterface, propertyName: string) => void;
+export declare function Raw(routeType: string, path: string): (target: FastApiInterface, propertyName: string) => void;
+/** special decorator to create a serveStatic method, you could specify a routeType default to GET */
+export declare function ServeStatic(path: string, routeType?: string): (target: FastApiInterface, propertyName: string) => void;
 export declare const Any: (path: string) => (target: FastApiInterface, propertyName: string) => void;
 export declare const Get: (path: string) => (target: FastApiInterface, propertyName: string) => void;
 export declare const Post: (path: string) => (target: FastApiInterface, propertyName: string) => void;

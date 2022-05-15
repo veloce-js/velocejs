@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Validate = void 0;
-// Validator Decorator
 const keys_1 = require("./keys");
 const constants_1 = require("../lib/constants");
 // Validate Decorator
