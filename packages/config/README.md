@@ -1,4 +1,4 @@
-# @jsonql/config
+# @velocejs/config
 
 Reading the project configuration files in various format and provide to different modules.
 
@@ -30,7 +30,7 @@ const cacheDir = c.getConfig('contract.cacheDir')
 
 ```
 
-@TODO add the full matching of all Veloce Config options then add the `@jsonql/config-check` module 
+@TODO add the full matching of all Veloce Config options then add the `@jsonql/config-check` module
 
 ---
 

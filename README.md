@@ -8,14 +8,14 @@ BTW we are using [pnpm]() to manage the mono repo.
 There are several modules to form this whole project:
 
 - [@velocejs/server](./packages/server/README.md)
-- []@velocejs/fastapi](./packages/fastapi/README.md)
+- [@velocejs/fastapi](./packages/fastapi/README.md)
 - [@velocejs/setup](./packages/setup/README.md)
 - [@velocejs/client](./packages/client/README.md)
 
 There are several more supporting modules
 
 - [@velocejs/config](./packages/config/README.md)
-- [@velocejs/bodyparser](./packages/config/README.md)
+- [@velocejs/bodyparser](./packages/bodyparser/README.md)
 
 Also we use modules from our other project [jsonql](https://jsonql.js.org)
 
