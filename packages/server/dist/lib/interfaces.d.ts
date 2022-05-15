@@ -35,7 +35,7 @@ export declare type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => v
 export interface UwsRouteSetup {
     type: string;
     path: string;
-    handler: UwsRouteHandler;
+    handler: UwsRouteHandler | WebSocketBehavior;
 }
 export interface UwsParsedResult extends UwsRespondBody {
     res: HttpResponse;

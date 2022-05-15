@@ -3,7 +3,8 @@
 // everything from the uWebSocket.js
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.C415 = exports.C414 = exports.C413 = exports.C412 = exports.C411 = exports.C410 = exports.C409 = exports.C408 = exports.C407 = exports.C406 = exports.C405 = exports.C404 = exports.C403 = exports.C402 = exports.C401 = exports.C400 = exports.C308 = exports.C307 = exports.C304 = exports.C303 = exports.C302 = exports.C301 = exports.C300 = exports.C226 = exports.C208 = exports.C207 = exports.C206 = exports.C205 = exports.C204 = exports.C203 = exports.C201 = exports.C200 = exports.C103 = exports.C102 = exports.C101 = exports.C100 = exports.UwsServer = exports.getRenderFn = exports.renderFile = exports.writeBufferToFile = exports.write404 = exports.getWriter = exports.jsonWriter = exports.getContentType = exports.lookupMimeType = exports.serveStatic = exports.readJsonAsync = exports.getPort = exports.shutdownServer = exports.createApp = void 0;
-exports.createSocketHandler = exports.SUPPORT_REST_ROUTES = exports.STATIC_TYPE = exports.STATIC_ROUTE = exports.SOCKET_DEFAULT_PROPS = exports.SHARED_COMPRESSOR = exports.RAW_TYPE = exports.MAX_PAYLOAD_LENGTH = exports.JSON_HEADER = exports.IS_OTHER = exports.IS_MULTI = exports.IS_JSON = exports.IS_FORM = exports.FILE_POST_HEADER = exports.DEFAULT_MIME_TYPE = exports.DEFAULT_FORM_HEADER = exports.DEFAULT_FILE_TYPE = exports.DEFAULT_FILE = exports.CONTENT_TYPE = exports.BOUNDARY = exports.BACK_PRESSURE = exports.lookupStatus = exports.C511 = exports.C510 = exports.C508 = exports.C507 = exports.C506 = exports.C505 = exports.C504 = exports.C503 = exports.C502 = exports.C501 = exports.C500 = exports.C451 = exports.C431 = exports.C429 = exports.C428 = exports.C426 = exports.C425 = exports.C424 = exports.C423 = exports.C422 = exports.C421 = exports.C418 = exports.C417 = exports.C416 = void 0;
+exports.DEDICATED_COMPRESSOR_16KB = exports.DEDICATED_COMPRESSOR_4KB = exports.DEDICATED_COMPRESSOR_3KB = exports.SHARED_DECOMPRESSOR = exports.SHARED_COMPRESSOR = exports.DISABLED = exports.SUPPORT_REST_ROUTES = exports.STATIC_TYPE = exports.STATIC_ROUTE = exports.SOCKET_DEFAULT_PROPS = exports.RAW_TYPE = exports.MAX_PAYLOAD_LENGTH = exports.JSON_HEADER = exports.IS_OTHER = exports.IS_MULTI = exports.IS_JSON = exports.IS_FORM = exports.FILE_POST_HEADER = exports.DEFAULT_MIME_TYPE = exports.DEFAULT_FORM_HEADER = exports.DEFAULT_FILE_TYPE = exports.DEFAULT_FILE = exports.CONTENT_TYPE = exports.BOUNDARY = exports.BACK_PRESSURE = exports.lookupStatus = exports.C511 = exports.C510 = exports.C508 = exports.C507 = exports.C506 = exports.C505 = exports.C504 = exports.C503 = exports.C502 = exports.C501 = exports.C500 = exports.C451 = exports.C431 = exports.C429 = exports.C428 = exports.C426 = exports.C425 = exports.C424 = exports.C423 = exports.C422 = exports.C421 = exports.C418 = exports.C417 = exports.C416 = void 0;
+exports.createSocketHandler = exports.DEDICATED_DECOMPRESSOR = exports.DEDICATED_DECOMPRESSOR_512B = exports.DEDICATED_DECOMPRESSOR_1KB = exports.DEDICATED_DECOMPRESSOR_2KB = exports.DEDICATED_DECOMPRESSOR_4KB = exports.DEDICATED_DECOMPRESSOR_8KB = exports.DEDICATED_DECOMPRESSOR_16KB = exports.DEDICATED_DECOMPRESSOR_32KB = exports.DEDICATED_COMPRESSOR_256KB = exports.DEDICATED_COMPRESSOR_128KB = exports.DEDICATED_COMPRESSOR_64KB = exports.DEDICATED_COMPRESSOR_32KB = void 0;
 const tslib_1 = require("tslib");
 // Main entry point
 const uWebSockets_js_1 = tslib_1.__importDefault(require("uWebSockets.js"));
@@ -35,6 +36,7 @@ Object.defineProperty(exports, "getRenderFn", { enumerable: true, get: function 
 // extended
 var uws_server_class_1 = require("./uws-server-class");
 Object.defineProperty(exports, "UwsServer", { enumerable: true, get: function () { return uws_server_class_1.UwsServer; } });
+// constants 
 var status_1 = require("./lib/status");
 Object.defineProperty(exports, "C100", { enumerable: true, get: function () { return status_1.C100; } });
 Object.defineProperty(exports, "C101", { enumerable: true, get: function () { return status_1.C101; } });
@@ -115,11 +117,28 @@ Object.defineProperty(exports, "IS_OTHER", { enumerable: true, get: function () 
 Object.defineProperty(exports, "JSON_HEADER", { enumerable: true, get: function () { return constants_1.JSON_HEADER; } });
 Object.defineProperty(exports, "MAX_PAYLOAD_LENGTH", { enumerable: true, get: function () { return constants_1.MAX_PAYLOAD_LENGTH; } });
 Object.defineProperty(exports, "RAW_TYPE", { enumerable: true, get: function () { return constants_1.RAW_TYPE; } });
-Object.defineProperty(exports, "SHARED_COMPRESSOR", { enumerable: true, get: function () { return constants_1.SHARED_COMPRESSOR; } });
 Object.defineProperty(exports, "SOCKET_DEFAULT_PROPS", { enumerable: true, get: function () { return constants_1.SOCKET_DEFAULT_PROPS; } });
 Object.defineProperty(exports, "STATIC_ROUTE", { enumerable: true, get: function () { return constants_1.STATIC_ROUTE; } });
 Object.defineProperty(exports, "STATIC_TYPE", { enumerable: true, get: function () { return constants_1.STATIC_TYPE; } });
 Object.defineProperty(exports, "SUPPORT_REST_ROUTES", { enumerable: true, get: function () { return constants_1.SUPPORT_REST_ROUTES; } });
+Object.defineProperty(exports, "DISABLED", { enumerable: true, get: function () { return constants_1.DISABLED; } });
+Object.defineProperty(exports, "SHARED_COMPRESSOR", { enumerable: true, get: function () { return constants_1.SHARED_COMPRESSOR; } });
+Object.defineProperty(exports, "SHARED_DECOMPRESSOR", { enumerable: true, get: function () { return constants_1.SHARED_DECOMPRESSOR; } });
+Object.defineProperty(exports, "DEDICATED_COMPRESSOR_3KB", { enumerable: true, get: function () { return constants_1.DEDICATED_COMPRESSOR_3KB; } });
+Object.defineProperty(exports, "DEDICATED_COMPRESSOR_4KB", { enumerable: true, get: function () { return constants_1.DEDICATED_COMPRESSOR_4KB; } });
+Object.defineProperty(exports, "DEDICATED_COMPRESSOR_16KB", { enumerable: true, get: function () { return constants_1.DEDICATED_COMPRESSOR_16KB; } });
+Object.defineProperty(exports, "DEDICATED_COMPRESSOR_32KB", { enumerable: true, get: function () { return constants_1.DEDICATED_COMPRESSOR_32KB; } });
+Object.defineProperty(exports, "DEDICATED_COMPRESSOR_64KB", { enumerable: true, get: function () { return constants_1.DEDICATED_COMPRESSOR_64KB; } });
+Object.defineProperty(exports, "DEDICATED_COMPRESSOR_128KB", { enumerable: true, get: function () { return constants_1.DEDICATED_COMPRESSOR_128KB; } });
+Object.defineProperty(exports, "DEDICATED_COMPRESSOR_256KB", { enumerable: true, get: function () { return constants_1.DEDICATED_COMPRESSOR_256KB; } });
+Object.defineProperty(exports, "DEDICATED_DECOMPRESSOR_32KB", { enumerable: true, get: function () { return constants_1.DEDICATED_DECOMPRESSOR_32KB; } });
+Object.defineProperty(exports, "DEDICATED_DECOMPRESSOR_16KB", { enumerable: true, get: function () { return constants_1.DEDICATED_DECOMPRESSOR_16KB; } });
+Object.defineProperty(exports, "DEDICATED_DECOMPRESSOR_8KB", { enumerable: true, get: function () { return constants_1.DEDICATED_DECOMPRESSOR_8KB; } });
+Object.defineProperty(exports, "DEDICATED_DECOMPRESSOR_4KB", { enumerable: true, get: function () { return constants_1.DEDICATED_DECOMPRESSOR_4KB; } });
+Object.defineProperty(exports, "DEDICATED_DECOMPRESSOR_2KB", { enumerable: true, get: function () { return constants_1.DEDICATED_DECOMPRESSOR_2KB; } });
+Object.defineProperty(exports, "DEDICATED_DECOMPRESSOR_1KB", { enumerable: true, get: function () { return constants_1.DEDICATED_DECOMPRESSOR_1KB; } });
+Object.defineProperty(exports, "DEDICATED_DECOMPRESSOR_512B", { enumerable: true, get: function () { return constants_1.DEDICATED_DECOMPRESSOR_512B; } });
+Object.defineProperty(exports, "DEDICATED_DECOMPRESSOR", { enumerable: true, get: function () { return constants_1.DEDICATED_DECOMPRESSOR; } });
 // @TODO streaming
 // import * as constants from './lib/status'
 // console.log(constants)

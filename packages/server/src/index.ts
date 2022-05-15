@@ -32,7 +32,7 @@ export {
 } from './render'
 // extended
 export { UwsServer } from './uws-server-class'
-// constants 
+// constants
 export {
   C100,
   C101,
@@ -96,6 +96,12 @@ export {
   C511,
   lookupStatus
 } from './lib/status'
+// useful methods
+export {
+  arrayBufferToString,
+  getFileSize,
+  toArrayBuffer,
+} from './lib/files'
 // if we use the * then we keep having problem with editor said its not export
 // export * from './lib/constants
 export {

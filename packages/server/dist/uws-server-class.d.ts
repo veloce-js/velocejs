@@ -35,7 +35,7 @@ export declare class UwsServer {
     set onError(cb: () => void);
     /** this doesn't do anything just for overwrite or display a debug message */
     onStartCb(): void;
-    /** to init, bind handlers and then start up the UWS Server */
+    /** to init, bind handlers and then optionally start up the UWS Server */
     run(handlers: UwsRouteSetup[]): void;
     /** manually start the server */
     start(): void;

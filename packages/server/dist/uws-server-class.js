@@ -85,7 +85,7 @@ class UwsServer {
         const hostName = this.getHostName();
         this.onStartFn(`${hostName}:${portNum}`);
     }
-    /** to init, bind handlers and then start up the UWS Server */
+    /** to init, bind handlers and then optionally start up the UWS Server */
     run(handlers) {
         const app = (0, create_app_1.createApp)(this.opts);
         if (!handlers.length) {
@@ -95,8 +95,8 @@ class UwsServer {
             const { type, path, handler } = o;
             // @BUG if we use Reflect.apply here, uws throw a string out of bound error
             if (type === constants_1.WEBSOCKET_ROUTE_NAME) {
-                // @ts-ignore lots of incompatible setting between two different version?
-                app[type](path, (0, create_socket_handler_1.createSocketHandler)(handler));
+                debugFn(`Create ${constants_1.WEBSOCKET_ROUTE_NAME} for ${path} with `, handler);
+                Reflect.apply(app[type], app, [path, (0, create_socket_handler_1.createSocketHandler)(handler)]);
             }
             else if (constants_1.SUPPORT_REST_ROUTES.includes(type)) {
                 debugFn(`Create ${type} route for ${path}`);
