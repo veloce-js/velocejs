@@ -89,6 +89,7 @@ export class FastApi implements FastApiInterface {
   private _middlewares: Array<VeloceMiddleware> = []
   private _validationErrStatus = 417
   private _dynamicRoutes = new Map()
+  private _staticRouteIndex: Array<number> = []
   // protected properties
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
@@ -157,13 +158,14 @@ export class FastApi implements FastApiInterface {
   ): Promise<Array<UwsRouteSetup>> {
     const checkFn = this._prepareDynamicRoute(new WeakSet())
 
-    return meta.map(m => {
+    return meta.map((m: RouteMetaInfo, i: number) => {
       const { path, type, propertyName, validation } = m
       switch (type) {
         case STATIC_TYPE:
+          this._staticRouteIndex.push(i)
           return {
             path,
-            type: STATIC_ROUTE,
+            type: STATIC_ROUTE, // @TODO m.route || STATIC_ROUTE (get)
             // the method just return the path to the files
             // We require the method to be a getter that returns a path
             // @TODO should we allow them to use dynamic route to perform url rewrite?
@@ -223,11 +225,13 @@ export class FastApi implements FastApiInterface {
     type: string,
     path: string,
   ): void {
-    const entry = {[propertyName]: {
-      params: toArray(args),
-      method: type,
-      route: path
-    }}
+    const entry = {
+      [propertyName]: {
+        params: toArray(args),
+        method: type,
+        route: path
+      }
+    }
     this._routeForContract = assign(this._routeForContract, entry)
   }
 
@@ -330,8 +334,23 @@ export class FastApi implements FastApiInterface {
 
   /** binding method to the uws server */
   private async _run(routes: Array<UwsRouteSetup>) {
-    debug('routes', routes)
-    return this._uwsInstance.run(routes)
+    let _routes = routes
+    if (this._staticRouteIndex.length > 0) { // we have a static route
+      const a: UwsRouteSetup[] = []
+      const b: UwsRouteSetup[] = []
+      const c = routes.length
+      for (let i=0; i<c; ++i) {
+        if (this._staticRouteIndex.includes(i)) {
+          b.push(routes[i])
+        } else {
+          a.push(routes[i])
+        }
+      }
+      _routes = a.concat(b)
+    }
+    debug('routes', _routes)
+
+    return this._uwsInstance.run(_routes)
   }
 
   /** split out from above because we still need to handle the user provide middlewares */
