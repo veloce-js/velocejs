@@ -98,6 +98,10 @@ class FastApi {
                         // @TODO should we allow them to use dynamic route to perform url rewrite?
                         handler: (0, server_1.serveStatic)(this[propertyName])
                     };
+                case server_1.WEBSOCKET_ROUTE_NAME: // socket route just return the value from getter for now
+                    return {
+                        path, type, handler: this._prepareSocketRoute(propertyName)
+                    };
                 case server_1.RAW_TYPE:
                     return {
                         path,
@@ -108,6 +112,10 @@ class FastApi {
                     return this._prepareNormalRoute(type, path, propertyName, m.args, validation, checkFn);
             }
         });
+    }
+    /** create this wrapper for future development */
+    _prepareSocketRoute(propertyName) {
+        return this[propertyName];
     }
     /** TS script force it to make it looks so damn bad for all their non-sense rules */
     _prepareNormalRoute(type, path, propertyName, args, validation, checkFn) {
@@ -155,6 +163,7 @@ class FastApi {
     ) {
         const handler = this[propertyName];
         // @TODO need to rethink about how this work
+        // @ts-ignore need to fix the server accepted type 
         return async (res, req) => {
             // @0.3.0 we change the whole thing into one middlewares stack
             const stacks = [
@@ -387,19 +396,19 @@ class FastApi {
     /** just a string */
     $text(content, type = 'text') {
         if (this.res && !this._written) {
-            return (0, server_1.getRenderer)(this.res)(type, content);
+            return (0, server_1.getRenderFn)(this.res)(type, content);
         }
     }
     /** serving up the html content with correct html header */
     $html(content) {
         if (this.res && !this._written) {
-            return (0, server_1.getRenderer)(this.res)('html', content);
+            return (0, server_1.getRenderFn)(this.res)('html', content);
         }
     }
     /** for serving up image / video or any none-textual content */
     $binary(url, content) {
         if (this.res && !this._written) {
-            return (0, server_1.fileRender)(this.res)(url, content);
+            return (0, server_1.renderFile)(this.res)(url, content);
         }
     }
     /** streaming content */

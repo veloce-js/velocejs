@@ -28,6 +28,8 @@ export declare class FastApi implements FastApiInterface {
     private _createContractRoute;
     /** Mapping all the string name to method and supply to UwsServer run method */
     private _prepareRoutes;
+    /** create this wrapper for future development */
+    private _prepareSocketRoute;
     /** TS script force it to make it looks so damn bad for all their non-sense rules */
     private _prepareNormalRoute;
     /** just wrap this together to make it look neater */

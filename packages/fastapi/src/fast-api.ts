@@ -185,7 +185,7 @@ export class FastApi implements FastApiInterface {
   }
 
   /** create this wrapper for future development */
-  private _prepareSocketRoute(propertyName: string) { 
+  private _prepareSocketRoute(propertyName: string) {
     return this[propertyName]
   }
 
@@ -260,6 +260,7 @@ export class FastApi implements FastApiInterface {
   ): UwsRouteHandler {
     const handler = this[propertyName]
     // @TODO need to rethink about how this work
+    // @ts-ignore need to fix the server accepted type 
     return async (res: HttpResponse, req: HttpRequest) => {
       // @0.3.0 we change the whole thing into one middlewares stack
       const stacks = [

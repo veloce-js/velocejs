@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Aborted = exports.Head = exports.Patch = exports.Del = exports.Options = exports.Put = exports.Post = exports.Get = exports.Any = exports.ServeStatic = exports.Raw = void 0;
+exports.Aborted = exports.Websocket = exports.Head = exports.Patch = exports.Del = exports.Options = exports.Put = exports.Post = exports.Get = exports.Any = exports.ServeStatic = exports.Raw = void 0;
 const bodyparser_1 = require("@velocejs/bodyparser");
 const server_1 = require("@velocejs/server");
 const keys_1 = require("./keys");
+const server_2 = require("@velocejs/server");
 /** make sure the dynamic route only apply on GET route */
 const assert = (type, path) => {
     if (type !== 'get' && bodyparser_1.UrlPattern.check(path)) {
@@ -36,9 +37,16 @@ function innerDecoratorFactory(type, path, routeType) {
             default:
                 meta.type = type;
         }
-        existingRoutes.push(meta);
-        // console.log('existingRoutes', existingRoutes)
-        Reflect.defineMetadata(keys_1.routeKey, existingRoutes, target);
+        // we should check if the same type already defined the same path
+        const found = !!existingRoutes.filter((route) => route.type === type && route.path === path).length;
+        if (!found) {
+            existingRoutes.push(meta);
+            // console.log('existingRoutes', existingRoutes)
+            Reflect.defineMetadata(keys_1.routeKey, existingRoutes, target);
+        }
+        else {
+            throw new Error(`${path} already defined with ${type}!`);
+        }
     };
 }
 // allow dev to define a raw handler - we don't do any processing
@@ -68,6 +76,8 @@ exports.Options = routeDecoratorFactory('options');
 exports.Del = routeDecoratorFactory('del');
 exports.Patch = routeDecoratorFactory('patch');
 exports.Head = routeDecoratorFactory('head');
+// Websocket - the s is lowercase to avoid the WebSocket type 
+exports.Websocket = routeDecoratorFactory(server_2.WEBSOCKET_ROUTE_NAME);
 // TBC what these two for
 // export const CONNECT = routeDecoratorFactory('connect')
 // export const TRACE = routeDecoratorFactory('trace')

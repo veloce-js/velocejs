@@ -33,7 +33,8 @@ function Rest(constructor) {
 exports.Rest = Rest;
 // just put them all together
 // @TODO protected route as well
-function mergeInfo(map, existingRoutes, validations, protectedRoutes) {
+function mergeInfo(map, existingRoutes, validations, // @TODO fix this type
+protectedRoutes) {
     return existingRoutes.map(route => {
         const { propertyName, type } = route;
         if (map[propertyName]) {
