@@ -1,11 +1,32 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createSocketHandler = void 0;
+const tslib_1 = require("tslib");
 // this will return an object with the props required for setup the socket
 const constants_1 = require("./lib/constants");
+const debug_1 = tslib_1.__importDefault(require("debug"));
+const debug = (0, debug_1.default)('velocejs:server:socket');
+const DEFAULT_PROPS = Object.assign(constants_1.SOCKET_DEFAULT_PROPS, {
+    drain: (ws) => {
+        debug('WebSocket backpressure: ', ws.getBufferedAmount());
+        // @TODO should be in the FastApi
+        /*
+        we might have to setup an Observable to intercept the message first
+        then pipe it to different places to send
+        while (ws.getBufferedAmount() < backpressure) {
+          ws.send("This is a message, let's call it " + messageNumber);
+          messageNumber++;
+          messages++;
+        }
+        */
+    },
+    close: (_, code /*, message: ArrayBuffer */) => {
+        debug(`WebSocket is closed`, code);
+    }
+});
 /** basically just provide some of the default props */
 function createSocketHandler(setup) {
-    return Object.assign({}, constants_1.SOCKET_DEFAULT_PROPS, setup);
+    return Object.assign({}, DEFAULT_PROPS, setup);
 }
 exports.createSocketHandler = createSocketHandler;
 /** A WebSocket connection that is valid from open to close event.

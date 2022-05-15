@@ -1,4 +1,4 @@
-import { AppOptions, TemplatedApp } from './types';
+import { AppOptions, TemplatedApp, us_listen_socket } from './types';
 export declare function createApp(opt?: AppOptions): TemplatedApp;
-export declare function shutdownServer(listenSocket: any): void;
+export declare function shutdownServer(listenSocket: us_listen_socket): void;
 export declare function getPort(token: any): number;
