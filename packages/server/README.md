@@ -14,7 +14,7 @@ All the examples using Typscript. We will start from the
 lower level code.
 
 ### createApp(opt?: AppOptions): TemplatedApp
-### shutdown(token: any)
+### shutdownServer(token: us_listen_socket)
 
 ```ts
 import { createApp, shutdown } from '@velocejs/server'
@@ -32,7 +32,7 @@ createApp()
     }
   })
 // now some time later if you need to gracefully shutdown your server
-shutdown(connectedSocket)
+shutdownServer(connectedSocket)
 ```
 If you pass the following configuration object, then it will create a `SSLApp`
 
@@ -260,7 +260,7 @@ Assume that you have put everything in a file call `server-with-hostname.js`
 $ HOST=0.0.0.0 node ./server-with-hostname.js
 ```
 
-This is handy to write start-up script for your DevOps. 
+This is handy to write start-up script for your DevOps.
 
 ---
 

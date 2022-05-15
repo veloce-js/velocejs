@@ -15,6 +15,7 @@ $ npm i @velocejs/fastapi
 import {
   FastApi,
   ServeStatic,
+  Websocket,
   Rest,
   Get,
   Post,
@@ -56,6 +57,21 @@ class MyExample extends FastApi {
   @ServeStatic('/*')
   get staticPath(): string {
     return '/path/to/where/your/static/files'
+  }
+
+  // Websocket support
+  @Websocket('/realtime/*')
+  get getSocketHandlers: any {
+    // @NOTE we require this to be a getter
+    return {
+      open: function(ws: WebSocket) {
+        ws.send('Hello!')
+        ws.subscribe('/channel/good-stuff/#') // also support pub sub (coming soon)
+      },
+      messsage: function(ws: WebSocket, message: ArrayBuffer) {
+        ws.send('Got your call')
+      }
+    }
   }
 }
 

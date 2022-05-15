@@ -95,8 +95,8 @@ export const Options = routeDecoratorFactory('options')
 export const Del = routeDecoratorFactory('del')
 export const Patch = routeDecoratorFactory('patch')
 export const Head = routeDecoratorFactory('head')
-// WebSocket
-export const WebSocket = routeDecoratorFactory(WEBSOCKET_ROUTE_NAME)
+// Websocket - the s is lowercase to avoid the WebSocket type 
+export const Websocket = routeDecoratorFactory(WEBSOCKET_ROUTE_NAME)
 
 // TBC what these two for
 // export const CONNECT = routeDecoratorFactory('connect')
