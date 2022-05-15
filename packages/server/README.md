@@ -13,10 +13,11 @@ $ npm i @velocejs/server
 All the examples using Typscript. We will start from the
 lower level code.
 
-### createApp(opt?: AppOptions): TemplatedApp AND shutdownServer(token: any)
+### createApp(opt?: AppOptions): TemplatedApp
+### shutdown(token: any)
 
 ```ts
-import { createApp, shutdownServer } from '@velocejs/server'
+import { createApp, shutdown } from '@velocejs/server'
 const port = 9001
 let connectedSocket
 
@@ -31,7 +32,7 @@ createApp()
     }
   })
 // now some time later if you need to gracefully shutdown your server
-shutdownServer(connectedSocket)
+shutdown(connectedSocket)
 ```
 If you pass the following configuration object, then it will create a `SSLApp`
 
@@ -47,7 +48,7 @@ You can also specify a host when you call the `listen` method
 
 ```ts
 createApp()
-  // ... add route handerls
+  // ... add route handlers
   .listen('0.0.0.0', 3456, token => {
     // the rest of your code
   })
@@ -72,7 +73,8 @@ createApp()
   })
 ```
 
-### async readJsonAsync(res: HttpResponse): Promise&lt;any&gt; and writeJson(res: HttpResponse, json: any): void
+### async readJsonAsync(res: HttpResponse): Promise&lt;any&gt;
+### writeJson(res: HttpResponse, json: any): void
 
 Extract the JSON from the request using `readJsonAsync` and serve up your JSON using `writeJsonAsync` (It creates all the appropriate headers for you)
 
@@ -100,7 +102,7 @@ Serve up your static assets or your actual rendered HTML page etc.
 
 ```ts
 const app = createApp()
-  .get('/assets/*', serveStatic('/path/to/assets'))
+  .get('/assets/*', serveStatic('/path/to/assets')) // can be an array of multiple folders
   .listen(port, token => {
     console.log("running")
   })
@@ -144,66 +146,7 @@ type UwsRespondBody = {
  payload?: Buffer
 }
 ```
-
-Here are the detail:
-
-- `url` - the full url got called
-- `method` - how it was called (i.e. GET, POST etc)
-- `query` - the full query string (i.e. ?a=1&b=2)
-- `headers` - all the headers from this request
-- `params` - if the call is a GET, then you will get result parsed from the query (i.e. {a: 1, b: 2}) if its a POST then you get all the field in one object; if you POST a json then the result json will be in this params
-- `payload` - this is the raw buffer received
-
-### Body Parser further explain
-
-It doesn't just process your POST form or GET url parameters. It also handles files upload at the same time.
-
-For example, you have a form with `multipart/form-data` header (default for HTML file form)
-with the the follow name / value pair
-
-```
-  name: John Doe
-  email: john@doe.com
-  file[]: avatar.jpg
-  file[]: avatar-alternative.png
-```
-
-This example form setup has two text fields, and multiple files upload field.
-Once it got to the server and processed by `bodyParser`:
-
-```ts
-// server setup etc
-  .post('/setup-user', async (res: HttpResponse, req: HttpRequest): void => {
-    const result = await bodyParser(res, req, () => console.error(`Server aborted!`))
-    // now inside your params you will get the following data
-    // THIS IS FAKE CODE!!!! DON'T COPY AND PASTED!!!! //
-    result.params = {
-      name: 'John Doe',
-      email: 'john@doe.com',
-      file: [
-        {
-          type: 'image/jpeg',
-          filename: 'avatar.jpg',
-          data: <Buffer>
-        },
-        {
-          type: 'image/png',
-          filename: 'avatar-alternative.png',
-          data: <Buffer>
-        },
-      ]
-
-    }
-    res.end('OK')
-  })
-```
-
-Now you can take that input and do what you want with it. Please note, we don't store that uploaded file anywhere
-so you have to deal with it yourself.
-
-## Higher level wrapper
-
-This section will explain how to use the higher level code to construct your server
+Please visit [@velocejs/bodyparser](https://github.com/veloce-js/velocejs/blob/main/packages/bodyparser/README.md) for more info.
 
 ### (Class) UwsServer
 
@@ -223,6 +166,18 @@ app.run([
         console.log(`server aborted`)
       })
       res.end(`Hello`)
+    }
+  },
+  { //  we also support WebSocket
+    type: 'ws',
+    path: '/socket/*',
+    handler: {
+      open: function(ws: WebSocket) {
+        ws.send('Hello World')
+      },
+      message: function(ws: WebSocket, message: ArrayBuffer) {
+        ws.send('Got your message')
+      }
     }
   }
 ])
@@ -305,11 +260,13 @@ Assume that you have put everything in a file call `server-with-hostname.js`
 $ HOST=0.0.0.0 node ./server-with-hostname.js
 ```
 
+This is handy to write start-up script for your DevOps. 
+
 ---
 
 ## (Class) FastApi
 
-This project has moved to it's npm. Coming soon.
+This project is now standalone module on [@velocejs/fastapi](https://github.com/veloce-js/velocejs/blob/main/packages/fastapi/README.md)
 
 ---
 
