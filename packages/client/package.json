@@ -13,7 +13,7 @@
     "fetch.js.map"
   ],
   "scripts": {
-    "dev": "pnpm build:dev:browser && VELOCE_CONFIG=./dev/veloce.config.js pnpm ts ./dev/start.ts",
+    "dev": "DEBUG=velocejs:* NODE_ENV=development VELOCE_CONFIG=./dev/veloce.config.js pnpm ts ./dev/start.ts",
     "test:ava": "ava",
     "test:nyc": "nyc ava",
     "test": "pnpm build && pnpm test:ava",

@@ -8,12 +8,12 @@ let api: DevApi
 test.before(async () => {
   api = new DevApi()
 
-  url = await api.start()
+  url = await api.$start()
   console.log('start on', url)
 })
 
 test.after(() => {
-  api.stop()
+  api.$stop()
 })
 
 test(`Test to see if our fetch works or not`, async t => {

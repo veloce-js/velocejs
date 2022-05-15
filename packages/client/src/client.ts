@@ -1,5 +1,5 @@
 /** the velocejs client to connect to the backend */
-import { TransportAsyncFunc, GenericKeyValue } from './types'
+import type { TransportAsyncFunc, GenericKeyValue } from './types'
 // this could be problematic if the use the config to change the url
 import {
   VELOCE_DEFAULT_URL,

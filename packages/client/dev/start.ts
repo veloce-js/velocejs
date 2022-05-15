@@ -1,9 +1,9 @@
 import { DevApi } from './api'
-import * as open from 'open'
+import open from 'open'
 
 const api = new DevApi()
 
-api.start()
+api.$start()
   .then((url: string) => {
     setTimeout(()=> {
       open(url)

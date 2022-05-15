@@ -66,16 +66,16 @@ function innerDecoratorFactory(type: string, path: string, routeType?: string) {
 }
 
 // allow dev to define a raw handler - we don't do any processing
-export function Raw(route: string, path: string) {
+export function Raw(routeType: string, path: string) {
 
-  return innerDecoratorFactory(RAW_TYPE, path, route)
+  return innerDecoratorFactory(RAW_TYPE, path, routeType)
 }
 
-// special decorator to create a serveStatic method
+/** special decorator to create a serveStatic method, you could specify a routeType default to GET */
 // Accessor Decorator
-export function ServeStatic(path: string) {
+export function ServeStatic(path: string, routeType?: string) {
 
-  return innerDecoratorFactory(STATIC_TYPE, path)
+  return innerDecoratorFactory(STATIC_TYPE, path, routeType)
 }
 
 // Factory method to create factory method
