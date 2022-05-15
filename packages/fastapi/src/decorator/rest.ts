@@ -28,7 +28,6 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
         .then(map => {
           const target = constructor.prototype
           const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
-          
           const validations = Reflect.getOwnMetadata(validationKey, target) || []
           const protectedRoute = Reflect.getOwnMetadata(protectedKey, target) || []
 
