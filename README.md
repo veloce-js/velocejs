@@ -1,7 +1,7 @@
 # velocejs
 
 This is the main mono repo for the whole project.
-BTW we are using [pnpm]() to manage the mono repo.
+BTW we are using [pnpm](https://pnpm.io) to manage the mono repo.
 
 ## Modules
 
