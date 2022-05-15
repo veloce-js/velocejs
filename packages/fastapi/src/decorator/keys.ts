@@ -1,15 +1,16 @@
 // The key to id the meta info
-export const routeKey = Symbol("FastApiRouteKey")
+export const routeKey = Symbol('FastApiRouteKey')
 // put the abort method in it's own array, because it will never be async method
 // and it tooks too much work to resolve them together
 export const abortFnKey = Symbol('FastApiAbortFnKey')
 // for storing the validation map
-export const validationKey = Symbol("FastApiValidationKey")
-// protected route 
-export const protectedKey = Symbol("FastApiProtectedKey")
-// Below are not in use anymore
+export const validationKey = Symbol('FastApiValidationKey')
+// protected route
+export const protectedKey = Symbol('FastApiProtectedKey')
+// web socket
+export const websocketKey = Symbol('FastApiWebSocketKey')
 
 // for extracting argument names
-export const argsKey = Symbol("FastApiArgsKey")
+// export const argsKey = Symbol("FastApiArgsKey")
 // for storing the ast of the file
-export const astKey = Symbol("FastApiAstKey")
+// export const astKey = Symbol("FastApiAstKey")
