@@ -616,7 +616,7 @@ export class FastApi implements FastApiInterface {
   // this is good for unit testing just on the class itself
 
   /** register a method that will check the route */
-  public $registerProtectedRouteMethod(): void {
+  public $registerAuthMethod(): void {
     debug(`@TODO registerProtectedRouteMethod`)
   }
 
