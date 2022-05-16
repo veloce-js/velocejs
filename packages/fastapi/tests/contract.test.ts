@@ -35,7 +35,9 @@ test(`Testing API with config and contract`, async  t => {
   // t.pass()
   const res = await Fetch(contractUrl)
   const json = await res.json()
+
   // console.dir(json, { depth: null })
-  t.truthy(json)
+  // should have a ws route here
+  t.true(!!json['data'].filter((data: any) => data.method === 'ws').length)
 
 })
