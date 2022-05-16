@@ -15,7 +15,7 @@ import type {
 import type {
   RouteMetaInfo,
   VeloceCtx,
-  VeloceMiddleware,
+  // VeloceMiddleware,
   // JsonValidationEntry,
 } from './types'
 import {
@@ -335,7 +335,8 @@ export class FastApi implements FastApiInterface {
   /** binding method to the uws server */
   private async _run(routes: Array<UwsRouteSetup>) {
     let _routes = routes
-    if (this._staticRouteIndex.length > 0) { // we have a static route
+    // we need to put the serverStatic route to the bottom
+    if (this._staticRouteIndex.length > 0) {
       const a: UwsRouteSetup[] = []
       const b: UwsRouteSetup[] = []
       const c = routes.length
@@ -365,18 +366,13 @@ export class FastApi implements FastApiInterface {
 
   // handle the errors return from validation
   private _handleValidationError(error: JsonqlValidationError) {
-    const { detail } = error
-    const payload = {
-      errors: {
-        detail: detail
-      }
-    }
+    const { detail, message, className } = error
+    const payload = { errors: { message, detail, className } }
     debug('errors', payload)
-    // @TODO should replace with the jsonWriter
+
     if (this.res && !this._written) {
       return jsonWriter(this.res)(payload, this._validationErrStatus)
     }
-    debug(`error json already written?`)
   }
 
   /** wrap the _createValidator with additoinal property */

@@ -56,7 +56,4 @@ export class DevApi extends FastApi {
   get httpdocs() {
     return join(__dirname, 'httpdocs')
   }
-
-
-
 }
