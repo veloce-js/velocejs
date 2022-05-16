@@ -128,7 +128,7 @@ export class FastApi implements FastApiInterface {
             this._contract = new JsonqlContractWriter(
               this._routeForContract
             ) // we didn't provde the apiType here @TODO when we add jsonql
-            return this._createContractRoute(routes, config)
+            return this._insertContractRoute(routes, config)
             // return a new route info here
           }
           return routes // just return it if there is none
@@ -137,7 +137,7 @@ export class FastApi implements FastApiInterface {
   }
 
   /** generate an additonal route for the contract */
-  private _createContractRoute(
+  private _insertContractRoute(
     routes: Array<UwsRouteSetup>,
     config: {[key: string]: string}
   ): Array<UwsRouteSetup> {
@@ -172,6 +172,7 @@ export class FastApi implements FastApiInterface {
             handler: serveStatic(this[propertyName])
           }
         case WEBSOCKET_ROUTE_NAME: // socket route just return the value from getter for now
+          this._prepareRouteForContract(propertyName, [], type, path)
           return {
             path, type, handler: this._prepareSocketRoute(propertyName)
           }
@@ -182,14 +183,26 @@ export class FastApi implements FastApiInterface {
             handler: this[propertyName] // pass it straight through
           }
         default:
-          return this._prepareNormalRoute(type, path, propertyName, m.args, validation, checkFn)
+          return this._prepareNormalRoute(
+            type,
+            path,
+            propertyName,
+            m.args,
+            validation,
+            checkFn
+          )
         }
     })
   }
 
   /** create this wrapper for future development */
   private _prepareSocketRoute(propertyName: string) {
-    return this[propertyName]
+    const config = this[propertyName]
+    if (!config['open']) {
+      throw new Error(`You must provide an open method for your websocket setup!`)
+    }
+    
+    return config
   }
 
   /** TS script force it to make it looks so damn bad for all their non-sense rules */
@@ -679,8 +692,8 @@ export class FastApi implements FastApiInterface {
       dev: isDev,
       port: this._uwsInstance.getPortNum(),
       host: this._uwsInstance.hostName,
-      useContract: this._contract !== undefined,
-      hasConfig: this._config !== undefined,
+      useContract: this._contract !== undefined, // @TODO return the contract
+      hasConfig: this._config !== undefined, // @TODO return the config
     }
   }
 }

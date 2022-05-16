@@ -1,4 +1,5 @@
-import { FastApi, Rest, Get, Post } from '../../../src'
+import { FastApi, Rest, Get, Post, ServeStatic, Websocket } from '../../../src'
+import { join } from 'node:path'
 
 @Rest
 export class ApiWithContract extends FastApi {
@@ -14,6 +15,20 @@ export class ApiWithContract extends FastApi {
       title,
       content,
       date
+    }
+  }
+
+  @ServeStatic('/*')
+  get httpdocs() {
+    return join(__dirname, 'httpdocs')
+  }
+
+  @Websocket('/realtime')
+  get socket() {
+    return {
+      open: function(ws: WebSocket) {
+        ws.send('Hello World')
+      }
     }
   }
 
