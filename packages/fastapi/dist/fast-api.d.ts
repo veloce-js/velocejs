@@ -97,7 +97,7 @@ export declare class FastApi implements FastApiInterface {
     then it get serve up via the @ServeStatic TBC
     */
     /** register a method that will check the route */
-    $registerProtectedRouteMethod(): void;
+    $registerAuthMethod(): void;
     set validationErrorStatus(status: number);
     /**
      The interface to serve up the contract, it's public but prefix underscore to avoid override

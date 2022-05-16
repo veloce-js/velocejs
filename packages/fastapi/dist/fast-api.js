@@ -449,7 +449,7 @@ class FastApi {
     // and the override methods will be protected methods
     // this is good for unit testing just on the class itself
     /** register a method that will check the route */
-    $registerProtectedRouteMethod() {
+    $registerAuthMethod() {
         debug(`@TODO registerProtectedRouteMethod`);
     }
     /* This is a global override for the status when validation failed */
