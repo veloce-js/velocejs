@@ -2,12 +2,41 @@
 <html>
   <head>
     <title>Dev for velocejs/client</title>
+
     <!-- script src="./velocejs-client.min.js"></script -->
     <script src="./dev.js"></script>
   </head>
   <body>
     <h1>Velocejs/Client test</h1>
+    <div v-scope>
+      <p>
+        MSG: <input v-model="msg" name="msg" />
+      </p>
+      <button @click="send">send</button>
+      <div>
 
+      </div>
+    </div>
+
+    <script type="module">
+      import { createApp } from "./petite/petite-vue.es.js"
+
+      fetch(window.location.href + 'veloce/contract')
+        .then(res => res.json())
+        .then(json => {
+          console.log(json)
+          createApp({
+            json,
+            msg: '',
+            send() {
+
+            }
+          }).mount()
+        })
+
+      /*
+
+      */
+    </script>
   </body>
-
 </html>
