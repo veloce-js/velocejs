@@ -9,10 +9,11 @@ specifiers:
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
   '@types/node': ^17.0.32
+  '@types/ws': ^8.5.3
   '@typescript-eslint/eslint-plugin': ^5.23.0
   '@typescript-eslint/parser': ^5.23.0
   '@velocejs/config': workspace:^0.4.0
-  '@velocejs/fastapi': workspace:^0.7.0
+  '@velocejs/fastapi': workspace:^0.7.1
   ava: ^4.2.0
   chokidar: ^3.5.3
   esbuild: ^0.14.39
@@ -25,6 +26,7 @@ specifiers:
   rimraf: ^3.0.2
   tslib: ^2.4.0
   typescript: ^4.6.4
+  ws: ^8.6.0
 
 dependencies:
   '@jsonql/constants': 0.7.2
@@ -39,6 +41,7 @@ devDependencies:
   '@types/fs-extra': 9.0.13
   '@types/mime-types': 2.1.1
   '@types/node': 17.0.32
+  '@types/ws': 8.5.3
   '@typescript-eslint/eslint-plugin': 5.23.0_c63nfttrfhylg3zmgcxfslaw44
   '@typescript-eslint/parser': 5.23.0_hcfsmds2fshutdssjqluwm76uu
   '@velocejs/fastapi': link:../fastapi
@@ -53,6 +56,7 @@ devDependencies:
   open: 8.4.0
   rimraf: 3.0.2
   typescript: 4.6.4
+  ws: 8.6.0
 
 packages:
 
@@ -424,6 +428,12 @@ packages:
 
   /@types/node/17.0.32:
     resolution: {integrity: sha512-eAIcfAvhf/BkHcf4pkLJ7ECpBAhh9kcxRBpip9cTiO+hf+aJrsxYxBeS6OXvOd9WqNAJmavXVpZvY1rBjNsXmw==}
+    dev: true
+
+  /@types/ws/8.5.3:
+    resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
+    dependencies:
+      '@types/node': 17.0.32
     dev: true
 
   /@typescript-eslint/eslint-plugin/5.23.0_c63nfttrfhylg3zmgcxfslaw44:
@@ -2782,6 +2792,19 @@ packages:
     dependencies:
       imurmurhash: 0.1.4
       signal-exit: 3.0.7
+    dev: true
+
+  /ws/8.6.0:
+    resolution: {integrity: sha512-AzmM3aH3gk0aX7/rZLYvjdvZooofDu3fFOzGqcSnQ1tOcTWwhM/o+q++E8mAyVVIyUdajrkzWUGftaVSDLn1bw==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
     dev: true
 
   /y18n/4.0.3:

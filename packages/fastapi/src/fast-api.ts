@@ -413,6 +413,8 @@ export class FastApi implements FastApiInterface {
     // const args2 = this._applyArgs(argNames, params)
     try {
       const reply = await Reflect.apply(handler, this, args)
+      // @TODO we should get rip of this
+      // @TODO create a register test handler to test this output directly?
       if (reply && !this._written) {
         this._render(type, reply)
       }
@@ -577,12 +579,10 @@ export class FastApi implements FastApiInterface {
 
   /** serving up the html content with correct html header */
   protected $html(content: string | Buffer) {
-    if (this.res && !this._written) {
-      return getRenderFn(this.res)('html', content)
-    }
+    this.$text(content, 'html')
   }
 
-  /** for serving up image / video or any none-textual content */
+  /** for serving up image / video or any non-textual content */
   protected $binary(url: string, content?: Buffer) {
     if (this.res && !this._written) {
       return renderFile(this.res)(url, content)
@@ -600,6 +600,10 @@ export class FastApi implements FastApiInterface {
     debug('@TODO ssr method', data, options)
     throw new Error(`ssr is not implemented`)
   }
+
+  /** @TODO SSG but this should only call when data been update and generate static files
+  then it get serve up via the @ServeStatic TBC
+  */
 
   ///////////////////////////////////////////
   //             PUBLIC                    //

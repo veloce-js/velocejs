@@ -74,7 +74,7 @@ export function Raw(routeType: string, path: string) {
 /** special decorator to create a serveStatic method, you could specify a routeType default to GET */
 // Accessor Decorator
 export function ServeStatic(path: string, routeType?: string) {
-
+  // @TODO the options is not apply fully 
   return innerDecoratorFactory(STATIC_TYPE, path, routeType)
 }
 

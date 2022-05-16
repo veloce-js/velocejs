@@ -25,11 +25,11 @@ export class DevApi extends FastApi {
     }
   }
 
-  @Websocket('/cheapo-hmr/*')
+  @Websocket('/cheapo-hmr')
   get socketConfig() {
     return {
       open: function(ws: WebSocket) {
-        console.log('connected')      
+        console.log('connected')
         // super simple dev reload server
         chokidar.watch(join(__dirname, 'httpdocs'))
                 .on('all', (evt: Event, path: string) => {

@@ -9,5 +9,6 @@ export * from './decorator/validator'
 export {
   getWriter,
   getContentType,
-  lookupStatus
+  lookupStatus,
+  arrayBufferToString
 } from '@velocejs/server'
