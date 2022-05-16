@@ -18,6 +18,13 @@ export class ApiWithContract extends FastApi {
     }
   }
 
+  // testing the dynamic route with spread
+  // also the converter 
+  @Get('/archive/:year/:month/:day')
+  archive(...dates: number[]) {
+    this.$text(dates.join('-'))
+  }
+
   @ServeStatic('/*')
   get httpdocs() {
     return join(__dirname, 'httpdocs')
