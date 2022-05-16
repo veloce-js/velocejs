@@ -31,7 +31,6 @@ class FastApi {
     _onConfigReady; // fucking any script
     _onConfigWait = placeholderFn;
     _onConfigError = placeholderFn;
-    _middlewares = [];
     _validationErrStatus = 417;
     _dynamicRoutes = new Map();
     _staticRouteIndex = [];
@@ -280,6 +279,8 @@ class FastApi {
         // const args2 = this._applyArgs(argNames, params)
         try {
             const reply = await Reflect.apply(handler, this, args);
+            // @TODO we should get rip of this
+            // @TODO create a register test handler to test this output directly?
             if (reply && !this._written) {
                 this._render(type, reply);
             }
@@ -418,11 +419,9 @@ class FastApi {
     }
     /** serving up the html content with correct html header */
     $html(content) {
-        if (this.res && !this._written) {
-            return (0, server_1.getRenderFn)(this.res)('html', content);
-        }
+        this.$text(content, 'html');
     }
-    /** for serving up image / video or any none-textual content */
+    /** for serving up image / video or any non-textual content */
     $binary(url, content) {
         if (this.res && !this._written) {
             return (0, server_1.renderFile)(this.res)(url, content);
@@ -438,6 +437,9 @@ class FastApi {
         debug('@TODO ssr method', data, options);
         throw new Error(`ssr is not implemented`);
     }
+    /** @TODO SSG but this should only call when data been update and generate static files
+    then it get serve up via the @ServeStatic TBC
+    */
     ///////////////////////////////////////////
     //             PUBLIC                    //
     ///////////////////////////////////////////
@@ -449,20 +451,6 @@ class FastApi {
     /** register a method that will check the route */
     $registerProtectedRouteMethod() {
         debug(`@TODO registerProtectedRouteMethod`);
-    }
-    /** dev can register their global middleware here */
-    $use(middlewares) {
-        if (middlewares) {
-            const _middlewares = (0, utils_1.toArray)(middlewares).map(m => {
-                // @TODO prepare the middleware
-                return m;
-            });
-            // @TODO should this be a Set and check if already registered
-            this._middlewares = this._middlewares.length ?
-                this._middlewares.concat(_middlewares) :
-                _middlewares;
-            debug(this._middlewares);
-        }
     }
     /* This is a global override for the status when validation failed */
     set validationErrorStatus(status) {

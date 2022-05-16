@@ -57,6 +57,7 @@ exports.Raw = Raw;
 /** special decorator to create a serveStatic method, you could specify a routeType default to GET */
 // Accessor Decorator
 function ServeStatic(path, routeType) {
+    // @TODO the options is not apply fully 
     return innerDecoratorFactory(server_1.STATIC_TYPE, path, routeType);
 }
 exports.ServeStatic = ServeStatic;

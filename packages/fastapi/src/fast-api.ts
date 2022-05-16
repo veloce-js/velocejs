@@ -86,7 +86,7 @@ export class FastApi implements FastApiInterface {
   private _onConfigReady: Promise<any> // fucking any script
   private _onConfigWait: (value: unknown) => void = placeholderFn
   private _onConfigError: (value: unknown) => void = placeholderFn
-  private _middlewares: Array<VeloceMiddleware> = []
+
   private _validationErrStatus = 417
   private _dynamicRoutes = new Map()
   private _staticRouteIndex: Array<number> = []
@@ -618,23 +618,6 @@ export class FastApi implements FastApiInterface {
   /** register a method that will check the route */
   public $registerProtectedRouteMethod(): void {
     debug(`@TODO registerProtectedRouteMethod`)
-  }
-
-  /** dev can register their global middleware here */
-  public $use(
-    middlewares: VeloceMiddleware | Array<VeloceMiddleware>
-  ): void {
-    if (middlewares) {
-      const _middlewares = toArray(middlewares).map(m => {
-        // @TODO prepare the middleware
-        return m
-      })
-      // @TODO should this be a Set and check if already registered
-      this._middlewares = this._middlewares.length ?
-             this._middlewares.concat(_middlewares) :
-                                      _middlewares
-      debug(this._middlewares)
-    }
   }
 
   /* This is a global override for the status when validation failed */

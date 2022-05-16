@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import type { AppOptions, HttpResponse, HttpRequest, UwsRespondBody } from '@velocejs/server/index';
-import type { RouteMetaInfo, VeloceMiddleware } from './types';
+import type { RouteMetaInfo } from './types';
 import { FastApiInterface } from './lib/fast-api-interface';
 export declare class FastApi implements FastApiInterface {
     private _uwsInstance;
@@ -13,7 +13,6 @@ export declare class FastApi implements FastApiInterface {
     private _onConfigReady;
     private _onConfigWait;
     private _onConfigError;
-    private _middlewares;
     private _validationErrStatus;
     private _dynamicRoutes;
     private _staticRouteIndex;
@@ -88,16 +87,17 @@ export declare class FastApi implements FastApiInterface {
     protected $text(content: string | Buffer, type?: string): void;
     /** serving up the html content with correct html header */
     protected $html(content: string | Buffer): void;
-    /** for serving up image / video or any none-textual content */
+    /** for serving up image / video or any non-textual content */
     protected $binary(url: string, content?: Buffer): void;
     /** streaming content */
     protected $stream(content: Buffer, type: string): void;
     /** @TODO for generate ssr content, should provide options via config but they could override here */
     protected $ssr(data: any, options?: any): void;
+    /** @TODO SSG but this should only call when data been update and generate static files
+    then it get serve up via the @ServeStatic TBC
+    */
     /** register a method that will check the route */
     $registerProtectedRouteMethod(): void;
-    /** dev can register their global middleware here */
-    $use(middlewares: VeloceMiddleware | Array<VeloceMiddleware>): void;
     set validationErrorStatus(status: number);
     /**
      The interface to serve up the contract, it's public but prefix underscore to avoid override

@@ -1,4 +1,12 @@
-import { FastApi, Rest, Get, Post, ServeStatic, Websocket } from '@velocejs/fastapi'
+import {
+  FastApi,
+  Rest,
+  Get,
+  Post,
+  ServeStatic,
+  Websocket,
+  arrayBufferToString
+} from '@velocejs/fastapi'
 import { join } from 'node:path'
 import chokidar from 'chokidar'
 
@@ -32,10 +40,13 @@ export class DevApi extends FastApi {
         console.log('connected')
         // super simple dev reload server
         chokidar.watch(join(__dirname, 'httpdocs'))
-                .on('all', (evt: Event, path: string) => {
+                .on('change', (evt: Event, path: string) => {
                   console.log('file change', evt)
                   ws.send(path)
                 })
+      },
+      message: function(ws: WebSocket, message: ArrayBuffer) {
+        ws.send(`Reply from server: ` + arrayBufferToString(message))
       }
     }
   }

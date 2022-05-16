@@ -3,4 +3,4 @@ export * from './fast-api';
 export * from './decorator/routes';
 export * from './decorator/rest';
 export * from './decorator/validator';
-export { getWriter, getContentType, lookupStatus } from '@velocejs/server';
+export { getWriter, getContentType, lookupStatus, arrayBufferToString } from '@velocejs/server';
