@@ -2,7 +2,6 @@
 import { ValidatorFactory } from '@jsonql/validator'
 import {
   RULES_KEY,
-  // OPTIONS_KEY,
   RULE_AUTOMATIC
 } from './constants'
 import { inArray, assign } from '@jsonql/utils'
@@ -16,24 +15,17 @@ declare type GenericKeyValue = {
 
 export function createValidator(
   propertyName: string,
-  argsList: any,
-  validationInput: any,
+  argsList: Array<any>, // @TODO fix types
+  validationInput: any, // @TODO fix types
   plugins: Array<any> // @TODO fix types
 ) {
   // first need to check if they actually apply the @Validate decorator
   if (validationInput === false) {
-    debug(`${propertyName} skip validation`)
-    const argNames = argsList.map((arg: any) => arg.name)
+    debug(`skip validation --> ${propertyName}`)
     // return a dummy handler - we need to package it up for consistency!
-    return async (values: any) => {
-      return argNames.map((name: string, i: number) => {
-        return {[name]: values[i]}
-      }).reduce((a: GenericKeyValue , b: GenericKeyValue) => assign(a, b), {})
-    }
+    return async (values: any) => values //  we don't need to do anyting now
   }
-  debug(`propertyName`, propertyName)
-  debug('argsList', argsList)
-  debug('input', validationInput)
+  debug('input -->', validationInput)
   assert(propertyName, argsList, validationInput)
   // @TODO we might need to subclass this and create a set global plugin
   const vObj = new ValidatorFactory(argsList)
@@ -51,7 +43,7 @@ export function createValidator(
 function assert(
     propertyName: string,
     argsList: Array<any>,
-    validationInput: any
+    validationInput: any // @TODO fix types
   ): void {
   // silly mistake
   if (!argsList.length) {

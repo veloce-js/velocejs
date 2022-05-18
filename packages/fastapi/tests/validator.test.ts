@@ -2,6 +2,7 @@
 import test from 'ava'
 import Fetch from 'node-fetch'
 import { MyExample } from './fixtures/my-example'
+import { ValidatorFactory } from '@jsonql/validator'
 
 let myExampleObj: MyExample
 const port = 30338
@@ -14,6 +15,27 @@ test.before(async () => {
 
 test.after(() => {
   myExampleObj.$stop()
+})
+
+test(`Re-test the spread style method here to see what cause the problem with dynamic route`, async t => {
+  t.plan(1)
+  const astMap = {
+    archive: [
+      {
+        name: 'dates',
+        required: true,
+        tstype: 'RestElement',
+        type: 'array',
+        types: 'number',
+        typeParams: [Object]
+      }
+    ]
+  }
+  const val = new ValidatorFactory(astMap.archive)
+  return val.validate([2022, 5, 19])
+            .then((result: number[]) => {
+              t.truthy(result)
+            })
 })
 
 test(`Validation with Decorator and @jsonql/validator`, async t => {

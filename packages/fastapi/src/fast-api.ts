@@ -309,10 +309,10 @@ export class FastApi implements FastApiInterface {
 
     return async (ctx: VeloceCtx) => {
       const args = this._applyArgs(argNames, ctx.params, argsList)
-
+      debug('args before validateFn -->', args)
       return validateFn(args)
                 .then((validatedResult: VeloceCtx) => {
-                  debug('validatedResult', validatedResult)
+                  debug('validatedResult -->', validatedResult)
                   // the validatedResult could have new props
                   return assign(ctx, { args: validatedResult })
                 })
