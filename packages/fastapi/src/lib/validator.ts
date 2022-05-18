@@ -41,7 +41,7 @@ export function createValidator(
     console.info('create plugins', plugins)
   }
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
-    vObj.createSchema(validationInput[RULES_KEY])
+    vObj.addValidationRules(validationInput[RULES_KEY])
   }
   // if we return it directly then it won't run
   return async (values: Array<any>) => vObj.validate(values)

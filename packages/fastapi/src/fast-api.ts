@@ -61,7 +61,6 @@ import {
   CONTRACT_METHOD_NAME,
   DEFAULT_CONTRACT_METHOD,
 } from './lib/constants'
-import { prepareArgs } from './lib/extract'
 import { createValidator } from './lib/validator'
 import {
   FastApiInterface
@@ -201,7 +200,7 @@ export class FastApi implements FastApiInterface {
     if (!config['open']) {
       throw new Error(`You must provide an open method for your websocket setup!`)
     }
-    
+
     return config
   }
 
@@ -313,11 +312,9 @@ export class FastApi implements FastApiInterface {
 
       return validateFn(args)
                 .then((validatedResult: VeloceCtx) => {
-                  debug('validatedResult', validatedResult, argNames)
+                  debug('validatedResult', validatedResult)
                   // the validatedResult could have new props
-                  return assign(ctx, {
-                    args: prepareArgs(argNames, validatedResult)
-                  })
+                  return assign(ctx, { args: validatedResult })
                 })
     }
   }
@@ -363,7 +360,6 @@ export class FastApi implements FastApiInterface {
       _routes = a.concat(b)
     }
     debug('routes', _routes)
-
     return this._uwsInstance.run(_routes)
   }
 
@@ -381,9 +377,8 @@ export class FastApi implements FastApiInterface {
   private _handleValidationError(error: JsonqlValidationError) {
     const { detail, message, className } = error
     const payload = { errors: { message, detail, className } }
-    debug('errors', payload)
-
     if (this.res && !this._written) {
+      debug('errors', payload)
       return jsonWriter(this.res)(payload, this._validationErrStatus)
     }
   }

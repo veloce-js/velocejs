@@ -10,7 +10,7 @@ specifiers:
   '@types/node': ^17.0.32
   '@typescript-eslint/eslint-plugin': ^5.23.0
   '@typescript-eslint/parser': ^5.23.0
-  '@velocejs/server': workspace:^0.7.6
+  '@velocejs/server': workspace:^0.8.2
   ava: ^4.2.0
   esbuild: ^0.14.39
   esbuild-register: ^3.3.2
@@ -24,13 +24,13 @@ specifiers:
   url-pattern: ^1.0.3
 
 dependencies:
-  '@jsonql/constants': 0.7.2
   '@jsonql/utils': 0.6.8
   '@velocejs/server': link:../server
   url-pattern: 1.0.3
 
 devDependencies:
   '@ava/typescript': 3.0.1
+  '@jsonql/constants': 0.7.2
   '@types/debug': 4.1.7
   '@types/fs-extra': 9.0.13
   '@types/mime-types': 2.1.1
@@ -334,7 +334,6 @@ packages:
 
   /@jsonql/constants/0.7.2:
     resolution: {integrity: sha512-1matJKybfmSIZp8eoSsq7463QHkYymAXZ4OzZKd6evPMT931E6XQbXqHU7F5R9UzsdLIQ4myDM309Tb7i4ceBw==}
-    dev: false
 
   /@jsonql/errors/0.6.1:
     resolution: {integrity: sha512-NuSDjMlwFTSGop2aAGnKN7QujJ7XxzgCGWrKn7DKZuIg/T4qIdnktYE9C2KaxQTAjifKTRtBex833bdKwEOFjw==}
