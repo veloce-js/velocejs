@@ -10,7 +10,6 @@ const contract_1 = require("@jsonql/contract");
 const utils_1 = require("@jsonql/utils");
 // here
 const constants_2 = require("./lib/constants");
-const extract_1 = require("./lib/extract");
 const validator_1 = require("./lib/validator");
 // setup
 const debug_1 = tslib_1.__importDefault(require("debug"));
@@ -63,7 +62,7 @@ class FastApi {
                 if (config && config.cacheDir) {
                     debug(apiType, this._routeForContract);
                     this._contract = new contract_1.JsonqlContractWriter(this._routeForContract); // we didn't provde the apiType here @TODO when we add jsonql
-                    return this._createContractRoute(routes, config);
+                    return this._insertContractRoute(routes, config);
                     // return a new route info here
                 }
                 return routes; // just return it if there is none
@@ -71,7 +70,7 @@ class FastApi {
         };
     }
     /** generate an additonal route for the contract */
-    _createContractRoute(routes, config) {
+    _insertContractRoute(routes, config) {
         /* it doesn't make much sense to include the contract route
         because the client needs to know where to find it first
         this._contract.data(name, { name, params, route: config.path, method: config.method}) */
@@ -99,6 +98,7 @@ class FastApi {
                         handler: (0, server_1.serveStatic)(this[propertyName])
                     };
                 case server_1.WEBSOCKET_ROUTE_NAME: // socket route just return the value from getter for now
+                    this._prepareRouteForContract(propertyName, [], type, path);
                     return {
                         path, type, handler: this._prepareSocketRoute(propertyName)
                     };
@@ -115,7 +115,11 @@ class FastApi {
     }
     /** create this wrapper for future development */
     _prepareSocketRoute(propertyName) {
-        return this[propertyName];
+        const config = this[propertyName];
+        if (!config['open']) {
+            throw new Error(`You must provide an open method for your websocket setup!`);
+        }
+        return config;
     }
     /** TS script force it to make it looks so damn bad for all their non-sense rules */
     _prepareNormalRoute(type, path, propertyName, args, validation, checkFn) {
@@ -186,13 +190,12 @@ class FastApi {
         const validateFn = this._createValidator(propertyName, argsList, validationInput);
         return async (ctx) => {
             const args = this._applyArgs(argNames, ctx.params, argsList);
+            debug('args before validateFn -->', args);
             return validateFn(args)
                 .then((validatedResult) => {
-                debug('validatedResult', validatedResult, argNames);
+                debug('validatedResult -->', validatedResult);
                 // the validatedResult could have new props
-                return (0, utils_1.assign)(ctx, {
-                    args: (0, extract_1.prepareArgs)(argNames, validatedResult)
-                });
+                return (0, utils_1.assign)(ctx, { args: validatedResult });
             });
         };
     }
@@ -216,7 +219,8 @@ class FastApi {
     /** binding method to the uws server */
     async _run(routes) {
         let _routes = routes;
-        if (this._staticRouteIndex.length > 0) { // we have a static route
+        // we need to put the serverStatic route to the bottom
+        if (this._staticRouteIndex.length > 0) {
             const a = [];
             const b = [];
             const c = routes.length;
@@ -244,18 +248,12 @@ class FastApi {
     }
     // handle the errors return from validation
     _handleValidationError(error) {
-        const { detail } = error;
-        const payload = {
-            errors: {
-                detail: detail
-            }
-        };
-        debug('errors', payload);
-        // @TODO should replace with the jsonWriter
+        const { detail, message, className } = error;
+        const payload = { errors: { message, detail, className } };
         if (this.res && !this._written) {
+            debug('errors', payload);
             return (0, server_1.jsonWriter)(this.res)(payload, this._validationErrStatus);
         }
-        debug(`error json already written?`);
     }
     /** wrap the _createValidator with additoinal property */
     _createValidator(propertyName, argsList, // @TODO fix type
@@ -507,7 +505,7 @@ class FastApi {
             port: this._uwsInstance.getPortNum(),
             host: this._uwsInstance.hostName,
             useContract: this._contract !== undefined,
-            hasConfig: this._config !== undefined,
+            hasConfig: this._config !== undefined, // @TODO return the config
         };
     }
 }

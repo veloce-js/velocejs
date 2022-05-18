@@ -1,10 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Rest = void 0;
+const tslib_1 = require("tslib");
 const keys_1 = require("./keys");
 const ast_1 = require("@jsonql/ast");
 const server_1 = require("@velocejs/server");
 const constants_1 = require("../lib/constants");
+const debug_1 = tslib_1.__importDefault(require("debug"));
+const debug = (0, debug_1.default)('velocejs:fastapi:rest');
 // import debug from 'debug'
 // const debugFn = debug('velocejs:fastapi:decorator:Rest')
 /** This should be generic that could apply to different Decorator init */
@@ -20,6 +23,7 @@ function Rest(constructor) {
             super(...args);
             (0, ast_1.tsClassParser)(where)
                 .then(map => {
+                debug('ast map', map);
                 const target = constructor.prototype;
                 const existingRoutes = Reflect.getOwnMetadata(keys_1.routeKey, target) || [];
                 const validations = Reflect.getOwnMetadata(keys_1.validationKey, target) || [];
@@ -33,8 +37,7 @@ function Rest(constructor) {
 exports.Rest = Rest;
 // just put them all together
 // @TODO protected route as well
-function mergeInfo(map, existingRoutes, validations, // @TODO fix this type
-protectedRoutes) {
+function mergeInfo(map, existingRoutes, validations, protectedRoutes) {
     return existingRoutes.map(route => {
         const { propertyName, type } = route;
         if (map[propertyName]) {

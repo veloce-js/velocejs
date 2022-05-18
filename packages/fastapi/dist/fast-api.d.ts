@@ -25,7 +25,7 @@ export declare class FastApi implements FastApiInterface {
     /** whether to setup a contract or not, if there is contract setup then we return a new route */
     private _prepareContract;
     /** generate an additonal route for the contract */
-    private _createContractRoute;
+    private _insertContractRoute;
     /** Mapping all the string name to method and supply to UwsServer run method */
     private _prepareRoutes;
     /** create this wrapper for future development */

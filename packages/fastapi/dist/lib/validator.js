@@ -9,22 +9,17 @@ const utils_1 = require("@jsonql/utils");
 const errors_1 = require("../lib/errors");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fastapi:lib:validator');
-function createValidator(propertyName, argsList, validationInput, plugins // @TODO fix types
+function createValidator(propertyName, argsList, // @TODO fix types
+validationInput, // @TODO fix types
+plugins // @TODO fix types
 ) {
     // first need to check if they actually apply the @Validate decorator
     if (validationInput === false) {
-        debug(`${propertyName} skip validation`);
-        const argNames = argsList.map((arg) => arg.name);
+        debug(`skip validation --> ${propertyName}`);
         // return a dummy handler - we need to package it up for consistency!
-        return async (values) => {
-            return argNames.map((name, i) => {
-                return { [name]: values[i] };
-            }).reduce((a, b) => (0, utils_1.assign)(a, b), {});
-        };
+        return async (values) => values; //  we don't need to do anyting now
     }
-    debug(`propertyName`, propertyName);
-    debug('argsList', argsList);
-    debug('input', validationInput);
+    debug('input -->', validationInput);
     assert(propertyName, argsList, validationInput);
     // @TODO we might need to subclass this and create a set global plugin
     const vObj = new validator_1.ValidatorFactory(argsList);
@@ -32,14 +27,15 @@ function createValidator(propertyName, argsList, validationInput, plugins // @TO
         console.info('create plugins', plugins);
     }
     if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
-        vObj.createSchema(validationInput[constants_1.RULES_KEY]);
+        vObj.addValidationRules(validationInput[constants_1.RULES_KEY]);
     }
     // if we return it directly then it won't run
     return async (values) => vObj.validate(values);
 }
 exports.createValidator = createValidator;
 /** validate aginst the dev input first */
-function assert(propertyName, argsList, validationInput) {
+function assert(propertyName, argsList, validationInput // @TODO fix types
+) {
     // silly mistake
     if (!argsList.length) {
         throw new Error(`${propertyName} has no parameters and therefore can not apply validation!`);

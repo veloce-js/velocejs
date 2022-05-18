@@ -19,7 +19,7 @@ function splitMethod(fnStr) {
         .map(t => t.trim())
         .filter(t => t !== '');
 }
-/** The validate result now comes in an object, we need to turn into array for apply */
+/** @DEPRECATED The validate result now comes in an object, we need to turn into array for apply */
 function prepareArgs(argList, result) {
     return argList.map(name => result[name]);
 }
