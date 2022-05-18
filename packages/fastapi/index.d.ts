@@ -1,6 +1,6 @@
 // move from @velocejs/server
 
-import {
+import type {
   // AppOptions,
   // HttpResponse,
   // HttpRequest,
@@ -12,7 +12,10 @@ import {
   // UwsStringPairObj,
   // RecognizedString
 } from '@velocejs/server/index'
-
+export type {
+  JsonqlArrayValidateInput,
+  JsonqlObjectValidateInput,
+} from '@jsonql/validator/index'
 export type RouteMetaInfo = {
   propertyName: string
   path: string
