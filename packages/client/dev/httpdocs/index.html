@@ -4,6 +4,7 @@
     <title>Dev for velocejs/client</title>
 
     <!-- script src="./velocejs-client.min.js"></script -->
+    <script src="./fetch.js"></script>
     <script src="./dev.js"></script>
   </head>
   <body>
@@ -20,9 +21,8 @@
 
     <script type="module">
       import { createApp } from "./petite/petite-vue.es.js"
-
-      fetch(window.location.href + 'veloce/contract')
-        .then(res => res.json())
+      const client = new VeloceFetchClient()
+      client.build()
         .then(json => {
           console.log(json)
           createApp({
@@ -32,11 +32,7 @@
 
             }
           }).mount()
-        })
-
-      /*
-
-      */
+      })
     </script>
   </body>
 </html>

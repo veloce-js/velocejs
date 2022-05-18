@@ -5,7 +5,6 @@ import {
   FILE_NAME,
   SUPPORT_EXT,
   VELOCE_DEFAULTS,
-  PATH_TO_VELOCE_CONFIG,
 } from './constants'
 import {
   VeloceConfigEntry,
@@ -13,6 +12,7 @@ import {
 } from './types'
 import debugFn from 'debug'
 const debug = debugFn('velocejs:config:class')
+export const PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG
 // main
 export class VeloceConfig {
 
@@ -112,6 +112,6 @@ export class VeloceConfig {
       }
       return content[moduleName]
     }
-    return content 
+    return content
   }
 }

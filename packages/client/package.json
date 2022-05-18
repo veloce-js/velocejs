@@ -13,7 +13,8 @@
     "fetch.js.map"
   ],
   "scripts": {
-    "dev": "DEBUG=velocejs:* NODE_ENV=development VELOCE_CONFIG=./dev/veloce.config.js pnpm ts ./dev/start.ts",
+    "dev": "pnpm build:fetch:dev && DEBUG=velocejs:* pnpm run:dev",
+    "run:dev": "NODE_ENV=development VELOCE_CONFIG=./dev/veloce.config.js pnpm ts ./dev/start.ts",
     "test:ava": "ava",
     "test:nyc": "nyc ava",
     "test": "pnpm build && pnpm test:ava",
@@ -22,7 +23,7 @@
     "build:tsc": "tsc -p tsconfig.json",
     "build:browser": "esbuild ./src/index.ts --bundle --minify --sourcemap --outfile=./dist/velocejs-client.min.js",
     "build:fetch": "esbuild ./src/fetch.ts --bundle --minify --sourcemap --outfile=./fetch.js",
-    "build:fetch:dev": "esbuild ./src/fetch.ts --bundle --sourcemap --outfile=./fetch.js",
+    "build:fetch:dev": "esbuild ./src/fetch.ts --bundle --sourcemap --outfile=./dev/httpdocs/fetch.js",
     "build:dev:browser": "esbuild ./src/index.ts --bundle --sourcemap --outfile=./dev/httpdocs/velocejs-client.js",
     "ts:check": "tsc -noEmit",
     "docs": "typedoc --entryPoints src/main.ts",

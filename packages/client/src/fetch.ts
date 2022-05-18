@@ -31,7 +31,7 @@ export async function f(
   return fetch(url, _opt)
             .then((res: any) => res.json()) // always return a json
 }
-/** Supply out fetch client here */
+/** Supply our fetch client here */
 export class VeloceFetchClient extends VeloceClient {
 
   constructor(options?: GenericKeyValue) {

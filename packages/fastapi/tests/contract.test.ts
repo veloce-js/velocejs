@@ -1,16 +1,13 @@
 // testing the contract generator
 // override the default
 // process.env.VELOCE_CONFIG = join(__dirname, 'fixtures', 'veloce.config.js')
-
 import test from 'ava'
 import Fetch from 'node-fetch'
 import { removeSync } from 'fs-extra'
 import { join } from 'node:path'
 import { VELOCE_DEFAULTS } from '@velocejs/config'
 import { ApiWithContract } from './fixtures/contract/api-with-contract'
-
-// const veloceConfig = process.env.VELOCE_CONFIG
-
+// const veloceConfig = process.env.VELOCE_CONFI
 let api: ApiWithContract
 let url: string
 // although this can show but the config class didn't see it
