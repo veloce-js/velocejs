@@ -1,4 +1,5 @@
 import { VeloceConfigEntry } from './types';
+export declare const PATH_TO_VELOCE_CONFIG: string | undefined;
 export declare class VeloceConfig {
     private _src;
     private _content?;

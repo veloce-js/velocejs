@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VeloceConfig = void 0;
+exports.VeloceConfig = exports.PATH_TO_VELOCE_CONFIG = void 0;
 const tslib_1 = require("tslib");
 const fsx = tslib_1.__importStar(require("fs-extra"));
 const node_path_1 = require("node:path");
@@ -8,12 +8,13 @@ const utils_1 = require("@jsonql/utils");
 const constants_1 = require("./constants");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:config:class');
+exports.PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG;
 // main
 class VeloceConfig {
     constructor(pathToConfigFile) {
         this._setupCallback();
         const cwd = process.cwd();
-        let _path = pathToConfigFile || constants_1.PATH_TO_VELOCE_CONFIG;
+        let _path = pathToConfigFile || exports.PATH_TO_VELOCE_CONFIG;
         // we only throw error when dev provide a file that doesn't exist
         if (_path) {
             _path = (0, node_path_1.resolve)(_path);

@@ -1,10 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.VELOCE_DEFAULTS = exports.SERVER_KEY = exports.CACHE_DIR = exports.CONTRACT_KEY = exports.PATH_TO_VELOCE_CONFIG = exports.SUPPORT_EXT = exports.FILE_NAME = exports.VELOCE_DEFAULT_URL = void 0;
+exports.VELOCE_DEFAULTS = exports.SERVER_KEY = exports.CACHE_DIR = exports.CONTRACT_KEY = exports.SUPPORT_EXT = exports.FILE_NAME = exports.VELOCE_DEFAULT_URL = void 0;
 exports.VELOCE_DEFAULT_URL = '/veloce';
 exports.FILE_NAME = 'veloce.config';
 exports.SUPPORT_EXT = ['js', 'cjs']; // can only support cjs style due to the f**king typescript
-exports.PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG;
 exports.CONTRACT_KEY = 'contract';
 exports.CACHE_DIR = 'cacheDir';
 exports.SERVER_KEY = 'server';
@@ -26,7 +25,7 @@ exports.SERVER_KEY = 'server';
 exports.VELOCE_DEFAULTS = {
     [exports.CONTRACT_KEY]: {
         method: 'get',
-        path: `${exports.VELOCE_DEFAULT_URL}/contract`
+        path: `${exports.VELOCE_DEFAULT_URL}/${exports.CONTRACT_KEY}`
     },
     [exports.SERVER_KEY]: {
         port: 0

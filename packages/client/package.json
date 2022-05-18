@@ -45,7 +45,7 @@
     "@jsonql/constants": "^0.7.2",
     "@jsonql/contract": "^0.5.0",
     "@jsonql/utils": "^0.6.8",
-    "@velocejs/config": "workspace:^0.4.0",
+    "@velocejs/config": "workspace:^0.4.1",
     "tslib": "^2.4.0"
   },
   "devDependencies": {
