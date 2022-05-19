@@ -4,6 +4,7 @@ exports.UrlPattern = void 0;
 const tslib_1 = require("tslib");
 // using the url-pattern lib to match against the dynamic url
 const url_pattern_1 = tslib_1.__importDefault(require("url-pattern"));
+const utils_1 = require("./utils");
 class UrlPattern {
     // private _urls: string[] = []
     constructor(basePattern) {
@@ -31,7 +32,8 @@ class UrlPattern {
     }
     /** super simple check */
     static check(url) {
-        return url.indexOf(':') > -1;
+        // now just a wrapper 
+        return (0, utils_1.isDynamicRoute)(url);
     }
     /** parse the var from url */
     parse(url) {

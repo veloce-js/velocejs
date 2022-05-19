@@ -326,8 +326,8 @@ export class FastApi implements FastApiInterface {
         const obj = this._dynamicRoutes.get(route)
         // the data extracted will become the argument
         const urlParams = obj.parse(ctx.url)
-        ctx.params = urlParams === null ? {} : urlParams
         // @TODO we need to process the params as well
+        ctx.params = urlParams === null ? {} : urlParams
       }
       this._setTemp(ctx, res)
       debug('ctx', ctx)
@@ -423,15 +423,16 @@ export class FastApi implements FastApiInterface {
   }
 
   // take the argument list and the input to create the correct arguments
+  // @TODO check if this is the dynamic route and we need to convert the data
   private _applyArgs(
     argNames: Array<string>,
     params: object,
     argsList: Array<UwsStringPairObj>
   ) {
-    // spread argument
-    if (argsList[0] &&
-        argsList[0][TS_TYPE_NAME] &&
-        argsList[0][TS_TYPE_NAME] === SPREAD_ARG_TYPE
+    const _al = argsList[0]
+    if (_al && // spread argument?
+        _al[TS_TYPE_NAME] &&
+        _al[TS_TYPE_NAME] === SPREAD_ARG_TYPE
     ) {
       const _args: any[] = []
       for (const key in params) {
@@ -439,6 +440,7 @@ export class FastApi implements FastApiInterface {
       }
       return _args
     }
+    debug('_applyArgs', argNames, params, argsList)
     // the normal key value pair
     return argNames.map(argName => params[argName])
   }

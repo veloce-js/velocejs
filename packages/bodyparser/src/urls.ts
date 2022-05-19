@@ -1,5 +1,6 @@
 // using the url-pattern lib to match against the dynamic url
 import UrlPatternLib from 'url-pattern'
+import { isDynamicRoute } from './utils'
 import { UwsStringPairObj } from '../index'
 
 export class UrlPattern {
@@ -34,12 +35,14 @@ export class UrlPattern {
     }
     this._originalUrl = '/' + url
     this._transformUrl = '/' + parts[0] + '/*'
+
     return this._originalUrl
   }
 
   /** super simple check */
   static check(url: string) {
-    return url.indexOf(':') > -1
+    // now just a wrapper 
+    return isDynamicRoute(url)
   }
 
   /** parse the var from url */

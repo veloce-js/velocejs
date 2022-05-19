@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseQuery = exports.isFile = exports.isForm = exports.isJson = exports.isEmptyObj = exports.takeApartName = exports.toBuffer = exports.toArr = exports.getHeaders = void 0;
+exports.parseQuery = exports.isDynamicRoute = exports.isFile = exports.isForm = exports.isJson = exports.isEmptyObj = exports.takeApartName = exports.toBuffer = exports.toArr = exports.getHeaders = void 0;
 const constants_1 = require("./constants");
 // return all the headers
 function getHeaders(req) {
@@ -30,7 +30,7 @@ exports.takeApartName = takeApartName;
 // check if the object is empty for the init run
 const isEmptyObj = (obj) => (obj && Object.keys(obj).length === 0 && obj.constructor === Object);
 exports.isEmptyObj = isEmptyObj;
-// check if the header 'Content-Type' is a json like 
+// check if the header 'Content-Type' is a json like
 const isJson = (headers) => (headers[constants_1.CONTENT_TYPE] !== undefined && headers[constants_1.CONTENT_TYPE].indexOf('json') > -1);
 exports.isJson = isJson;
 // check if it's regular post form
@@ -42,6 +42,9 @@ const isFile = (headers) => (headers[constants_1.CONTENT_TYPE] !== undefined &&
 // headers[CONTENT_TYPE].indexOf(BOUNDARY) > -1
 );
 exports.isFile = isFile;
+/** just check if the url looks like a dynamic route */
+const isDynamicRoute = (route) => route.indexOf(constants_1.DYNAMIC_ROUTE_PATTERN) > -1;
+exports.isDynamicRoute = isDynamicRoute;
 // the actual function to take the query apart
 function parseQuery(query) {
     const params = new URLSearchParams(query);

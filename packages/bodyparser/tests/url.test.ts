@@ -3,9 +3,7 @@ import test from 'ava'
 import { UrlPattern } from '../src/urls'
 
 test(`Simple check url is dynamic or not`, t => {
-
   t.true(UrlPattern.check('/post/:id'))
-
   t.false(UrlPattern.check('/posts/something'))
 })
 
@@ -38,5 +36,4 @@ test(`Test the optional pattern`, t => {
   const params1 = urlObj1.parse('/posts/2022/05/06/something-else')
 
   t.is(params1.slug, 'something-else')
-
 })

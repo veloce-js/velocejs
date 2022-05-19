@@ -6,3 +6,4 @@ export declare const IS_JSON = "json";
 export declare const IS_OTHER = "other";
 export declare const DEFAULT_FORM_HEADER = "application/x-www-form-urlencoded";
 export declare const FILE_POST_HEADER = "multipart/form-data";
+export declare const DYNAMIC_ROUTE_PATTERN = "/:";

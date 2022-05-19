@@ -8,3 +8,5 @@ export const IS_OTHER = 'other'
 
 export const DEFAULT_FORM_HEADER = 'application/x-www-form-urlencoded'
 export const FILE_POST_HEADER = 'multipart/form-data'
+
+export const DYNAMIC_ROUTE_PATTERN = '/:'

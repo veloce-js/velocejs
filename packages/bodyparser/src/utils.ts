@@ -6,6 +6,7 @@ import {
   CONTENT_TYPE,
   DEFAULT_FORM_HEADER,
   FILE_POST_HEADER,
+  DYNAMIC_ROUTE_PATTERN,
 } from './constants'
 // return all the headers
 export function getHeaders(req: HttpRequest) {
@@ -38,7 +39,7 @@ export const isEmptyObj = (obj: any): boolean => (
   obj && Object.keys(obj).length === 0 && obj.constructor === Object
 )
 
-// check if the header 'Content-Type' is a json like 
+// check if the header 'Content-Type' is a json like
 export const isJson = (headers: UwsStringPairObj): boolean => (
   headers[CONTENT_TYPE] !== undefined && headers[CONTENT_TYPE].indexOf('json') > -1
 )
@@ -52,6 +53,9 @@ export const isFile = (headers: UwsStringPairObj): boolean => (
   headers[CONTENT_TYPE].indexOf(FILE_POST_HEADER) > -1
   // headers[CONTENT_TYPE].indexOf(BOUNDARY) > -1
 )
+
+/** just check if the url looks like a dynamic route */
+export const isDynamicRoute = (route: string) => route.indexOf(DYNAMIC_ROUTE_PATTERN) > -1
 
 // the actual function to take the query apart
 export function parseQuery(query: string): UwsStringPairObj {
