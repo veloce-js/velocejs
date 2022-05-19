@@ -39,7 +39,7 @@ export class UwsServer {
 
   /** stock start function */
   private onStartFn = (url: string): void => {
-    debugFn(`Server started at ${url}`)
+    debugFn(`Server started: ${url}`)
   }
 
   private onStartErrorFn = (): void => {
@@ -69,8 +69,12 @@ export class UwsServer {
   /** overwrite the port number via the start up env */
   public get portNum() {
     const p = process.env.PORT
-
-    return p ? parseInt(p) : this.port
+    const port = p ? parseInt(p) : p
+    if (p && isNaN(port as number)) {
+      throw new Error(`"${p}" from process.env.PORT is not a correct port number!`)
+    }
+    //@BUG if they didn't pass a number than what
+    return port ? port as number : this.port
   }
 
   /** setter for post number */
@@ -85,6 +89,7 @@ export class UwsServer {
       port: number,
       cb: (listenSocket: us_listen_socket) => void
     ): TemplatedApp;
+    @TODO what about ipv6 address?
   */
   public get hostName() {
     const h = process.env.HOST
