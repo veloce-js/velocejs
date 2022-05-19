@@ -9,7 +9,7 @@ import { UrlPattern } from '@velocejs/bodyparser'
 import {
   STATIC_TYPE,
   STATIC_ROUTE,
-  // GET_ROUTE_NAME, // @TODO 
+  GET_ROUTE_NAME,
   RAW_TYPE,
 } from '@velocejs/server'
 import { routeKey } from './keys'
@@ -19,7 +19,7 @@ import { WEBSOCKET_ROUTE_NAME } from '@velocejs/server'
 
 /** make sure the dynamic route only apply on GET route */
 const assertRoutePath = (type: string, path: string) => {
-  if (type !== STATIC_ROUTE && UrlPattern.check(path)) {
+  if (type !== GET_ROUTE_NAME && UrlPattern.check(path)) {
     throw new Error(`Dynamic route is not allow with ${type} route`)
   }
 }
@@ -44,7 +44,7 @@ function innerDecoratorFactory(type: string, path: string, opts?: UwsStringPairO
     switch (type) {
       case RAW_TYPE:
         meta.type = RAW_TYPE
-        meta.route = opts ? opts.routeType : STATIC_ROUTE // this is the GET, POST etc etc
+        meta.route = opts ? opts.routeType : GET_ROUTE_NAME // this is the GET, POST etc etc
         break
       case STATIC_TYPE:
         meta.type = STATIC_TYPE
