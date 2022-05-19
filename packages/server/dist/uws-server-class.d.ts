@@ -25,6 +25,7 @@ export declare class UwsServer {
         port: number,
         cb: (listenSocket: us_listen_socket) => void
       ): TemplatedApp;
+      @TODO what about ipv6 address?
     */
     get hostName(): RecognizedString;
     /** setter for host name */

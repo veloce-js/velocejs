@@ -23,7 +23,7 @@ class UwsServer {
     }
     /** stock start function */
     onStartFn = (url) => {
-        debugFn(`Server started at ${url}`);
+        debugFn(`Server started: ${url}`);
     };
     onStartErrorFn = () => {
         throw new Error(`Server could not start!`);
@@ -49,7 +49,12 @@ class UwsServer {
     /** overwrite the port number via the start up env */
     get portNum() {
         const p = process.env.PORT;
-        return p ? parseInt(p) : this.port;
+        const port = p ? parseInt(p) : p;
+        if (p && isNaN(port)) {
+            throw new Error(`"${p}" from process.env.PORT is not a correct port number!`);
+        }
+        //@BUG if they didn't pass a number than what
+        return port ? port : this.port;
     }
     /** setter for post number */
     set portNum(port) {
@@ -62,6 +67,7 @@ class UwsServer {
         port: number,
         cb: (listenSocket: us_listen_socket) => void
       ): TemplatedApp;
+      @TODO what about ipv6 address?
     */
     get hostName() {
         const h = process.env.HOST;

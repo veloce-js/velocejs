@@ -2,6 +2,7 @@ declare const DISABLED: number, SHARED_COMPRESSOR: number, SHARED_DECOMPRESSOR: 
 export declare const SUPPORT_REST_ROUTES: string[];
 export declare const WEBSOCKET_ROUTE_NAME = "ws";
 export declare const STATIC_TYPE = "static";
+export declare const GET_ROUTE_NAME = "get";
 export declare const STATIC_ROUTE = "get";
 export declare const DEFAULT_FILE = "index.html";
 export declare const RAW_TYPE = "raw";
