@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/client",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "@velocejs/client generate client code using contract",
   "main": "dist/index.js",
   "module": "dist/index.ts",
@@ -46,7 +46,9 @@
     "@jsonql/contract": "^0.5.0",
     "@jsonql/utils": "^0.6.8",
     "@velocejs/config": "workspace:^0.4.1",
-    "tslib": "^2.4.0"
+    "@velocejs/server": "workspace:^0.8.2",
+    "tslib": "^2.4.0",
+    "url-pattern": "^1.0.3"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",

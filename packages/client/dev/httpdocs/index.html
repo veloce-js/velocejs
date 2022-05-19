@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Dev for velocejs/client</title>
+    <title>Dev for velocejs/client wtf</title>
     <script src="./dev.js"></script>
   </head>
   <body>
-    <h1>Velocejs/Client test</h1>
+    <h1>Velocejs/Client TEST</h1>
     <div v-scope>
       <p>
         MSG: <input v-model="msg" name="msg" />
@@ -26,6 +26,7 @@
           console.log(methods)
           createApp({
             msg: '',
+            results: [],
             methods,
             send() {
               console.log('call send', this.msg)

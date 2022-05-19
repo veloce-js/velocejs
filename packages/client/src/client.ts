@@ -1,5 +1,6 @@
 /** the velocejs client to connect to the backend */
 import type { TransportAsyncFunc, GenericKeyValue } from './types'
+import UrlPatternLib from 'url-pattern'
 // this could be problematic if the use the config to change the url
 import {
   CONTRACT_REQUEST_METHODS

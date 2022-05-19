@@ -7,6 +7,9 @@ import {
   Websocket,
   arrayBufferToString
 } from '@velocejs/fastapi'
+import type {
+  WebSocket
+} from '@velocejs/server/index'
 import { join } from 'node:path'
 import chokidar from 'chokidar'
 
@@ -14,30 +17,34 @@ import chokidar from 'chokidar'
 export class DevApi extends FastApi {
 
   // static folder
-
   @Get('/simple')
   public simple() {
-    return {Hello: 'World'}
+
+    this.$json({ Hello: 'World' })
   }
 
   @Get('/update/:id')
   public update(id: string) {
-    return {msg: `You send ${id} to fetch update`}
+
+    this.$json({ msg: `You send ${id} to fetch update` })
   }
 
   @Post('/test')
   public testPost(id: number, title: string, content?: string) {
 
-    return {
+    this.$json({
       id, title, content
-    }
+    })
   }
 
   @Websocket('/cheapo-hmr')
   get socketConfig() {
+
     return {
       open: function(ws: WebSocket) {
-        console.log('connected')
+        // test out the pub sub
+        // ws.subscribe('hmr/file-change') //nothing happens
+
         // super simple dev reload server
         chokidar.watch(join(__dirname, 'httpdocs'))
                 .on('change', (path: string /*, evt: Event */) => {
@@ -47,10 +54,12 @@ export class DevApi extends FastApi {
       },
       message: function(ws: WebSocket, message: ArrayBuffer) {
         ws.send(`Reply from server: ` + arrayBufferToString(message))
+      },
+      close: function() {
+        console.log('connection closed???')
       }
     }
   }
-
 
   @ServeStatic('/*')
   get httpdocs() {
