@@ -50,10 +50,17 @@ export class VeloceClient {
     method: string,
     params: Array<GenericKeyValue>
   ) {
-
+    
     return (...args: any) => {
+      const _args = this._createArgs(args, params)
       if (method !== 'ws') {
-        this._transportFn(route, method, this._createArgs(args, params))
+        if (route.indexOf(':') > -1) {
+          const urlLib = new UrlPatternLib(route)
+          route = urlLib.stringify(_args)
+        }
+        // when this route using the dynamic route we need to prepare it
+        // new UrlPattern('/api/users(/:id)')
+        this._transportFn(route, method, _args)
       } else {
         console.info(`@TODO setup ws connection for`, route)
       }
