@@ -1,16 +1,17 @@
 // move from @velocejs/server
 
-import type {
-  // AppOptions,
-  // HttpResponse,
-  // HttpRequest,
-  // UwsRouteSetup,
-  // UwsRouteHandler,
+export type {
+  AppOptions,
+  WebSocket,
+  HttpResponse,
+  HttpRequest,
+  UwsRouteSetup,
+  UwsRouteHandler,
   UwsRespondBody,
   // UwsWriter,
   // UwsJsonWriter,
-  // UwsStringPairObj,
-  // RecognizedString
+  UwsStringPairObj,
+  RecognizedString,
 } from '@velocejs/server/index'
 export type {
   JsonqlArrayValidateInput,
@@ -20,10 +21,11 @@ export type RouteMetaInfo = {
   propertyName: string
   path: string
   type: string
-  onAbortedHandler?: string
+  excluded?: boolean // exclude this from contract
+  // onAbortedHandler?: string this is deprectead
   protected?: boolean
-  validation?: any
-  [key: string]: any // so we can store more info if we need to
+  validation?: JsonqlArrayValidateInput | JsonqlObjectValidateInput
+  [key: string]: any // so we can store more info if we need to @TODO remove this once it's stable
 }
 // this is totally pointless
 export type MetaDecorator = (path: string) => (target: any, propertyName: string, descriptor: any) => void
@@ -37,6 +39,8 @@ export type DescriptorMeta = {
 // we might add more options in the future
 export type RouteOptions = {
   protected?: boolean
+  excluded?: boolean
+  routeType?: string
 }
 /*
 export type ArgsListType = {
