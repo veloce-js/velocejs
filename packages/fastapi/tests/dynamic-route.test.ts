@@ -23,12 +23,12 @@ test(`Just test a normal url /news/* first`, async t => {
   return Fetch(_url)
           .then(res => res.text())
           .then((text: string) => {
-            // console.log(_url, text)
+            console.log(_url, text)
             t.truthy(text)
           })
 })
 
-test(`Should able to use dynamic route on GET route with correct type on method`, async t => {
+test.only(`Should able to use dynamic route on GET route with correct type on method`, async t => {
   t.plan(1)
   const _url = `${url}/posts/2022/5/7`
   // console.log('calling', _url)

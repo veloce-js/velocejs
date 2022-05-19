@@ -1,10 +1,11 @@
-import { FastApi, Rest, Get } from '../../dist'
+import { FastApi, Rest, Get, Validate } from '../../src'
 
 @Rest
 export class MyDynamicRoute extends FastApi {
 
   @Get('/posts/:year/:month/:day')
-  public posts(year: string, month: string, day: string) {
+  @Validate()
+  public posts(year: string, month: number, day: number) {
 
     this.$json({
       date: [year, month, day].join('-')
@@ -12,7 +13,7 @@ export class MyDynamicRoute extends FastApi {
   }
 
   @Get('/news/:year/:month/:day(/:slug)')
-  public news(...args: any[]) {
+  public news(...args: string[]) {
     console.log('news args', args)
     this.$text(args.join('_'))
   }

@@ -33,8 +33,6 @@ import {
   WEBSOCKET_ROUTE_NAME,
 } from '@velocejs/server'
 import {
-  SPREAD_ARG_TYPE,
-  TS_TYPE_NAME,
   REST_NAME,
 } from '@jsonql/constants'
 
@@ -52,7 +50,7 @@ import {
   chainProcessPromises,
   queuePromisesProcess,
   toArray,
-  assign
+  assign,
 } from '@jsonql/utils'
 // here
 import {
@@ -60,8 +58,15 @@ import {
   isDev,
   CONTRACT_METHOD_NAME,
   DEFAULT_CONTRACT_METHOD,
+  DYNAMIC_ROUTE_ALLOW_TYPES,
 } from './lib/constants'
-import { createValidator } from './lib/validator'
+import {
+  convertStrToType,
+  isSpreadFn,
+} from './lib/common'
+import {
+  createValidator
+} from './lib/validator'
 import {
   FastApiInterface
 } from './lib/fast-api-interface'
@@ -202,10 +207,10 @@ export class FastApi implements FastApiInterface {
   /** TS script force it to make it looks so damn bad for all their non-sense rules */
   private _prepareNormalRoute(
     meta: RouteMetaInfo,
-    checkFn: (t: string, p: string) => string
+    checkFn: (t: string, p: string, args: RouteMetaInfo[]) => string
   ) {
-    const { type , path, propertyName , args, validation, excluded } = meta
-    const _route = checkFn(type, path)
+    const { type, path, propertyName, args, validation, excluded } = meta
+    const _route = checkFn(type, path, args)
     // also add this to the route that can create contract - if we need it
     const _path = _route !== '' ? _route : path
     if (!excluded) {
@@ -243,9 +248,16 @@ export class FastApi implements FastApiInterface {
   /** check if there is a dynamic route and prepare it */
   private _prepareDynamicRoute(tmpSet: WeakSet<object>) {
 
-    return (type: string, path: string): string => {
+    return (type: string, path: string, args: RouteMetaInfo[]): string => {
+      debug(`checkFn`, path)
       let route = '', upObj: any
       if (type === DEFAULT_CONTRACT_METHOD && UrlPattern.check(path)) {
+        // now we need to check if the types are supported
+        const invalid = !!args.filter((arg: RouteMetaInfo) => !DYNAMIC_ROUTE_ALLOW_TYPES.includes(arg.type)).length
+        debug('isValid', invalid)
+        if (invalid) {
+          debug('why is it invalid', args)
+        }
         upObj = new UrlPattern(path)
         route = upObj.route
       }
@@ -298,10 +310,14 @@ export class FastApi implements FastApiInterface {
     validationInput: any, // this is the raw rules input by dev
   ) {
     const argNames = argsList.map(arg => arg.name)
-    const validateFn = this._createValidator(propertyName, argsList, validationInput)
+    const validateFn = createValidator(
+                            propertyName,
+                            argsList,
+                            validationInput,
+                            this.validatorPlugins)
 
     return async (ctx: VeloceCtx) => {
-      const args = this._applyArgs(argNames, ctx.params, argsList)
+      const args = this._applyArgs(argNames, argsList, ctx)
       debug('args before validateFn -->', args)
       return validateFn(args)
                 .then((validatedResult: VeloceCtx) => {
@@ -320,7 +336,7 @@ export class FastApi implements FastApiInterface {
   ) {
 
     return async (result: UwsRespondBody): Promise<VeloceCtx> => {
-      const ctx: VeloceCtx = assign(result, { propertyName })
+      const ctx: VeloceCtx = assign(result, { propertyName, route })
       // 0.3.0 handle dynamic route
       if (route) {
         const obj = this._dynamicRoutes.get(route)
@@ -376,20 +392,6 @@ export class FastApi implements FastApiInterface {
     }
   }
 
-  /** wrap the _createValidator with additoinal property */
-  private _createValidator(
-    propertyName: string,
-    argsList: any,// @TODO fix type
-    validationInput: any // @TODO fix type
-  ) {
-    return createValidator(
-      propertyName,
-      argsList,
-      validationInput,
-      this.validatorPlugins
-    )
-  }
-
   /** @TODO handle protected route, also we need another library to destruct those pattern route */
   private _handleProtectedRoute(propertyName: string) {
     // need to check out the route info
@@ -426,21 +428,23 @@ export class FastApi implements FastApiInterface {
   // @TODO check if this is the dynamic route and we need to convert the data
   private _applyArgs(
     argNames: Array<string>,
-    params: object,
-    argsList: Array<UwsStringPairObj>
+    argsList: Array<UwsStringPairObj>,
+    ctx: VeloceCtx
   ) {
-    const _al = argsList[0]
-    if (_al && // spread argument?
-        _al[TS_TYPE_NAME] &&
-        _al[TS_TYPE_NAME] === SPREAD_ARG_TYPE
-    ) {
+    const { params, route } = ctx
+    const obj = this._dynamicRoutes.get(route)
+    if (obj) {
+      return convertStrToType(argNames, params)
+    }
+    // this could be wrong when it's a mix
+    if (isSpreadFn(argsList[0])) {
+      debug(`Spread argument type`)
       const _args: any[] = []
       for (const key in params) {
         _args.push(params[key])
       }
       return _args
     }
-    debug('_applyArgs', argNames, params, argsList)
     // the normal key value pair
     return argNames.map(argName => params[argName])
   }

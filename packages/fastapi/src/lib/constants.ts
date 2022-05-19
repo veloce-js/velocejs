@@ -21,3 +21,4 @@ export const METHOD_TO_RUN = '$prepare'
 export const CONTRACT_METHOD_NAME = '_serveContract'
 
 export const DEFAULT_CONTRACT_METHOD = 'get'
+export const DYNAMIC_ROUTE_ALLOW_TYPES = ['number', 'string', 'boolean']
