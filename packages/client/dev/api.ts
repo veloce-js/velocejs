@@ -40,8 +40,8 @@ export class DevApi extends FastApi {
         console.log('connected')
         // super simple dev reload server
         chokidar.watch(join(__dirname, 'httpdocs'))
-                .on('change', (path: string, evt: Event) => {
-                  // console.log('file change', evt)
+                .on('change', (path: string /*, evt: Event */) => {
+                  console.log('file change')
                   ws.send(path)
                 })
       },

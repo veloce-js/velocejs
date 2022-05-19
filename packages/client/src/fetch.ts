@@ -13,7 +13,6 @@ export async function f(
   const opts = {
     method,
     headers: { 'Content-Type': 'application/json' }, // @TODO change to jsonql next
-    body: ''
   }
   // @TODO lots of things to do here
   if (method === 'get') {
@@ -23,7 +22,7 @@ export async function f(
     }
     url = url + '?' + query.join('&')
   } else {
-    opts.body = JSON.stringify(params)
+    opts['body'] = JSON.stringify(params)
   }
 
   const _opt = options ? Object.assign(opts, options) : opts

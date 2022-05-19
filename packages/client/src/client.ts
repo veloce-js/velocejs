@@ -2,37 +2,45 @@
 import type { TransportAsyncFunc, GenericKeyValue } from './types'
 // this could be problematic if the use the config to change the url
 import {
-  VELOCE_DEFAULT_URL,
-  CONTRACT_KEY
-} from '@velocejs/config/dist/constants'
-import {
-  JsonqlContractReader,
-} from '@jsonql/contract/dist/reader'
-import {
   CONTRACT_REQUEST_METHODS
 } from '@jsonql/constants'
 
 export class VeloceClient {
+  private _isAppReady: Promise<GenericKeyValue>
+  private _isSetupSuccess!: (value: GenericKeyValue) => void
+  private _isSetupFail!: (value: Error) => void
   private _options: GenericKeyValue
   // hold all the generate methods
-  public methods = {}
+  public methods: GenericKeyValue = {}
   // assign the transport method on init
   constructor(protected _transportFn: TransportAsyncFunc, options?: GenericKeyValue) {
     this._options = options || {
-      host: '/',
-      contractUrl: `${VELOCE_DEFAULT_URL}/${CONTRACT_KEY}`
+      contractUrl: '/veloce/contract'
     }
+    this._isAppReady = new Promise((resolver, rejecter) => {
+      this._isSetupSuccess = resolver
+      this._isSetupFail = rejecter
+      this._setup()
+        .then(methods => {
+          this._isSetupSuccess(methods)
+        })
+        .catch((e:Error) => {
+          this._isSetupFail(e)
+        })
+    })
+  }
+
+  /** main method to get the methods */
+  public async client() {
+    return this.methods || this._isAppReady
   }
 
   /** The first fetch method */
-  private async _getContract(): Promise<JsonqlContractReader> {
+  private async _getContract(): Promise<GenericKeyValue> {
     return this._transportFn(
-      this._options.host + this._options.contractUrl,
+      this._options.contractUrl,
       CONTRACT_REQUEST_METHODS[0]
     )
-    .then(json => (
-      new JsonqlContractReader(json)
-    ))
   }
 
   /** this will create the actual call method */
@@ -41,10 +49,13 @@ export class VeloceClient {
     method: string,
     params: Array<GenericKeyValue>
   ) {
-    // @TODO use the new Function method to generate with name params?
-    return (...args: any) => {
 
-      this._transportFn(route, method, this._createArgs(args, params))
+    return (...args: any) => {
+      if (method !== 'ws') {
+        this._transportFn(route, method, this._createArgs(args, params))
+      } else {
+        console.info(`@TODO setup ws connection for`, route)
+      }
     }
   }
 
@@ -56,11 +67,10 @@ export class VeloceClient {
   }
 
   /** building the client with contract */
-  public async build() {
+  public async _setup() {
     return this._getContract()
-      .then((reader: JsonqlContractReader) => {
-        const data = reader.data()
-        return data.map((d: any) => (
+      .then((reader: any) => {
+        return reader.data.map((d: any) => (
           {[d.name]: this._createMethod(d.route, d.method, d.params)}
         ))
         .reduce((a: any, b: any) => Object.assign(a,b), this.methods)

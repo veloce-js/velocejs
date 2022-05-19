@@ -23,7 +23,7 @@
     "build:tsc": "tsc -p tsconfig.json",
     "build:browser": "esbuild ./src/index.ts --bundle --minify --sourcemap --outfile=./dist/velocejs-client.min.js",
     "build:fetch": "esbuild ./src/fetch.ts --bundle --minify --sourcemap --outfile=./fetch.js",
-    "build:fetch:dev": "esbuild ./src/fetch.ts --bundle --sourcemap --outfile=./dev/httpdocs/fetch.js",
+    "build:fetch:dev": "esbuild ./src/fetch.ts --bundle --tree-shaking=true --format=esm --outfile=./dev/httpdocs/veloce-fetch-client.dev.js",
     "build:dev:browser": "esbuild ./src/index.ts --bundle --sourcemap --outfile=./dev/httpdocs/velocejs-client.js",
     "ts:check": "tsc -noEmit",
     "docs": "typedoc --entryPoints src/main.ts",

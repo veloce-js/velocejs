@@ -2,9 +2,6 @@
 <html>
   <head>
     <title>Dev for velocejs/client</title>
-
-    <!-- script src="./velocejs-client.min.js"></script -->
-    <script src="./fetch.js"></script>
     <script src="./dev.js"></script>
   </head>
   <body>
@@ -21,19 +18,23 @@
 
     <script type="module">
       import { createApp } from "./petite/petite-vue.es.js"
-      import { VeloceFetchClient } from "./fetch.js"
-      const client = new VeloceFetchClient()
-      client.build()
-        .then(json => {
-          console.log(json)
-          createApp({
-            json,
-            msg: '',
-            send() {
+      import { VeloceFetchClient, f } from "./veloce-fetch-client.dev.js"
 
+      const veloce = new VeloceFetchClient()
+      veloce.client()
+        .then(methods => {
+          console.log(methods)
+          createApp({
+            msg: '',
+            methods,
+            send() {
+              console.log('call send', this.msg)
             }
           }).mount()
-      })
+        })
+        .catch(e => {
+          console.error('build error', e)
+        })
     </script>
   </body>
 </html>
