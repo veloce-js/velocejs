@@ -11,6 +11,8 @@ const assertRoutePath = (type, path) => {
         throw new Error(`Dynamic route is not allow with ${type} route`);
     }
 };
+// util
+const getOpt = (name, opts) => opts ? opts[name] : opts;
 /** The actual factory metod to generate the call **/
 function innerDecoratorFactory(type, path, opts) {
     // validate the url here then we won't get problem later in the class
@@ -36,7 +38,8 @@ function innerDecoratorFactory(type, path, opts) {
                 break;
             default:
                 meta.type = type;
-                meta.options = opts; // passing this back for use later
+                meta.excluded = getOpt('excluded', opts); // passing this back for use later
+            // meta.protected = getOpt('protected', opts)
         }
         // we should check if the same type already defined the same path
         if (!existingRoutes.filter(// not found
