@@ -39,6 +39,8 @@ export type DescriptorMeta = {
 // we might add more options in the future
 export type RouteOptions = {
   protected?: boolean
+  excluded?: boolean
+  routeType?: string
 }
 /*
 export type ArgsListType = {

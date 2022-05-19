@@ -1,9 +1,9 @@
 // all decorators are here
 import type {
   RouteMetaInfo,
-  UwsStringPairObj,
+  // UwsStringPairObj,
   // DescriptorMeta,
-  // RouteOptions next when develop protected route
+  RouteOptions //next when develop protected route
 } from '../types'
 import { UrlPattern } from '@velocejs/bodyparser'
 import {
@@ -23,9 +23,11 @@ const assertRoutePath = (type: string, path: string) => {
     throw new Error(`Dynamic route is not allow with ${type} route`)
   }
 }
+// util
+const getOpt = (name: string, opts?: RouteOptions) => opts ? opts[name] : opts
 
 /** The actual factory metod to generate the call **/
-function innerDecoratorFactory(type: string, path: string, opts?: UwsStringPairObj) {
+function innerDecoratorFactory(type: string, path: string, opts?: RouteOptions) {
   // validate the url here then we won't get problem later in the class
   assertRoutePath(type, path)
 
@@ -52,7 +54,8 @@ function innerDecoratorFactory(type: string, path: string, opts?: UwsStringPairO
         break
       default:
         meta.type = type
-        meta.options = opts // passing this back for use later
+        meta.excluded = getOpt('excluded', opts) // passing this back for use later
+        // meta.protected = getOpt('protected', opts)
     }
     // we should check if the same type already defined the same path
     if (!existingRoutes.filter( // not found
@@ -83,7 +86,7 @@ export function ServeStatic(path: string) {
 // Factory method to create factory method
 function routeDecoratorFactory(routeType: string) {
   // @TODO if they didn't provide a path then we could use the propertyName as path
-  return (path: string, opts?: UwsStringPairObj) => {
+  return (path: string, opts?: RouteOptions) => {
     // 0.7.4 We use the opts to do further customization for the route such as exclude from contract
     return innerDecoratorFactory(routeType, path , opts)
   }

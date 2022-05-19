@@ -19,10 +19,15 @@ export class ApiWithContract extends FastApi {
   }
 
   // testing the dynamic route with spread
-  // also the converter 
+  // also the converter
   @Get('/archive/:year/:month/:day')
   archive(...dates: number[]) {
     this.$text(dates.join('-'))
+  }
+
+  @Get('/not-here-route', { excluded: true })
+  youDontSeeMeOnContract() {
+    return 'you shouldnt able to see me in the contract'
   }
 
   @ServeStatic('/*')

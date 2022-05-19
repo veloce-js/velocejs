@@ -31,10 +31,13 @@ test.after(() => {
   removeSync(join(__dirname, 'fixtures', 'contract', 'tmp'))
 })
 
-test(`Testing API with config and contract`, t => {
+test(`Testing API with config and contract plus excluded`, t => {
+  const _contract = contract['data']
+  // console.dir(_contract, { depth: null })
+  t.false(!!_contract.filter( (data:any) => data.route === '/not-here-route' ).length)
   // console.dir(json, { depth: null })
   // should have a ws route here
-  t.true(!!contract['data'].filter((data: any) => data.method === 'ws').length)
+  t.true(!!_contract.filter((data: any) => data.method === 'ws').length)
 })
 
 test(`Testing the dynamic route with spread parameter`, async t => {
