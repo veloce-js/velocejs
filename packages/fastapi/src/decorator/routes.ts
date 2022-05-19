@@ -1,6 +1,7 @@
 // all decorators are here
 import type {
   RouteMetaInfo,
+  UwsStringPairObj,
   // DescriptorMeta,
   // RouteOptions next when develop protected route
 } from '../types'
@@ -8,7 +9,8 @@ import { UrlPattern } from '@velocejs/bodyparser'
 import {
   STATIC_TYPE,
   STATIC_ROUTE,
-  RAW_TYPE
+  // GET_ROUTE_NAME, // @TODO 
+  RAW_TYPE,
 } from '@velocejs/server'
 import { routeKey } from './keys'
 // import { extractArgs } from '../lib/extract'
@@ -16,16 +18,16 @@ import { FastApiInterface } from '../lib/fast-api-interface'
 import { WEBSOCKET_ROUTE_NAME } from '@velocejs/server'
 
 /** make sure the dynamic route only apply on GET route */
-const assert = (type: string, path: string) => {
-  if (type !== 'get' && UrlPattern.check(path)) {
+const assertRoutePath = (type: string, path: string) => {
+  if (type !== STATIC_ROUTE && UrlPattern.check(path)) {
     throw new Error(`Dynamic route is not allow with ${type} route`)
   }
 }
 
 /** The actual factory metod to generate the call **/
-function innerDecoratorFactory(type: string, path: string, routeType?: string) {
+function innerDecoratorFactory(type: string, path: string, opts?: UwsStringPairObj) {
   // validate the url here then we won't get problem later in the class
-  assert(type, path)
+  assertRoutePath(type, path)
 
   return (
     target: FastApiInterface,
@@ -42,7 +44,7 @@ function innerDecoratorFactory(type: string, path: string, routeType?: string) {
     switch (type) {
       case RAW_TYPE:
         meta.type = RAW_TYPE
-        meta.route = routeType // this is the GET, POST etc etc
+        meta.route = opts ? opts.routeType : STATIC_ROUTE // this is the GET, POST etc etc
         break
       case STATIC_TYPE:
         meta.type = STATIC_TYPE
@@ -50,12 +52,12 @@ function innerDecoratorFactory(type: string, path: string, routeType?: string) {
         break
       default:
         meta.type = type
+        meta.options = opts // passing this back for use later
     }
     // we should check if the same type already defined the same path
-    const found = !!existingRoutes.filter(
+    if (!existingRoutes.filter( // not found
       (route: RouteMetaInfo) => route.type === type && route.path === path
-    ).length
-    if (!found) {
+    ).length) {
       existingRoutes.push(meta)
       // console.log('existingRoutes', existingRoutes)
       Reflect.defineMetadata(routeKey, existingRoutes, target)
@@ -68,22 +70,22 @@ function innerDecoratorFactory(type: string, path: string, routeType?: string) {
 // allow dev to define a raw handler - we don't do any processing
 export function Raw(routeType: string, path: string) {
 
-  return innerDecoratorFactory(RAW_TYPE, path, routeType)
+  return innerDecoratorFactory(RAW_TYPE, path, { routeType })
 }
 
 /** special decorator to create a serveStatic method, you could specify a routeType default to GET */
 // Accessor Decorator
-export function ServeStatic(path: string, routeType?: string) {
-  // @TODO the options is not apply fully 
-  return innerDecoratorFactory(STATIC_TYPE, path, routeType)
+export function ServeStatic(path: string) {
+  // @TODO the options is not apply fully
+  return innerDecoratorFactory(STATIC_TYPE, path)
 }
 
 // Factory method to create factory method
 function routeDecoratorFactory(routeType: string) {
   // @TODO if they didn't provide a path then we could use the propertyName as path
-  return (path: string /*, opts?: RouteOptions*/) => {
-
-    return innerDecoratorFactory(routeType, path /*, opts */)
+  return (path: string, opts?: UwsStringPairObj) => {
+    // 0.7.4 We use the opts to do further customization for the route such as exclude from contract
+    return innerDecoratorFactory(routeType, path , opts)
   }
 }
 // making the decorators

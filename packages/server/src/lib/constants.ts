@@ -27,7 +27,8 @@ export const WEBSOCKET_ROUTE_NAME = 'ws'
 // , 'ws' has a different signature
 // also it's not part of the REST spec therefore we don't include them here
 export const STATIC_TYPE = 'static'
-export const STATIC_ROUTE = 'get'
+export const GET_ROUTE_NAME = 'get'
+export const STATIC_ROUTE = GET_ROUTE_NAME
 export const DEFAULT_FILE = 'index.html'
 
 export const RAW_TYPE = 'raw'
@@ -57,7 +58,7 @@ export const SOCKET_DEFAULT_PROPS = {
   maxPayloadLength: MAX_PAYLOAD_LENGTH,
   idleTimeout: 32, // this need to be multiple of 4
 }
-// re-export all uWS constatnts 
+// re-export all uWS constatnts
 export {
   DISABLED,
   SHARED_COMPRESSOR,
