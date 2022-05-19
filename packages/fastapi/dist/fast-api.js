@@ -85,7 +85,7 @@ class FastApi {
     async _prepareRoutes(meta) {
         const checkFn = this._prepareDynamicRoute(new WeakSet());
         return meta.map((m, i) => {
-            const { path, type, propertyName, validation } = m;
+            const { path, type, propertyName } = m;
             switch (type) {
                 case server_1.STATIC_TYPE:
                     this._staticRouteIndex.push(i);
@@ -98,7 +98,9 @@ class FastApi {
                         handler: (0, server_1.serveStatic)(this[propertyName])
                     };
                 case server_1.WEBSOCKET_ROUTE_NAME: // socket route just return the value from getter for now
-                    this._prepareRouteForContract(propertyName, [], type, path);
+                    if (!m.excluded) {
+                        this._prepareRouteForContract(propertyName, [], type, path);
+                    }
                     return {
                         path, type, handler: this._prepareSocketRoute(propertyName)
                     };
@@ -109,7 +111,7 @@ class FastApi {
                         handler: this[propertyName] // pass it straight through
                     };
                 default:
-                    return this._prepareNormalRoute(type, path, propertyName, m.args, validation, checkFn);
+                    return this._prepareNormalRoute(m, checkFn);
             }
         });
     }
@@ -122,11 +124,14 @@ class FastApi {
         return config;
     }
     /** TS script force it to make it looks so damn bad for all their non-sense rules */
-    _prepareNormalRoute(type, path, propertyName, args, validation, checkFn) {
+    _prepareNormalRoute(meta, checkFn) {
+        const { type, path, propertyName, args, validation, excluded } = meta;
         const _route = checkFn(type, path);
         // also add this to the route that can create contract - if we need it
         const _path = _route !== '' ? _route : path;
-        this._prepareRouteForContract(propertyName, args, type, path);
+        if (!excluded) {
+            this._prepareRouteForContract(propertyName, args, type, path);
+        }
         return {
             type,
             path: _path,

@@ -6,15 +6,15 @@ const server_1 = require("@velocejs/server");
 const keys_1 = require("./keys");
 const server_2 = require("@velocejs/server");
 /** make sure the dynamic route only apply on GET route */
-const assert = (type, path) => {
-    if (type !== 'get' && bodyparser_1.UrlPattern.check(path)) {
+const assertRoutePath = (type, path) => {
+    if (type !== server_1.GET_ROUTE_NAME && bodyparser_1.UrlPattern.check(path)) {
         throw new Error(`Dynamic route is not allow with ${type} route`);
     }
 };
 /** The actual factory metod to generate the call **/
-function innerDecoratorFactory(type, path, routeType) {
+function innerDecoratorFactory(type, path, opts) {
     // validate the url here then we won't get problem later in the class
-    assert(type, path);
+    assertRoutePath(type, path);
     return (target, propertyName
     /*, descriptor: DescriptorMeta*/
     ) => {
@@ -28,7 +28,7 @@ function innerDecoratorFactory(type, path, routeType) {
         switch (type) {
             case server_1.RAW_TYPE:
                 meta.type = server_1.RAW_TYPE;
-                meta.route = routeType; // this is the GET, POST etc etc
+                meta.route = opts ? opts.routeType : server_1.GET_ROUTE_NAME; // this is the GET, POST etc etc
                 break;
             case server_1.STATIC_TYPE:
                 meta.type = server_1.STATIC_TYPE;
@@ -36,10 +36,11 @@ function innerDecoratorFactory(type, path, routeType) {
                 break;
             default:
                 meta.type = type;
+                meta.options = opts; // passing this back for use later
         }
         // we should check if the same type already defined the same path
-        const found = !!existingRoutes.filter((route) => route.type === type && route.path === path).length;
-        if (!found) {
+        if (!existingRoutes.filter(// not found
+        (route) => route.type === type && route.path === path).length) {
             existingRoutes.push(meta);
             // console.log('existingRoutes', existingRoutes)
             Reflect.defineMetadata(keys_1.routeKey, existingRoutes, target);
@@ -51,21 +52,22 @@ function innerDecoratorFactory(type, path, routeType) {
 }
 // allow dev to define a raw handler - we don't do any processing
 function Raw(routeType, path) {
-    return innerDecoratorFactory(server_1.RAW_TYPE, path, routeType);
+    return innerDecoratorFactory(server_1.RAW_TYPE, path, { routeType });
 }
 exports.Raw = Raw;
 /** special decorator to create a serveStatic method, you could specify a routeType default to GET */
 // Accessor Decorator
-function ServeStatic(path, routeType) {
-    // @TODO the options is not apply fully 
-    return innerDecoratorFactory(server_1.STATIC_TYPE, path, routeType);
+function ServeStatic(path) {
+    // @TODO the options is not apply fully
+    return innerDecoratorFactory(server_1.STATIC_TYPE, path);
 }
 exports.ServeStatic = ServeStatic;
 // Factory method to create factory method
 function routeDecoratorFactory(routeType) {
     // @TODO if they didn't provide a path then we could use the propertyName as path
-    return (path /*, opts?: RouteOptions*/) => {
-        return innerDecoratorFactory(routeType, path /*, opts */);
+    return (path, opts) => {
+        // 0.7.4 We use the opts to do further customization for the route such as exclude from contract
+        return innerDecoratorFactory(routeType, path, opts);
     };
 }
 // making the decorators
