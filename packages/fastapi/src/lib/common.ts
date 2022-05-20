@@ -5,15 +5,23 @@
 // parse the file at TS stage to extract the Type info for Validation
 import type {
   UwsStringPairObj,
+  RouteMetaInfo,
 } from '@velocejs/server/index'
 import {
   SPREAD_ARG_TYPE,
   TS_TYPE_NAME,
 } from '@jsonql/constants'
 import {
+  DYNAMIC_ROUTE_ALLOW_TYPES
+} from './constants'
+import {
   strToNum,
   strToBool,
 } from '@jsonql/utils'
+
+import debugFn from 'debug'
+const debug = debugFn('velocejs:fastapi:common')
+
 // ugly but simple and it works
 export function extractArgs(fnStr: string): Array<string> {
 
@@ -40,7 +48,10 @@ Moving some of the smaller function out from the fastapi to reduce the complexit
 */
 
 /** convert the string from url to the right type for dynamic route */
-export function convertStrToType(argNames: Array<string>, params: UwsStringPairObj) {
+export function convertStrToType(
+  argNames: Array<string>,
+  argsList: Array<UwsStringPairObj>,
+  params: UwsStringPairObj) {
 
   return argNames.map((name: string, i: number) => {
     switch (argsList[i].type) {
@@ -53,9 +64,38 @@ export function convertStrToType(argNames: Array<string>, params: UwsStringPairO
     }
   })
 }
-/** */
-export function isSpreadFn(al: any) {
-  return (al && // spread argument?
-      al[TS_TYPE_NAME] &&
-      al[TS_TYPE_NAME] === SPREAD_ARG_TYPE)
+/** take the spread argument def if there is one */
+export function hasSpreadArg(argsList: RouteMetaInfo[]) {
+  // you could only have one
+  return argsList.filter(isSpreadFn)[0]
+}
+
+/** check if this handler is using a spread argument  */
+export function isSpreadFn(list: RouteMetaInfo) {
+  return (
+    list && // spread argument?
+    list[TS_TYPE_NAME] &&
+    list[TS_TYPE_NAME] === SPREAD_ARG_TYPE
+  )
+}
+/** just a loop to take the value out from the params for spread fn */
+export function prepareSpreadArg(params: any) {
+  const args: any[] = []
+  for (const key in params) {
+    args.push(params[key])
+  }
+  return args
+}
+
+/** check if the dynamic route parameter is valid or not, this throw to hail */
+export function assertDynamicRouteArgs(argsList: RouteMetaInfo[]) {
+  if (argsList.filter((arg: RouteMetaInfo) => {
+    let tk = 'type'
+    if (isSpreadFn(arg)) {
+      tk = 'types'
+    }
+    return !DYNAMIC_ROUTE_ALLOW_TYPES.includes(arg[tk])
+  }).length) {
+    throw new Error(`We only support ${checkTypes.join(',')} in dynamic route handler`)
+  }
 }

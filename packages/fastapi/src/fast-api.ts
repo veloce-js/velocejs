@@ -58,11 +58,12 @@ import {
   isDev,
   CONTRACT_METHOD_NAME,
   DEFAULT_CONTRACT_METHOD,
-  DYNAMIC_ROUTE_ALLOW_TYPES,
 } from './lib/constants'
 import {
   convertStrToType,
-  isSpreadFn,
+  hasSpreadArg,
+  prepareSpreadArg,
+  assertDynamicRouteArgs,
 } from './lib/common'
 import {
   createValidator
@@ -253,11 +254,7 @@ export class FastApi implements FastApiInterface {
       let route = '', upObj: any
       if (type === DEFAULT_CONTRACT_METHOD && UrlPattern.check(path)) {
         // now we need to check if the types are supported
-        const invalid = !!args.filter((arg: RouteMetaInfo) => !DYNAMIC_ROUTE_ALLOW_TYPES.includes(arg.type)).length
-        debug('isValid', invalid)
-        if (invalid) {
-          debug('why is it invalid', args)
-        }
+        assertDynamicRouteArgs(args)
         upObj = new UrlPattern(path)
         route = upObj.route
       }
@@ -432,18 +429,12 @@ export class FastApi implements FastApiInterface {
     ctx: VeloceCtx
   ) {
     const { params, route } = ctx
-    const obj = this._dynamicRoutes.get(route)
-    if (obj) {
-      return convertStrToType(argNames, params)
+    if (this._dynamicRoutes.get(route)) {
+      return convertStrToType(argNames, argsList, params)
     }
-    // this could be wrong when it's a mix
-    if (isSpreadFn(argsList[0])) {
+    if (hasSpreadArg(argsList)) {
       debug(`Spread argument type`)
-      const _args: any[] = []
-      for (const key in params) {
-        _args.push(params[key])
-      }
-      return _args
+      return prepareSpreadArg(params)
     }
     // the normal key value pair
     return argNames.map(argName => params[argName])
