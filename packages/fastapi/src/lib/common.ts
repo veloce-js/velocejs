@@ -5,8 +5,10 @@
 // parse the file at TS stage to extract the Type info for Validation
 import type {
   UwsStringPairObj,
-  RouteMetaInfo,
 } from '@velocejs/server/index'
+import type {
+  RouteMetaInfo,
+} from '../types'
 import {
   SPREAD_ARG_TYPE,
   TS_TYPE_NAME,
@@ -51,7 +53,8 @@ Moving some of the smaller function out from the fastapi to reduce the complexit
 export function convertStrToType(
   argNames: Array<string>,
   argsList: Array<UwsStringPairObj>,
-  params: UwsStringPairObj) {
+  params: UwsStringPairObj
+) {
 
   return argNames.map((name: string, i: number) => {
     switch (argsList[i].type) {
@@ -65,13 +68,13 @@ export function convertStrToType(
   })
 }
 /** take the spread argument def if there is one */
-export function hasSpreadArg(argsList: RouteMetaInfo[]) {
+export function hasSpreadArg(argsList: UwsStringPairObj[]) {
   // you could only have one
   return argsList.filter(isSpreadFn)[0]
 }
 
 /** check if this handler is using a spread argument  */
-export function isSpreadFn(list: RouteMetaInfo) {
+export function isSpreadFn(list: UwsStringPairObj) {
   return (
     list && // spread argument?
     list[TS_TYPE_NAME] &&
@@ -79,7 +82,7 @@ export function isSpreadFn(list: RouteMetaInfo) {
   )
 }
 /** just a loop to take the value out from the params for spread fn */
-export function prepareSpreadArg(params: any) {
+export function prepareSpreadArg(params: UwsStringPairObj) {
   const args: any[] = []
   for (const key in params) {
     args.push(params[key])
@@ -88,14 +91,14 @@ export function prepareSpreadArg(params: any) {
 }
 
 /** check if the dynamic route parameter is valid or not, this throw to hail */
-export function assertDynamicRouteArgs(argsList: RouteMetaInfo[]) {
-  if (argsList.filter((arg: RouteMetaInfo) => {
+export function assertDynamicRouteArgs(argsList: UwsStringPairObj[]) {
+  if (argsList.filter((arg: UwsStringPairObj) => {
     let tk = 'type'
     if (isSpreadFn(arg)) {
       tk = 'types'
     }
     return !DYNAMIC_ROUTE_ALLOW_TYPES.includes(arg[tk])
   }).length) {
-    throw new Error(`We only support ${checkTypes.join(',')} in dynamic route handler`)
+    throw new Error(`We only support ${DYNAMIC_ROUTE_ALLOW_TYPES.join(',')} in dynamic route handler`)
   }
 }

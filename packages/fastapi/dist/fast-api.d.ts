@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import type { AppOptions, HttpResponse, HttpRequest, UwsRespondBody } from '@velocejs/server/index';
+import type { AppOptions, HttpResponse, HttpRequest, UwsRespondBody, UwsStringPairObj } from '@velocejs/server/index';
 import type { RouteMetaInfo } from './types';
 import { FastApiInterface } from './lib/fast-api-interface';
 export declare class FastApi implements FastApiInterface {
@@ -46,8 +46,6 @@ export declare class FastApi implements FastApiInterface {
     /** split out from above because we still need to handle the user provide middlewares */
     private _handleMiddlewares;
     private _handleValidationError;
-    /** wrap the _createValidator with additoinal property */
-    private _createValidator;
     /** @TODO handle protected route, also we need another library to destruct those pattern route */
     private _handleProtectedRoute;
     private _handleContent;
@@ -82,7 +80,7 @@ export declare class FastApi implements FastApiInterface {
     */
     /** Apart from serving the standard html, when using the json contract system
     this will get wrap inside the delivery format - next protobuf as well */
-    protected $json(content: any): void;
+    protected $json(content: UwsStringPairObj): void;
     /** just a string */
     protected $text(content: string | Buffer, type?: string): void;
     /** serving up the html content with correct html header */
@@ -92,7 +90,7 @@ export declare class FastApi implements FastApiInterface {
     /** streaming content */
     protected $stream(content: Buffer, type: string): void;
     /** @TODO for generate ssr content, should provide options via config but they could override here */
-    protected $ssr(data: any, options?: any): void;
+    protected $ssr(data: UwsStringPairObj, options?: UwsStringPairObj): void;
     /** @TODO SSG but this should only call when data been update and generate static files
     then it get serve up via the @ServeStatic TBC
     */

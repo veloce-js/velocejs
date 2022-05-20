@@ -4,7 +4,6 @@ exports.Aborted = exports.Websocket = exports.Head = exports.Patch = exports.Del
 const bodyparser_1 = require("@velocejs/bodyparser");
 const server_1 = require("@velocejs/server");
 const keys_1 = require("./keys");
-const server_2 = require("@velocejs/server");
 /** make sure the dynamic route only apply on GET route */
 const assertRoutePath = (type, path) => {
     if (type !== server_1.GET_ROUTE_NAME && bodyparser_1.UrlPattern.check(path)) {
@@ -83,7 +82,7 @@ exports.Del = routeDecoratorFactory('del');
 exports.Patch = routeDecoratorFactory('patch');
 exports.Head = routeDecoratorFactory('head');
 // Websocket - the s is lowercase to avoid the WebSocket type
-exports.Websocket = routeDecoratorFactory(server_2.WEBSOCKET_ROUTE_NAME);
+exports.Websocket = routeDecoratorFactory(server_1.WEBSOCKET_ROUTE_NAME);
 // TBC what these two for
 // export const CONNECT = routeDecoratorFactory('connect')
 // export const TRACE = routeDecoratorFactory('trace')

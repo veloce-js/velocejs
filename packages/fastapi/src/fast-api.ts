@@ -121,7 +121,7 @@ export class FastApi implements FastApiInterface {
   /** whether to setup a contract or not, if there is contract setup then we return a new route */
   private _prepareContract(
     apiType: string
-  ): (routes: Array<UwsRouteSetup>) => Promise<any> {
+  ): (routes: Array<UwsRouteSetup>) => Promise<UwsRouteSetup[]> {
 
     return async(routes: Array<UwsRouteSetup>) => {
 
@@ -208,7 +208,7 @@ export class FastApi implements FastApiInterface {
   /** TS script force it to make it looks so damn bad for all their non-sense rules */
   private _prepareNormalRoute(
     meta: RouteMetaInfo,
-    checkFn: (t: string, p: string, args: RouteMetaInfo[]) => string
+    checkFn: (t: string, p: string, args: UwsStringPairObj[]) => string
   ) {
     const { type, path, propertyName, args, validation, excluded } = meta
     const _route = checkFn(type, path, args)
@@ -232,7 +232,7 @@ export class FastApi implements FastApiInterface {
   /** just wrap this together to make it look neater */
   private _prepareRouteForContract(
     propertyName: string,
-    args: any[],
+    args: UwsStringPairObj[],
     type: string,
     path: string,
   ): void {
@@ -249,7 +249,11 @@ export class FastApi implements FastApiInterface {
   /** check if there is a dynamic route and prepare it */
   private _prepareDynamicRoute(tmpSet: WeakSet<object>) {
 
-    return (type: string, path: string, args: RouteMetaInfo[]): string => {
+    return (
+      type: string,
+      path: string,
+      args: UwsStringPairObj[]
+    ): string => {
       debug(`checkFn`, path)
       let route = '', upObj: any
       if (type === DEFAULT_CONTRACT_METHOD && UrlPattern.check(path)) {
@@ -262,7 +266,7 @@ export class FastApi implements FastApiInterface {
         throw new Error(`${route} already existed!`)
       }
       tmpSet.add({ route: route === '' ? path : route })
-      if (upObj) {
+      if (upObj !== undefined) {
         this._dynamicRoutes.set(route, upObj)
       }
       return route
@@ -303,7 +307,7 @@ export class FastApi implements FastApiInterface {
   /** take this out from above to keep related code in one place */
   private _prepareValidator(
     propertyName: string,
-    argsList: Array<any>,
+    argsList: Array<UwsStringPairObj>,
     validationInput: any, // this is the raw rules input by dev
   ) {
     const argNames = argsList.map(arg => arg.name)
@@ -401,7 +405,7 @@ export class FastApi implements FastApiInterface {
   }
   // break out from above to make the code cleaner
   private async _handleContent(
-    args: any[],
+    args: UwsStringPairObj[],
     handler: any, // Function
     type: string,
     propertyName: string
@@ -432,6 +436,7 @@ export class FastApi implements FastApiInterface {
     if (this._dynamicRoutes.get(route)) {
       return convertStrToType(argNames, argsList, params)
     }
+    debug(`hasSpreadArg argsList`, argsList)
     if (hasSpreadArg(argsList)) {
       debug(`Spread argument type`)
       return prepareSpreadArg(params)
@@ -558,7 +563,7 @@ export class FastApi implements FastApiInterface {
 
   /** Apart from serving the standard html, when using the json contract system
   this will get wrap inside the delivery format - next protobuf as well */
-  protected $json(content: any) {
+  protected $json(content: UwsStringPairObj) {
     if (this.res && !this._written) {
       return jsonWriter(this.res)(content)
     }
@@ -590,7 +595,7 @@ export class FastApi implements FastApiInterface {
   }
 
   /** @TODO for generate ssr content, should provide options via config but they could override here */
-  protected $ssr(data: any, options?: any) {
+  protected $ssr(data: UwsStringPairObj, options?: UwsStringPairObj) {
     debug('@TODO ssr method', data, options)
     throw new Error(`ssr is not implemented`)
   }
@@ -629,7 +634,7 @@ export class FastApi implements FastApiInterface {
           this._contract.output() :
           this._config.getConfig(`${CONTRACT_KEY}.${CACHE_DIR}`)
             .then((cacheDir: string) => this._contract.serve(cacheDir))
-    ).then((json: any) => {
+    ).then((json: UwsStringPairObj) => {
       debug('contract', json)
       this.$json(json)
     })

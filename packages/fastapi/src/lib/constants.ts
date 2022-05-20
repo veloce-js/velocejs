@@ -12,9 +12,6 @@ export const RULE_AUTOMATIC = 'rule-automatic'
 export const RULE_LIST = 'rule-list'
 export const RULE_SIMPLE = 'rule-simple'
 export const RULE_FULL = 'rule-full'
-
-export const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
-export const isDebug = process.env.DEBUG !== undefined
 // this is the method that we need to call in the Top Decorator
 export const METHOD_TO_RUN = '$prepare'
 
@@ -22,3 +19,6 @@ export const CONTRACT_METHOD_NAME = '_serveContract'
 
 export const DEFAULT_CONTRACT_METHOD = 'get'
 export const DYNAMIC_ROUTE_ALLOW_TYPES = ['number', 'string', 'boolean']
+// dynamic 
+export const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
+export const isDebug = process.env.DEBUG !== undefined

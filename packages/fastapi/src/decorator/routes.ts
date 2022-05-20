@@ -11,11 +11,11 @@ import {
   STATIC_ROUTE,
   GET_ROUTE_NAME,
   RAW_TYPE,
+  WEBSOCKET_ROUTE_NAME,
 } from '@velocejs/server'
 import { routeKey } from './keys'
 // import { extractArgs } from '../lib/extract'
 import { FastApiInterface } from '../lib/fast-api-interface'
-import { WEBSOCKET_ROUTE_NAME } from '@velocejs/server'
 
 /** make sure the dynamic route only apply on GET route */
 const assertRoutePath = (type: string, path: string) => {

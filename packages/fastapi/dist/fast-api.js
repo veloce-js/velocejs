@@ -10,6 +10,7 @@ const contract_1 = require("@jsonql/contract");
 const utils_1 = require("@jsonql/utils");
 // here
 const constants_2 = require("./lib/constants");
+const common_1 = require("./lib/common");
 const validator_1 = require("./lib/validator");
 // setup
 const debug_1 = tslib_1.__importDefault(require("debug"));
@@ -126,7 +127,7 @@ class FastApi {
     /** TS script force it to make it looks so damn bad for all their non-sense rules */
     _prepareNormalRoute(meta, checkFn) {
         const { type, path, propertyName, args, validation, excluded } = meta;
-        const _route = checkFn(type, path);
+        const _route = checkFn(type, path, args);
         // also add this to the route that can create contract - if we need it
         const _path = _route !== '' ? _route : path;
         if (!excluded) {
@@ -151,9 +152,12 @@ class FastApi {
     }
     /** check if there is a dynamic route and prepare it */
     _prepareDynamicRoute(tmpSet) {
-        return (type, path) => {
+        return (type, path, args) => {
+            debug(`checkFn`, path);
             let route = '', upObj;
             if (type === constants_2.DEFAULT_CONTRACT_METHOD && bodyparser_1.UrlPattern.check(path)) {
+                // now we need to check if the types are supported
+                (0, common_1.assertDynamicRouteArgs)(args);
                 upObj = new bodyparser_1.UrlPattern(path);
                 route = upObj.route;
             }
@@ -161,7 +165,7 @@ class FastApi {
                 throw new Error(`${route} already existed!`);
             }
             tmpSet.add({ route: route === '' ? path : route });
-            if (upObj) {
+            if (upObj !== undefined) {
                 this._dynamicRoutes.set(route, upObj);
             }
             return route;
@@ -192,9 +196,9 @@ class FastApi {
     /** take this out from above to keep related code in one place */
     _prepareValidator(propertyName, argsList, validationInput) {
         const argNames = argsList.map(arg => arg.name);
-        const validateFn = this._createValidator(propertyName, argsList, validationInput);
+        const validateFn = (0, validator_1.createValidator)(propertyName, argsList, validationInput, this.validatorPlugins);
         return async (ctx) => {
-            const args = this._applyArgs(argNames, ctx.params, argsList);
+            const args = this._applyArgs(argNames, argsList, ctx);
             debug('args before validateFn -->', args);
             return validateFn(args)
                 .then((validatedResult) => {
@@ -207,14 +211,14 @@ class FastApi {
     /** get call after the bodyParser, and prepare for the operation */
     _prepareCtx(propertyName, res, route) {
         return async (result) => {
-            const ctx = (0, utils_1.assign)(result, { propertyName });
+            const ctx = (0, utils_1.assign)(result, { propertyName, route });
             // 0.3.0 handle dynamic route
             if (route) {
                 const obj = this._dynamicRoutes.get(route);
                 // the data extracted will become the argument
                 const urlParams = obj.parse(ctx.url);
-                ctx.params = urlParams === null ? {} : urlParams;
                 // @TODO we need to process the params as well
+                ctx.params = urlParams === null ? {} : urlParams;
             }
             this._setTemp(ctx, res);
             debug('ctx', ctx);
@@ -260,12 +264,6 @@ class FastApi {
             return (0, server_1.jsonWriter)(this.res)(payload, this._validationErrStatus);
         }
     }
-    /** wrap the _createValidator with additoinal property */
-    _createValidator(propertyName, argsList, // @TODO fix type
-    validationInput // @TODO fix type
-    ) {
-        return (0, validator_1.createValidator)(propertyName, argsList, validationInput, this.validatorPlugins);
-    }
     /** @TODO handle protected route, also we need another library to destruct those pattern route */
     _handleProtectedRoute(propertyName) {
         // need to check out the route info
@@ -295,16 +293,16 @@ class FastApi {
         }
     }
     // take the argument list and the input to create the correct arguments
-    _applyArgs(argNames, params, argsList) {
-        // spread argument
-        if (argsList[0] &&
-            argsList[0][constants_1.TS_TYPE_NAME] &&
-            argsList[0][constants_1.TS_TYPE_NAME] === constants_1.SPREAD_ARG_TYPE) {
-            const _args = [];
-            for (const key in params) {
-                _args.push(params[key]);
-            }
-            return _args;
+    // @TODO check if this is the dynamic route and we need to convert the data
+    _applyArgs(argNames, argsList, ctx) {
+        const { params, route } = ctx;
+        if (this._dynamicRoutes.get(route)) {
+            return (0, common_1.convertStrToType)(argNames, argsList, params);
+        }
+        debug(`hasSpreadArg argsList`, argsList);
+        if ((0, common_1.hasSpreadArg)(argsList)) {
+            debug(`Spread argument type`);
+            return (0, common_1.prepareSpreadArg)(params);
         }
         // the normal key value pair
         return argNames.map(argName => params[argName]);
