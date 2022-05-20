@@ -3,7 +3,8 @@ export declare class UrlPattern {
     private _libObj;
     private _originalUrl;
     private _transformUrl;
-    constructor(basePattern: string);
+    names: string[];
+    constructor(basePatternUrl: string);
     get route(): string;
     get orginal(): string;
     private _validate;
@@ -13,4 +14,6 @@ export declare class UrlPattern {
     parse(url: string): any;
     /** construct a url */
     create(params: UwsStringPairObj): string;
+    /** this is not great solution but ... */
+    private _getNames;
 }
