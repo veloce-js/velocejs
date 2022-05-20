@@ -154,7 +154,7 @@ class FastApi {
     _prepareDynamicRoute(tmpSet) {
         return (type, path, args) => {
             debug(`checkFn`, path);
-            let route = '', upObj;
+            let route = '', upObj = null;
             if (type === constants_2.DEFAULT_CONTRACT_METHOD && bodyparser_1.UrlPattern.check(path)) {
                 // now we need to check if the types are supported
                 (0, common_1.assertDynamicRouteArgs)(args);
@@ -165,7 +165,7 @@ class FastApi {
                 throw new Error(`${route} already existed!`);
             }
             tmpSet.add({ route: route === '' ? path : route });
-            if (upObj !== undefined) {
+            if (upObj !== null) {
                 this._dynamicRoutes.set(route, upObj);
             }
             return route;
@@ -219,6 +219,8 @@ class FastApi {
                 const urlParams = obj.parse(ctx.url);
                 // @TODO we need to process the params as well
                 ctx.params = urlParams === null ? {} : urlParams;
+                // we need to add the names in order into the ctx
+                ctx.paramNames = obj.names;
             }
             this._setTemp(ctx, res);
             debug('ctx', ctx);
@@ -295,17 +297,21 @@ class FastApi {
     // take the argument list and the input to create the correct arguments
     // @TODO check if this is the dynamic route and we need to convert the data
     _applyArgs(argNames, argsList, ctx) {
-        const { params, route } = ctx;
-        if (this._dynamicRoutes.get(route)) {
-            return (0, common_1.convertStrToType)(argNames, argsList, params);
+        const { params, route, paramNames } = ctx;
+        const isDynamic = (0, common_1.notUndef)(this._dynamicRoutes.get(route));
+        const isSpread = (0, common_1.notUndef)((0, common_1.hasSpreadArg)(argsList));
+        // debug('_applyArgs', argNames, argsList, ctx)
+        switch (true) {
+            case isDynamic && isSpread:
+                debug('-------------------- BOTH ------------------');
+                return (0, common_1.prepareArgsFromDynamicToSpread)(argNames, argsList, params, paramNames);
+            case isDynamic && !isSpread:
+                return (0, common_1.convertStrToType)(argNames, argsList, params);
+            case !isDynamic && isSpread:
+                return (0, common_1.prepareSpreadArg)(params);
+            default:
+                return argNames.map(argName => params[argName]);
         }
-        debug(`hasSpreadArg argsList`, argsList);
-        if ((0, common_1.hasSpreadArg)(argsList)) {
-            debug(`Spread argument type`);
-            return (0, common_1.prepareSpreadArg)(params);
-        }
-        // the normal key value pair
-        return argNames.map(argName => params[argName]);
     }
     // When we call the user provided method, we will pass them the payload.params pass instead of
     // the whole payload, and we keep them in a temporary place, and destroy it once the call is over

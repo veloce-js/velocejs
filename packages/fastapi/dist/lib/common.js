@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.assertDynamicRouteArgs = exports.prepareSpreadArg = exports.isSpreadFn = exports.hasSpreadArg = exports.convertStrToType = exports.prepareArgs = exports.extractArgs = void 0;
+exports.notUndef = exports.prepareArgsFromDynamicToSpread = exports.assertDynamicRouteArgs = exports.prepareSpreadArg = exports.isSpreadFn = exports.hasSpreadArg = exports.convertStrToTypeAction = exports.convertStrToType = exports.prepareArgs = exports.extractArgs = void 0;
 const tslib_1 = require("tslib");
 const constants_1 = require("@jsonql/constants");
 const constants_2 = require("./constants");
@@ -31,17 +31,22 @@ Moving some of the smaller function out from the fastapi to reduce the complexit
 /** convert the string from url to the right type for dynamic route */
 function convertStrToType(argNames, argsList, params) {
     return argNames.map((name, i) => {
-        switch (argsList[i].type) {
-            case 'number':
-                return (0, utils_1.strToNum)(params[name]);
-            case 'boolean':
-                return (0, utils_1.strToBool)(params[name]);
-            default:
-                return params[name];
-        }
+        return convertStrToTypeAction(argsList[i].type, params[name]);
     });
 }
 exports.convertStrToType = convertStrToType;
+/** The actual method to convert the string to their type */
+function convertStrToTypeAction(type, value) {
+    switch (type) {
+        case 'number':
+            return (0, utils_1.strToNum)(value);
+        case 'boolean':
+            return (0, utils_1.strToBool)(value);
+        default:
+            return value;
+    }
+}
+exports.convertStrToTypeAction = convertStrToTypeAction;
 /** take the spread argument def if there is one */
 function hasSpreadArg(argsList) {
     // you could only have one
@@ -50,6 +55,7 @@ function hasSpreadArg(argsList) {
 exports.hasSpreadArg = hasSpreadArg;
 /** check if this handler is using a spread argument  */
 function isSpreadFn(list) {
+    // debug('list isSpreadFn', list)
     return (list && // spread argument?
         list[constants_1.TS_TYPE_NAME] &&
         list[constants_1.TS_TYPE_NAME] === constants_1.SPREAD_ARG_TYPE);
@@ -67,13 +73,36 @@ exports.prepareSpreadArg = prepareSpreadArg;
 /** check if the dynamic route parameter is valid or not, this throw to hail */
 function assertDynamicRouteArgs(argsList) {
     if (argsList.filter((arg) => {
-        let tk = 'type';
-        if (isSpreadFn(arg)) {
-            tk = 'types';
-        }
+        const tk = isSpreadFn(arg) ? 'types' : 'type';
         return !constants_2.DYNAMIC_ROUTE_ALLOW_TYPES.includes(arg[tk]);
     }).length) {
         throw new Error(`We only support ${constants_2.DYNAMIC_ROUTE_ALLOW_TYPES.join(',')} in dynamic route handler`);
     }
 }
 exports.assertDynamicRouteArgs = assertDynamicRouteArgs;
+/** this is a mouthful! */
+function prepareArgsFromDynamicToSpread(argNames, argsList, params, paramNames) {
+    debug('names', paramNames, params);
+    const processedNames = [];
+    const result = argsList.map((list, i) => {
+        if (isSpreadFn(list)) {
+            const tmp = [];
+            paramNames.forEach((name) => {
+                if (!processedNames.includes(name)) {
+                    // @TODO there is one problem the object is not in order!
+                    tmp.push(convertStrToTypeAction(list.types, params[name]));
+                }
+            });
+            return tmp;
+        }
+        else {
+            const name = argNames[i];
+            processedNames.push(name);
+            return params[name];
+        }
+    });
+    return (0, utils_1.flatMap)(result);
+}
+exports.prepareArgsFromDynamicToSpread = prepareArgsFromDynamicToSpread;
+const notUndef = (value) => value !== undefined;
+exports.notUndef = notUndef;
