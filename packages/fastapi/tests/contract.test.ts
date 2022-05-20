@@ -40,7 +40,7 @@ test(`Testing API with config and contract plus excluded`, t => {
   t.true(!!_contract.filter((data: any) => data.method === 'ws').length)
 })
 
-test(`Testing the dynamic route with spread parameter`, async t => {
+test.only(`Testing the dynamic route with spread parameter`, async t => {
   t.plan(1)
 
   const res = await Fetch(`${url}/archive/2022/5/16`)

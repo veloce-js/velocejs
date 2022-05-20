@@ -64,6 +64,8 @@ import {
   hasSpreadArg,
   prepareSpreadArg,
   assertDynamicRouteArgs,
+  notUndef,
+  prepareArgsFromDynamicToSpread,
 } from './lib/common'
 import {
   createValidator
@@ -255,7 +257,7 @@ export class FastApi implements FastApiInterface {
       args: UwsStringPairObj[]
     ): string => {
       debug(`checkFn`, path)
-      let route = '', upObj: any
+      let route = '', upObj: UrlPattern | null = null
       if (type === DEFAULT_CONTRACT_METHOD && UrlPattern.check(path)) {
         // now we need to check if the types are supported
         assertDynamicRouteArgs(args)
@@ -266,7 +268,7 @@ export class FastApi implements FastApiInterface {
         throw new Error(`${route} already existed!`)
       }
       tmpSet.add({ route: route === '' ? path : route })
-      if (upObj !== undefined) {
+      if (upObj !== null) {
         this._dynamicRoutes.set(route, upObj)
       }
       return route
@@ -276,7 +278,7 @@ export class FastApi implements FastApiInterface {
   // transform the string name to actual method
   private _mapMethodToHandler(
     propertyName: string,
-    argsList: Array<any>,
+    argsList: Array<UwsStringPairObj>,
     validationInput: any, // this is the rules provide via Decorator
     route?: string
     // onAbortedHandler?: string // take out
@@ -433,16 +435,20 @@ export class FastApi implements FastApiInterface {
     ctx: VeloceCtx
   ) {
     const { params, route } = ctx
-    if (this._dynamicRoutes.get(route)) {
-      return convertStrToType(argNames, argsList, params)
+    const isDynamic = notUndef(this._dynamicRoutes.get(route))
+    const isSpread = notUndef(hasSpreadArg(argsList))
+    // debug('_applyArgs', argNames, argsList, ctx)
+    switch (true) {
+      case isDynamic && isSpread:
+        debug('-------------------- BOTH ------------------')
+        return prepareArgsFromDynamicToSpread(argNames, argsList, params)
+      case isDynamic && !isSpread:
+        return convertStrToType(argNames, argsList, params)
+      case !isDynamic && isSpread:
+        return prepareSpreadArg(params)
+      default:
+        return argNames.map(argName => params[argName])
     }
-    debug(`hasSpreadArg argsList`, argsList)
-    if (hasSpreadArg(argsList)) {
-      debug(`Spread argument type`)
-      return prepareSpreadArg(params)
-    }
-    // the normal key value pair
-    return argNames.map(argName => params[argName])
   }
 
   // When we call the user provided method, we will pass them the payload.params pass instead of

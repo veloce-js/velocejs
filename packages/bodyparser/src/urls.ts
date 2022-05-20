@@ -2,16 +2,18 @@
 import UrlPatternLib from 'url-pattern'
 import { isDynamicRoute } from './utils'
 import { UwsStringPairObj } from '../index'
+import { DYNAMIC_ROUTE_PATTERN } from './constants'
 
 export class UrlPattern {
   private _libObj: UrlPatternLib
   private _originalUrl!: string
   private _transformUrl!: string
-  // private _urls: string[] = []
+  // we need this when we encounter spread argument method handler
+  public names: string[] = []
 
-  constructor(basePattern: string) {
+  constructor(basePatternUrl: string) {
     this._libObj = new UrlPatternLib(
-      this._validate(basePattern)
+      this._validate(basePatternUrl)
     )
     // also we need to use this to create a base url
     // for example the url is like /posts/:day/:month/:year/:slug
@@ -35,13 +37,14 @@ export class UrlPattern {
     }
     this._originalUrl = '/' + url
     this._transformUrl = '/' + parts[0] + '/*'
+    this._getNames(url)
 
     return this._originalUrl
   }
 
   /** super simple check */
-  static check(url: string) {
-    // now just a wrapper 
+  static check(url: string): boolean {
+    // now just a wrapper
     return isDynamicRoute(url)
   }
 
@@ -51,8 +54,17 @@ export class UrlPattern {
   }
 
   /** construct a url */
-  create(params: UwsStringPairObj) {
+  create(params: UwsStringPairObj): string {
     return this._libObj.stringify(params)
+  }
+
+  /** this is not great solution but ... */
+  private _getNames(url: string): void {
+    const parts = url.split(DYNAMIC_ROUTE_PATTERN)
+    parts.shift()
+    this.names = parts.map((part: string) =>
+      part.replace('(','').replace(')','')
+    )
   }
 
 }

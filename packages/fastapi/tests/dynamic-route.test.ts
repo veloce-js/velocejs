@@ -28,7 +28,7 @@ test(`Just test a normal url /news/* first`, async t => {
           })
 })
 
-test.only(`Should able to use dynamic route on GET route with correct type on method`, async t => {
+test(`Should able to use dynamic route on GET route with correct type on method`, async t => {
   t.plan(1)
   const _url = `${url}/posts/2022/5/7`
   // console.log('calling', _url)
@@ -40,7 +40,6 @@ test.only(`Should able to use dynamic route on GET route with correct type on me
             })
 })
 
-test.todo(`Should able to use dynamic route on GET route with spread arguments`)
 
 /*
 // t.throws or t.throwsAsync not able to contain the error within and cause the test fail

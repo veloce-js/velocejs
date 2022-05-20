@@ -41,7 +41,7 @@ function splitMethod(fnStr: string): Array<string> {
 }
 
 /** The validate result now comes in an object, we need to turn into array for apply */
-export function prepareArgs(argList: string[], result: {[key: string]: any}) {
+export function prepareArgs(argList: string[], result: UwsStringPairObj) {
   return argList.map(name => result[name])
 }
 
@@ -57,16 +57,18 @@ export function convertStrToType(
 ) {
 
   return argNames.map((name: string, i: number) => {
+    const value = params[name]
     switch (argsList[i].type) {
       case 'number':
-        return strToNum(params[name])
+        return strToNum(value)
       case 'boolean':
-        return strToBool(params[name])
+        return strToBool(value)
       default:
-        return params[name]
+        return value
     }
   })
 }
+
 /** take the spread argument def if there is one */
 export function hasSpreadArg(argsList: UwsStringPairObj[]) {
   // you could only have one
@@ -75,6 +77,7 @@ export function hasSpreadArg(argsList: UwsStringPairObj[]) {
 
 /** check if this handler is using a spread argument  */
 export function isSpreadFn(list: UwsStringPairObj) {
+  // debug('list isSpreadFn', list)
   return (
     list && // spread argument?
     list[TS_TYPE_NAME] &&
@@ -93,12 +96,39 @@ export function prepareSpreadArg(params: UwsStringPairObj) {
 /** check if the dynamic route parameter is valid or not, this throw to hail */
 export function assertDynamicRouteArgs(argsList: UwsStringPairObj[]) {
   if (argsList.filter((arg: UwsStringPairObj) => {
-    let tk = 'type'
-    if (isSpreadFn(arg)) {
-      tk = 'types'
-    }
+    const tk = isSpreadFn(arg) ? 'types' : 'type'
+
     return !DYNAMIC_ROUTE_ALLOW_TYPES.includes(arg[tk])
   }).length) {
     throw new Error(`We only support ${DYNAMIC_ROUTE_ALLOW_TYPES.join(',')} in dynamic route handler`)
   }
 }
+/** this is a mouthful! */
+export function prepareArgsFromDynamicToSpread(
+  argNames: Array<string>,
+  argsList: Array<UwsStringPairObj>,
+  params: UwsStringPairObj
+) {
+
+  debug(argNames)
+  debug(argsList)
+  debug(params)
+  const processedNames: string[] = []
+  const result = argList.map((list: UwsStringPairObj, i: number) => {
+    if (isSpreadFn(list)) {
+      const type = list.types
+      for (const key in params) {
+        if (!processedNames.includes(key)) {
+          // @TODO there is one problem the object is not in order!
+          
+        }
+      }
+    } else {
+      const name = argNames[i]
+      return params[name]
+    }
+  })
+}
+
+
+export const notUndef = (value: any) => value !== undefined
