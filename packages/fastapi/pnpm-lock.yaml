@@ -6,17 +6,17 @@ specifiers:
   '@jsonql/constants': ^0.7.2
   '@jsonql/contract': ^0.5.0
   '@jsonql/errors': ^0.6.1
-  '@jsonql/utils': ^0.6.8
+  '@jsonql/utils': ^0.6.9
   '@jsonql/validator': ^0.5.0
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
-  '@types/node': ^17.0.34
+  '@types/node': ^17.0.35
   '@types/ws': ^8.5.3
   '@typescript-eslint/eslint-plugin': ^5.25.0
   '@typescript-eslint/parser': ^5.25.0
-  '@velocejs/bodyparser': workspace:^0.4.0
-  '@velocejs/config': workspace:^0.4.0
-  '@velocejs/server': workspace:^0.8.2
+  '@velocejs/bodyparser': workspace:^0.4.2
+  '@velocejs/config': workspace:^0.4.1
+  '@velocejs/server': workspace:^0.8.4
   ava: ^4.2.0
   debug: ^4.3.4
   esbuild: ^0.14.39
@@ -39,7 +39,7 @@ dependencies:
   '@jsonql/constants': 0.7.2
   '@jsonql/contract': 0.5.0
   '@jsonql/errors': 0.6.1
-  '@jsonql/utils': 0.6.8
+  '@jsonql/utils': 0.6.9
   '@jsonql/validator': 0.5.0
   '@velocejs/bodyparser': link:../bodyparser
   '@velocejs/config': link:../config
@@ -53,7 +53,7 @@ devDependencies:
   '@ava/typescript': 3.0.1
   '@types/debug': 4.1.7
   '@types/fs-extra': 9.0.13
-  '@types/node': 17.0.34
+  '@types/node': 17.0.35
   '@types/ws': 8.5.3
   '@typescript-eslint/eslint-plugin': 5.25.0_qo2hgs5jt7x2a3p77h2rutcdae
   '@typescript-eslint/parser': 5.25.0_hcfsmds2fshutdssjqluwm76uu
@@ -66,7 +66,7 @@ devDependencies:
   open: 8.4.0
   rimraf: 3.0.2
   swc-node: 1.0.0_typescript@4.6.4
-  ts-node: 10.7.0_3smuweqyuzdazdnyhhezld6mfa
+  ts-node: 10.7.0_ihi2kx3po6rqbrzdqgpcfvwinm
   typescript: 4.6.4
   ws: 8.6.0
 
@@ -369,7 +369,7 @@ packages:
       '@jsonql/ast': 0.8.4
       '@jsonql/constants': 0.7.2
       '@jsonql/errors': 0.6.1
-      '@jsonql/utils': 0.6.8
+      '@jsonql/utils': 0.6.9
       debug: 4.3.4
       fs-extra: 10.1.0
       tslib: 2.4.0
@@ -383,8 +383,8 @@ packages:
       '@jsonql/constants': 0.7.2
     dev: false
 
-  /@jsonql/utils/0.6.8:
-    resolution: {integrity: sha512-Suush0Rl8sXn003ne4ldPx7imV9v/C6zKw3N1bbeFkSeq0PZU6YagNCxL7+bRKbMn3fBomYV7jApbCnDWEsW7w==}
+  /@jsonql/utils/0.6.9:
+    resolution: {integrity: sha512-bfPxNN+8vmV3HGAoe9zVWTb6NVvuDHbnTDIyxJHrFNmhxEoQVLoISFX/4jm1eeegQcDg2IGYDAjUKOp03uzGsg==}
     dependencies:
       '@jsonql/constants': 0.7.2
       '@jsonql/errors': 0.6.1
@@ -396,7 +396,7 @@ packages:
     dependencies:
       '@jsonql/constants': 0.7.2
       '@jsonql/errors': 0.6.1
-      '@jsonql/utils': 0.6.8
+      '@jsonql/utils': 0.6.9
     dev: false
 
   /@jsonql/validator/0.5.0:
@@ -405,7 +405,7 @@ packages:
       '@jsonql/ast': 0.8.4
       '@jsonql/constants': 0.7.2
       '@jsonql/errors': 0.6.1
-      '@jsonql/utils': 0.6.8
+      '@jsonql/utils': 0.6.9
       '@jsonql/validator-core': 0.7.2
       debug: 4.3.4
       reflect-metadata: 0.1.13
@@ -625,7 +625,7 @@ packages:
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
     dependencies:
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
     dev: true
 
   /@types/json-schema/7.0.11:
@@ -636,14 +636,14 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
-  /@types/node/17.0.34:
-    resolution: {integrity: sha512-XImEz7XwTvDBtzlTnm8YvMqGW/ErMWBsKZ+hMTvnDIjGCKxwK5Xpc+c/oQjOauwq8M4OS11hEkpjX8rrI/eEgA==}
+  /@types/node/17.0.35:
+    resolution: {integrity: sha512-vu1SrqBjbbZ3J6vwY17jBs8Sr/BKA+/a/WtjRG+whKg1iuLFOosq872EXS0eXWILdO36DHQQeku/ZcL6hz2fpg==}
     dev: true
 
   /@types/ws/8.5.3:
     resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
     dependencies:
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
     dev: true
 
   /@typescript-eslint/eslint-plugin/5.25.0_qo2hgs5jt7x2a3p77h2rutcdae:
@@ -2950,7 +2950,7 @@ packages:
       is-number: 7.0.0
     dev: true
 
-  /ts-node/10.7.0_3smuweqyuzdazdnyhhezld6mfa:
+  /ts-node/10.7.0_ihi2kx3po6rqbrzdqgpcfvwinm:
     resolution: {integrity: sha512-TbIGS4xgJoX2i3do417KSaep1uRAW/Lu+WAL2doDHC0D6ummjirVOXU5/7aiZotbQ5p1Zp9tP7U6cYhA0O7M8A==}
     hasBin: true
     peerDependencies:
@@ -2969,7 +2969,7 @@ packages:
       '@tsconfig/node12': 1.0.9
       '@tsconfig/node14': 1.0.1
       '@tsconfig/node16': 1.0.2
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
       acorn: 8.7.0
       acorn-walk: 8.2.0
       arg: 4.1.3

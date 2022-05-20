@@ -57,16 +57,24 @@ export function convertStrToType(
 ) {
 
   return argNames.map((name: string, i: number) => {
-    const value = params[name]
-    switch (argsList[i].type) {
-      case 'number':
-        return strToNum(value)
-      case 'boolean':
-        return strToBool(value)
-      default:
-        return value
-    }
+
+    return convertStrToTypeAction(argsList[i].type, params[name])
   })
+}
+
+/** The actual method to convert the string to their type */
+export function convertStrToTypeAction(
+  type: string,
+  value: string
+) {
+  switch (type) {
+    case 'number':
+      return strToNum(value)
+    case 'boolean':
+      return strToBool(value)
+    default:
+      return value
+  }
 }
 
 /** take the spread argument def if there is one */
@@ -107,27 +115,26 @@ export function assertDynamicRouteArgs(argsList: UwsStringPairObj[]) {
 export function prepareArgsFromDynamicToSpread(
   argNames: Array<string>,
   argsList: Array<UwsStringPairObj>,
-  params: UwsStringPairObj
+  params: UwsStringPairObj,
+  // names: string[]
 ) {
-
-  debug(argNames)
-  debug(argsList)
-  debug(params)
   const processedNames: string[] = []
   const result = argList.map((list: UwsStringPairObj, i: number) => {
     if (isSpreadFn(list)) {
-      const type = list.types
       for (const key in params) {
         if (!processedNames.includes(key)) {
           // @TODO there is one problem the object is not in order!
-          
+          return convertStrToTypeAction(list.types, params[key])
         }
       }
     } else {
       const name = argNames[i]
+      processedNames.push(name)
       return params[name]
     }
   })
+  
+
 }
 
 
