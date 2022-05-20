@@ -6,9 +6,6 @@
 import type {
   UwsStringPairObj,
 } from '@velocejs/server/index'
-import type {
-  RouteMetaInfo,
-} from '../types'
 import {
   SPREAD_ARG_TYPE,
   TS_TYPE_NAME,
@@ -19,6 +16,7 @@ import {
 import {
   strToNum,
   strToBool,
+  flatMap,
 } from '@jsonql/utils'
 
 import debugFn from 'debug'
@@ -116,25 +114,29 @@ export function prepareArgsFromDynamicToSpread(
   argNames: Array<string>,
   argsList: Array<UwsStringPairObj>,
   params: UwsStringPairObj,
-  // names: string[]
+  paramNames: string[]
 ) {
+  debug('names', paramNames, params)
   const processedNames: string[] = []
-  const result = argList.map((list: UwsStringPairObj, i: number) => {
+  const result = argsList.map((list: UwsStringPairObj, i: number) => {
     if (isSpreadFn(list)) {
-      for (const key in params) {
-        if (!processedNames.includes(key)) {
+      const tmp: any[] = []
+      paramNames.forEach((name: string) => {
+        if (!processedNames.includes(name)) {
+
           // @TODO there is one problem the object is not in order!
-          return convertStrToTypeAction(list.types, params[key])
+          tmp.push(convertStrToTypeAction(list.types, params[name]))
         }
-      }
+      })
+      return tmp
     } else {
       const name = argNames[i]
       processedNames.push(name)
       return params[name]
     }
   })
-  
 
+  return flatMap(result)
 }
 
 

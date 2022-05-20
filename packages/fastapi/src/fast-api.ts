@@ -347,6 +347,8 @@ export class FastApi implements FastApiInterface {
         const urlParams = obj.parse(ctx.url)
         // @TODO we need to process the params as well
         ctx.params = urlParams === null ? {} : urlParams
+        // we need to add the names in order into the ctx
+        ctx.paramNames = obj.names
       }
       this._setTemp(ctx, res)
       debug('ctx', ctx)
@@ -434,14 +436,14 @@ export class FastApi implements FastApiInterface {
     argsList: Array<UwsStringPairObj>,
     ctx: VeloceCtx
   ) {
-    const { params, route } = ctx
+    const { params, route, paramNames } = ctx
     const isDynamic = notUndef(this._dynamicRoutes.get(route))
     const isSpread = notUndef(hasSpreadArg(argsList))
     // debug('_applyArgs', argNames, argsList, ctx)
     switch (true) {
       case isDynamic && isSpread:
         debug('-------------------- BOTH ------------------')
-        return prepareArgsFromDynamicToSpread(argNames, argsList, params)
+        return prepareArgsFromDynamicToSpread(argNames, argsList, params, paramNames)
       case isDynamic && !isSpread:
         return convertStrToType(argNames, argsList, params)
       case !isDynamic && isSpread:
