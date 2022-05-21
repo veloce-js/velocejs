@@ -4,7 +4,8 @@ import type {
   HttpRequest,
   UwsRespondBody,
   UwsStringPairObj,
-  UwsBodyParserMixEntry
+  UwsBodyParserMixEntry,
+  UwsBodyParserOptions
 } from '../index'
 import {
   CONTENT_TYPE,
@@ -41,7 +42,7 @@ const debugFn = debug('velocejs:body-parser:main')
 export async function bodyParser(
   res: HttpResponse,
   req: HttpRequest,
-  options?: { config: UwsStringPairObj, onAborted?: () => void }
+  options?: { config: UwsBodyParserOptions, onAborted?: () => void }
 ): Promise<UwsRespondBody> {
   // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
   res.onAborted(() => {

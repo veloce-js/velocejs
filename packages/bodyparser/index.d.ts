@@ -75,3 +75,10 @@ export type UwsBodyParserFileEntry = {
 export type UwsBodyParserMixEntry = {
   [key: string]: string | Buffer | UwsBodyParserFileEntry
 }
+
+export type UwsBodyParserOptions = {
+  stripUnderscoreParam: boolean
+  originalRouteDef?: string
+  onAborted?: () => void
+  [key: string]: any
+}

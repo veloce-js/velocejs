@@ -1,6 +1,7 @@
 import {
   HttpRequest,
-  UwsStringPairObj
+  UwsStringPairObj,
+  UwsBodyParserOptions,
 } from './types'
 import {
   CONTENT_TYPE,
@@ -11,7 +12,7 @@ import {
 } from './constants'
 
 /** provide default to options */
-export function applyConfig(config?: UwsStringPairObj) {
+export function applyConfig(config?: UwsBodyParserOptions) {
   return Object.assign(DEFAULT_CONFIG, config || {})
 }
 

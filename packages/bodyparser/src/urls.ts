@@ -1,7 +1,7 @@
 // using the url-pattern lib to match against the dynamic url
+import type { UwsStringPairObj } from '../index'
 import UrlPatternLib from 'url-pattern'
 import { isDynamicRoute } from './utils'
-import { UwsStringPairObj } from '../index'
 import { DYNAMIC_ROUTE_PATTERN } from './constants'
 
 export class UrlPattern {
@@ -66,5 +66,4 @@ export class UrlPattern {
       part.replace('(','').replace(')','')
     )
   }
-
 }

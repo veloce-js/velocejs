@@ -14,10 +14,10 @@ app.autoStart = false
 app.run([
   {
     type: 'get',
-    path: '/some-path/:id/(/:optional)', // here is the problem
+    path: '/some-path/*', // here is the problem
     handler: async (res: HttpResponse, req: HttpRequest) => {
       const result = await bodyParser(res, req)
-      // console.log(`got called`, result)
+      console.log(`got called`, result)
       const { params } = result
       // we only return the result.params
       jsonWriter(res)(params)
@@ -28,7 +28,7 @@ app.run([
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
       const result = await bodyParser(res, req)
-      // console.log(`got called`, result)
+      console.log(`got called here --->`, result)
       const { params } = result
       // we only return the result.params
       jsonWriter(res)(params)
