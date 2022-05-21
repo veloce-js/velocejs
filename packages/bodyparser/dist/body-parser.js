@@ -8,6 +8,7 @@ const handle_upload_1 = require("./handle-upload");
 const parse_multipart_1 = require("./parse-multipart");
 const constants_1 = require("./constants");
 const utils_1 = require("./utils");
+const parse_query_1 = require("./parse-query");
 // debug
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)('velocejs:body-parser:main');
@@ -23,13 +24,16 @@ function bodyParser(res, req, onAborted) {
         const headers = (0, utils_1.getHeaders)(req);
         const url = req.getUrl();
         const query = req.getQuery();
-        const params = (0, utils_1.parseQuery)(query);
+        const params = (0, parse_query_1.parseQuery)(query);
         const method = req.getMethod();
         // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
         // and we need to extract the params from the url and pass back as the ctx object
-        // package it up
         const body = { url, method, query, headers, params };
-        // we should only call this when the header is not GET?
+        if (method === constants_1.GET_NAME) {
+            body.type = constants_1.IS_OTHER;
+            return Promise.resolve(body);
+        }
+        // we should only call this when the header is not GET - there is nobody to process
         return new Promise(resolver => {
             (0, handle_upload_1.onDataHandler)(res, buffer => {
                 body.payload = buffer;
@@ -40,7 +44,7 @@ function bodyParser(res, req, onAborted) {
                         break;
                     case (0, utils_1.isForm)(headers):
                         body.type = constants_1.IS_FORM;
-                        body.params = (0, utils_1.parseQuery)(buffer.toString());
+                        body.params = (0, parse_query_1.parseQuery)(buffer.toString());
                         break;
                     case (0, utils_1.isFile)(headers):
                         body.type = constants_1.IS_MULTI;

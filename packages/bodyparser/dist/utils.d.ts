@@ -10,4 +10,3 @@ export declare const isForm: (headers: UwsStringPairObj) => boolean;
 export declare const isFile: (headers: UwsStringPairObj) => boolean;
 /** just check if the url looks like a dynamic route */
 export declare const isDynamicRoute: (route: string) => boolean;
-export declare function parseQuery(query: string): UwsStringPairObj;

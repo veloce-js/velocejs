@@ -56,14 +56,3 @@ export const isFile = (headers: UwsStringPairObj): boolean => (
 
 /** just check if the url looks like a dynamic route */
 export const isDynamicRoute = (route: string) => route.indexOf(DYNAMIC_ROUTE_PATTERN) > -1
-
-// the actual function to take the query apart
-export function parseQuery(query: string): UwsStringPairObj {
-  const params = new URLSearchParams(query)
-  const result = {}
-  for (const pair of params.entries()) {
-   result[ pair[0] ] = pair[1]
-  }
-
-  return result
-}

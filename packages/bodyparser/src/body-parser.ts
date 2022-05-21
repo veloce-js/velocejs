@@ -15,6 +15,7 @@ import {
   IS_JSON,
   IS_MULTI,
   IS_OTHER,
+  GET_NAME,
 } from './constants'
 import {
   getHeaders,
@@ -25,8 +26,8 @@ import {
   isJson,
   isForm,
   isFile,
-  parseQuery,
 } from './utils'
+import { parseQuery } from './parse-query'
 // debug
 import debug from 'debug'
 const debugFn = debug('velocejs:body-parser:main')
@@ -42,7 +43,6 @@ export async function bodyParser(
   res.onAborted(() => {
     onAborted ? Reflect.apply(onAborted, null, [res]) : debugFn('ABORTED')
   })
-
   // process the header
   const headers = getHeaders(req)
   const url = req.getUrl()
@@ -51,15 +51,15 @@ export async function bodyParser(
   const method = req.getMethod()
   // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
   // and we need to extract the params from the url and pass back as the ctx object
-
-  // package it up
   const body: UwsRespondBody = { url, method, query, headers, params }
-
-  // we should only call this when the header is not GET?
+  if (method === GET_NAME) {
+    body.type = IS_OTHER
+    return Promise.resolve(body)
+  }
+  // we should only call this when the header is not GET - there is nobody to process
   return new Promise(resolver => {
     onDataHandler(res, buffer => {
       body.payload = buffer
-
       switch (true) {
         case isJson(headers):
           body.type = IS_JSON

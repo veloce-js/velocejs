@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseQuery = exports.isDynamicRoute = exports.isFile = exports.isForm = exports.isJson = exports.isEmptyObj = exports.takeApartName = exports.toBuffer = exports.toArr = exports.getHeaders = void 0;
+exports.isDynamicRoute = exports.isFile = exports.isForm = exports.isJson = exports.isEmptyObj = exports.takeApartName = exports.toBuffer = exports.toArr = exports.getHeaders = void 0;
 const constants_1 = require("./constants");
 // return all the headers
 function getHeaders(req) {
@@ -45,13 +45,3 @@ exports.isFile = isFile;
 /** just check if the url looks like a dynamic route */
 const isDynamicRoute = (route) => route.indexOf(constants_1.DYNAMIC_ROUTE_PATTERN) > -1;
 exports.isDynamicRoute = isDynamicRoute;
-// the actual function to take the query apart
-function parseQuery(query) {
-    const params = new URLSearchParams(query);
-    const result = {};
-    for (const pair of params.entries()) {
-        result[pair[0]] = pair[1];
-    }
-    return result;
-}
-exports.parseQuery = parseQuery;

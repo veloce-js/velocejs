@@ -4,6 +4,7 @@ export declare const IS_FORM = "form";
 export declare const IS_MULTI = "multipart";
 export declare const IS_JSON = "json";
 export declare const IS_OTHER = "other";
+export declare const GET_NAME = "get";
 export declare const DEFAULT_FORM_HEADER = "application/x-www-form-urlencoded";
 export declare const FILE_POST_HEADER = "multipart/form-data";
 export declare const DYNAMIC_ROUTE_PATTERN = "/:";

@@ -6,6 +6,8 @@ export const IS_MULTI = 'multipart'
 export const IS_JSON = 'json'
 export const IS_OTHER = 'other'
 
+export const GET_NAME = 'get'
+
 export const DEFAULT_FORM_HEADER = 'application/x-www-form-urlencoded'
 export const FILE_POST_HEADER = 'multipart/form-data'
 

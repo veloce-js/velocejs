@@ -200,6 +200,7 @@ export class FastApi implements FastApiInterface {
   /** create this wrapper for future development */
   private _prepareSocketRoute(propertyName: string) {
     const config = this[propertyName]
+    // @TODO we are going to create a new wrapper class to take over the Socket 
     if (!config['open']) {
       throw new Error(`You must provide an open method for your websocket setup!`)
     }
@@ -400,7 +401,7 @@ export class FastApi implements FastApiInterface {
   /** @TODO handle protected route, also we need another library to destruct those pattern route */
   private _handleProtectedRoute(propertyName: string) {
     // need to check out the route info
-    debug(`checking the route`, propertyName)
+    debug(`@TODO checking the route --->`, propertyName)
     return async (bodyParserProcessedResult: VeloceCtx): Promise<VeloceCtx> => {
       // the value is bodyParser processed result
       // console.info('@TODO handle protected route') //, bodyParserProcessedResult)
@@ -442,7 +443,6 @@ export class FastApi implements FastApiInterface {
     // debug('_applyArgs', argNames, argsList, ctx)
     switch (true) {
       case isDynamic && isSpread:
-        debug('-------------------- BOTH ------------------')
         return prepareArgsFromDynamicToSpread(argNames, argsList, params, paramNames)
       case isDynamic && !isSpread:
         return convertStrToType(argNames, argsList, params)

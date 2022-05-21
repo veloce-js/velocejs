@@ -23,7 +23,7 @@ test(`Just test a normal url /news/* first`, async t => {
   return Fetch(_url)
           .then(res => res.text())
           .then((text: string) => {
-            console.log(_url, text)
+            // console.log(_url, text)
             t.truthy(text)
           })
 })
@@ -35,10 +35,26 @@ test(`Should able to use dynamic route on GET route with correct type on method`
   return Fetch(_url)
             .then(res => res.json())
             .then(json => {
-              console.log(json)
+              // console.log(json)
               t.truthy(json)
             })
 })
+
+test.only(`Test an api with mix static argument with spread argument`, async t => {
+
+  t.plan(1)
+  // @TODO found a problem if the route not match no 404 returns
+  const _url = `${url}/mix-spread/shoes/socks/1024/3456`
+  return Fetch(_url)
+          .then(res => res.text())
+          .then(text => {
+            console.log(text)
+            t.truthy(text)
+          })
+
+})
+
+test.todo(`Test a non-existing route and return 404`)
 
 
 /*
