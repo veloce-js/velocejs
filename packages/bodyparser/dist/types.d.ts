@@ -14,7 +14,7 @@ export type Input = {
   data: Buffer
 }
 
-// from UWS
+// from uws
 export interface us_socket_context_t {}
 
 export type RecognizedString = string | ArrayBuffer | Uint8Array | Int8Array | Uint16Array | Int16Array | Uint32Array | Int32Array | Float32Array | Float64Array;
@@ -54,14 +54,22 @@ export interface HttpRequest {
 export type UwsStringPairObj = {
   [key: string]: string
 }
+
+export type UwsStringAnyObj = {
+  [key: string]: any
+}
+
 // Typing the result object
 export type UwsRespondBody = {
   url: string
   method: string
-  query: string,
+  query: string
   headers: UwsStringPairObj
-  params: object,
-  urlParams?: ParsedUrl,
+  params: UwsStringAnyObj
+  // instead of a lot of different key those from url will be here
+  queryParams: UwsStringAnyObj
+  // just flattern the structure instead of one level down from params
+  names?: Array<string>
   type?: string,
   payload?: Buffer
 }
@@ -74,4 +82,10 @@ export type UwsBodyParserFileEntry = {
 
 export type UwsBodyParserMixEntry = {
   [key: string]: string | Buffer | UwsBodyParserFileEntry
+}
+
+export type UwsBodyParserOptions = {
+  stripUnderscoreParam?: boolean
+  originalRouteDef?: string
+  [key: string]: any
 }

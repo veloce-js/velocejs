@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UrlPattern = void 0;
 const tslib_1 = require("tslib");
-// using the url-pattern lib to match against the dynamic url
 const url_pattern_1 = tslib_1.__importDefault(require("url-pattern"));
 const utils_1 = require("./utils");
 const constants_1 = require("./constants");
@@ -40,6 +39,7 @@ class UrlPattern {
     }
     /** parse the var from url */
     parse(url) {
+        this._getNames(url); // get the names at the same time
         return this._libObj.match(url);
     }
     /** construct a url */

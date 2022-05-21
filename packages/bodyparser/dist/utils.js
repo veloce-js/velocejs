@@ -1,8 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isDynamicRoute = exports.isFile = exports.isForm = exports.isJson = exports.isEmptyObj = exports.takeApartName = exports.toBuffer = exports.toArr = exports.getHeaders = void 0;
+exports.isDynamicRoute = exports.isFile = exports.isForm = exports.isJson = exports.isEmptyObj = exports.takeApartName = exports.toBuffer = exports.toArr = exports.getHeaders = exports.applyConfig = void 0;
 const constants_1 = require("./constants");
-// return all the headers
+/** provide default to options */
+function applyConfig(config) {
+    return Object.assign(constants_1.DEFAULT_CONFIG, config || {});
+}
+exports.applyConfig = applyConfig;
+/** return all the headers */
 function getHeaders(req) {
     const headers = {};
     req.forEach((key, value) => {

@@ -1,5 +1,11 @@
 /// <reference types="node" />
-import { HttpRequest, UwsStringPairObj } from './types';
+import { HttpRequest, UwsStringPairObj, UwsBodyParserOptions } from './types';
+/** provide default to options */
+export declare function applyConfig(config?: UwsBodyParserOptions): {
+    stripUnderscoreParam: boolean;
+    originalRouteDef: string;
+} & UwsBodyParserOptions;
+/** return all the headers */
 export declare function getHeaders(req: HttpRequest): {};
 export declare function toArr(value: any): Array<any>;
 export declare function toBuffer(data: any): Buffer;

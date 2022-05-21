@@ -52,7 +52,7 @@ export interface HttpRequest {
 
 // our custom types
 export type UwsStringPairObj = {
-  [key: string]: RecognizedString
+  [key: string]: string
 }
 
 export type UwsStringAnyObj = {

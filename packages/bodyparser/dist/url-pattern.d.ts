@@ -1,4 +1,4 @@
-import { UwsStringPairObj } from '../index';
+import type { UwsStringPairObj } from '../index';
 export declare class UrlPattern {
     private _libObj;
     private _originalUrl;

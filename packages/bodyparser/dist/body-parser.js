@@ -2,13 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processParams = exports.parseMultipart = exports.bodyParser = void 0;
 const tslib_1 = require("tslib");
-// bodyparser main
-const handle_upload_1 = require("./handle-upload");
-// @NOTE 2022-05-02 although the module has updated but it still not working correctly!
-const parse_multipart_1 = require("./parse-multipart");
 const constants_1 = require("./constants");
 const utils_1 = require("./utils");
 const parse_query_1 = require("./parse-query");
+const handle_upload_1 = require("./handle-upload");
+// @NOTE 2022-05-02 although the module has updated but it still not working correctly!
+const parse_multipart_1 = require("./parse-multipart");
 // debug
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)('velocejs:body-parser:main');
@@ -26,13 +25,21 @@ function bodyParser(res, req, options) {
         const headers = (0, utils_1.getHeaders)(req);
         const url = req.getUrl();
         const query = req.getQuery();
-        const params = (0, parse_query_1.parseQuery)(query, options === null || options === void 0 ? void 0 : options.config);
         const method = req.getMethod();
+        const queryParams = (0, parse_query_1.parseQuery)(query, (0, utils_1.applyConfig)(options === null || options === void 0 ? void 0 : options.config));
+        const params = {};
         // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
         // and we need to extract the params from the url and pass back as the ctx object
-        const body = { url, method, query, headers, params };
+        const body = { url, method, query, headers, params, queryParams };
+        // check if it has dynamic route
+        if (queryParams[constants_1.DYNAMIC_PARAM]) {
+            body[constants_1.QUERY_PARAM] = queryParams[constants_1.QUERY_PARAM];
+            body[constants_1.DYNAMIC_NAMES] = queryParams[constants_1.DYNAMIC_NAMES];
+            body.params = queryParams[constants_1.DYNAMIC_PARAM];
+            body.type = constants_1.IS_DYNAMIC;
+        }
         if (method === constants_1.GET_NAME) {
-            body.type = constants_1.IS_OTHER;
+            body.type = body.type || constants_1.IS_OTHER;
             return Promise.resolve(body);
         }
         // we should only call this when the header is not GET - there is nobody to process
@@ -46,13 +53,14 @@ function bodyParser(res, req, options) {
                         break;
                     case (0, utils_1.isForm)(headers):
                         body.type = constants_1.IS_FORM;
-                        body.params = (0, parse_query_1.parseQuery)(buffer.toString());
+                        body.params = (0, parse_query_1.processQueryParameters)(buffer.toString());
                         break;
                     case (0, utils_1.isFile)(headers):
                         body.type = constants_1.IS_MULTI;
                         body.params = parseMultipart(headers, buffer);
                         break;
                     default:
+                        // @TODO need to test more edge case to find out how we can get here
                         body.type = constants_1.IS_OTHER;
                 }
                 resolver(body);
@@ -70,7 +78,7 @@ function handleJsonRequestParams(buffer, params) {
     // @TODO this could still be problematic in some edge case, waiting for that to happen
     return payload ? JSON.parse(payload) : ((0, utils_1.isEmptyObj)(params) ? {} : params);
 }
-/** all-in-one to parse and post process the multipart-formdata input */
+/** all-in-one to parse and post-process the multipart-formdata input */
 function parseMultipart(headers, body) {
     const boundary = (0, parse_multipart_1.getBoundary)(headers[constants_1.CONTENT_TYPE]);
     if (boundary) {
