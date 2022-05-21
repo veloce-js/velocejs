@@ -41,7 +41,6 @@ import {
   parse,
   getBoundary
 } from './parse-multipart'
-const DYNAMIC_PROPS = [DYNAMIC_NAMES, DYNAMIC_PARAM]
 // debug
 import debug from 'debug'
 const debugFn = debug('velocejs:body-parser:main')
@@ -72,15 +71,13 @@ export async function bodyParser(
   // check if it has dynamic route
   if (queryParams[DYNAMIC_PARAM]) {
     body[QUERY_PARAM] = queryParams[QUERY_PARAM]
-    DYNAMIC_PROPS.forEach((key: string) => {
-      body.params[key] = queryParams[key]
-    })
+    body[DYNAMIC_NAMES] = queryParams[DYNAMIC_NAMES]
+    body.params = queryParams[DYNAMIC_PARAM]
     body.type = IS_DYNAMIC
   }
   if (method === GET_NAME) {
-    if (!body.type) {
-      body.type = IS_OTHER
-    }
+    body.type = body.type || IS_OTHER
+
     return Promise.resolve(body)
   }
   // we should only call this when the header is not GET - there is nobody to process
@@ -122,20 +119,18 @@ function handleJsonRequestParams(
   return payload ? JSON.parse(payload) : (isEmptyObj(params) ? {} : params)
 }
 
-/** all-in-one to parse and post process the multipart-formdata input */
+/** all-in-one to parse and post-process the multipart-formdata input */
 export function parseMultipart(
   headers: UwsStringPairObj,
   body: Buffer
 ): object {
-  const boundary = getBoundary(headers[CONTENT_TYPE])
+  const boundary = getBoundary(headers[CONTENT_TYPE] as string)
   if (boundary) {
     const params = parse(body, boundary as string)
     if (Array.isArray(params) && params.length) {
-
       return processParams(params as unknown as Array<Record<string, UwsBodyParserMixEntry>>)
     }
   }
-
   return {}
 }
 
@@ -143,7 +138,6 @@ export function parseMultipart(
 function processFileArray(
   params: Array<Record<string, UwsBodyParserMixEntry>>
 ) {
-
   return params.filter(param => param.filename && param.type)
                .map(param => {
                  const { name, type, filename, data } = param
@@ -173,7 +167,6 @@ function processFileArray(
 function processTextArray(
   params: Array<Record<string, UwsBodyParserMixEntry>>
 ) {
-
   return params
     .filter(param => !param.filename && !param.type)
     .map((param): UwsStringPairObj => (
@@ -188,7 +181,6 @@ function processTextArray(
 export function processParams(
   params: Array<Record<string, UwsBodyParserMixEntry>>
 ): UwsBodyParserMixEntry {
-
   return Object.assign(
     processFileArray(params),
     processTextArray(params)

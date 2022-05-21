@@ -22,4 +22,4 @@ export const DEFAULT_CONFIG = {
 // then we could support more variety of query schema
 export const QUERY_PARAM = 'queryParams'
 export const DYNAMIC_PARAM = 'dynamicParams'
-export const DYNAMIC_NAMES = 'dynamicNames'
+export const DYNAMIC_NAMES = 'names'

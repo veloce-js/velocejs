@@ -63,11 +63,13 @@ export type UwsStringAnyObj = {
 export type UwsRespondBody = {
   url: string
   method: string
-  query: string,
+  query: string
   headers: UwsStringPairObj
   params: UwsStringAnyObj
   // instead of a lot of different key those from url will be here
-  queryParams: UwsStringPairObj
+  queryParams: UwsStringAnyObj
+  // just flattern the structure instead of one level down from params
+  names?: Array<string>
   type?: string,
   payload?: Buffer
 }

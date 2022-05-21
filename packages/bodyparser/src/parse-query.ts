@@ -1,8 +1,7 @@
 // this is taken out from util and expand it's capability
 import type {
   // UwsStringPairObj,
-  UwsBodyParserOptions,
-  UwsParamsBody
+  UwsBodyParserOptions
 } from './types'
 import {
   QUERY_PARAM,
@@ -19,7 +18,7 @@ const debug = debugFn('velocejs:bodypaser:parse-query')
 export function parseQuery(
   query: string,
   config?: UwsBodyParserOptions
-): UwsParamsBody {
+) {
   const {
     stripUnderscoreParam,
     originalRouteDef
