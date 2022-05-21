@@ -26,3 +26,4 @@ export const DYNAMIC_NAMES = 'names'
 // keys for config
 export const STRIP_UNDERSCORE = 'stripUnderscoreParam'
 export const ORG_ROUTE_REF = '_originalRouteDef'
+export const URL_PATTERN_OBJ = '_urlPatternObj'

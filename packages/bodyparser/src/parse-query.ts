@@ -9,6 +9,7 @@ import {
   DYNAMIC_PARAM,
   STRIP_UNDERSCORE,
   ORG_ROUTE_REF,
+  URL_PATTERN_OBJ,
 } from './constants'
 import {
   UrlPattern
@@ -27,10 +28,10 @@ export function parseQuery(
   }
   // process the query parameter first if any
   // next if we provide the url for analysis and if it's a dynamic route
-  if (c[ORG_ROUTE_REF]) {
+  if (c[URL_PATTERN_OBJ] || c[ORG_ROUTE_REF]) {
     params = Object.assign(
       params,
-      processDynamicRoute(url, c[ORG_ROUTE_REF])
+      processDynamicRoute(url, c)
     )
   }
   // only one way or the other, not allow to mix and match
@@ -56,20 +57,38 @@ export function processQueryParameters(
   return result
 }
 
-/** process dynamic route */
+/** wrap this together and divide the task here */
 function processDynamicRoute(
+  url: string,
+  config: UwsBodyParserOptions
+) {
+  if (config[URL_PATTERN_OBJ]) {
+    return processDynamicRouteByUrlPattern(url, config[URL_PATTERN_OBJ])
+  }
+  return processDynamicRouteWithOrgRef(url, config[ORG_ROUTE_REF])
+}
+
+
+/** process dynamic route */
+function processDynamicRouteWithOrgRef(
   url: string,
   originalRouteDef?: string
 ) {
   const orgUrl = originalRouteDef as string
   if (UrlPattern.check(orgUrl)) {
     const obj = new UrlPattern(orgUrl)
-
-    return {
-      [DYNAMIC_PARAM]: obj.parse(url),
-      [DYNAMIC_NAMES]: obj.names
-    }
+    return processDynamicRouteByUrlPattern(url, obj)
   }
-
   return {}
+}
+
+/** if we pass this instance straight means we already did all the work before we call here*/
+function processDynamicRouteByUrlPattern(
+  url: string,
+  urlPatternObj: UrlPattern
+) {
+  return {
+    [DYNAMIC_PARAM]: urlPatternObj.parse(url),
+    [DYNAMIC_NAMES]: urlPatternObj.names
+  }
 }
