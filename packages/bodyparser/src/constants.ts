@@ -12,3 +12,7 @@ export const DEFAULT_FORM_HEADER = 'application/x-www-form-urlencoded'
 export const FILE_POST_HEADER = 'multipart/form-data'
 
 export const DYNAMIC_ROUTE_PATTERN = '/:'
+// default options for body parser
+export const DEFAULT_CONFIG = {
+  stripUnderscoreParam: true // so those _cb will get strip out
+}

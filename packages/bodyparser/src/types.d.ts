@@ -14,7 +14,7 @@ export type Input = {
   data: Buffer
 }
 
-// from UWS
+// from uws 
 export interface us_socket_context_t {}
 
 export type RecognizedString = string | ArrayBuffer | Uint8Array | Int8Array | Uint16Array | Int16Array | Uint32Array | Int32Array | Float32Array | Float64Array;

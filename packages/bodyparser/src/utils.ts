@@ -7,8 +7,15 @@ import {
   DEFAULT_FORM_HEADER,
   FILE_POST_HEADER,
   DYNAMIC_ROUTE_PATTERN,
+  DEFAULT_CONFIG,
 } from './constants'
-// return all the headers
+
+/** provide default to options */
+export function applyConfig(config?: UwsStringPairObj) {
+  return Object.assign(DEFAULT_CONFIG, config || {})
+}
+
+/** return all the headers */
 export function getHeaders(req: HttpRequest) {
   const headers = {}
   req.forEach((key: string, value: string) => {

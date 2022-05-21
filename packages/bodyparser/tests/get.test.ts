@@ -15,12 +15,18 @@ test.after(() => {
   app.shutdown()
 })
 
+test(`Testing the url with dynamic parameter`, async t => {
+  
+
+})
+
+
 
 test(`Should able to fix the buffer.toString() problem with a post`,async t => {
   // + '/whatever?key=1&b=2'
   const res = await fetch(url  + '/whatever?key=1&b=2', {
     headers: {
-      'Content-Type': CONTENT_TYPE 
+      'Content-Type': CONTENT_TYPE
       // 'application/json'
     },
     // method: 'HEAD' // <-- this will cause a unexpected end of JSON imput, but this is todo with node-fetch

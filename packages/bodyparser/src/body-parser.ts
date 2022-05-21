@@ -1,8 +1,5 @@
 // bodyparser main
-import { onDataHandler } from './handle-upload'
-// @NOTE 2022-05-02 although the module has updated but it still not working correctly!
-import { parse, getBoundary } from './parse-multipart'
-import {
+import type {
   HttpResponse,
   HttpRequest,
   UwsRespondBody,
@@ -26,8 +23,15 @@ import {
   isJson,
   isForm,
   isFile,
+  applyConfig,
 } from './utils'
 import { parseQuery } from './parse-query'
+import { onDataHandler } from './handle-upload'
+// @NOTE 2022-05-02 although the module has updated but it still not working correctly!
+import {
+  parse,
+  getBoundary
+} from './parse-multipart'
 // debug
 import debug from 'debug'
 const debugFn = debug('velocejs:body-parser:main')
@@ -49,7 +53,7 @@ export async function bodyParser(
   const headers = getHeaders(req)
   const url = req.getUrl()
   const query = req.getQuery()
-  const params = parseQuery(query, options?.config)
+  const params = parseQuery(query, applyConfig(options?.config))
   const method = req.getMethod()
   // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
   // and we need to extract the params from the url and pass back as the ctx object
