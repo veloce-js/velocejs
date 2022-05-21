@@ -25,6 +25,7 @@ import {
   jsonWriter,
   getRenderFn,
   renderFile,
+  write404,
   STATIC_TYPE,
   STATIC_ROUTE,
   RAW_TYPE,
@@ -200,7 +201,7 @@ export class FastApi implements FastApiInterface {
   /** create this wrapper for future development */
   private _prepareSocketRoute(propertyName: string) {
     const config = this[propertyName]
-    // @TODO we are going to create a new wrapper class to take over the Socket 
+    // @TODO we are going to create a new wrapper class to take over the Socket
     if (!config['open']) {
       throw new Error(`You must provide an open method for your websocket setup!`)
     }
@@ -211,10 +212,10 @@ export class FastApi implements FastApiInterface {
   /** TS script force it to make it looks so damn bad for all their non-sense rules */
   private _prepareNormalRoute(
     meta: RouteMetaInfo,
-    checkFn: (t: string, p: string, args: UwsStringPairObj[]) => string
+    checkFn: (t: string, p: string, pn: string, args: UwsStringPairObj[]) => string
   ) {
     const { type, path, propertyName, args, validation, excluded } = meta
-    const _route = checkFn(type, path, args)
+    const _route = checkFn(type, path, propertyName, args)
     // also add this to the route that can create contract - if we need it
     const _path = _route !== '' ? _route : path
     if (!excluded) {
@@ -251,10 +252,11 @@ export class FastApi implements FastApiInterface {
 
   /** check if there is a dynamic route and prepare it */
   private _prepareDynamicRoute(tmpSet: WeakSet<object>) {
-
+    // @TODO we don't need to create the object anymore, its been handle by bodyParser
     return (
       type: string,
       path: string,
+      propertyName: string,
       args: UwsStringPairObj[]
     ): string => {
       debug(`checkFn`, path)
@@ -270,7 +272,7 @@ export class FastApi implements FastApiInterface {
       }
       tmpSet.add({ route: route === '' ? path : route })
       if (upObj !== null) {
-        this._dynamicRoutes.set(route, upObj)
+        this._dynamicRoutes.set(route, { propertyName, upObj })
       }
       return route
     }
@@ -307,6 +309,12 @@ export class FastApi implements FastApiInterface {
     }
   }
 
+  /** wrapper of method and provide config option to bodyParser */
+  private _bodyParser(res: HttpResponse, req: HttpRequest) {
+
+    return false
+  }
+
   /** take this out from above to keep related code in one place */
   private _prepareValidator(
     propertyName: string,
@@ -341,16 +349,6 @@ export class FastApi implements FastApiInterface {
 
     return async (result: UwsRespondBody): Promise<VeloceCtx> => {
       const ctx: VeloceCtx = assign(result, { propertyName, route })
-      // 0.3.0 handle dynamic route
-      if (route) {
-        const obj = this._dynamicRoutes.get(route)
-        // the data extracted will become the argument
-        const urlParams = obj.parse(ctx.url)
-        // @TODO we need to process the params as well
-        ctx.params = urlParams === null ? {} : urlParams
-        // we need to add the names in order into the ctx
-        ctx.paramNames = obj.names
-      }
       this._setTemp(ctx, res)
       debug('ctx', ctx)
       return ctx
@@ -374,6 +372,8 @@ export class FastApi implements FastApiInterface {
       }
       _routes = a.concat(b)
     }
+    // @TODO if there is no static route / or catchAll route
+    // we put one to the bottom of the stack to handle 404 route 
     debug('routes', _routes)
     return this._uwsInstance.run(_routes)
   }
@@ -635,7 +635,7 @@ export class FastApi implements FastApiInterface {
   /**
    The interface to serve up the contract, it's public but prefix underscore to avoid override
    */
-  public _serveContract() {
+  public $_serveContract() {
     // debug('call _serveContract') // @BUG if I remove this then it doens't work???
     Promise.resolve(
       isDev ?
@@ -643,9 +643,18 @@ export class FastApi implements FastApiInterface {
           this._config.getConfig(`${CONTRACT_KEY}.${CACHE_DIR}`)
             .then((cacheDir: string) => this._contract.serve(cacheDir))
     ).then((json: UwsStringPairObj) => {
-      debug('contract', json)
+      debug('_serveContract contract:', json)
       this.$json(json)
     })
+  }
+
+  /**
+    When there is no catch all route, we will insert this to the end and serve up a 404
+    because when the route unmatch the server just hang up
+  */
+  public $_catchAll() {
+    // debug(ctx) // to see what's going on
+    write404(this.res)
   }
 
   /**

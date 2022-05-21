@@ -4,6 +4,9 @@ export const SUPPORT_EXT = ['js', 'cjs'] // can only support cjs style due to th
 export const CONTRACT_KEY = 'contract'
 export const CACHE_DIR = 'cacheDir'
 export const SERVER_KEY = 'server'
+export const BODYPARSER_KEY = 'bodyparser'
+export const ORG_ROUTE_REF = '_originalRouteDef'
+export const STRIP_UNDERSCORE = 'stripUnderscoreParam'
 /*
   provide some of the default values for config
   For example:
@@ -26,5 +29,8 @@ export const VELOCE_DEFAULTS = {
   },
   [SERVER_KEY]: {
     port: 0
+  },
+  [BODYPARSER_KEY]: {
+    [STRIP_UNDERSCORE]: true
   }
 }

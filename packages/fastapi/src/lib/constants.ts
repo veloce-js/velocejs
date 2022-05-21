@@ -15,10 +15,12 @@ export const RULE_FULL = 'rule-full'
 // this is the method that we need to call in the Top Decorator
 export const METHOD_TO_RUN = '$prepare'
 
-export const CONTRACT_METHOD_NAME = '_serveContract'
+export const CONTRACT_METHOD_NAME = '$_serveContract'
+export const CATCH_ALL_METHOD_NAME = '$_catchAll'
+export const CATCH_ALL_ROUTE = '/*'
 
 export const DEFAULT_CONTRACT_METHOD = 'get'
 export const DYNAMIC_ROUTE_ALLOW_TYPES = ['number', 'string', 'boolean']
-// dynamic 
+// dynamic
 export const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
 export const isDebug = process.env.DEBUG !== undefined
