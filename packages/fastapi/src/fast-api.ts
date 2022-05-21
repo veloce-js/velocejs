@@ -36,14 +36,14 @@ import {
 import {
   REST_NAME,
 } from '@jsonql/constants'
-
 import bodyParser, {
   UrlPattern
 } from '@velocejs/bodyparser'
-import {
-  VeloceConfig,
+import VeloceConfig, {
   CONTRACT_KEY,
   CACHE_DIR,
+  BODYPARSER_KEY,
+  
 } from '@velocejs/config'
 import { JsonqlValidationError } from '@jsonql/errors'
 import { JsonqlContractWriter } from '@jsonql/contract'
@@ -291,7 +291,7 @@ export class FastApi implements FastApiInterface {
     return async (res: HttpResponse, req: HttpRequest) => {
       // @0.3.0 we change the whole thing into one middlewares stack
       const stacks = [
-        bodyParser,
+        this._bodyParser(propertyName, route),
         this._prepareCtx(propertyName, res, route),
         this._handleProtectedRoute(propertyName),
         this._prepareValidator(propertyName, argsList, validationInput),
@@ -303,16 +303,22 @@ export class FastApi implements FastApiInterface {
       this._handleMiddlewares(
         stacks,
         res,
-        req,
-        () => console.log(`@TODO`, 'define our own onAbortedHandler')
+        req
       )
     }
   }
 
   /** wrapper of method and provide config option to bodyParser */
-  private _bodyParser(res: HttpResponse, req: HttpRequest) {
+  private _bodyParser(propertyName: string, route?: string) {
 
-    return false
+    const config = {
+      onAborted: () => console.log(`@TODO`, 'define our own onAbortedHandler')
+    }
+
+    return (res: HttpResponse, req: HttpRequest) => {
+
+      return bodyParser(res, req, config)
+    }
   }
 
   /** take this out from above to keep related code in one place */
@@ -373,7 +379,7 @@ export class FastApi implements FastApiInterface {
       _routes = a.concat(b)
     }
     // @TODO if there is no static route / or catchAll route
-    // we put one to the bottom of the stack to handle 404 route 
+    // we put one to the bottom of the stack to handle 404 route
     debug('routes', _routes)
     return this._uwsInstance.run(_routes)
   }
