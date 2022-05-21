@@ -18,3 +18,4 @@ export declare const DYNAMIC_PARAM = "dynamicParams";
 export declare const DYNAMIC_NAMES = "names";
 export declare const STRIP_UNDERSCORE = "stripUnderscoreParam";
 export declare const ORG_ROUTE_REF = "_originalRouteDef";
+export declare const URL_PATTERN_OBJ = "_urlPatternObj";

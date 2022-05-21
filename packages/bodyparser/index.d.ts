@@ -86,6 +86,7 @@ export type UwsBodyParserMixEntry = {
 
 export type UwsBodyParserOptions = {
   stripUnderscoreParam?: boolean
-  _originalRouteDef?: string // this is private 
+  _originalRouteDef?: string // this is private
+  _urlPatternObj?: any
   // [key: string]: any
 }

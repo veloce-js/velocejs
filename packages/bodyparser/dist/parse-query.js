@@ -13,8 +13,8 @@ function parseQuery(url, query, config) {
     };
     // process the query parameter first if any
     // next if we provide the url for analysis and if it's a dynamic route
-    if (c[constants_1.ORG_ROUTE_REF]) {
-        params = Object.assign(params, processDynamicRoute(url, c[constants_1.ORG_ROUTE_REF]));
+    if (c[constants_1.URL_PATTERN_OBJ] || c[constants_1.ORG_ROUTE_REF]) {
+        params = Object.assign(params, processDynamicRoute(url, c));
     }
     // only one way or the other, not allow to mix and match
     return params;
@@ -36,15 +36,26 @@ function processQueryParameters(query, stripUnderscoreParam) {
     return result;
 }
 exports.processQueryParameters = processQueryParameters;
+/** wrap this together and divide the task here */
+function processDynamicRoute(url, config) {
+    if (config[constants_1.URL_PATTERN_OBJ]) {
+        return processDynamicRouteByUrlPattern(url, config[constants_1.URL_PATTERN_OBJ]);
+    }
+    return processDynamicRouteWithOrgRef(url, config[constants_1.ORG_ROUTE_REF]);
+}
 /** process dynamic route */
-function processDynamicRoute(url, originalRouteDef) {
+function processDynamicRouteWithOrgRef(url, originalRouteDef) {
     const orgUrl = originalRouteDef;
     if (url_pattern_1.UrlPattern.check(orgUrl)) {
         const obj = new url_pattern_1.UrlPattern(orgUrl);
-        return {
-            [constants_1.DYNAMIC_PARAM]: obj.parse(url),
-            [constants_1.DYNAMIC_NAMES]: obj.names
-        };
+        return processDynamicRouteByUrlPattern(url, obj);
     }
     return {};
+}
+/** if we pass this instance straight means we already did all the work before we call here*/
+function processDynamicRouteByUrlPattern(url, urlPatternObj) {
+    return {
+        [constants_1.DYNAMIC_PARAM]: urlPatternObj.parse(url),
+        [constants_1.DYNAMIC_NAMES]: urlPatternObj.names
+    };
 }
