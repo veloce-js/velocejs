@@ -18,6 +18,7 @@ export const METHOD_TO_RUN = '$prepare'
 export const CONTRACT_METHOD_NAME = '$_serveContract'
 export const CATCH_ALL_METHOD_NAME = '$_catchAll'
 export const CATCH_ALL_ROUTE = '/*'
+export const CATCH_ALL_TYPE = 'any'
 
 export const DEFAULT_CONTRACT_METHOD = 'get'
 export const DYNAMIC_ROUTE_ALLOW_TYPES = ['number', 'string', 'boolean']

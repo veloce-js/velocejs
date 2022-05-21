@@ -37,14 +37,16 @@ import {
   REST_NAME,
 } from '@jsonql/constants'
 import bodyParser, {
-  UrlPattern
+  UrlPattern,
+  GET_NAME,
+  QUERY_PARAM,
 } from '@velocejs/bodyparser'
-import VeloceConfig, {
+import {
+  VeloceConfig,
   CONTRACT_KEY,
   CACHE_DIR,
   BODYPARSER_KEY,
   ORG_ROUTE_REF,
-  STRIP_UNDERSCORE,
 } from '@velocejs/config'
 import {
   JsonqlValidationError
@@ -64,6 +66,9 @@ import {
   isDev,
   CONTRACT_METHOD_NAME,
   DEFAULT_CONTRACT_METHOD,
+  CATCH_ALL_ROUTE,
+  CATCH_ALL_METHOD_NAME,
+  CATCH_ALL_TYPE,
 } from './lib/constants'
 import {
   convertStrToType,
@@ -103,6 +108,7 @@ export class FastApi implements FastApiInterface {
   private _validationErrStatus = 417
   private _dynamicRoutes = new Map()
   private _staticRouteIndex: Array<number> = []
+  private _hasCatchAll = false
   // protected properties
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
@@ -165,6 +171,15 @@ export class FastApi implements FastApiInterface {
     return routes
   }
 
+  /** create a catch all route to handle those unhandle url(s) */
+  private _createCatchAllRoute() {
+    return {
+      path: CATCH_ALL_ROUTE,
+      type: CATCH_ALL_TYPE,
+      handler: this._mapMethodToHandler(CATCH_ALL_METHOD_NAME, [], false)
+    }
+  }
+
   /** Mapping all the string name to method and supply to UwsServer run method */
   private async _prepareRoutes(
     meta: RouteMetaInfo[]
@@ -173,6 +188,7 @@ export class FastApi implements FastApiInterface {
 
     return meta.map((m: RouteMetaInfo, i: number) => {
       const { path, type, propertyName } = m
+      this._hasCatchAll = path === CATCH_ALL_ROUTE
       switch (type) {
         case STATIC_TYPE:
           this._staticRouteIndex.push(i)
@@ -217,10 +233,10 @@ export class FastApi implements FastApiInterface {
   /** TS script force it to make it looks so damn bad for all their non-sense rules */
   private _prepareNormalRoute(
     meta: RouteMetaInfo,
-    checkFn: (t: string, p: string, pn: string, args: UwsStringPairObj[]) => string
+    checkFn: (t: string, p: string, args: UwsStringPairObj[]) => string
   ) {
     const { type, path, propertyName, args, validation, excluded } = meta
-    const _route = checkFn(type, path, propertyName, args)
+    const _route = checkFn(type, path, args)
     // also add this to the route that can create contract - if we need it
     const _path = _route !== '' ? _route : path
     if (!excluded) {
@@ -238,30 +254,12 @@ export class FastApi implements FastApiInterface {
     }
   }
 
-  /** just wrap this together to make it look neater */
-  private _prepareRouteForContract(
-    propertyName: string,
-    args: UwsStringPairObj[],
-    type: string,
-    path: string,
-  ): void {
-    const entry = {
-      [propertyName]: {
-        params: toArray(args),
-        method: type,
-        route: path
-      }
-    }
-    this._routeForContract = assign(this._routeForContract, entry)
-  }
-
   /** check if there is a dynamic route and prepare it */
   private _prepareDynamicRoute(tmpSet: WeakSet<object>) {
     // @TODO we don't need to create the object anymore, its been handle by bodyParser
     return (
       type: string,
       path: string,
-      propertyName: string,
       args: UwsStringPairObj[]
     ): string => {
       debug(`checkFn`, path)
@@ -270,14 +268,14 @@ export class FastApi implements FastApiInterface {
         // now we need to check if the types are supported
         assertDynamicRouteArgs(args)
         upObj = new UrlPattern(path)
-        route = upObj.route
+        route = upObj.route // this is the transformed route
       }
       if (tmpSet.has({ route })) {
         throw new Error(`${route} already existed!`)
       }
       tmpSet.add({ route: route === '' ? path : route })
       if (upObj !== null) {
-        this._dynamicRoutes.set(route, { propertyName, upObj })
+        this._dynamicRoutes.set(route, upObj)
       }
       return route
     }
@@ -296,7 +294,7 @@ export class FastApi implements FastApiInterface {
     return async (res: HttpResponse, req: HttpRequest) => {
       // @0.3.0 we change the whole thing into one middlewares stack
       const stacks = [
-        this._bodyParser(propertyName, route),
+        this._bodyParser(route),
         this._prepareCtx(propertyName, res, route),
         this._handleProtectedRoute(propertyName),
         this._prepareValidator(propertyName, argsList, validationInput),
@@ -314,10 +312,15 @@ export class FastApi implements FastApiInterface {
   }
 
   /** wrapper of method and provide config option to bodyParser */
-  private _bodyParser(propertyName: string, route?: string) {
-
+  private async _bodyParser(route?: string) {
+    const bodyParserConfig = await this._config.getConfig(BODYPARSER_KEY)
+                           || VeloceConfig.getDefaults(BODYPARSER_KEY)
+    if (route) { // this is a dynamic route
+      bodyParserConfig[ORG_ROUTE_REF] = this._dynamicRoutes.get(route).original
+    }
     const config = {
-      onAborted: () => console.log(`@TODO`, 'define our own onAbortedHandler')
+      config: bodyParserConfig,
+      onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
     }
 
     return (res: HttpResponse, req: HttpRequest) => {
@@ -366,6 +369,23 @@ export class FastApi implements FastApiInterface {
     }
   }
 
+  /** just wrap this together to make it look neater */
+  private _prepareRouteForContract(
+    propertyName: string,
+    args: UwsStringPairObj[],
+    type: string,
+    path: string,
+  ): void {
+    const entry = {
+      [propertyName]: {
+        params: toArray(args),
+        method: type,
+        route: path
+      }
+    }
+    this._routeForContract = assign(this._routeForContract, entry)
+  }
+
   /** binding method to the uws server */
   private async _run(routes: Array<UwsRouteSetup>) {
     let _routes = routes
@@ -385,6 +405,9 @@ export class FastApi implements FastApiInterface {
     }
     // @TODO if there is no static route / or catchAll route
     // we put one to the bottom of the stack to handle 404 route
+    if (!this._hasCatchAll) {
+      _routes.push(this._createCatchAllRoute())
+    }
     debug('routes', _routes)
     return this._uwsInstance.run(_routes)
   }
@@ -448,18 +471,23 @@ export class FastApi implements FastApiInterface {
     argsList: Array<UwsStringPairObj>,
     ctx: VeloceCtx
   ) {
-    const { params, route, paramNames } = ctx
+    const { params, route, names } = ctx
     const isDynamic = notUndef(this._dynamicRoutes.get(route))
     const isSpread = notUndef(hasSpreadArg(argsList))
     // debug('_applyArgs', argNames, argsList, ctx)
     switch (true) {
       case isDynamic && isSpread:
-        return prepareArgsFromDynamicToSpread(argNames, argsList, params, paramNames)
+        return prepareArgsFromDynamicToSpread(argNames, argsList, params, names)
       case isDynamic && !isSpread:
         return convertStrToType(argNames, argsList, params)
       case !isDynamic && isSpread:
         return prepareSpreadArg(params)
       default:
+        // now the body and query are handle in two different props which means
+        // one of them will get lost @TODO how to allow using both? or not KISS?
+        if (ctx.method === GET_NAME) {
+          return argNames.map(argName => ctx[QUERY_PARAM][argName])
+        }
         return argNames.map(argName => params[argName])
     }
   }
@@ -665,7 +693,7 @@ export class FastApi implements FastApiInterface {
   */
   public $_catchAll() {
     // debug(ctx) // to see what's going on
-    write404(this.res)
+    write404(this.res as HttpResponse)
   }
 
   /**
