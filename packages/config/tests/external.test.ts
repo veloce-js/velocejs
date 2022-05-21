@@ -4,7 +4,9 @@ import { join } from 'node:path'
 // this is useless - it doesn't work
 process.env.VELOCE_CONFIG = join(__dirname, 'fixtures', 'jsonql.config.cjs')
 
-import { VeloceConfig, PATH_TO_VELOCE_CONFIG } from '../dist'
+import VeloceConfig from '../dist'
+
+// const PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG
 
 let config1: VeloceConfig
 
@@ -16,7 +18,7 @@ test(`Should able to find the config file via process.env.VELOCE_CONFIG`, async 
 
   const config = await config1.getConfig()
 
-  t.false(!!PATH_TO_VELOCE_CONFIG)
+  // t.true(!!PATH_TO_VELOCE_CONFIG)
 
   t.truthy(config)
 })

@@ -45,6 +45,10 @@ class VeloceConfig {
             }
         }
     }
+    /** a quick way to grab some of the default to fill the gap */
+    static getDefaults(key) {
+        return key ? constants_1.VELOCE_DEFAULTS[key] : constants_1.VELOCE_DEFAULTS;
+    }
     /** this let us to able to tell if the system is ready or not */
     get isReady() {
         return this._isConfigReady;

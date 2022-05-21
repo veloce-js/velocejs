@@ -7,6 +7,8 @@ export declare class VeloceConfig {
     private _configResolve;
     private _configReject;
     constructor(pathToConfigFile?: string);
+    /** a quick way to grab some of the default to fill the gap */
+    static getDefaults(key?: string): any;
     /** this let us to able to tell if the system is ready or not */
     get isReady(): Promise<VeloceConfigEntry>;
     /** The main method to get config */
