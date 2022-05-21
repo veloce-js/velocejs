@@ -15,6 +15,10 @@ import {
   IS_MULTI,
   IS_OTHER,
   GET_NAME,
+  DYNAMIC_PARAM,
+  DYNAMIC_NAMES,
+  QUERY_PARAM,
+  IS_DYNAMIC,
 } from './constants'
 import {
   getHeaders,
@@ -37,6 +41,7 @@ import {
   parse,
   getBoundary
 } from './parse-multipart'
+const DYNAMIC_PROPS = [DYNAMIC_NAMES, DYNAMIC_PARAM]
 // debug
 import debug from 'debug'
 const debugFn = debug('velocejs:body-parser:main')
@@ -59,13 +64,23 @@ export async function bodyParser(
   const url = req.getUrl()
   const query = req.getQuery()
   const method = req.getMethod()
-  const params = parseQuery(query, applyConfig(options?.config))
-
+  const queryParams = parseQuery(query, applyConfig(options?.config))
+  const params = {}
   // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
   // and we need to extract the params from the url and pass back as the ctx object
-  const body: UwsRespondBody = { url, method, query, headers, params }
+  const body: UwsRespondBody = { url, method, query, headers, params, queryParams }
+  // check if it has dynamic route
+  if (queryParams[DYNAMIC_PARAM]) {
+    body[QUERY_PARAM] = queryParams[QUERY_PARAM]
+    DYNAMIC_PROPS.forEach((key: string) => {
+      body.params[key] = queryParams[key]
+    })
+    body.type = IS_DYNAMIC
+  }
   if (method === GET_NAME) {
-    body.type = IS_OTHER
+    if (!body.type) {
+      body.type = IS_OTHER
+    }
     return Promise.resolve(body)
   }
   // we should only call this when the header is not GET - there is nobody to process
@@ -86,6 +101,7 @@ export async function bodyParser(
           body.params = parseMultipart(headers, buffer)
           break
         default:
+          // @TODO need to test more edge case to find out how we can get here
           body.type = IS_OTHER
       }
       resolver(body)
