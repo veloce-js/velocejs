@@ -1,6 +1,6 @@
 # @velocejs/bodyparser
 
-This module is for `uWebSocket.js`
+This module is for use with `uWebSocket.js`, not for standard node.js http library.
 
 ```ts
 import bodyParser from '@velocejs/bodyparser'
@@ -50,6 +50,7 @@ type UwsRespondBody = {
   headers: UwsStringPairObj
   params: UwsStringAnyObj
   queryParams: UwsStringPairObj
+  names?: Array<string>
   type?: string // our internal ID
   payload?: Buffer
 }
