@@ -1,22 +1,31 @@
 // this is taken out from util and expand it's capability
-import { UrlPattern } from './url-pattern'
 import type {
-  UwsStringPairObj,
-  UwsBodyParserOptions
+  // UwsStringPairObj,
+  UwsBodyParserOptions,
+  UwsParamsBody
 } from './types'
+import {
+  QUERY_PARAM,
+  DYNAMIC_NAMES,
+  DYNAMIC_PARAM,
+} from './constants'
+import {
+  UrlPattern
+} from './url-pattern'
+
 import debugFn from 'debug'
 const debug = debugFn('velocejs:bodypaser:parse-query')
 // the actual function to take the query apart
 export function parseQuery(
   query: string,
   config?: UwsBodyParserOptions
-): UwsStringPairObj {
+): UwsParamsBody {
   const {
     stripUnderscoreParam,
     originalRouteDef
   } = config as UwsBodyParserOptions
-  // process the query parameter first if any
   let params = processQueryParameters(query, stripUnderscoreParam)
+  // process the query parameter first if any
   // next if we provide the url for analysis and if it's a dynamic route
   if (originalRouteDef) {
     params = Object.assign(
@@ -24,11 +33,12 @@ export function parseQuery(
       processDynamicRoute(query, originalRouteDef)
     )
   }
+  // only one way or the other, not allow to mix and match
   return params
 }
 
 /** break up the process to make the main interface cleaner */
-function processQueryParameters(
+export function processQueryParameters(
   query: string,
   stripUnderscoreParam?: boolean
 ) {
@@ -43,7 +53,7 @@ function processQueryParameters(
     }
     result[ key ] = pair[1]
   }
-  return result
+  return { [QUERY_PARAM]: result }
 }
 
 /** process dynamic route */
@@ -51,8 +61,15 @@ function processDynamicRoute(
   query: string,
   originalRouteDef?: string
 ) {
-  if (UrlPattern.check(originalRouteDef)) {
+  const url = originalRouteDef as string
+  if (UrlPattern.check(url)) {
     debug(`originalRouteDef`, query)
+    const obj = new UrlPattern(url)
+
+    return {
+      [DYNAMIC_PARAM]: obj.parse(query),
+      [DYNAMIC_NAMES]: obj.names
+    }
   }
 
   return {}

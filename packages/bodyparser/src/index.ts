@@ -18,3 +18,5 @@ export {
 export {
   UrlPattern
 } from './url-pattern'
+// export all constants 
+export * from './constants'

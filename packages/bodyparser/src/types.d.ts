@@ -52,16 +52,22 @@ export interface HttpRequest {
 
 // our custom types
 export type UwsStringPairObj = {
-  [key: string]: string
+  [key: string]: RecognizedString
 }
+
+export type UwsStringAnyObj = {
+  [key: string]: any
+}
+
 // Typing the result object
 export type UwsRespondBody = {
   url: string
   method: string
   query: string,
   headers: UwsStringPairObj
-  params: object,
-  urlParams?: ParsedUrl,
+  params: UwsStringAnyObj
+  // instead of a lot of different key those from url will be here
+  queryParams: UwsStringPairObj
   type?: string,
   payload?: Buffer
 }

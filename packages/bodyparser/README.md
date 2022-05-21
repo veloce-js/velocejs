@@ -41,13 +41,17 @@ const app = createApp()
 The `result` is a `UwsRespondBody` type object with this signature:
 
 ```ts
+// BREAKING CHANGE in 0.5.0
+
 type UwsRespondBody = {
- url: string
- method: string
- query: string,
- headers: UwsStringPairObj
- params: any
- payload?: Buffer
+  url: string
+  method: string
+  query: string
+  headers: UwsStringPairObj
+  params: UwsStringAnyObj
+  queryParams: UwsStringPairObj
+  type?: string // our internal ID
+  payload?: Buffer
 }
 ```
 
@@ -107,16 +111,24 @@ Once it got to the server and processed by `bodyParser`:
 Now you can take that input and do what you want with it. Please note, we don't store that uploaded file anywhere
 so you have to deal with it yourself.
 
+### Dynamic Route support
+
+*BREAKING CHANGE in V.0.5.0*
+
+More to come
+
+
 ## Extra export from this module
 
 The follow two exports can use in any node.js project
 
-### parseMultipart
-### getBoundary
+### parseMultipart and getBoundary
 
 First you use the `getBoundary(headers: string[])` to extract the boundary
 then use the `parseMultipart(body: Buffer, boundary: string)` to parse the input.
 And you will get the result in an array, file will also be in it.
+
+
 
 ---
 

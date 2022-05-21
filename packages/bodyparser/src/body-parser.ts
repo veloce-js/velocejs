@@ -5,8 +5,9 @@ import type {
   UwsRespondBody,
   UwsStringPairObj,
   UwsBodyParserMixEntry,
-  UwsBodyParserOptions
-} from '../index'
+  UwsBodyParserOptions,
+  UwsStringAnyObj,
+} from './types'
 import {
   CONTENT_TYPE,
   IS_FORM,
@@ -26,7 +27,10 @@ import {
   isFile,
   applyConfig,
 } from './utils'
-import { parseQuery } from './parse-query'
+import {
+  parseQuery,
+  processQueryParameters,
+} from './parse-query'
 import { onDataHandler } from './handle-upload'
 // @NOTE 2022-05-02 although the module has updated but it still not working correctly!
 import {
@@ -54,8 +58,9 @@ export async function bodyParser(
   const headers = getHeaders(req)
   const url = req.getUrl()
   const query = req.getQuery()
-  const params = parseQuery(query, applyConfig(options?.config))
   const method = req.getMethod()
+  const params = parseQuery(query, applyConfig(options?.config))
+
   // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
   // and we need to extract the params from the url and pass back as the ctx object
   const body: UwsRespondBody = { url, method, query, headers, params }
@@ -71,15 +76,15 @@ export async function bodyParser(
         case isJson(headers):
           body.type = IS_JSON
           body.params = handleJsonRequestParams(buffer, params)
-          break;
+          break
         case isForm(headers):
           body.type = IS_FORM
-          body.params = parseQuery(buffer.toString())
-          break;
+          body.params = processQueryParameters(buffer.toString())
+          break
         case isFile(headers):
           body.type = IS_MULTI
           body.params = parseMultipart(headers, buffer)
-          break;
+          break
         default:
           body.type = IS_OTHER
       }
@@ -94,7 +99,7 @@ export async function bodyParser(
  */
 function handleJsonRequestParams(
   buffer: Buffer,
-  params: UwsStringPairObj
+  params: UwsStringAnyObj
 ) {
   const payload = buffer.toString()
   // @TODO this could still be problematic in some edge case, waiting for that to happen

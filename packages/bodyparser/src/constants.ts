@@ -5,6 +5,7 @@ export const IS_FORM = 'form' // could be get could be post or anything with the
 export const IS_MULTI = 'multipart'
 export const IS_JSON = 'json'
 export const IS_OTHER = 'other'
+export const IS_DYNAMIC = 'dynamic'
 
 export const GET_NAME = 'get'
 
@@ -17,3 +18,8 @@ export const DEFAULT_CONFIG = {
   stripUnderscoreParam: true, // so those _cb will get strip out
   originalRouteDef: '' // use this understand better what to expect
 }
+// We need to namespace all the different params
+// then we could support more variety of query schema
+export const QUERY_PARAM = 'queryParams'
+export const DYNAMIC_PARAM = 'dynamicParams'
+export const DYNAMIC_NAMES = 'dynamicNames'
