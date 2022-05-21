@@ -58,12 +58,11 @@ export async function bodyParser(
       Reflect.apply(options.onAborted, null, [res]) :
       debugFn('ABORTED')
   })
-  // process the header
-  const headers = getHeaders(req)
   const url = req.getUrl()
   const query = req.getQuery()
   const method = req.getMethod()
-  const queryParams = parseQuery(query, applyConfig(options?.config))
+  const headers = getHeaders(req)
+  const queryParams = parseQuery(url, query, applyConfig(options?.config))
   const params = {}
   // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
   // and we need to extract the params from the url and pass back as the ctx object

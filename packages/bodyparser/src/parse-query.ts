@@ -11,11 +11,11 @@ import {
 import {
   UrlPattern
 } from './url-pattern'
-
-import debugFn from 'debug'
-const debug = debugFn('velocejs:bodypaser:parse-query')
+// import debugFn from 'debug'
+// const debug = debugFn('velocejs:bodypaser:parse-query')
 // the actual function to take the query apart
 export function parseQuery(
+  url: string,
   query: string,
   config?: UwsBodyParserOptions
 ) {
@@ -31,7 +31,7 @@ export function parseQuery(
   if (originalRouteDef) {
     params = Object.assign(
       params,
-      processDynamicRoute(query, originalRouteDef)
+      processDynamicRoute(url, originalRouteDef)
     )
   }
   // only one way or the other, not allow to mix and match
@@ -59,16 +59,16 @@ export function processQueryParameters(
 
 /** process dynamic route */
 function processDynamicRoute(
-  query: string,
+  url: string,
   originalRouteDef?: string
 ) {
-  const url = originalRouteDef as string
-  if (UrlPattern.check(url)) {
-    debug(`originalRouteDef`, query)
-    const obj = new UrlPattern(url)
+  const orgUrl = originalRouteDef as string
+  console.log('checking url', orgUrl, url)
+  if (UrlPattern.check(orgUrl)) {
+    const obj = new UrlPattern(orgUrl)
 
     return {
-      [DYNAMIC_PARAM]: obj.parse(query),
+      [DYNAMIC_PARAM]: obj.parse(url),
       [DYNAMIC_NAMES]: obj.names
     }
   }

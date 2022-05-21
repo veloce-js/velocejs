@@ -27,6 +27,7 @@ test.only(`Testing the url with dynamic parameter`, async t => {
 })
 
 test(`Should able to fix the buffer.toString() problem with a post`,async t => {
+  t.plan(1)
   // + '/whatever?key=1&b=2'
   const res = await fetch(url  + '/whatever?key=1&b=2', {
     headers: {
