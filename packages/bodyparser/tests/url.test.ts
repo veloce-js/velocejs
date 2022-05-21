@@ -1,6 +1,6 @@
 // individualy test the url stuff here
 import test from 'ava'
-import { UrlPattern } from '../src/urls'
+import { UrlPattern } from '../src/url-pattern'
 
 test(`Simple check url is dynamic or not`, t => {
   t.true(UrlPattern.check('/post/:id'))

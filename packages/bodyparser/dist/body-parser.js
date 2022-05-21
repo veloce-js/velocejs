@@ -31,9 +31,9 @@ function bodyParser(res, req, options) {
         // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
         // and we need to extract the params from the url and pass back as the ctx object
         const body = { url, method, query, headers, params, queryParams };
+        body[constants_1.QUERY_PARAM] = queryParams[constants_1.QUERY_PARAM];
         // check if it has dynamic route
         if (queryParams[constants_1.DYNAMIC_PARAM]) {
-            body[constants_1.QUERY_PARAM] = queryParams[constants_1.QUERY_PARAM];
             body[constants_1.DYNAMIC_NAMES] = queryParams[constants_1.DYNAMIC_NAMES];
             body.params = queryParams[constants_1.DYNAMIC_PARAM];
             body.type = constants_1.IS_DYNAMIC;

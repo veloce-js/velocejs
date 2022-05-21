@@ -87,5 +87,5 @@ export type UwsBodyParserMixEntry = {
 export type UwsBodyParserOptions = {
   stripUnderscoreParam?: boolean
   originalRouteDef?: string
-  [key: string]: any
+  // [key: string]: any
 }

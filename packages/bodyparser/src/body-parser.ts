@@ -68,9 +68,9 @@ export async function bodyParser(
   // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
   // and we need to extract the params from the url and pass back as the ctx object
   const body: UwsRespondBody = { url, method, query, headers, params, queryParams }
+  body[QUERY_PARAM] = queryParams[QUERY_PARAM]
   // check if it has dynamic route
   if (queryParams[DYNAMIC_PARAM]) {
-    body[QUERY_PARAM] = queryParams[QUERY_PARAM]
     body[DYNAMIC_NAMES] = queryParams[DYNAMIC_NAMES]
     body.params = queryParams[DYNAMIC_PARAM]
     body.type = IS_DYNAMIC

@@ -9,7 +9,9 @@ const debug = (0, debug_1.default)('velocejs:bodypaser:parse-query');
 // the actual function to take the query apart
 function parseQuery(query, config) {
     const { stripUnderscoreParam, originalRouteDef } = config;
-    let params = processQueryParameters(query, stripUnderscoreParam);
+    let params = {
+        [constants_1.QUERY_PARAM]: processQueryParameters(query, stripUnderscoreParam)
+    };
     // process the query parameter first if any
     // next if we provide the url for analysis and if it's a dynamic route
     if (originalRouteDef) {
@@ -32,7 +34,7 @@ function processQueryParameters(query, stripUnderscoreParam) {
         }
         result[key] = pair[1];
     }
-    return { [constants_1.QUERY_PARAM]: result };
+    return result;
 }
 exports.processQueryParameters = processQueryParameters;
 /** process dynamic route */

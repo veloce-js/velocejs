@@ -23,7 +23,9 @@ export function parseQuery(
     stripUnderscoreParam,
     originalRouteDef
   } = config as UwsBodyParserOptions
-  let params = processQueryParameters(query, stripUnderscoreParam)
+  let params = {
+    [QUERY_PARAM]: processQueryParameters(query, stripUnderscoreParam)
+  }
   // process the query parameter first if any
   // next if we provide the url for analysis and if it's a dynamic route
   if (originalRouteDef) {
@@ -52,7 +54,7 @@ export function processQueryParameters(
     }
     result[ key ] = pair[1]
   }
-  return { [QUERY_PARAM]: result }
+  return result
 }
 
 /** process dynamic route */
