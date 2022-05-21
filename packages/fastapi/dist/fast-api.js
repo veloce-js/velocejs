@@ -34,6 +34,7 @@ class FastApi {
     _validationErrStatus = 417;
     _dynamicRoutes = new Map();
     _staticRouteIndex = [];
+    _hasCatchAll = false;
     // protected properties
     payload;
     res;
@@ -82,11 +83,20 @@ class FastApi {
         });
         return routes;
     }
+    /** create a catch all route to handle those unhandle url(s) */
+    _createCatchAllRoute() {
+        return {
+            path: constants_2.CATCH_ALL_ROUTE,
+            type: constants_2.CATCH_ALL_TYPE,
+            handler: this._mapMethodToHandler(constants_2.CATCH_ALL_METHOD_NAME, [], false)
+        };
+    }
     /** Mapping all the string name to method and supply to UwsServer run method */
     async _prepareRoutes(meta) {
         const checkFn = this._prepareDynamicRoute(new WeakSet());
         return meta.map((m, i) => {
             const { path, type, propertyName } = m;
+            this._hasCatchAll = path === constants_2.CATCH_ALL_ROUTE;
             switch (type) {
                 case server_1.STATIC_TYPE:
                     this._staticRouteIndex.push(i);
@@ -119,6 +129,7 @@ class FastApi {
     /** create this wrapper for future development */
     _prepareSocketRoute(propertyName) {
         const config = this[propertyName];
+        // @TODO we are going to create a new wrapper class to take over the Socket
         if (!config['open']) {
             throw new Error(`You must provide an open method for your websocket setup!`);
         }
@@ -139,19 +150,9 @@ class FastApi {
             handler: this._mapMethodToHandler(propertyName, args, validation, _route)
         };
     }
-    /** just wrap this together to make it look neater */
-    _prepareRouteForContract(propertyName, args, type, path) {
-        const entry = {
-            [propertyName]: {
-                params: (0, utils_1.toArray)(args),
-                method: type,
-                route: path
-            }
-        };
-        this._routeForContract = (0, utils_1.assign)(this._routeForContract, entry);
-    }
     /** check if there is a dynamic route and prepare it */
     _prepareDynamicRoute(tmpSet) {
+        // @TODO we don't need to create the object anymore, its been handle by bodyParser
         return (type, path, args) => {
             debug(`checkFn`, path);
             let route = '', upObj = null;
@@ -159,7 +160,7 @@ class FastApi {
                 // now we need to check if the types are supported
                 (0, common_1.assertDynamicRouteArgs)(args);
                 upObj = new bodyparser_1.UrlPattern(path);
-                route = upObj.route;
+                route = upObj.route; // this is the transformed route
             }
             if (tmpSet.has({ route })) {
                 throw new Error(`${route} already existed!`);
@@ -181,7 +182,7 @@ class FastApi {
         return async (res, req) => {
             // @0.3.0 we change the whole thing into one middlewares stack
             const stacks = [
-                bodyparser_1.default,
+                this._bodyParser(route),
                 this._prepareCtx(propertyName, res, route),
                 this._handleProtectedRoute(propertyName),
                 this._prepareValidator(propertyName, argsList, validationInput),
@@ -190,7 +191,22 @@ class FastApi {
                     return this._handleContent(args, handler, type, propertyName);
                 }
             ];
-            this._handleMiddlewares(stacks, res, req, () => console.log(`@TODO`, 'define our own onAbortedHandler'));
+            this._handleMiddlewares(stacks, res, req);
+        };
+    }
+    /** wrapper of method and provide config option to bodyParser */
+    async _bodyParser(route) {
+        const bodyParserConfig = await this._config.getConfig(config_1.BODYPARSER_KEY)
+            || config_1.VeloceConfig.getDefaults(config_1.BODYPARSER_KEY);
+        if (route) { // this is a dynamic route
+            bodyParserConfig[config_1.ORG_ROUTE_REF] = this._dynamicRoutes.get(route).original;
+        }
+        const config = {
+            config: bodyParserConfig,
+            onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
+        };
+        return (res, req) => {
+            return (0, bodyparser_1.default)(res, req, config);
         };
     }
     /** take this out from above to keep related code in one place */
@@ -212,20 +228,21 @@ class FastApi {
     _prepareCtx(propertyName, res, route) {
         return async (result) => {
             const ctx = (0, utils_1.assign)(result, { propertyName, route });
-            // 0.3.0 handle dynamic route
-            if (route) {
-                const obj = this._dynamicRoutes.get(route);
-                // the data extracted will become the argument
-                const urlParams = obj.parse(ctx.url);
-                // @TODO we need to process the params as well
-                ctx.params = urlParams === null ? {} : urlParams;
-                // we need to add the names in order into the ctx
-                ctx.paramNames = obj.names;
-            }
             this._setTemp(ctx, res);
             debug('ctx', ctx);
             return ctx;
         };
+    }
+    /** just wrap this together to make it look neater */
+    _prepareRouteForContract(propertyName, args, type, path) {
+        const entry = {
+            [propertyName]: {
+                params: (0, utils_1.toArray)(args),
+                method: type,
+                route: path
+            }
+        };
+        this._routeForContract = (0, utils_1.assign)(this._routeForContract, entry);
     }
     /** binding method to the uws server */
     async _run(routes) {
@@ -244,6 +261,11 @@ class FastApi {
                 }
             }
             _routes = a.concat(b);
+        }
+        // @TODO if there is no static route / or catchAll route
+        // we put one to the bottom of the stack to handle 404 route
+        if (!this._hasCatchAll) {
+            _routes.push(this._createCatchAllRoute());
         }
         debug('routes', _routes);
         return this._uwsInstance.run(_routes);
@@ -269,7 +291,7 @@ class FastApi {
     /** @TODO handle protected route, also we need another library to destruct those pattern route */
     _handleProtectedRoute(propertyName) {
         // need to check out the route info
-        debug(`checking the route`, propertyName);
+        debug(`@TODO checking the route --->`, propertyName);
         return async (bodyParserProcessedResult) => {
             // the value is bodyParser processed result
             // console.info('@TODO handle protected route') //, bodyParserProcessedResult)
@@ -297,19 +319,23 @@ class FastApi {
     // take the argument list and the input to create the correct arguments
     // @TODO check if this is the dynamic route and we need to convert the data
     _applyArgs(argNames, argsList, ctx) {
-        const { params, route, paramNames } = ctx;
+        const { params, route, names } = ctx;
         const isDynamic = (0, common_1.notUndef)(this._dynamicRoutes.get(route));
         const isSpread = (0, common_1.notUndef)((0, common_1.hasSpreadArg)(argsList));
         // debug('_applyArgs', argNames, argsList, ctx)
         switch (true) {
             case isDynamic && isSpread:
-                debug('-------------------- BOTH ------------------');
-                return (0, common_1.prepareArgsFromDynamicToSpread)(argNames, argsList, params, paramNames);
+                return (0, common_1.prepareArgsFromDynamicToSpread)(argNames, argsList, params, names);
             case isDynamic && !isSpread:
                 return (0, common_1.convertStrToType)(argNames, argsList, params);
             case !isDynamic && isSpread:
                 return (0, common_1.prepareSpreadArg)(params);
             default:
+                // now the body and query are handle in two different props which means
+                // one of them will get lost @TODO how to allow using both? or not KISS?
+                if (ctx.method === bodyparser_1.GET_NAME) {
+                    return argNames.map(argName => ctx[bodyparser_1.QUERY_PARAM][argName]);
+                }
                 return argNames.map(argName => params[argName]);
         }
     }
@@ -466,15 +492,23 @@ class FastApi {
     /**
      The interface to serve up the contract, it's public but prefix underscore to avoid override
      */
-    _serveContract() {
+    $_serveContract() {
         // debug('call _serveContract') // @BUG if I remove this then it doens't work???
         Promise.resolve(constants_2.isDev ?
             this._contract.output() :
             this._config.getConfig(`${config_1.CONTRACT_KEY}.${config_1.CACHE_DIR}`)
                 .then((cacheDir) => this._contract.serve(cacheDir))).then((json) => {
-            debug('contract', json);
+            debug('_serveContract contract:', json);
             this.$json(json);
         });
+    }
+    /**
+      When there is no catch all route, we will insert this to the end and serve up a 404
+      because when the route unmatch the server just hang up
+    */
+    $_catchAll() {
+        // debug(ctx) // to see what's going on
+        (0, server_1.write404)(this.res);
     }
     /**
      * We remap some of the methods from UwsServer to here for easier to use

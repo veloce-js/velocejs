@@ -16,6 +16,7 @@ export declare class FastApi implements FastApiInterface {
     private _validationErrStatus;
     private _dynamicRoutes;
     private _staticRouteIndex;
+    private _hasCatchAll;
     protected payload: UwsRespondBody | undefined;
     protected res: HttpResponse | undefined;
     protected req: HttpRequest | undefined;
@@ -26,21 +27,25 @@ export declare class FastApi implements FastApiInterface {
     private _prepareContract;
     /** generate an additonal route for the contract */
     private _insertContractRoute;
+    /** create a catch all route to handle those unhandle url(s) */
+    private _createCatchAllRoute;
     /** Mapping all the string name to method and supply to UwsServer run method */
     private _prepareRoutes;
     /** create this wrapper for future development */
     private _prepareSocketRoute;
     /** TS script force it to make it looks so damn bad for all their non-sense rules */
     private _prepareNormalRoute;
-    /** just wrap this together to make it look neater */
-    private _prepareRouteForContract;
     /** check if there is a dynamic route and prepare it */
     private _prepareDynamicRoute;
     private _mapMethodToHandler;
+    /** wrapper of method and provide config option to bodyParser */
+    private _bodyParser;
     /** take this out from above to keep related code in one place */
     private _prepareValidator;
     /** get call after the bodyParser, and prepare for the operation */
     private _prepareCtx;
+    /** just wrap this together to make it look neater */
+    private _prepareRouteForContract;
     /** binding method to the uws server */
     private _run;
     /** split out from above because we still need to handle the user provide middlewares */
@@ -100,7 +105,12 @@ export declare class FastApi implements FastApiInterface {
     /**
      The interface to serve up the contract, it's public but prefix underscore to avoid override
      */
-    _serveContract(): void;
+    $_serveContract(): void;
+    /**
+      When there is no catch all route, we will insert this to the end and serve up a 404
+      because when the route unmatch the server just hang up
+    */
+    $_catchAll(): void;
     /**
      * We remap some of the methods from UwsServer to here for easier to use
      */
