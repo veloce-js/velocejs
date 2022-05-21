@@ -14,17 +14,19 @@ const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)('velocejs:body-parser:main');
 // processing
 // main
-function bodyParser(res, req, onAborted) {
+function bodyParser(res, req, options) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
         res.onAborted(() => {
-            onAborted ? Reflect.apply(onAborted, null, [res]) : debugFn('ABORTED');
+            (options === null || options === void 0 ? void 0 : options.onAborted) ?
+                Reflect.apply(options.onAborted, null, [res]) :
+                debugFn('ABORTED');
         });
         // process the header
         const headers = (0, utils_1.getHeaders)(req);
         const url = req.getUrl();
         const query = req.getQuery();
-        const params = (0, parse_query_1.parseQuery)(query);
+        const params = (0, parse_query_1.parseQuery)(query, options === null || options === void 0 ? void 0 : options.config);
         const method = req.getMethod();
         // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
         // and we need to extract the params from the url and pass back as the ctx object
@@ -68,7 +70,7 @@ function handleJsonRequestParams(buffer, params) {
     // @TODO this could still be problematic in some edge case, waiting for that to happen
     return payload ? JSON.parse(payload) : ((0, utils_1.isEmptyObj)(params) ? {} : params);
 }
-// all-in-one to parse and post process the multipart-formdata input
+/** all-in-one to parse and post process the multipart-formdata input */
 function parseMultipart(headers, body) {
     const boundary = (0, parse_multipart_1.getBoundary)(headers[constants_1.CONTENT_TYPE]);
     if (boundary) {
@@ -105,7 +107,7 @@ function processFileArray(params) {
         }
     }, {});
 }
-// when the result is simple text then we parse it to string not buffer
+/** when the result is simple text then we parse it to string not buffer */
 function processTextArray(params) {
     return params
         .filter(param => !param.filename && !param.type)
@@ -114,7 +116,7 @@ function processTextArray(params) {
     { [param.name]: (0, utils_1.toBuffer)(param.data).toString() }))
         .reduce((a, b) => Object.assign(a, b), {});
 }
-// export this for unit test
+/** export this for unit test **/
 function processParams(params) {
     return Object.assign(processFileArray(params), processTextArray(params));
 }

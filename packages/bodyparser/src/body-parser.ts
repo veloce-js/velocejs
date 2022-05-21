@@ -37,17 +37,19 @@ const debugFn = debug('velocejs:body-parser:main')
 export async function bodyParser(
   res: HttpResponse,
   req: HttpRequest,
-  onAborted?: () => void
+  options?: { config: UwsStringPairObj, onAborted?: () => void }
 ): Promise<UwsRespondBody> {
   // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
   res.onAborted(() => {
-    onAborted ? Reflect.apply(onAborted, null, [res]) : debugFn('ABORTED')
+    options?.onAborted ?
+      Reflect.apply(options.onAborted, null, [res]) :
+      debugFn('ABORTED')
   })
   // process the header
   const headers = getHeaders(req)
   const url = req.getUrl()
   const query = req.getQuery()
-  const params = parseQuery(query)
+  const params = parseQuery(query, options?.config)
   const method = req.getMethod()
   // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
   // and we need to extract the params from the url and pass back as the ctx object
@@ -94,8 +96,7 @@ function handleJsonRequestParams(
   return payload ? JSON.parse(payload) : (isEmptyObj(params) ? {} : params)
 }
 
-
-// all-in-one to parse and post process the multipart-formdata input
+/** all-in-one to parse and post process the multipart-formdata input */
 export function parseMultipart(
   headers: UwsStringPairObj,
   body: Buffer
@@ -105,7 +106,7 @@ export function parseMultipart(
     const params = parse(body, boundary as string)
     if (Array.isArray(params) && params.length) {
 
-      return processParams(params as any)
+      return processParams(params as unknown as Array<Record<string, UwsBodyParserMixEntry>>)
     }
   }
 
@@ -115,7 +116,7 @@ export function parseMultipart(
 // break it out from above for clearity
 function processFileArray(
   params: Array<Record<string, UwsBodyParserMixEntry>>
-): any {
+) {
 
   return params.filter(param => param.filename && param.type)
                .map(param => {
@@ -131,21 +132,18 @@ function processFileArray(
                .reduce<Record<string, UwsBodyParserMixEntry>>((a , b): any => {
                  switch (true) {
                   case (isEmptyObj(a)):
-
                     return { [b.name]: b.value } // init
                   case (a[b.name] !== undefined):
-
                     return Object.assign(a , {
                       [b.name]: toArr(a[b.name]).concat(toArr(b.value))
                     })
                   default:
-
                     return Object.assign(a, {[b.name]: b.value})
                  }
                }, {})
 }
 
-// when the result is simple text then we parse it to string not buffer
+/** when the result is simple text then we parse it to string not buffer */
 function processTextArray(
   params: Array<Record<string, UwsBodyParserMixEntry>>
 ) {
@@ -160,7 +158,7 @@ function processTextArray(
   .reduce<Record<string, string>>((a, b) => Object.assign(a, b), {})
 }
 
-// export this for unit test
+/** export this for unit test **/
 export function processParams(
   params: Array<Record<string, UwsBodyParserMixEntry>>
 ): UwsBodyParserMixEntry {

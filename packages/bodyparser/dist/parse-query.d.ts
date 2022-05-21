@@ -1,2 +1,2 @@
 import type { UwsStringPairObj } from './types';
-export declare function parseQuery(query: string): UwsStringPairObj;
+export declare function parseQuery(query: string, config?: UwsStringPairObj): UwsStringPairObj;
