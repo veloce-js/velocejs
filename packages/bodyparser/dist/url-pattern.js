@@ -39,7 +39,6 @@ class UrlPattern {
     }
     /** parse the var from url */
     parse(url) {
-        this._getNames(url); // get the names at the same time
         return this._libObj.match(url);
     }
     /** construct a url */

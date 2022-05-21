@@ -1,21 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processQueryParameters = exports.parseQuery = void 0;
-const tslib_1 = require("tslib");
 const constants_1 = require("./constants");
 const url_pattern_1 = require("./url-pattern");
-const debug_1 = tslib_1.__importDefault(require("debug"));
-const debug = (0, debug_1.default)('velocejs:bodypaser:parse-query');
+// import debugFn from 'debug'
+// const debug = debugFn('velocejs:bodypaser:parse-query')
 // the actual function to take the query apart
-function parseQuery(query, config) {
-    const { stripUnderscoreParam, originalRouteDef } = config;
+function parseQuery(url, query, config) {
+    const c = config;
     let params = {
-        [constants_1.QUERY_PARAM]: processQueryParameters(query, stripUnderscoreParam)
+        [constants_1.QUERY_PARAM]: processQueryParameters(query, c[constants_1.STRIP_UNDERSCORE])
     };
     // process the query parameter first if any
     // next if we provide the url for analysis and if it's a dynamic route
-    if (originalRouteDef) {
-        params = Object.assign(params, processDynamicRoute(query, originalRouteDef));
+    if (c[constants_1.ORG_ROUTE_REF]) {
+        params = Object.assign(params, processDynamicRoute(url, c[constants_1.ORG_ROUTE_REF]));
     }
     // only one way or the other, not allow to mix and match
     return params;
@@ -38,13 +37,12 @@ function processQueryParameters(query, stripUnderscoreParam) {
 }
 exports.processQueryParameters = processQueryParameters;
 /** process dynamic route */
-function processDynamicRoute(query, originalRouteDef) {
-    const url = originalRouteDef;
-    if (url_pattern_1.UrlPattern.check(url)) {
-        debug(`originalRouteDef`, query);
-        const obj = new url_pattern_1.UrlPattern(url);
+function processDynamicRoute(url, originalRouteDef) {
+    const orgUrl = originalRouteDef;
+    if (url_pattern_1.UrlPattern.check(orgUrl)) {
+        const obj = new url_pattern_1.UrlPattern(orgUrl);
         return {
-            [constants_1.DYNAMIC_PARAM]: obj.parse(query),
+            [constants_1.DYNAMIC_PARAM]: obj.parse(url),
             [constants_1.DYNAMIC_NAMES]: obj.names
         };
     }

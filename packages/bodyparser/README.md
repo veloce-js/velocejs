@@ -64,6 +64,7 @@ Here are the detail:
 - `headers` - all the headers from this request
 - `params` - if the call is a GET, then you will get result parsed from the query (i.e. {a: 1, b: 2}) if its a POST then you get all the field in one object; if you POST a json then the result json will be in this params
 - `payload` - this is the raw buffer received
+- `queryParams` - this is the params we get from your url (i.e. url?a=1&b=2) by default all the props start with underscore (i.e. _cb=092348309) will get strip out
 
 ### Body Parser further explain
 

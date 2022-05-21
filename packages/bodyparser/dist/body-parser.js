@@ -21,12 +21,11 @@ function bodyParser(res, req, options) {
                 Reflect.apply(options.onAborted, null, [res]) :
                 debugFn('ABORTED');
         });
-        // process the header
-        const headers = (0, utils_1.getHeaders)(req);
         const url = req.getUrl();
         const query = req.getQuery();
         const method = req.getMethod();
-        const queryParams = (0, parse_query_1.parseQuery)(query, (0, utils_1.applyConfig)(options === null || options === void 0 ? void 0 : options.config));
+        const headers = (0, utils_1.getHeaders)(req);
+        const queryParams = (0, parse_query_1.parseQuery)(url, query, (0, utils_1.applyConfig)(options === null || options === void 0 ? void 0 : options.config));
         const params = {};
         // we now always parse the URL because the url could be soemthing like /something/*/_id whatever
         // and we need to extract the params from the url and pass back as the ctx object

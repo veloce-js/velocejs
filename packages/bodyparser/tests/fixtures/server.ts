@@ -8,6 +8,7 @@ import {
   HttpRequest
 } from '@velocejs/server/index'
 import bodyParser from '../../src'
+import { ORG_ROUTE_REF } from '../../src'
 
 const app = new UwsServer()
 app.autoStart = false
@@ -18,10 +19,10 @@ app.run([
     handler: async (res: HttpResponse, req: HttpRequest) => {
       const result = await bodyParser(res, req, {
         config: {
-          originalRouteDef: '/some-path/:id(/:optional)'
+          [ORG_ROUTE_REF]: '/some-path/:id(/:optional)'
         }
       })
-      console.log(`got called`, result)
+      // console.log(`got called here`, result)
       const { params } = result
       // we only return the result.params
       jsonWriter(res)(params)

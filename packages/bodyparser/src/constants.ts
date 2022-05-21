@@ -23,3 +23,6 @@ export const DEFAULT_CONFIG = {
 export const QUERY_PARAM = 'queryParams'
 export const DYNAMIC_PARAM = 'dynamicParams'
 export const DYNAMIC_NAMES = 'names'
+// keys for config
+export const STRIP_UNDERSCORE = 'stripUnderscoreParam'
+export const ORG_ROUTE_REF = '_originalRouteDef'

@@ -15,15 +15,13 @@ test.after(() => {
   app.shutdown()
 })
 
-test.only(`Testing the url with dynamic parameter`, async t => {
+test(`Testing the url with dynamic parameter`, async t => {
   t.plan(1)
   // '/some-path/:id/(/:optional)'
-  const res = await fetch(`${url}/some-path/100`)
+  const res = await fetch(`${url}/some-path/100?_cb=${Date.now()}&id=200` )
   const json = await res.json()
-
-  console.log(json)
-
-  t.truthy(json)
+  // console.log(json)
+  t.deepEqual(json, {id: '100'})
 })
 
 test(`Should able to fix the buffer.toString() problem with a post`,async t => {

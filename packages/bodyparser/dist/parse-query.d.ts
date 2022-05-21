@@ -1,5 +1,5 @@
 import type { UwsBodyParserOptions } from './types';
-export declare function parseQuery(query: string, config?: UwsBodyParserOptions): {
+export declare function parseQuery(url: string, query: string, config?: UwsBodyParserOptions): {
     queryParams: {};
 };
 /** break up the process to make the main interface cleaner */

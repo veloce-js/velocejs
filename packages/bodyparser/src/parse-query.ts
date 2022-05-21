@@ -7,6 +7,8 @@ import {
   QUERY_PARAM,
   DYNAMIC_NAMES,
   DYNAMIC_PARAM,
+  STRIP_UNDERSCORE,
+  ORG_ROUTE_REF,
 } from './constants'
 import {
   UrlPattern
@@ -19,19 +21,16 @@ export function parseQuery(
   query: string,
   config?: UwsBodyParserOptions
 ) {
-  const {
-    stripUnderscoreParam,
-    originalRouteDef
-  } = config as UwsBodyParserOptions
+  const c = config as UwsBodyParserOptions
   let params = {
-    [QUERY_PARAM]: processQueryParameters(query, stripUnderscoreParam)
+    [QUERY_PARAM]: processQueryParameters(query, c[STRIP_UNDERSCORE])
   }
   // process the query parameter first if any
   // next if we provide the url for analysis and if it's a dynamic route
-  if (originalRouteDef) {
+  if (c[ORG_ROUTE_REF]) {
     params = Object.assign(
       params,
-      processDynamicRoute(url, originalRouteDef)
+      processDynamicRoute(url, c[ORG_ROUTE_REF])
     )
   }
   // only one way or the other, not allow to mix and match
@@ -63,7 +62,6 @@ function processDynamicRoute(
   originalRouteDef?: string
 ) {
   const orgUrl = originalRouteDef as string
-  console.log('checking url', orgUrl, url)
   if (UrlPattern.check(orgUrl)) {
     const obj = new UrlPattern(orgUrl)
 

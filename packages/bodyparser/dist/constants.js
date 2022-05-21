@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DYNAMIC_NAMES = exports.DYNAMIC_PARAM = exports.QUERY_PARAM = exports.DEFAULT_CONFIG = exports.DYNAMIC_ROUTE_PATTERN = exports.FILE_POST_HEADER = exports.DEFAULT_FORM_HEADER = exports.GET_NAME = exports.IS_DYNAMIC = exports.IS_OTHER = exports.IS_JSON = exports.IS_MULTI = exports.IS_FORM = exports.CONTENT_TYPE = exports.BOUNDARY = void 0;
+exports.ORG_ROUTE_REF = exports.STRIP_UNDERSCORE = exports.DYNAMIC_NAMES = exports.DYNAMIC_PARAM = exports.QUERY_PARAM = exports.DEFAULT_CONFIG = exports.DYNAMIC_ROUTE_PATTERN = exports.FILE_POST_HEADER = exports.DEFAULT_FORM_HEADER = exports.GET_NAME = exports.IS_DYNAMIC = exports.IS_OTHER = exports.IS_JSON = exports.IS_MULTI = exports.IS_FORM = exports.CONTENT_TYPE = exports.BOUNDARY = void 0;
 exports.BOUNDARY = 'boundary';
 exports.CONTENT_TYPE = 'content-type';
 // simple input type to determine what is the response should be
@@ -23,3 +23,6 @@ exports.DEFAULT_CONFIG = {
 exports.QUERY_PARAM = 'queryParams';
 exports.DYNAMIC_PARAM = 'dynamicParams';
 exports.DYNAMIC_NAMES = 'names';
+// keys for config
+exports.STRIP_UNDERSCORE = 'stripUnderscoreParam';
+exports.ORG_ROUTE_REF = '_originalRouteDef';

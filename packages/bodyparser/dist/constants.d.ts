@@ -16,3 +16,5 @@ export declare const DEFAULT_CONFIG: {
 export declare const QUERY_PARAM = "queryParams";
 export declare const DYNAMIC_PARAM = "dynamicParams";
 export declare const DYNAMIC_NAMES = "names";
+export declare const STRIP_UNDERSCORE = "stripUnderscoreParam";
+export declare const ORG_ROUTE_REF = "_originalRouteDef";
