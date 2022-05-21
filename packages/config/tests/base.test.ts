@@ -1,6 +1,6 @@
 import test from 'ava'
 import { join } from 'node:path'
-import VeloceConfig from '../dist'
+import { VeloceConfig } from '../dist'
 
 let config1: VeloceConfig
 let config2: VeloceConfig

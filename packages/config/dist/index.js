@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.STRIP_UNDERSCORE = exports.ORG_ROUTE_REF = exports.BODYPARSER_KEY = exports.SERVER_KEY = exports.CACHE_DIR = exports.CONTRACT_KEY = exports.SUPPORT_EXT = exports.FILE_NAME = exports.VELOCE_DEFAULT_URL = void 0;
+exports.STRIP_UNDERSCORE = exports.ORG_ROUTE_REF = exports.BODYPARSER_KEY = exports.SERVER_KEY = exports.CACHE_DIR = exports.CONTRACT_KEY = exports.SUPPORT_EXT = exports.FILE_NAME = exports.VELOCE_DEFAULT_URL = exports.VeloceConfig = void 0;
 // start your project here
-const veloce_config_1 = require("./veloce-config");
-exports.default = veloce_config_1.VeloceConfig; // breaking change 0.5.0
+// switch back in 0.5.1 too many ts bs 
+var veloce_config_1 = require("./veloce-config");
+Object.defineProperty(exports, "VeloceConfig", { enumerable: true, get: function () { return veloce_config_1.VeloceConfig; } });
 var constants_1 = require("./constants");
 Object.defineProperty(exports, "VELOCE_DEFAULT_URL", { enumerable: true, get: function () { return constants_1.VELOCE_DEFAULT_URL; } });
 Object.defineProperty(exports, "FILE_NAME", { enumerable: true, get: function () { return constants_1.FILE_NAME; } });

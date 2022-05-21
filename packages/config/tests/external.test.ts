@@ -4,7 +4,7 @@ import { join } from 'node:path'
 // this is useless - it doesn't work
 process.env.VELOCE_CONFIG = join(__dirname, 'fixtures', 'jsonql.config.cjs')
 
-import VeloceConfig from '../dist'
+import { VeloceConfig } from '../dist'
 
 // const PATH_TO_VELOCE_CONFIG = process.env.VELOCE_CONFIG
 

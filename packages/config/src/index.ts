@@ -1,7 +1,6 @@
 // start your project here
-import { VeloceConfig } from './veloce-config'
-export default VeloceConfig // breaking change 0.5.0
-
+// switch back in 0.5.1 too many ts bs 
+export { VeloceConfig } from './veloce-config'
 export {
   VELOCE_DEFAULT_URL,
   FILE_NAME,
