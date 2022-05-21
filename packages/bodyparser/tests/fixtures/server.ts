@@ -16,7 +16,11 @@ app.run([
     type: 'get',
     path: '/some-path/*', // here is the problem
     handler: async (res: HttpResponse, req: HttpRequest) => {
-      const result = await bodyParser(res, req)
+      const result = await bodyParser(res, req, {
+        config: {
+          originalRouteDef: '/some-path/:id(/:optional)'
+        }
+      })
       console.log(`got called`, result)
       const { params } = result
       // we only return the result.params

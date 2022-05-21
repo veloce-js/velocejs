@@ -3,8 +3,13 @@ import { bodyParser } from './body-parser'
 // this way the default is bodyparser and if wanted we can named import the others
 export default bodyParser
 // sub export
-export { getHeaders, isDynamicRoute } from './utils'
-export { uploadHandler } from './handle-upload'
+export {
+  getHeaders,
+  isDynamicRoute
+} from './utils'
+export {
+  uploadHandler
+} from './handle-upload'
 export {
   parse as parseMultipart, // rename it
   getBoundary
@@ -12,4 +17,4 @@ export {
 // 0.3.0 dynamic url
 export {
   UrlPattern
-} from './urls'
+} from './url-pattern'

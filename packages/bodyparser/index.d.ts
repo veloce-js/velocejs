@@ -77,7 +77,7 @@ export type UwsBodyParserMixEntry = {
 }
 
 export type UwsBodyParserOptions = {
-  stripUnderscoreParam: boolean
+  stripUnderscoreParam?: boolean
   originalRouteDef?: string
   onAborted?: () => void
   [key: string]: any
