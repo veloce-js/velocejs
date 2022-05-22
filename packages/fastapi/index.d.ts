@@ -17,6 +17,7 @@ export type {
   JsonqlArrayValidateInput,
   JsonqlObjectValidateInput,
 } from '@jsonql/validator/index'
+
 export type RouteMetaInfo = {
   propertyName: string
   path: string
@@ -61,3 +62,8 @@ export type VeloceCtx = {
 } & UwsRespondBody
 
 export type VeloceMiddleware = (ctx: VeloceCtx) => Promise<VeloceCtx>
+
+export type BodyParserConfig = {
+  config: any,
+  onAborted?: () => void
+}
