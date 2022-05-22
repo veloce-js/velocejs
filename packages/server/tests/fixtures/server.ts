@@ -18,9 +18,9 @@ app.run([
     handler: async (res: HttpResponse, req: HttpRequest) => {
       const result = await bodyParser(res, req)
       // console.log(`got called`, result)
-      const { params } = result
+      const payload = result.method === 'get' ? result.queryParams : result.params
       // we only return the result.params
-      jsonWriter(res)(params)
+      jsonWriter(res)(payload)
     }
   }
 ])

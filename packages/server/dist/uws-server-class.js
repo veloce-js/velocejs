@@ -106,7 +106,8 @@ class UwsServer {
             }
             else if (constants_1.SUPPORT_REST_ROUTES.includes(type)) {
                 debugFn(`Create ${type} route for ${path}`);
-                app[type](path, handler);
+                // app[type](path, handler)
+                Reflect.apply(app[type], app, [path, handler]);
             }
             else {
                 throw new Error(`Route ${type} is not supported!`);

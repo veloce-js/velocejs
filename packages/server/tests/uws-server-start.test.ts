@@ -14,7 +14,7 @@ test.before(() => {
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
       const result = await bodyParser(res, req)
-      jsonWriter(res)(result.params)
+      jsonWriter(res)(result.queryParams)
     }
   }])
 })

@@ -169,6 +169,7 @@ export class FastApi implements FastApiInterface {
   }
 
   /** create a catch all route to handle those unhandle url(s) */
+  /*
   private _createCatchAllRoute() {
     return {
       path: CATCH_ALL_ROUTE,
@@ -176,7 +177,7 @@ export class FastApi implements FastApiInterface {
       handler: this._mapMethodToHandler(CATCH_ALL_METHOD_NAME, [], false)
     }
   }
-
+  */
   /** check if there is a catch all route, otherwise create one at the end */
   private _checkCatchAllRoute(path: string, type: string) {
     if (!this._hasCatchAll) {
@@ -300,10 +301,10 @@ export class FastApi implements FastApiInterface {
     const handler = this[propertyName]
     // @TODO need to rethink about how this work
     return async (res: HttpResponse, req: HttpRequest) => {
-      debug(`Interface get call`, req.getUrl(), route)
-      // @0.3.0 we change the whole thing into one middlewares stack
-      const stacks = [
-        this._bodyParser(route),
+      debug(`Interface get call`, req.getUrl(), route, propertyName)
+      const config = await this._getBodyParserConfig(route)
+      const fnStacks = [
+        bodyParser,
         this._prepareCtx(propertyName, res, route),
         this._handleProtectedRoute(propertyName),
         this._prepareValidator(propertyName, argsList, validationInput),
@@ -312,30 +313,24 @@ export class FastApi implements FastApiInterface {
           return this._handleContent(args, handler, type as string, propertyName)
         }
       ]
-      this._handleMiddlewares(stacks, res, req)
+      this._handleMiddlewares(fnStacks, res, req, config)
     }
   }
 
-  /** wrapper method to provide config option to bodyParser */
-  private async _bodyParser(route?: string) {
-    const bodyParserConfig = await this._config.getConfig(BODYPARSER_KEY)
-                           || VeloceConfig.getDefaults(BODYPARSER_KEY)
-    if (route) { // this is a dynamic route
-      bodyParserConfig[URL_PATTERN_OBJ] = this._dynamicRoutes.get(route)
-    }
-    debug('bodyParserConfig', bodyParserConfig)
-    const config = {
-      config: bodyParserConfig,
-      onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
-    }
-
-    return async (res: HttpResponse, req: HttpRequest) => {
-      return bodyParser(res, req, config)
-                .then((res: any) => {
-                  debug('bodyParser', res)
-                  return res
-                })
-    }
+  /** fetch the bodyParser config */
+  private async _getBodyParserConfig(dynamicRoute?: string) {
+    return this._config.getConfig(BODYPARSER_KEY)
+      .then((config: {[key: string]: string}) => {
+        const bodyParserConfig = config || VeloceConfig.getDefaults(BODYPARSER_KEY)
+        if (dynamicRoute) { // this is a dynamic route
+          bodyParserConfig[URL_PATTERN_OBJ] = this._dynamicRoutes.get(dynamicRoute)
+        }
+        debug('bodyParserConfig', bodyParserConfig)
+        return {
+          config: bodyParserConfig,
+          onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
+        }
+      })
   }
 
   /** take this out from above to keep related code in one place */
@@ -413,9 +408,10 @@ export class FastApi implements FastApiInterface {
     }
     // @TODO if there is no static route / or catchAll route
     // we put one to the bottom of the stack to handle 404 route
+    /*
     if (!this._hasCatchAll) {
       _routes.push(this._createCatchAllRoute())
-    }
+    } */
     debug('all setup routes', _routes)
     return this._uwsInstance.run(_routes)
   }
