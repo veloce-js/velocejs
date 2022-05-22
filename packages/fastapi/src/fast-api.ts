@@ -6,10 +6,7 @@ import type {
   UwsRouteSetup,
   UwsRouteHandler,
   UwsRespondBody,
-  // UwsWriter,
-  // UwsJsonWriter,
   UwsStringPairObj,
-  // RecognizedString
 } from '@velocejs/server/index' // point to the source ts
 // our deps
 import type {
@@ -273,21 +270,22 @@ export class FastApi implements FastApiInterface {
       args: UwsStringPairObj[]
     ): string => {
       debug(`checkFn`, path)
-      let route = '', upObj: UrlPattern | null = null
+      let dynamicRoute = '', upObj: UrlPattern | null = null
       if (type === DEFAULT_CONTRACT_METHOD && UrlPattern.check(path)) {
         // now we need to check if the types are supported
         assertDynamicRouteArgs(args)
         upObj = new UrlPattern(path)
-        route = upObj.route // this is the transformed route
+        dynamicRoute = upObj.route // this is the transformed route
+        debug('transformed dynamicRoute', dynamicRoute)
       }
-      if (tmpSet.has({ route })) {
-        throw new Error(`${route} already existed!`)
+      if (tmpSet.has({ dynamicRoute })) {
+        throw new Error(`${dynamicRoute} already existed!`)
       }
-      tmpSet.add({ route: route === '' ? path : route })
+      tmpSet.add({ route: dynamicRoute === '' ? path : dynamicRoute })
       if (upObj !== null) {
-        this._dynamicRoutes.set(route, upObj)
+        this._dynamicRoutes.set(dynamicRoute, upObj)
       }
-      return route
+      return dynamicRoute
     }
   }
 

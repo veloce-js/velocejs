@@ -55,7 +55,7 @@
     "@types/ws": "^8.5.3",
     "@typescript-eslint/eslint-plugin": "^5.25.0",
     "@typescript-eslint/parser": "^5.25.0",
-    "@velocejs/bodyparser": "workspace:^0.5.1",
+    "@velocejs/bodyparser": "workspace:^0.5.2",
     "ava": "^4.2.0",
     "esbuild": "^0.14.39",
     "esbuild-register": "^3.3.2",
