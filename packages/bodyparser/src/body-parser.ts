@@ -52,6 +52,7 @@ export async function bodyParser(
   req: HttpRequest,
   options?: { config: UwsBodyParserOptions, onAborted?: () => void }
 ): Promise<UwsRespondBody> {
+  debugFn('bodyparser options', options)
   // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
   res.onAborted(() => {
     options?.onAborted ?
