@@ -16,4 +16,5 @@ export declare function prepareSpreadArg(params: UwsStringPairObj): any[];
 export declare function assertDynamicRouteArgs(argsList: UwsStringPairObj[]): void;
 /** this is a mouthful! */
 export declare function prepareArgsFromDynamicToSpread(argNames: Array<string>, argsList: Array<UwsStringPairObj>, params: UwsStringPairObj, paramNames: string[]): any;
+/** check if a value is undefined, wrapper to make the code looks cleaner */
 export declare const notUndef: (value: any) => boolean;

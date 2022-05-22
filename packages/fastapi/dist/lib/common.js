@@ -82,14 +82,13 @@ function assertDynamicRouteArgs(argsList) {
 exports.assertDynamicRouteArgs = assertDynamicRouteArgs;
 /** this is a mouthful! */
 function prepareArgsFromDynamicToSpread(argNames, argsList, params, paramNames) {
-    debug('names', paramNames, params);
+    debug('names', paramNames, params, paramNames);
     const processedNames = [];
     const result = argsList.map((list, i) => {
         if (isSpreadFn(list)) {
             const tmp = [];
             paramNames.forEach((name) => {
                 if (!processedNames.includes(name)) {
-                    // @TODO there is one problem the object is not in order!
                     tmp.push(convertStrToTypeAction(list.types, params[name]));
                 }
             });
@@ -104,5 +103,6 @@ function prepareArgsFromDynamicToSpread(argNames, argsList, params, paramNames) 
     return (0, utils_1.flatMap)(result);
 }
 exports.prepareArgsFromDynamicToSpread = prepareArgsFromDynamicToSpread;
+/** check if a value is undefined, wrapper to make the code looks cleaner */
 const notUndef = (value) => value !== undefined;
 exports.notUndef = notUndef;

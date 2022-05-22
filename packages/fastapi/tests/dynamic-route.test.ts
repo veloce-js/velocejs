@@ -40,7 +40,7 @@ test(`Should able to use dynamic route on GET route with correct type on method`
             })
 })
 
-test.only(`Test an api with mix static argument with spread argument`, async t => {
+test(`Test an api with mix static argument with spread argument`, async t => {
 
   t.plan(1)
   // @TODO found a problem if the route not match no 404 returns
@@ -48,8 +48,8 @@ test.only(`Test an api with mix static argument with spread argument`, async t =
   return Fetch(_url)
           .then(res => res.text())
           .then(text => {
-            console.log(text)
-            t.truthy(text)
+            // console.log(text)
+            t.true(text.indexOf('socks_1024_3456') > -1)
           })
 
 })

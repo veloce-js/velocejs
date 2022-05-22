@@ -53,9 +53,7 @@ export function convertStrToType(
   argsList: Array<UwsStringPairObj>,
   params: UwsStringPairObj
 ) {
-
   return argNames.map((name: string, i: number) => {
-
     return convertStrToTypeAction(argsList[i].type, params[name])
   })
 }
@@ -123,8 +121,6 @@ export function prepareArgsFromDynamicToSpread(
       const tmp: any[] = []
       paramNames.forEach((name: string) => {
         if (!processedNames.includes(name)) {
-
-          // @TODO there is one problem the object is not in order!
           tmp.push(convertStrToTypeAction(list.types, params[name]))
         }
       })
@@ -135,9 +131,7 @@ export function prepareArgsFromDynamicToSpread(
       return params[name]
     }
   })
-
   return flatMap(result)
 }
-
-
+/** check if a value is undefined, wrapper to make the code looks cleaner */
 export const notUndef = (value: any) => value !== undefined
