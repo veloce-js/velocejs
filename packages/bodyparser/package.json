@@ -33,7 +33,7 @@
   "homepage": "https://velocejs.com",
   "dependencies": {
     "@jsonql/utils": "^0.6.9",
-    "@velocejs/server": "workspace:^0.8.4",
+    "@velocejs/server": "workspace:^0.8.5",
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
