@@ -21,7 +21,7 @@ export class MyExample extends FastApi {
   })
   @Post('/login')
   login(username: string, password: string) {
-    console.log(password)
+    // console.log(password)
     this.$json({ username: username.toLowerCase() })
   }
 

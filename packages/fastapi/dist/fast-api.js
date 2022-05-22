@@ -91,17 +91,24 @@ class FastApi {
             handler: this._mapMethodToHandler(constants_2.CATCH_ALL_METHOD_NAME, [], false)
         };
     }
+    /** check if there is a catch all route, otherwise create one at the end */
+    _checkCatchAllRoute(path, type) {
+        if (!this._hasCatchAll) {
+            this._hasCatchAll = path === constants_2.CATCH_ALL_TYPE && type === 'any';
+        }
+    }
     /** Mapping all the string name to method and supply to UwsServer run method */
     async _prepareRoutes(meta) {
         const checkFn = this._prepareDynamicRoute(new WeakSet());
         return meta.map((m, i) => {
             const { path, type, propertyName } = m;
-            this._hasCatchAll = path === constants_2.CATCH_ALL_ROUTE;
+            this._checkCatchAllRoute(path, type);
             switch (type) {
                 case server_1.STATIC_TYPE:
                     this._staticRouteIndex.push(i);
                     return {
                         path,
+                        propertyName,
                         type: server_1.STATIC_ROUTE,
                         // the method just return the path to the files
                         // We require the method to be a getter that returns a path
@@ -113,9 +120,10 @@ class FastApi {
                         this._prepareRouteForContract(propertyName, [], type, path);
                     }
                     return {
-                        path, type, handler: this._prepareSocketRoute(propertyName)
+                        path, type, propertyName, handler: this._prepareSocketRoute(propertyName)
                     };
                 case server_1.RAW_TYPE:
+                    // this will always excluded from contract
                     return {
                         path,
                         type: m.route,
@@ -146,6 +154,7 @@ class FastApi {
         }
         return {
             type,
+            propertyName,
             path: _path,
             handler: this._mapMethodToHandler(propertyName, args, validation, _route)
         };
@@ -155,21 +164,22 @@ class FastApi {
         // @TODO we don't need to create the object anymore, its been handle by bodyParser
         return (type, path, args) => {
             debug(`checkFn`, path);
-            let route = '', upObj = null;
+            let dynamicRoute = '', upObj = null;
             if (type === constants_2.DEFAULT_CONTRACT_METHOD && bodyparser_1.UrlPattern.check(path)) {
                 // now we need to check if the types are supported
                 (0, common_1.assertDynamicRouteArgs)(args);
                 upObj = new bodyparser_1.UrlPattern(path);
-                route = upObj.route; // this is the transformed route
+                dynamicRoute = upObj.route; // this is the transformed route
+                debug('transformed dynamicRoute', dynamicRoute);
             }
-            if (tmpSet.has({ route })) {
-                throw new Error(`${route} already existed!`);
+            if (tmpSet.has({ dynamicRoute })) {
+                throw new Error(`${dynamicRoute} already existed!`);
             }
-            tmpSet.add({ route: route === '' ? path : route });
+            tmpSet.add({ route: dynamicRoute === '' ? path : dynamicRoute });
             if (upObj !== null) {
-                this._dynamicRoutes.set(route, upObj);
+                this._dynamicRoutes.set(dynamicRoute, upObj);
             }
-            return route;
+            return dynamicRoute;
         };
     }
     // transform the string name to actual method
@@ -178,10 +188,9 @@ class FastApi {
     // onAbortedHandler?: string // take out
     ) {
         const handler = this[propertyName];
-        // @TODO need to rethink about how this work
         return async (res, req) => {
-            // @0.3.0 we change the whole thing into one middlewares stack
-            const stacks = [
+            debug(`Interface get call`, route, propertyName);
+            this._handleMiddlewares([
                 this._bodyParser(route),
                 this._prepareCtx(propertyName, res, route),
                 this._handleProtectedRoute(propertyName),
@@ -190,25 +199,38 @@ class FastApi {
                     const { type, args } = ctx;
                     return this._handleContent(args, handler, type, propertyName);
                 }
-            ];
-            this._handleMiddlewares(stacks, res, req);
+            ], res, req);
         };
     }
-    /** wrapper method to provide config option to bodyParser */
-    async _bodyParser(route) {
-        const bodyParserConfig = await this._config.getConfig(config_1.BODYPARSER_KEY)
-            || config_1.VeloceConfig.getDefaults(config_1.BODYPARSER_KEY);
-        if (route) { // this is a dynamic route
-            bodyParserConfig[bodyparser_1.URL_PATTERN_OBJ] = this._dynamicRoutes.get(route);
-        }
-        const config = {
-            config: bodyParserConfig,
-            onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
+    /** wrap this together to make it clearer what it does */
+    _bodyParser(dynamicRoute) {
+        return async (res, req) => {
+            const config = await this._getBodyParserConfig(dynamicRoute);
+            return (0, bodyparser_1.default)(res, req, config);
         };
-        return (res, req) => (0, bodyparser_1.default)(res, req, config);
+    }
+    /** fetch the bodyParser config */
+    async _getBodyParserConfig(dynamicRoute) {
+        return this._config.getConfig()
+            .then((config) => {
+            const bodyParserConfig = config[config_1.BODYPARSER_KEY] || config_1.VeloceConfig.getDefaults(config_1.BODYPARSER_KEY);
+            if (dynamicRoute) { // this is a dynamic route
+                bodyParserConfig[bodyparser_1.URL_PATTERN_OBJ] = this._dynamicRoutes.get(dynamicRoute);
+            }
+            debug('bodyParserConfig', bodyParserConfig);
+            return {
+                config: bodyParserConfig,
+                onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
+            };
+        })
+            .catch((err) => {
+            debug('Config err?', err);
+            return {};
+        });
     }
     /** take this out from above to keep related code in one place */
-    _prepareValidator(propertyName, argsList, validationInput) {
+    _prepareValidator(propertyName, argsList, validationInput //JsonqlObjectValidateInput || JsonqlArrayValidateInput, // this is the raw rules input by dev
+    ) {
         const argNames = argsList.map(arg => arg.name);
         const validateFn = (0, validator_1.createValidator)(propertyName, argsList, validationInput, this.validatorPlugins);
         return async (ctx) => {
@@ -265,7 +287,7 @@ class FastApi {
         if (!this._hasCatchAll) {
             _routes.push(this._createCatchAllRoute());
         }
-        debug('routes', _routes);
+        debug('all setup routes', _routes);
         return this._uwsInstance.run(_routes);
     }
     /** split out from above because we still need to handle the user provide middlewares */
@@ -277,20 +299,21 @@ class FastApi {
             this._unsetTemp();
         });
     }
-    // handle the errors return from validation
+    /** handle the errors return from validation */
     _handleValidationError(error) {
+        debug('_handleValidationError', error);
         const { detail, message, className } = error;
         const payload = { errors: { message, detail, className } };
         if (this.res && !this._written) {
-            debug('errors', payload);
             return (0, server_1.jsonWriter)(this.res)(payload, this._validationErrStatus);
         }
     }
     /** @TODO handle protected route, also we need another library to destruct those pattern route */
     _handleProtectedRoute(propertyName) {
         // need to check out the route info
-        debug(`@TODO checking the route --->`, propertyName);
+        debug(`@TODO checking for protected route --->`, propertyName);
         return async (bodyParserProcessedResult) => {
+            debug('bodyParserProcessedResult', bodyParserProcessedResult);
             // the value is bodyParser processed result
             // console.info('@TODO handle protected route') //, bodyParserProcessedResult)
             return bodyParserProcessedResult;

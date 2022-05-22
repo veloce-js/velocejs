@@ -70,24 +70,26 @@ test(`Validation with Decorator and @jsonql/validator another success to call ap
 
 test(`Validation with wrong property to cause a throw`, async t => {
   const login = {username: 'John', password: '123'}
-
+  t.plan(2)
   return Fetch(logigEndpoint, {
     method: 'POST',
     body: JSON.stringify(login),
     headers: { 'Content-Type': 'application/json' }
   })
   .then(res => {
-    console.log('server status -->', res.status)
+    t.is(res.status, 417)
+    // console.log('server status -->', res.status)
     return res.json()
   })
-  .then(json => {
-    console.log('json', json)
-    t.pass()
+  .then((json: any) => {
+    // console.log('json', json)
+    t.truthy(json.errors)
   })
-  .catch(error => {
+  /*
+  .catch((error: any) => {
     // should get a non 200 respond
-    console.log('catch server error here', error)
+    // console.log('catch server error here', error)
     t.pass()
   })
-
+  */
 })

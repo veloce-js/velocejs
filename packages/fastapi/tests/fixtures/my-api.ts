@@ -29,16 +29,13 @@ export class MyApi extends FastApi {
   @Post('/submit')
   // @Validate()
   myPostFunc(name: string, value: string) {
-
-    console.log('myPostFunc', name, value)
-
+    // console.log('myPostFunc', name, value)
     // console.log('hanlder got call with', params)
     this.$json({msg: `${name} is doing ${value}`})
   }
 
   @Raw('any', '/fall-back-route')
   myFallbackRoute(res: HttpResponse) {
-
     res.end(msg3)
   }
 }

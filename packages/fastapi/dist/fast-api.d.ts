@@ -29,6 +29,8 @@ export declare class FastApi implements FastApiInterface {
     private _insertContractRoute;
     /** create a catch all route to handle those unhandle url(s) */
     private _createCatchAllRoute;
+    /** check if there is a catch all route, otherwise create one at the end */
+    private _checkCatchAllRoute;
     /** Mapping all the string name to method and supply to UwsServer run method */
     private _prepareRoutes;
     /** create this wrapper for future development */
@@ -38,8 +40,10 @@ export declare class FastApi implements FastApiInterface {
     /** check if there is a dynamic route and prepare it */
     private _prepareDynamicRoute;
     private _mapMethodToHandler;
-    /** wrapper method to provide config option to bodyParser */
+    /** wrap this together to make it clearer what it does */
     private _bodyParser;
+    /** fetch the bodyParser config */
+    private _getBodyParserConfig;
     /** take this out from above to keep related code in one place */
     private _prepareValidator;
     /** get call after the bodyParser, and prepare for the operation */
@@ -50,6 +54,7 @@ export declare class FastApi implements FastApiInterface {
     private _run;
     /** split out from above because we still need to handle the user provide middlewares */
     private _handleMiddlewares;
+    /** handle the errors return from validation */
     private _handleValidationError;
     /** @TODO handle protected route, also we need another library to destruct those pattern route */
     private _handleProtectedRoute;

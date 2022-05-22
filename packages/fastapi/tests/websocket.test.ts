@@ -26,7 +26,7 @@ test(`Testing the basic websocket rouote`, async t => {
   return new Promise((resolver) => {
     client.on('open', function open() {
       t.pass()
-      console.log('openned')
+      // console.log('openned')
     })
 
     client.on('message', function message(msg: ArrayBuffer) {

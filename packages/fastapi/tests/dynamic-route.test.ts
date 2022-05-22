@@ -53,22 +53,3 @@ test.only(`Test an api with mix static argument with spread argument`, async t =
           })
 
 })
-
-test.todo(`Test a non-existing route and return 404`)
-
-
-/*
-// t.throws or t.throwsAsync not able to contain the error within and cause the test fail
-test.skip(`Should throw error if dynamic route apply on non-get route`, async t => {
-  t.plan(1)
-
-  async function startWrong() {
-    const obj = new MyWrongDynamicRoute()
-    return await obj.start()
-  }
-
-  t.throwsAsync(async () => {
-    return await startWrong()
-  })
-})
-*/

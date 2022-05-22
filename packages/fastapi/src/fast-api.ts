@@ -170,7 +170,7 @@ export class FastApi implements FastApiInterface {
   }
 
   /** create a catch all route to handle those unhandle url(s) */
-  /*
+
   private _createCatchAllRoute() {
     return {
       path: CATCH_ALL_ROUTE,
@@ -178,7 +178,7 @@ export class FastApi implements FastApiInterface {
       handler: this._mapMethodToHandler(CATCH_ALL_METHOD_NAME, [], false)
     }
   }
-  */
+  
   /** check if there is a catch all route, otherwise create one at the end */
   private _checkCatchAllRoute(path: string, type: string) {
     if (!this._hasCatchAll) {
@@ -419,10 +419,9 @@ export class FastApi implements FastApiInterface {
     }
     // @TODO if there is no static route / or catchAll route
     // we put one to the bottom of the stack to handle 404 route
-    /*
     if (!this._hasCatchAll) {
       _routes.push(this._createCatchAllRoute())
-    } */
+    }
     debug('all setup routes', _routes)
     return this._uwsInstance.run(_routes)
   }
