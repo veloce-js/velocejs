@@ -62,3 +62,8 @@ export type VeloceCtx = {
 } & UwsRespondBody
 
 export type VeloceMiddleware = (ctx: VeloceCtx) => Promise<VeloceCtx>
+
+export type BodyParserConfig = {
+  config: any,
+  onAborted?: () => void
+}

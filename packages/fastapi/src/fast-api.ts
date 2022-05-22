@@ -12,6 +12,7 @@ import type {
 import type {
   RouteMetaInfo,
   VeloceCtx,
+  BodyParserConfig,
   // JsonqlArrayValidateInput,
   // JsonqlObjectValidateInput,
 } from './types'
@@ -299,12 +300,10 @@ export class FastApi implements FastApiInterface {
     // onAbortedHandler?: string // take out
   ): UwsRouteHandler {
     const handler = this[propertyName]
-    // @TODO need to rethink about how this work
     return async (res: HttpResponse, req: HttpRequest) => {
-      debug(`Interface get call`, req.getUrl(), route, propertyName)
-      const config = await this._getBodyParserConfig(route)
-      const fnStacks = [
-        bodyParser,
+      debug(`Interface get call`, route, propertyName)
+      this._handleMiddlewares([
+        this._bodyParser(route),
         this._prepareCtx(propertyName, res, route),
         this._handleProtectedRoute(propertyName),
         this._prepareValidator(propertyName, argsList, validationInput),
@@ -312,16 +311,24 @@ export class FastApi implements FastApiInterface {
           const { type, args } = ctx
           return this._handleContent(args, handler, type as string, propertyName)
         }
-      ]
-      this._handleMiddlewares(fnStacks, res, req, config)
+      ],
+      res, req)
+    }
+  }
+
+  /** wrap this together to make it clearer what it does */
+  private _bodyParser(dynamicRoute?: string) {
+    return async (res: HttpResponse, req: HttpRequest) => {
+      const config = await this._getBodyParserConfig(dynamicRoute)
+      return bodyParser(res, req, config as unknown as BodyParserConfig)
     }
   }
 
   /** fetch the bodyParser config */
   private async _getBodyParserConfig(dynamicRoute?: string) {
-    return this._config.getConfig(BODYPARSER_KEY)
+    return this._config.getConfig()
       .then((config: {[key: string]: string}) => {
-        const bodyParserConfig = config || VeloceConfig.getDefaults(BODYPARSER_KEY)
+        const bodyParserConfig = config[BODYPARSER_KEY] || VeloceConfig.getDefaults(BODYPARSER_KEY)
         if (dynamicRoute) { // this is a dynamic route
           bodyParserConfig[URL_PATTERN_OBJ] = this._dynamicRoutes.get(dynamicRoute)
         }
@@ -330,6 +337,10 @@ export class FastApi implements FastApiInterface {
           config: bodyParserConfig,
           onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
         }
+      })
+      .catch((err: string) => {
+        debug('Config err?', err)
+        return {}
       })
   }
 

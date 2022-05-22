@@ -26,8 +26,11 @@ test.skip(`Test the contract api first`, async t => {
 
 test(`The most basic get test`, async t => {
 
-  const res = await fetch(`${url}/first`)
+  const res = await fetch(`${url}/first?x=y`)
   const txt = await res.text()
 
+  // console.log(txt)
+
+  // t.pass()
   t.is(txt, 'FIRST')
 })
