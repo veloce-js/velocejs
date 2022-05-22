@@ -20,7 +20,7 @@ function bodyParser(res, req, options) {
         res.onAborted(() => {
             (options === null || options === void 0 ? void 0 : options.onAborted) ?
                 Reflect.apply(options.onAborted, null, [res]) :
-                debugFn('ABORTED');
+                debugFn('Aborted catch by bodyParser');
         });
         const url = req.getUrl();
         const query = req.getQuery();

@@ -34,7 +34,9 @@ app.run([
           [URL_PATTERN_OBJ]: obj
         }
       })
-      jsonWriter(res)(result.params)
+      const json = result.params
+      json.names = obj.names
+      jsonWriter(res)(json)
     }
   }
 ])

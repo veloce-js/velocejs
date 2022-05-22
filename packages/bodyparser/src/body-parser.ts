@@ -57,7 +57,7 @@ export async function bodyParser(
   res.onAborted(() => {
     options?.onAborted ?
       Reflect.apply(options.onAborted, null, [res]) :
-      debugFn('ABORTED')
+      debugFn('Aborted catch by bodyParser')
   })
   const url = req.getUrl()
   const query = req.getQuery()
@@ -77,7 +77,6 @@ export async function bodyParser(
   }
   if (method === GET_NAME) {
     body.type = body.type || IS_OTHER
-
     return Promise.resolve(body)
   }
   // we should only call this when the header is not GET - there is nobody to process
