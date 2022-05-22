@@ -302,6 +302,7 @@ export class FastApi implements FastApiInterface {
     const handler = this[propertyName]
     // @TODO need to rethink about how this work
     return async (res: HttpResponse, req: HttpRequest) => {
+      debug(`Interface get call`, req.getUrl(), route)
       // @0.3.0 we change the whole thing into one middlewares stack
       const stacks = [
         this._bodyParser(route),
@@ -324,12 +325,19 @@ export class FastApi implements FastApiInterface {
     if (route) { // this is a dynamic route
       bodyParserConfig[URL_PATTERN_OBJ] = this._dynamicRoutes.get(route)
     }
+    debug('bodyParserConfig', bodyParserConfig)
     const config = {
       config: bodyParserConfig,
       onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
     }
 
-    return (res: HttpResponse, req: HttpRequest) => bodyParser(res, req, config)
+    return async (res: HttpResponse, req: HttpRequest) => {
+      return bodyParser(res, req, config)
+                .then((res: any) => {
+                  debug('bodyParser', res)
+                  return res
+                })
+    }
   }
 
   /** take this out from above to keep related code in one place */
@@ -424,12 +432,12 @@ export class FastApi implements FastApiInterface {
               })
   }
 
-  // handle the errors return from validation
+  /** handle the errors return from validation */
   private _handleValidationError(error: JsonqlValidationError) {
+    debug('_handleValidationError', error)
     const { detail, message, className } = error
     const payload = { errors: { message, detail, className } }
     if (this.res && !this._written) {
-      debug('errors', payload)
       return jsonWriter(this.res)(payload, this._validationErrStatus)
     }
   }
@@ -437,8 +445,9 @@ export class FastApi implements FastApiInterface {
   /** @TODO handle protected route, also we need another library to destruct those pattern route */
   private _handleProtectedRoute(propertyName: string) {
     // need to check out the route info
-    debug(`@TODO checking the route --->`, propertyName)
+    debug(`@TODO checking for protected route --->`, propertyName)
     return async (bodyParserProcessedResult: VeloceCtx): Promise<VeloceCtx> => {
+      debug('bodyParserProcessedResult', bodyParserProcessedResult)
       // the value is bodyParser processed result
       // console.info('@TODO handle protected route') //, bodyParserProcessedResult)
       return bodyParserProcessedResult
