@@ -14,8 +14,8 @@ import {
 import {
   UrlPattern
 } from './url-pattern'
-// import debugFn from 'debug'
-// const debug = debugFn('velocejs:bodypaser:parse-query')
+import debugFn from 'debug'
+const debug = debugFn('velocejs:bodypaser:parse-query')
 // the actual function to take the query apart
 export function parseQuery(
   url: string,
@@ -63,8 +63,10 @@ function processDynamicRoute(
   config: UwsBodyParserOptions
 ) {
   if (config[URL_PATTERN_OBJ]) {
+    debug('parse url using UrlPattern')
     return processDynamicRouteByUrlPattern(url, config[URL_PATTERN_OBJ])
   }
+  debug('parse url with pattern url')
   return processDynamicRouteWithOrgRef(url, config[ORG_ROUTE_REF])
 }
 

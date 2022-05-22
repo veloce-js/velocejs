@@ -116,7 +116,7 @@ export function prepareArgsFromDynamicToSpread(
   params: UwsStringPairObj,
   paramNames: string[]
 ) {
-  debug('names', paramNames, params)
+  debug('names', paramNames, params, paramNames)
   const processedNames: string[] = []
   const result = argsList.map((list: UwsStringPairObj, i: number) => {
     if (isSpreadFn(list)) {

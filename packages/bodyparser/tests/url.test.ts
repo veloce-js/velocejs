@@ -11,6 +11,15 @@ test(`it will throw if we pass a wrong pattern url`, t => {
   t.throws(() => new UrlPattern('/:something/:id'))
 })
 
+test(`Testing a pattern that failed in FastApi`, t => {
+  const urlObj = new UrlPattern('/mix-spread/:category/:subcategory/:id/:subcatid')
+  const params = urlObj.parse('/mix-spread/shoes/socks/1024/3456')
+
+  t.deepEqual(urlObj.names, ['category', 'subcategory', 'id', 'subcatid'])
+  t.deepEqual(params, {category: 'shoes', subcategory: 'socks', id: '1024', subcatid: '3456'})
+
+})
+
 test(`Create a dynamic url and try to extract value from it`, t => {
   const urlObj = new UrlPattern('/post/:year/:month/:day')
   t.is(urlObj.route, '/post/*')

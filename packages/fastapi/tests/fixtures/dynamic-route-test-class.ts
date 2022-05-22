@@ -19,7 +19,7 @@ export class MyDynamicRoute extends FastApi {
   }
 
 
-  @Get('/mix-spread/:category/:subcategory/:id/:subcat_id')
+  @Get('/mix-spread/:category/:subCategory/:id/:subcatId')
   public mixSpread(category: string, ...ids: number[]) {
 
     this.$text(`This is searching in ${category} with ${ids.join('_')}`)
