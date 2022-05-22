@@ -194,20 +194,18 @@ class FastApi {
             this._handleMiddlewares(stacks, res, req);
         };
     }
-    /** wrapper of method and provide config option to bodyParser */
+    /** wrapper method to provide config option to bodyParser */
     async _bodyParser(route) {
         const bodyParserConfig = await this._config.getConfig(config_1.BODYPARSER_KEY)
             || config_1.VeloceConfig.getDefaults(config_1.BODYPARSER_KEY);
         if (route) { // this is a dynamic route
-            bodyParserConfig[config_1.ORG_ROUTE_REF] = this._dynamicRoutes.get(route).original;
+            bodyParserConfig[bodyparser_1.URL_PATTERN_OBJ] = this._dynamicRoutes.get(route);
         }
         const config = {
             config: bodyParserConfig,
             onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
         };
-        return (res, req) => {
-            return (0, bodyparser_1.default)(res, req, config);
-        };
+        return (res, req) => (0, bodyparser_1.default)(res, req, config);
     }
     /** take this out from above to keep related code in one place */
     _prepareValidator(propertyName, argsList, validationInput) {

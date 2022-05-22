@@ -38,7 +38,7 @@ export declare class FastApi implements FastApiInterface {
     /** check if there is a dynamic route and prepare it */
     private _prepareDynamicRoute;
     private _mapMethodToHandler;
-    /** wrapper of method and provide config option to bodyParser */
+    /** wrapper method to provide config option to bodyParser */
     private _bodyParser;
     /** take this out from above to keep related code in one place */
     private _prepareValidator;

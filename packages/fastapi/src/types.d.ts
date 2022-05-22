@@ -17,6 +17,7 @@ export type {
   JsonqlArrayValidateInput,
   JsonqlObjectValidateInput,
 } from '@jsonql/validator/index'
+
 export type RouteMetaInfo = {
   propertyName: string
   path: string

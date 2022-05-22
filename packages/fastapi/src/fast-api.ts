@@ -15,8 +15,8 @@ import type {
 import type {
   RouteMetaInfo,
   VeloceCtx,
-  // VeloceMiddleware,
-  // JsonValidationEntry,
+  // JsonqlArrayValidateInput,
+  // JsonqlObjectValidateInput,
 } from './types'
 import {
   UwsServer,
@@ -40,13 +40,13 @@ import bodyParser, {
   UrlPattern,
   GET_NAME,
   QUERY_PARAM,
+  URL_PATTERN_OBJ,
 } from '@velocejs/bodyparser'
 import {
   VeloceConfig,
   CONTRACT_KEY,
   CACHE_DIR,
   BODYPARSER_KEY,
-  ORG_ROUTE_REF,
 } from '@velocejs/config'
 import {
   JsonqlValidationError
@@ -180,6 +180,13 @@ export class FastApi implements FastApiInterface {
     }
   }
 
+  /** check if there is a catch all route, otherwise create one at the end */
+  private _checkCatchAllRoute(path: string, type: string) {
+    if (!this._hasCatchAll) {
+      this._hasCatchAll = path === CATCH_ALL_TYPE && type === 'any'
+    }
+  }
+
   /** Mapping all the string name to method and supply to UwsServer run method */
   private async _prepareRoutes(
     meta: RouteMetaInfo[]
@@ -188,12 +195,13 @@ export class FastApi implements FastApiInterface {
 
     return meta.map((m: RouteMetaInfo, i: number) => {
       const { path, type, propertyName } = m
-      this._hasCatchAll = path === CATCH_ALL_ROUTE
+      this._checkCatchAllRoute(path, type)
       switch (type) {
         case STATIC_TYPE:
           this._staticRouteIndex.push(i)
           return {
             path,
+            propertyName,
             type: STATIC_ROUTE, // @TODO m.route || STATIC_ROUTE (get)
             // the method just return the path to the files
             // We require the method to be a getter that returns a path
@@ -205,9 +213,10 @@ export class FastApi implements FastApiInterface {
             this._prepareRouteForContract(propertyName, [], type, path)
           }
           return {
-            path, type, handler: this._prepareSocketRoute(propertyName)
+            path, type, propertyName, handler: this._prepareSocketRoute(propertyName)
           }
         case RAW_TYPE:
+          // this will always excluded from contract
           return {
             path,
             type: m.route,
@@ -244,6 +253,7 @@ export class FastApi implements FastApiInterface {
     }
     return {
       type,
+      propertyName, // add this for debug purposes
       path: _path,
       handler: this._mapMethodToHandler(
         propertyName,
@@ -303,37 +313,30 @@ export class FastApi implements FastApiInterface {
           return this._handleContent(args, handler, type as string, propertyName)
         }
       ]
-      this._handleMiddlewares(
-        stacks,
-        res,
-        req
-      )
+      this._handleMiddlewares(stacks, res, req)
     }
   }
 
-  /** wrapper of method and provide config option to bodyParser */
+  /** wrapper method to provide config option to bodyParser */
   private async _bodyParser(route?: string) {
     const bodyParserConfig = await this._config.getConfig(BODYPARSER_KEY)
                            || VeloceConfig.getDefaults(BODYPARSER_KEY)
     if (route) { // this is a dynamic route
-      bodyParserConfig[ORG_ROUTE_REF] = this._dynamicRoutes.get(route).original
+      bodyParserConfig[URL_PATTERN_OBJ] = this._dynamicRoutes.get(route)
     }
     const config = {
       config: bodyParserConfig,
       onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
     }
 
-    return (res: HttpResponse, req: HttpRequest) => {
-
-      return bodyParser(res, req, config)
-    }
+    return (res: HttpResponse, req: HttpRequest) => bodyParser(res, req, config)
   }
 
   /** take this out from above to keep related code in one place */
   private _prepareValidator(
     propertyName: string,
     argsList: Array<UwsStringPairObj>,
-    validationInput: any, // this is the raw rules input by dev
+    validationInput: any //JsonqlObjectValidateInput || JsonqlArrayValidateInput, // this is the raw rules input by dev
   ) {
     const argNames = argsList.map(arg => arg.name)
     const validateFn = createValidator(
@@ -360,7 +363,6 @@ export class FastApi implements FastApiInterface {
     res: HttpResponse,
     route?: string,
   ) {
-
     return async (result: UwsRespondBody): Promise<VeloceCtx> => {
       const ctx: VeloceCtx = assign(result, { propertyName, route })
       this._setTemp(ctx, res)
@@ -408,7 +410,7 @@ export class FastApi implements FastApiInterface {
     if (!this._hasCatchAll) {
       _routes.push(this._createCatchAllRoute())
     }
-    debug('routes', _routes)
+    debug('all setup routes', _routes)
     return this._uwsInstance.run(_routes)
   }
 
