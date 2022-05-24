@@ -4,9 +4,9 @@ specifiers:
   '@types/node': ^17.0.32
   '@typescript-eslint/eslint-plugin': ^5.23.0
   '@typescript-eslint/parser': ^5.23.0
-  '@velocejs/config': workspace:^0.4.1
-  '@velocejs/fastapi': workspace:^0.7.4
-  '@velocejs/server': workspace:^0.8.4
+  '@velocejs/config': workspace:^0.5.2
+  '@velocejs/fastapi': workspace:^0.8.0
+  '@velocejs/server': workspace:^0.8.5
   eslint: ^8.15.0
   typescript: ^4.6.4
 
