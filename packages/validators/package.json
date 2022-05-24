@@ -22,7 +22,7 @@
     "update:version": "node ../../update-devs.js validators",
     "clean:dist": "rimraf ./dist",
     "build": "pnpm clean:dist && pnpm build:tsc",
-    "prepublishOnly": "pnpm build && pnpm test:nyc && prepare:types",
+    "prepublishOnly": "pnpm build && pnpm test:nyc && pnpm prepare:types",
     "postpublish": "pnpm update:version",
     "patch": "npm version patch",
     "minor": "npm version minor",
