@@ -1,5 +1,8 @@
 // main class
 import type {
+  JsonqlValidationPlugin
+} from '@jsonql/validator-core/index'
+import type {
   VeloceAstMap,
   AddValidationRuleFn,
   ValidationRuleRecord
@@ -38,8 +41,11 @@ export class Validators {
       const obj = this._validators.get(propertyName)
       // we need to overload the methods here
       return {
-        addValidationRule: this.addValidationRule(propertyName, obj.addValidationRule),
-        validate: obj.validate.bind(obj)
+        addValidationRules: this.addValidationRules(
+          propertyName,
+          obj?.addValidationRules.bind(obj) as AddValidationRuleFn
+        ),
+        validate: obj?.validate.bind(obj)
       }
     }
     throw new Error(`${propertyName} validator is not registered!`)
@@ -61,7 +67,7 @@ export class Validators {
     this._plugin.loadExtPlugin(name, pluginConfig)
   }
 
-  public addValidationRule(
+  public addValidationRules(
     propertyName: string,
     orgAddValidationRule: AddValidationRuleFn
   ) {
@@ -70,16 +76,16 @@ export class Validators {
       orgAddValidationRule(input)
     }
   }
-  
+
   public export() {
     debug('@TODO export all schema')
   }
 
   /** store the rules for later export */
   private _appendRules(propertyName: string, input: ValidationRuleRecord) {
-    let existingRules: Array<ValidationRuleRecord> = []
+    let existingRules: ValidationRuleRecord[] = []
     if (this._validationRules.has(propertyName)) {
-      existingRules = this._validationRules.get(propertyName)
+      existingRules = this._validationRules.get(propertyName) as ValidationRuleRecord[]
     }
     existingRules = existingRules.concat([input])
     this._validationRules.set(propertyName, existingRules.concat([input]))
