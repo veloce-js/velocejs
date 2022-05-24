@@ -1,11 +1,12 @@
 // main class
+/*
 import type {
   JsonqlValidationPlugin,
   JsonqlArrayValidateInput,
   JsonqlObjectValidateInput,
   JsonqlPropertyParamMap,
 } from '@jsonql/validator/index'
-
+*/
 import type {
   VeloceAstMap
 } from './types'
@@ -14,17 +15,16 @@ import {
   ValidatorPlugins,
   ValidatorFactory
 } from '@jsonql/validator'
+
 import debugFn from 'debug'
-
 const debug = debugFn('velocejs:validator:main')
-
 
 /**
   Instead of one ast per init
    we now pass the entire ast here
    then get it back via the propertyName
 **/
-export class VeloceValidator {
+export class Validators {
 
   private _validators = new Map<string, ValidatorFactory>()
   private _plugin = new ValidatorPlugins()
