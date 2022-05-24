@@ -47,16 +47,33 @@ class Validators {
         };
     }
     export() {
-        debug('@TODO export all schema');
+        const result = {};
+        this._validationRules.forEach((value, key) => {
+            result[key] = value;
+        });
+        debug('export schema', result);
+        return result;
     }
+    /*
+    @TODO
+    When to add
+    1. when a rule is add we check if this is internal plugin and not mark as `server`
+    2. When a rule is insert via loadExtPlugin and the original plugin was not mark as server
+  
+    IDEA
+    we could extract the inline code and store it in file (or just in memeory)
+    and insert a new url (e.g. /veloce/plugin) then serve it up to the client
+    */
     /** store the rules for later export */
     _appendRules(propertyName, input) {
-        let existingRules = [];
         if (this._validationRules.has(propertyName)) {
-            existingRules = this._validationRules.get(propertyName);
+            const existingRules = this._validationRules.get(propertyName);
+            this._validationRules.set(propertyName, existingRules.concat([input]));
         }
-        existingRules = existingRules.concat([input]);
-        this._validationRules.set(propertyName, existingRules.concat([input]));
+        else {
+            debug('adding new rule', input);
+            this._validationRules.set(propertyName, [input]);
+        }
     }
 }
 exports.Validators = Validators;

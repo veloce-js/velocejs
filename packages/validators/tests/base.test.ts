@@ -29,21 +29,31 @@ test(`Should able to get a validator but name and pass the validation`, async t 
 })
 
 test(`Should able to use addAdditonalRules`, async t => {
-  t.plan(1)
+  t.plan(2)
   const V1 = validators.getValidator('posts')
 
   V1.addValidationRules({
-    arg2: {
-      plugin: 'moreThan', num: 101
+    arg1: {
+      plugin: 'lessThan', num: 2
     }
   })
+  // confirm this works too
+  V1.addValidationRules({arg2: {
+    plugin: 'moreThan', num: 101
+  }})
+
+  const schema = validators.export()
+
+  t.truthy(schema)
+
+  // console.dir(schema, {depth: null})
 
   return V1.validate(['A', 100])
             .then((result: Array<string | number>) => {
                 t.deepEqual(result, ['A', 100])
             })
             .catch((error: JsonqlValidationError) => {
-              
+
               t.deepEqual(error.detail, [1,1], 'Catch error in the added rule')
             })
 

@@ -1,7 +1,7 @@
 {
-  "name": "@velocejs/validator",
-  "version": "0.0.1",
-  "description": "@velocejs/validators",
+  "name": "@velocejs/validators",
+  "version": "0.1.0",
+  "description": "@velocejs/validators based of @jsonql/validator",
   "main": "dist/index.js",
   "module": "dist/index.ts",
   "files": [
@@ -19,10 +19,10 @@
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",
     "prepare:types": "cp ./src/types.d.ts ./index.d.ts && cp ./src/types.d.ts ./dist/types.d.ts",
-    "update:version": "node ../../update-devs.js validator",
+    "update:version": "node ../../update-devs.js validators",
     "clean:dist": "rimraf ./dist",
     "build": "pnpm clean:dist && pnpm build:tsc",
-    "prepublishOnly": "pnpm build && pnpm test:nyc",
+    "prepublishOnly": "pnpm build && pnpm test:nyc && prepare:types",
     "postpublish": "pnpm update:version",
     "patch": "npm version patch",
     "minor": "npm version minor",

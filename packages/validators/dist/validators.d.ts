@@ -20,7 +20,7 @@ export declare class Validators {
     registerPlugin(name: string, pluginConfig: JsonqlValidationPlugin): void;
     loadExtPlugin(name: string, pluginConfig: JsonqlValidationPlugin): void;
     addValidationRules(propertyName: string, orgAddValidationRule: AddValidationRuleFn): (input: ValidationRuleRecord) => void;
-    export(): void;
+    export(): {};
     /** store the rules for later export */
     private _appendRules;
 }
