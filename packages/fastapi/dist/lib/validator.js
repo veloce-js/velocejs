@@ -7,23 +7,13 @@ const utils_1 = require("@jsonql/utils");
 const errors_1 = require("../lib/errors");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fastapi:lib:validator');
-/*
-declare type GenericKeyValue = {
-  [key: string]: any
-}
-*/
-function createValidator(propertyName, argsList, // @TODO fix types
-vObj, validationInput) {
-    // first need to check if they actually apply the @Validate decorator
-    if (validationInput === false) {
-        debug(`skip validation --> ${propertyName}`);
-        // return a dummy handler - we need to package it up for consistency!
-        return async (values) => values; //  we don't need to do anyting now
-    }
-    debug('input -->', validationInput);
+/** get the validator for the propertyName and add extra rules here */
+function createValidator(propertyName, argsList, vObj, validationInput) {
+    debug('createValidator input -->', validationInput);
     assert(propertyName, argsList, validationInput);
     if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
-        vObj.addValidationRules(propertyName, validationInput[constants_1.RULES_KEY]);
+        debug('addValidationRules', validationInput[constants_1.RULES_KEY]);
+        vObj.addValidationRules(validationInput[constants_1.RULES_KEY]);
     }
     // if we return it directly then it won't run
     return async (values) => vObj.validate(values);
@@ -37,7 +27,6 @@ function assert(propertyName, argsList, validationInput // @TODO fix types if I 
         throw new Error(`${propertyName} has no parameters and therefore can not apply validation!`);
     }
     // check the name matches
-    // @ts-ignore keep saying this is going to be true ???
     if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
         const names = [];
         for (const name in validationInput[constants_1.RULES_KEY]) {

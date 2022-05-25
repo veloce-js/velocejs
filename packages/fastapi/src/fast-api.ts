@@ -21,6 +21,8 @@ import type {
   ArgsListType,
   ValidatorsInstance,
   DynamicRouteCheckFn,
+  JsonqlValidationRule,
+  ValidateFn,
 } from './types'
 import {
   UwsServer,
@@ -200,9 +202,9 @@ export class FastApi implements FastApiInterface {
   /** Mapping all the string name to method and supply to UwsServer run method */
   private async _prepareRoutes(
     meta: RouteMetaInfo[]
-  ): Promise<Array<UwsRouteSetup>> {
+  ) /*: Promise<Array<UwsRouteSetup>>*/ {
     const checkFn = this._prepareDynamicRoute(new WeakSet())
-    // @ts-ignore fix this later undefined not assignable to string crap again
+    // @ ts-ignore fix this later undefined not assignable to string crap again
     return meta.map((m: RouteMetaInfo, i: number) => {
       const { path, type, propertyName } = m
       this._checkCatchAllRoute(path, type)
@@ -306,16 +308,17 @@ export class FastApi implements FastApiInterface {
   private _mapMethodToHandler(
     propertyName: string,
     argsList: Array<ArgsListType>,
-    validationInput: any, // this is the rules provide via Decorator
-    route?: string
+    validationInput: JsonqlValidationRule, // this is the rules provide via Decorator
+    dynamicRoute?: string
     // onAbortedHandler?: string // take out
   ): UwsRouteHandler {
     const handler = this[propertyName]
+
     return async (res: HttpResponse, req: HttpRequest) => {
-      debug(`Interface get call`, route, propertyName)
+
       this._handleMiddlewares([
-        this._bodyParser(route),
-        this._prepareCtx(propertyName, res, route),
+        this._bodyParser(dynamicRoute),
+        this._prepareCtx(propertyName, res, dynamicRoute),
         this._handleProtectedRoute(propertyName),
         this._prepareValidator(propertyName, argsList, validationInput),
         async (ctx: VeloceCtx) => {
@@ -324,6 +327,7 @@ export class FastApi implements FastApiInterface {
         }
       ],
       res, req)
+
     }
   }
 
@@ -331,6 +335,7 @@ export class FastApi implements FastApiInterface {
   private _bodyParser(dynamicRoute?: string) {
     return async (res: HttpResponse, req: HttpRequest) => {
       const config = await this._getBodyParserConfig(dynamicRoute)
+
       return bodyParser(res, req, config)
     }
   }
@@ -339,6 +344,9 @@ export class FastApi implements FastApiInterface {
   private async _getBodyParserConfig(dynamicRoute?: string): Promise<BodyParserConfig> {
     return this._config.getConfig()
       .then((config: {[key: string]: string}) => {
+
+        debug('config', config)
+
         const bodyParserConfig = config[BODYPARSER_KEY] || VeloceConfig.getDefaults(BODYPARSER_KEY)
         if (dynamicRoute) { // this is a dynamic route
           bodyParserConfig[URL_PATTERN_OBJ] = this._dynamicRoutes.get(dynamicRoute)
@@ -355,33 +363,28 @@ export class FastApi implements FastApiInterface {
       })
   }
 
-  /** prepare validator using veloce/validators */
-  private _prepareValidators(
-    astMap: object,
-    validations: JsonqlObjectValidateInput
-  ) {
-    if (!(Array.isArray(validations) && validations.length === 0)) {
-      this._validators = new Validators(astMap as VeloceAstMap)
-      debug('this._validators', this._validators, astMap)
-      // @TODO addValidationRules here if it's not automatic
-      debug(`validations`, validations)
-    }
-  }
-
   /** take this out from above to keep related code in one place */
   private _prepareValidator(
     propertyName: string,
     argsList: Array<ArgsListType>,
-    validationInput: JsonqlObjectValidateInput | boolean, // this is the raw rules input by dev
+    validationInput?: JsonqlValidationRule, // this is the raw rules input by dev
   ) {
-    const argNames = argsList.map(arg => arg.name)
-    const validatorInstance = this._validators.getValidator(propertyName)
-    const validateFn = createValidator(
+    let validateFn: ValidateFn
+    // first need to check if they actually apply the @Validate decorator
+    if (!validationInput) {
+      debug(`skip validation --> ${propertyName}`)
+      // return a dummy handler - we need to package it up for consistency!
+      validateFn = async (values: unknown[]) => values //  we don't need to do anyting now
+    } else {
+      const validatorInstance = this._validators.getValidator(propertyName)
+      validateFn = createValidator(
                             propertyName,
                             argsList,
                             validatorInstance as unknown as ValidatorsInstance,
                             validationInput)
-
+    }
+    const argNames = argsList.map(arg => arg.name)
+    
     return async (ctx: VeloceCtx) => {
       const args = this._applyArgs(argNames, argsList, ctx)
       debug('args before validateFn -->', args)
@@ -452,7 +455,7 @@ export class FastApi implements FastApiInterface {
   }
 
   /** split out from above because we still need to handle the user provide middlewares */
-  private _handleMiddlewares(...args: any[]) {
+  private _handleMiddlewares(...args: unknown[]) {
     // @TODO if there is any middleware we insert that before the validation pos 1
     return Reflect.apply(queuePromisesProcess, null, args)
               .catch(this._handleValidationError.bind(this))
@@ -584,6 +587,16 @@ export class FastApi implements FastApiInterface {
     }
   }
 
+  /** prepare validator using veloce/validators */
+  private _initValidators(
+    astMap: object,
+    validations: JsonqlObjectValidateInput
+  ) {
+    if (!(Array.isArray(validations) && validations.length === 0)) {
+      this._validators = new Validators(astMap as VeloceAstMap)
+    }
+  }
+
   ////////////////////////////////////////////////
   /**           PROTECTED METHODS               */
   ////////////////////////////////////////////////
@@ -605,7 +618,7 @@ export class FastApi implements FastApiInterface {
       console.time('FastApiStartUp')
     }
     const routes: Array<RouteMetaInfo> = mergeInfo(astMap, existingRoutes, validations, protectedRoutes)
-    this._prepareValidators(astMap, validations)
+    this._initValidators(astMap, validations)
     this._uwsInstance.autoStart = false
     // @0.4.0 we change this to a chain promise start up sequence
     // check the config to see if there is one to generate contract

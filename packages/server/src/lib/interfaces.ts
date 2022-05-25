@@ -41,6 +41,7 @@ export interface UwsRouteSetup {
   type: string
   path: string
   handler: UwsRouteHandler | WebSocketBehavior
+  propertyName?: string
 }
 
 // this interface is for the result pass to the fast-api callback

@@ -7,6 +7,7 @@ import type {
   RouteMetaInfo,
   // JsonqlArrayValidateInput,
   JsonqlObjectValidateInput,
+  JsonqlValidationRule,
   ArgsListType,
 } from '../types'
 import type {
@@ -167,13 +168,15 @@ export function mergeInfo(
     return route
   })
 }
+
 /** skip the static and raw type */
 export function prepareValidateRoute(
   type: string,
   propertyName: string,
   validations: JsonqlObjectValidateInput,
-) {
-  return (type === STATIC_TYPE || type === RAW_TYPE ) ?
-                                                false :
-                   validations[propertyName] || false
+): JsonqlValidationRule | undefined {
+  if (type !== STATIC_TYPE && type !== RAW_TYPE) {
+    return validations[propertyName]
+  }
+  return undefined
 }

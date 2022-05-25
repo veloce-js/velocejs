@@ -21,8 +21,6 @@ test(`Test the catchAll route to handle 404`, async t => {
   t.is(res.status, 404)
 })
 
-
-
 test(`Test the contract api first`, async t => {
 
   const res = await fetch(`${url}/veloce/contract`)

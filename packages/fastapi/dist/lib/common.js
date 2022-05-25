@@ -125,8 +125,9 @@ function mergeInfo(map, existingRoutes, validations, protectedRoutes) {
 exports.mergeInfo = mergeInfo;
 /** skip the static and raw type */
 function prepareValidateRoute(type, propertyName, validations) {
-    return (type === server_1.STATIC_TYPE || type === server_1.RAW_TYPE) ?
-        false :
-        validations[propertyName] || false;
+    if (type !== server_1.STATIC_TYPE && type !== server_1.RAW_TYPE) {
+        return validations[propertyName];
+    }
+    return undefined;
 }
 exports.prepareValidateRoute = prepareValidateRoute;

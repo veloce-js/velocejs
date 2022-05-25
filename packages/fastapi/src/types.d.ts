@@ -16,15 +16,16 @@ export type {
 export type {
   JsonqlArrayValidateInput,
   JsonqlObjectValidateInput,
+  JsonqlValidationRule,
 } from '@jsonql/validator/index'
 import type {
   UwsBodyParserOptions
 } from '@velocejs/bodyparser/index'
 
 export type RouteMetaInfo = {
+  type: string
   propertyName: string
   path: string
-  type: string
   excluded?: boolean // exclude this from contract
   // onAbortedHandler?: string this is deprectead
   protected?: boolean
@@ -71,8 +72,10 @@ export type BodyParserConfig = {
   onAborted?: () => void
 }
 
+export type ValidateFn = (values: Array<unknown>) => Promise<Array<unknown>>
+
 export type ValidatorsInstance = {
-  validate: (values: Array<unknown>) => Promise<Array<unknown>>
+  validate: ValidateFn
   addValidationRules: (rules: JsonqlObjectValidateInput) => void
 }
 

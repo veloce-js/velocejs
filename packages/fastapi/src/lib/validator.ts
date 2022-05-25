@@ -1,7 +1,8 @@
 // wrap the @jsonql/validator here
 import type {
   ValidatorsInstance,
-  JsonqlObjectValidateInput,
+  // JsonqlObjectValidateInput,
+  JsonqlValidationRule,
   ArgsListType,
 } from '../types'
 import {
@@ -12,26 +13,17 @@ import { inArray } from '@jsonql/utils'
 import { VeloceError } from '../lib/errors'
 import debugFn from 'debug'
 const debug = debugFn('velocejs:fastapi:lib:validator')
-/*
-declare type GenericKeyValue = {
-  [key: string]: any
-}
-*/
+
+/** get the validator for the propertyName and add extra rules here */
 export function createValidator(
   propertyName: string,
-  argsList: Array<ArgsListType>, // @TODO fix types
+  argsList: Array<ArgsListType>,
   vObj: ValidatorsInstance,
-  validationInput: JsonqlObjectValidateInput | boolean, // @TODO fix types
-  // plugins: Array<any> // @TODO fix types
+  validationInput: JsonqlValidationRule,
 ) {
-  // first need to check if they actually apply the @Validate decorator
-  if (validationInput === false) {
-    debug(`skip validation --> ${propertyName}`)
-    // return a dummy handler - we need to package it up for consistency!
-    return async (values: unknown) => values //  we don't need to do anyting now
-  }
   debug('createValidator input -->', validationInput)
-  assert(propertyName, argsList, validationInput as JsonqlObjectValidateInput)
+  assert(propertyName, argsList, validationInput)
+
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
     debug('addValidationRules', validationInput[RULES_KEY])
     vObj.addValidationRules(validationInput[RULES_KEY])
@@ -44,14 +36,13 @@ export function createValidator(
 function assert(
     propertyName: string,
     argsList: Array<ArgsListType>,
-    validationInput: JsonqlObjectValidateInput // @TODO fix types if I use the ValidationInput then it doesnt work below
+    validationInput: JsonqlValidationRule // @TODO fix types if I use the ValidationInput then it doesnt work below
   ): void {
   // silly mistake
   if (!argsList.length) {
     throw new Error(`${propertyName} has no parameters and therefore can not apply validation!`)
   }
   // check the name matches
-  // @ts-ignore keep saying this is going to be true ???
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
     const names: string[] = []
     for (const name in validationInput[RULES_KEY]) {

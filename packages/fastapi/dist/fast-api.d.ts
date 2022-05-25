@@ -45,8 +45,6 @@ export declare class FastApi implements FastApiInterface {
     private _bodyParser;
     /** fetch the bodyParser config */
     private _getBodyParserConfig;
-    /** prepare validator using veloce/validators */
-    private _prepareValidators;
     /** take this out from above to keep related code in one place */
     private _prepareValidator;
     /** get call after the bodyParser, and prepare for the operation */
@@ -69,6 +67,8 @@ export declare class FastApi implements FastApiInterface {
     This will be only output
     */
     private _render;
+    /** prepare validator using veloce/validators */
+    private _initValidators;
     /**           PROTECTED METHODS               */
     /**
       instead of using a Prepare decorator and ugly call the super.run

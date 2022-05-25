@@ -102,7 +102,7 @@ class FastApi {
     /** Mapping all the string name to method and supply to UwsServer run method */
     async _prepareRoutes(meta) {
         const checkFn = this._prepareDynamicRoute(new WeakSet());
-        // @ts-ignore fix this later undefined not assignable to string crap again
+        // @ ts-ignore fix this later undefined not assignable to string crap again
         return meta.map((m, i) => {
             const { path, type, propertyName } = m;
             this._checkCatchAllRoute(path, type);
@@ -187,15 +187,14 @@ class FastApi {
     }
     // transform the string name to actual method
     _mapMethodToHandler(propertyName, argsList, validationInput, // this is the rules provide via Decorator
-    route
+    dynamicRoute
     // onAbortedHandler?: string // take out
     ) {
         const handler = this[propertyName];
         return async (res, req) => {
-            debug(`Interface get call`, route, propertyName);
             this._handleMiddlewares([
-                this._bodyParser(route),
-                this._prepareCtx(propertyName, res, route),
+                this._bodyParser(dynamicRoute),
+                this._prepareCtx(propertyName, res, dynamicRoute),
                 this._handleProtectedRoute(propertyName),
                 this._prepareValidator(propertyName, argsList, validationInput),
                 async (ctx) => {
@@ -216,6 +215,7 @@ class FastApi {
     async _getBodyParserConfig(dynamicRoute) {
         return this._config.getConfig()
             .then((config) => {
+            debug('config', config);
             const bodyParserConfig = config[config_1.BODYPARSER_KEY] || config_1.VeloceConfig.getDefaults(config_1.BODYPARSER_KEY);
             if (dynamicRoute) { // this is a dynamic route
                 bodyParserConfig[bodyparser_1.URL_PATTERN_OBJ] = this._dynamicRoutes.get(dynamicRoute);
@@ -231,20 +231,20 @@ class FastApi {
             throw new Error(err);
         });
     }
-    /** prepare validator using veloce/validators */
-    _prepareValidators(astMap, validations) {
-        if (!(Array.isArray(validations) && validations.length === 0)) {
-            this._validators = new validators_1.Validators(astMap);
-            debug('this._validators', this._validators, astMap);
-            // @TODO addValidationRules here if it's not automatic
-            debug(`validations`, validations);
-        }
-    }
     /** take this out from above to keep related code in one place */
     _prepareValidator(propertyName, argsList, validationInput) {
+        let validateFn;
+        // first need to check if they actually apply the @Validate decorator
+        if (!validationInput) {
+            debug(`skip validation --> ${propertyName}`);
+            // return a dummy handler - we need to package it up for consistency!
+            validateFn = async (values) => values; //  we don't need to do anyting now
+        }
+        else {
+            const validatorInstance = this._validators.getValidator(propertyName);
+            validateFn = (0, validator_1.createValidator)(propertyName, argsList, validatorInstance, validationInput);
+        }
         const argNames = argsList.map(arg => arg.name);
-        const validatorInstance = this._validators.getValidator(propertyName);
-        const validateFn = (0, validator_1.createValidator)(propertyName, argsList, validatorInstance, validationInput);
         return async (ctx) => {
             const args = this._applyArgs(argNames, argsList, ctx);
             debug('args before validateFn -->', args);
@@ -418,6 +418,12 @@ class FastApi {
                 (0, server_1.jsonWriter)(res)(payload, this._status);
         }
     }
+    /** prepare validator using veloce/validators */
+    _initValidators(astMap, validations) {
+        if (!(Array.isArray(validations) && validations.length === 0)) {
+            this._validators = new validators_1.Validators(astMap);
+        }
+    }
     ////////////////////////////////////////////////
     /**           PROTECTED METHODS               */
     ////////////////////////////////////////////////
@@ -433,7 +439,7 @@ class FastApi {
             console.time('FastApiStartUp');
         }
         const routes = (0, common_1.mergeInfo)(astMap, existingRoutes, validations, protectedRoutes);
-        this._prepareValidators(astMap, validations);
+        this._initValidators(astMap, validations);
         this._uwsInstance.autoStart = false;
         // @0.4.0 we change this to a chain promise start up sequence
         // check the config to see if there is one to generate contract

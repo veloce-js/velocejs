@@ -1,4 +1,4 @@
-import type { RouteMetaInfo, JsonqlObjectValidateInput, ArgsListType } from '../types';
+import type { RouteMetaInfo, JsonqlObjectValidateInput, JsonqlValidationRule, ArgsListType } from '../types';
 import type { UwsStringPairObj } from '@velocejs/server/index';
 export declare function extractArgs(fnStr: string): Array<string>;
 /** The validate result now comes in an object, we need to turn into array for apply */
@@ -24,4 +24,4 @@ because we need to re-organize how to init the validation object among others
 */
 export declare function mergeInfo(map: object, existingRoutes: Array<RouteMetaInfo>, validations: JsonqlObjectValidateInput, protectedRoutes: string[]): RouteMetaInfo[];
 /** skip the static and raw type */
-export declare function prepareValidateRoute(type: string, propertyName: string, validations: JsonqlObjectValidateInput): false | import("@jsonql/validator").JsonqlValidationRule | import("@jsonql/validator").JsonqlValidationRule[];
+export declare function prepareValidateRoute(type: string, propertyName: string, validations: JsonqlObjectValidateInput): JsonqlValidationRule | undefined;
