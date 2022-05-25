@@ -25,10 +25,10 @@ class Validators {
     getValidator(propertyName) {
         if (this._validators.has(propertyName)) {
             const obj = this._validators.get(propertyName);
-            // we need to overload the methods here
+            // overload the method here
             return {
-                addValidationRules: this.addValidationRules(propertyName, obj === null || obj === void 0 ? void 0 : obj.addValidationRules.bind(obj)),
-                validate: obj === null || obj === void 0 ? void 0 : obj.validate.bind(obj)
+                addValidationRules: this.addValidationRules(propertyName, obj),
+                validate: obj.validate.bind(obj)
             };
         }
         throw new Error(`${propertyName} validator is not registered!`);
@@ -40,10 +40,10 @@ class Validators {
     loadExtPlugin(name, pluginConfig) {
         this._plugin.loadExtPlugin(name, pluginConfig);
     }
-    addValidationRules(propertyName, orgAddValidationRule) {
+    addValidationRules(propertyName, obj) {
         return (input) => {
             this._appendRules(propertyName, input);
-            orgAddValidationRule(input);
+            Reflect.apply(obj.addValidationRules, obj, [input]);
         };
     }
     export() {

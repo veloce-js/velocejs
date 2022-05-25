@@ -30,9 +30,10 @@ export function createValidator(
     // return a dummy handler - we need to package it up for consistency!
     return async (values: unknown) => values //  we don't need to do anyting now
   }
-  debug('input -->', validationInput)
+  debug('createValidator input -->', validationInput)
   assert(propertyName, argsList, validationInput as JsonqlObjectValidateInput)
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
+    debug('addValidationRules', validationInput[RULES_KEY])
     vObj.addValidationRules(propertyName, validationInput[RULES_KEY])
   }
   // if we return it directly then it won't run

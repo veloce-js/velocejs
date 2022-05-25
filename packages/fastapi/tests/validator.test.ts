@@ -68,7 +68,7 @@ test(`Validation with Decorator and @jsonql/validator another success to call ap
   })
 })
 
-test(`Validation with wrong property to cause a throw`, async t => {
+test.only(`Validation with wrong property to cause a throw`, async t => {
   const login = {username: 'John', password: '123'}
   t.plan(2)
   return Fetch(logigEndpoint, {

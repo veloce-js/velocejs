@@ -4,7 +4,6 @@ import type {
 } from '@jsonql/validator-core/index'
 import type {
   VeloceAstMap,
-  AddValidationRuleFn,
   ValidationRuleRecord,
 } from './types'
 import {
@@ -38,14 +37,11 @@ export class Validators {
   /** get the validator */
   public getValidator(propertyName: string) {
     if (this._validators.has(propertyName)) {
-      const obj = this._validators.get(propertyName)
-      // we need to overload the methods here
+      const obj = this._validators.get(propertyName) as ValidatorFactory
+      // overload the method here
       return {
-        addValidationRules: this.addValidationRules(
-          propertyName,
-          obj?.addValidationRules.bind(obj) as AddValidationRuleFn
-        ),
-        validate: obj?.validate.bind(obj)
+        addValidationRules: this.addValidationRules(propertyName, obj),
+        validate: obj.validate.bind(obj)
       }
     }
     throw new Error(`${propertyName} validator is not registered!`)
@@ -69,11 +65,11 @@ export class Validators {
 
   public addValidationRules(
     propertyName: string,
-    orgAddValidationRule: AddValidationRuleFn
+    obj: ValidatorFactory
   ) {
     return (input: ValidationRuleRecord) => {
       this._appendRules(propertyName, input)
-      orgAddValidationRule(input)
+      Reflect.apply(obj.addValidationRules, obj, [input])
     }
   }
 
