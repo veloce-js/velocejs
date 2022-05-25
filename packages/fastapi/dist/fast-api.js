@@ -239,8 +239,7 @@ class FastApi {
         }
     }
     /** take this out from above to keep related code in one place */
-    _prepareValidator(propertyName, argsList, validationInput //JsonqlObjectValidateInput || JsonqlArrayValidateInput, // this is the raw rules input by dev
-    ) {
+    _prepareValidator(propertyName, argsList, validationInput) {
         const argNames = argsList.map(arg => arg.name);
         const validatorInstance = this._validators.getValidator(propertyName);
         const validateFn = (0, validator_1.createValidator)(propertyName, argsList, validatorInstance, validationInput);
@@ -543,7 +542,7 @@ class FastApi {
       because when the route unmatch the server just hang up
     */
     $_catchAll() {
-        // @TODO check if it's open by a browser then we should serve up a 404 page 
+        // @TODO check if it's open by a browser then we should serve up a 404 page
         // debug(ctx) // to see what's going on
         (0, server_1.write404)(this.res);
     }

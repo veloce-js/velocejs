@@ -7,8 +7,14 @@ const utils_1 = require("@jsonql/utils");
 const errors_1 = require("../lib/errors");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fastapi:lib:validator');
+/*
+declare type GenericKeyValue = {
+  [key: string]: any
+}
+*/
 function createValidator(propertyName, argsList, // @TODO fix types
 vObj, validationInput) {
+    debug('argsList', argsList);
     // first need to check if they actually apply the @Validate decorator
     if (validationInput === false) {
         debug(`skip validation --> ${propertyName}`);
@@ -17,19 +23,15 @@ vObj, validationInput) {
     }
     debug('input -->', validationInput);
     assert(propertyName, argsList, validationInput);
-    // @TODO we might need to subclass this and create a set global plugin
-    if (plugins && plugins.length) {
-        console.info('create plugins', plugins);
-    }
     if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
-        vObj.addValidationRules(validationInput[constants_1.RULES_KEY]);
+        vObj.addValidationRules(propertyName, validationInput[constants_1.RULES_KEY]);
     }
     // if we return it directly then it won't run
     return async (values) => vObj.validate(values);
 }
 exports.createValidator = createValidator;
 /** validate aginst the dev input first */
-function assert(propertyName, argsList, validationInput // @TODO fix types
+function assert(propertyName, argsList, validationInput // @TODO fix types if I use the ValidationInput then it doesnt work below
 ) {
     // silly mistake
     if (!argsList.length) {

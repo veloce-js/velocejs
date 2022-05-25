@@ -1,3 +1,3 @@
-import { Validators } from '@velocejs/validators';
+import type { ValidatorsInstance, JsonqlObjectValidateInput } from '../types';
 export declare function createValidator(propertyName: string, argsList: Array<any>, // @TODO fix types
-vObj: Validators, validationInput: any): (values: Array<any>) => Promise<any>;
+vObj: ValidatorsInstance, validationInput: JsonqlObjectValidateInput | boolean): ((values: unknown) => Promise<unknown>) | ((values: Array<unknown>) => Promise<unknown[]>);

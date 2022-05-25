@@ -1,11 +1,11 @@
 // main class
 import type {
-  JsonqlValidationPlugin
+  JsonqlValidationPlugin,
 } from '@jsonql/validator-core/index'
 import type {
   VeloceAstMap,
   AddValidationRuleFn,
-  ValidationRuleRecord
+  ValidationRuleRecord,
 } from './types'
 import {
   ValidatorPlugins,

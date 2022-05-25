@@ -7,6 +7,7 @@ import type {
   RouteMetaInfo,
   // JsonqlArrayValidateInput,
   JsonqlObjectValidateInput,
+  ArgsListType,
 } from '../types'
 import type {
   UwsStringPairObj,
@@ -59,7 +60,7 @@ Moving some of the smaller function out from the fastapi to reduce the complexit
 /** convert the string from url to the right type for dynamic route */
 export function convertStrToType(
   argNames: Array<string>,
-  argsList: Array<UwsStringPairObj>,
+  argsList: Array<ArgsListType>,
   params: UwsStringPairObj
 ) {
   return argNames.map((name: string, i: number) => {
@@ -83,13 +84,13 @@ export function convertStrToTypeAction(
 }
 
 /** take the spread argument def if there is one */
-export function hasSpreadArg(argsList: UwsStringPairObj[]) {
+export function hasSpreadArg(argsList: ArgsListType[]) {
   // you could only have one
   return argsList.filter(isSpreadFn)[0]
 }
 
 /** check if this handler is using a spread argument  */
-export function isSpreadFn(list: UwsStringPairObj) {
+export function isSpreadFn(list: ArgsListType) {
   // debug('list isSpreadFn', list)
   return (
     list && // spread argument?
@@ -107,11 +108,11 @@ export function prepareSpreadArg(params: UwsStringPairObj) {
 }
 
 /** check if the dynamic route parameter is valid or not, this throw to hail */
-export function assertDynamicRouteArgs(argsList: UwsStringPairObj[]) {
-  if (argsList.filter((arg: UwsStringPairObj) => {
+export function assertDynamicRouteArgs(argsList: ArgsListType[]) {
+  if (argsList.filter((arg: ArgsListType) => {
     const tk = isSpreadFn(arg) ? 'types' : 'type'
 
-    return !DYNAMIC_ROUTE_ALLOW_TYPES.includes(arg[tk])
+    return !DYNAMIC_ROUTE_ALLOW_TYPES.includes(arg[tk] as string)
   }).length) {
     throw new Error(`We only support ${DYNAMIC_ROUTE_ALLOW_TYPES.join(',')} in dynamic route handler`)
   }
@@ -119,18 +120,18 @@ export function assertDynamicRouteArgs(argsList: UwsStringPairObj[]) {
 /** this is a mouthful! */
 export function prepareArgsFromDynamicToSpread(
   argNames: Array<string>,
-  argsList: Array<UwsStringPairObj>,
+  argsList: Array<ArgsListType>,
   params: UwsStringPairObj,
   paramNames: string[]
 ) {
   debug('names', paramNames, params, paramNames)
   const processedNames: string[] = []
-  const result = argsList.map((list: UwsStringPairObj, i: number) => {
+  const result = argsList.map((list: ArgsListType, i: number) => {
     if (isSpreadFn(list)) {
       const tmp: unknown[] = []
       paramNames.forEach((name: string) => {
         if (!processedNames.includes(name)) {
-          tmp.push(convertStrToTypeAction(list.types, params[name]))
+          tmp.push(convertStrToTypeAction(list.types as string, params[name]))
         }
       })
       return tmp
@@ -147,7 +148,7 @@ export const notUndef = (value: unknown) => value !== undefined
 
 // just put them all together
 /** This method was in the rest.ts now move inside the FastApi class def
-because we need to re-organize how to init the validation object among others 
+because we need to re-organize how to init the validation object among others
 */
 export function mergeInfo(
   map: object,

@@ -18,6 +18,8 @@ import type {
   BodyParserConfig,
   JsonqlObjectValidateInput,
   // JsonqlArrayValidateInput,
+  ArgsListType,
+  ValidatorsInstance,
 } from './types'
 import {
   UwsServer,
@@ -302,7 +304,7 @@ export class FastApi implements FastApiInterface {
   // transform the string name to actual method
   private _mapMethodToHandler(
     propertyName: string,
-    argsList: Array<UwsStringPairObj>,
+    argsList: Array<ArgsListType>,
     validationInput: any, // this is the rules provide via Decorator
     route?: string
     // onAbortedHandler?: string // take out
@@ -359,6 +361,7 @@ export class FastApi implements FastApiInterface {
   ) {
     if (!(Array.isArray(validations) && validations.length === 0)) {
       this._validators = new Validators(astMap as VeloceAstMap)
+      debug('this._validators', this._validators, astMap)
       // @TODO addValidationRules here if it's not automatic
       debug(`validations`, validations)
     }
@@ -367,17 +370,16 @@ export class FastApi implements FastApiInterface {
   /** take this out from above to keep related code in one place */
   private _prepareValidator(
     propertyName: string,
-    argsList: Array<UwsStringPairObj>,
-    validationInput: any //JsonqlObjectValidateInput || JsonqlArrayValidateInput, // this is the raw rules input by dev
+    argsList: Array<ArgsListType>,
+    validationInput: JsonqlObjectValidateInput | boolean, // this is the raw rules input by dev
   ) {
     const argNames = argsList.map(arg => arg.name)
     const validatorInstance = this._validators.getValidator(propertyName)
     const validateFn = createValidator(
                             propertyName,
                             argsList,
-                            validatorInstance,
+                            validatorInstance as unknown as ValidatorsInstance,
                             validationInput)
-                            // this.validatorPlugins)
 
     return async (ctx: VeloceCtx) => {
       const args = this._applyArgs(argNames, argsList, ctx)
@@ -505,7 +507,7 @@ export class FastApi implements FastApiInterface {
   // @TODO check if this is the dynamic route and we need to convert the data
   private _applyArgs(
     argNames: Array<string>,
-    argsList: Array<UwsStringPairObj>,
+    argsList: Array<ArgsListType>,
     ctx: VeloceCtx
   ) {
     const { params, route, names } = ctx
@@ -733,7 +735,7 @@ export class FastApi implements FastApiInterface {
     because when the route unmatch the server just hang up
   */
   public $_catchAll() {
-    // @TODO check if it's open by a browser then we should serve up a 404 page 
+    // @TODO check if it's open by a browser then we should serve up a 404 page
     // debug(ctx) // to see what's going on
     write404(this.res as HttpResponse)
   }
