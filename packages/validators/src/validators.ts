@@ -69,7 +69,7 @@ export class Validators {
   ) {
     return (input: ValidationRuleRecord) => {
       this._appendRules(propertyName, input)
-      Reflect.apply(obj.addValidationRules, obj, [input])
+      return Reflect.apply(obj.addValidationRules, obj, [input])
     }
   }
 
