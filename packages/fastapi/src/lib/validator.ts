@@ -34,7 +34,7 @@ export function createValidator(
   assert(propertyName, argsList, validationInput as JsonqlObjectValidateInput)
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
     debug('addValidationRules', validationInput[RULES_KEY])
-    vObj.addValidationRules(propertyName, validationInput[RULES_KEY])
+    vObj.addValidationRules(validationInput[RULES_KEY])
   }
   // if we return it directly then it won't run
   return async (values: Array<unknown>) => vObj.validate(values)

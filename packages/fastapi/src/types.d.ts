@@ -73,7 +73,7 @@ export type BodyParserConfig = {
 
 export type ValidatorsInstance = {
   validate: (values: Array<unknown>) => Promise<Array<unknown>>
-  addValidationRules: (key: string, rules: JsonqlObjectValidateInput) => void
+  addValidationRules: (rules: JsonqlObjectValidateInput) => void
 }
 
 export type DynamicRouteCheckFn = (t: string, p: string, args: ArgsListType[]) => string
