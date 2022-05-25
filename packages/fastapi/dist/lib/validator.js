@@ -14,7 +14,6 @@ declare type GenericKeyValue = {
 */
 function createValidator(propertyName, argsList, // @TODO fix types
 vObj, validationInput) {
-    debug('argsList', argsList);
     // first need to check if they actually apply the @Validate decorator
     if (validationInput === false) {
         debug(`skip validation --> ${propertyName}`);
@@ -38,6 +37,7 @@ function assert(propertyName, argsList, validationInput // @TODO fix types if I 
         throw new Error(`${propertyName} has no parameters and therefore can not apply validation!`);
     }
     // check the name matches
+    // @ts-ignore keep saying this is going to be true ???
     if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
         const names = [];
         for (const name in validationInput[constants_1.RULES_KEY]) {

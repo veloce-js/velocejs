@@ -17,6 +17,9 @@ export type {
   JsonqlArrayValidateInput,
   JsonqlObjectValidateInput,
 } from '@jsonql/validator/index'
+import type {
+  UwsBodyParserOptions
+} from '@velocejs/bodyparser/index'
 
 export type RouteMetaInfo = {
   propertyName: string
@@ -64,7 +67,7 @@ export type VeloceCtx = {
 export type VeloceMiddleware = (ctx: VeloceCtx) => Promise<VeloceCtx>
 
 export type BodyParserConfig = {
-  config: unknown,
+  config: UwsBodyParserOptions,
   onAborted?: () => void
 }
 
@@ -72,3 +75,5 @@ export type ValidatorsInstance = {
   validate: (values: Array<unknown>) => Promise<Array<unknown>>
   addValidationRules: (key: string, rules: JsonqlObjectValidateInput) => void
 }
+
+export type DynamicRouteCheckFn = (t: string, p: string, args: ArgsListType[]) => string

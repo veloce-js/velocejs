@@ -114,6 +114,8 @@ export declare class FastApi implements FastApiInterface {
      The interface to serve up the contract, it's public but prefix underscore to avoid override
      */
     $_serveContract(): void;
+    /** @TODO this is reserved for serving up generated (js) script for validator */
+    $_serveScript(): void;
     /**
       When there is no catch all route, we will insert this to the end and serve up a 404
       because when the route unmatch the server just hang up

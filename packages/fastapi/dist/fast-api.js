@@ -102,6 +102,7 @@ class FastApi {
     /** Mapping all the string name to method and supply to UwsServer run method */
     async _prepareRoutes(meta) {
         const checkFn = this._prepareDynamicRoute(new WeakSet());
+        // @ts-ignore fix this later undefined not assignable to string crap again
         return meta.map((m, i) => {
             const { path, type, propertyName } = m;
             this._checkCatchAllRoute(path, type);
@@ -226,14 +227,15 @@ class FastApi {
             };
         })
             .catch((err) => {
-            debug('Config err?', err);
-            return {};
+            debug('_getBodyParserConfig err?', err);
+            throw new Error(err);
         });
     }
     /** prepare validator using veloce/validators */
     _prepareValidators(astMap, validations) {
         if (!(Array.isArray(validations) && validations.length === 0)) {
             this._validators = new validators_1.Validators(astMap);
+            debug('this._validators', this._validators, astMap);
             // @TODO addValidationRules here if it's not automatic
             debug(`validations`, validations);
         }
@@ -243,7 +245,6 @@ class FastApi {
         const argNames = argsList.map(arg => arg.name);
         const validatorInstance = this._validators.getValidator(propertyName);
         const validateFn = (0, validator_1.createValidator)(propertyName, argsList, validatorInstance, validationInput);
-        // this.validatorPlugins)
         return async (ctx) => {
             const args = this._applyArgs(argNames, argsList, ctx);
             debug('args before validateFn -->', args);
@@ -536,6 +537,10 @@ class FastApi {
             debug('_serveContract contract:', json);
             this.$json(json);
         });
+    }
+    /** @TODO this is reserved for serving up generated (js) script for validator */
+    $_serveScript() {
+        debug('@TODO for serving up server generated script');
     }
     /**
       When there is no catch all route, we will insert this to the end and serve up a 404

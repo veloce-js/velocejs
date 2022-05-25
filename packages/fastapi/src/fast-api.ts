@@ -20,6 +20,7 @@ import type {
   // JsonqlArrayValidateInput,
   ArgsListType,
   ValidatorsInstance,
+  DynamicRouteCheckFn,
 } from './types'
 import {
   UwsServer,
@@ -201,7 +202,7 @@ export class FastApi implements FastApiInterface {
     meta: RouteMetaInfo[]
   ): Promise<Array<UwsRouteSetup>> {
     const checkFn = this._prepareDynamicRoute(new WeakSet())
-
+    // @ts-ignore fix this later undefined not assignable to string crap again
     return meta.map((m: RouteMetaInfo, i: number) => {
       const { path, type, propertyName } = m
       this._checkCatchAllRoute(path, type)
@@ -251,7 +252,7 @@ export class FastApi implements FastApiInterface {
   /** TS script force it to make it looks so damn bad for all their non-sense rules */
   private _prepareNormalRoute(
     meta: RouteMetaInfo,
-    checkFn: (t: string, p: string, args: UwsStringPairObj[]) => string
+    checkFn: DynamicRouteCheckFn
   ) {
     const { type, path, propertyName, args, validation, excluded } = meta
     const _route = checkFn(type, path, args)
@@ -279,7 +280,7 @@ export class FastApi implements FastApiInterface {
     return (
       type: string,
       path: string,
-      args: UwsStringPairObj[]
+      args: ArgsListType[]
     ): string => {
       debug(`checkFn`, path)
       let dynamicRoute = '', upObj: UrlPattern | null = null
@@ -330,12 +331,12 @@ export class FastApi implements FastApiInterface {
   private _bodyParser(dynamicRoute?: string) {
     return async (res: HttpResponse, req: HttpRequest) => {
       const config = await this._getBodyParserConfig(dynamicRoute)
-      return bodyParser(res, req, config as unknown as BodyParserConfig)
+      return bodyParser(res, req, config)
     }
   }
 
   /** fetch the bodyParser config */
-  private async _getBodyParserConfig(dynamicRoute?: string) {
+  private async _getBodyParserConfig(dynamicRoute?: string): Promise<BodyParserConfig> {
     return this._config.getConfig()
       .then((config: {[key: string]: string}) => {
         const bodyParserConfig = config[BODYPARSER_KEY] || VeloceConfig.getDefaults(BODYPARSER_KEY)
@@ -349,8 +350,8 @@ export class FastApi implements FastApiInterface {
         }
       })
       .catch((err: string) => {
-        debug('Config err?', err)
-        return {}
+        debug('_getBodyParserConfig err?', err)
+        throw new Error(err)
       })
   }
 
@@ -728,6 +729,11 @@ export class FastApi implements FastApiInterface {
       debug('_serveContract contract:', json)
       this.$json(json)
     })
+  }
+
+  /** @TODO this is reserved for serving up generated (js) script for validator */
+  public $_serveScript() {
+    debug('@TODO for serving up server generated script')
   }
 
   /**
