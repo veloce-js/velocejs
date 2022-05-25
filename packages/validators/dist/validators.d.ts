@@ -15,12 +15,12 @@ export declare class Validators {
     constructor(_astMap: VeloceAstMap);
     /** get the validator */
     getValidator(propertyName: string): {
-        addValidationRules: (input: ValidationRuleRecord) => void;
+        addValidationRules: (input: ValidationRuleRecord) => any;
         validate: (values: unknown[], raw?: boolean | undefined) => Promise<any>;
     };
     registerPlugin(name: string, pluginConfig: JsonqlValidationPlugin): void;
     loadExtPlugin(name: string, pluginConfig: JsonqlValidationPlugin): void;
-    addValidationRules(propertyName: string, obj: ValidatorFactory): (input: ValidationRuleRecord) => void;
+    addValidationRules(propertyName: string, obj: ValidatorFactory): (input: ValidationRuleRecord) => any;
     export(): {};
     /** store the rules for later export */
     private _appendRules;
