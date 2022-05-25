@@ -1,3 +1,4 @@
+import type { RouteMetaInfo, JsonqlObjectValidateInput } from '../types';
 import type { UwsStringPairObj } from '@velocejs/server/index';
 export declare function extractArgs(fnStr: string): Array<string>;
 /** The validate result now comes in an object, we need to turn into array for apply */
@@ -11,10 +12,16 @@ export declare function hasSpreadArg(argsList: UwsStringPairObj[]): UwsStringPai
 /** check if this handler is using a spread argument  */
 export declare function isSpreadFn(list: UwsStringPairObj): boolean | "";
 /** just a loop to take the value out from the params for spread fn */
-export declare function prepareSpreadArg(params: UwsStringPairObj): any[];
+export declare function prepareSpreadArg(params: UwsStringPairObj): unknown[];
 /** check if the dynamic route parameter is valid or not, this throw to hail */
 export declare function assertDynamicRouteArgs(argsList: UwsStringPairObj[]): void;
 /** this is a mouthful! */
 export declare function prepareArgsFromDynamicToSpread(argNames: Array<string>, argsList: Array<UwsStringPairObj>, params: UwsStringPairObj, paramNames: string[]): any;
 /** check if a value is undefined, wrapper to make the code looks cleaner */
-export declare const notUndef: (value: any) => boolean;
+export declare const notUndef: (value: unknown) => boolean;
+/** This method was in the rest.ts now move inside the FastApi class def
+because we need to re-organize how to init the validation object among others
+*/
+export declare function mergeInfo(map: object, existingRoutes: Array<RouteMetaInfo>, validations: JsonqlObjectValidateInput, protectedRoutes: string[]): RouteMetaInfo[];
+/** skip the static and raw type */
+export declare function prepareValidateRoute(type: string, propertyName: string, validations: JsonqlObjectValidateInput): false | import("@jsonql/validator").JsonqlValidationRule | import("@jsonql/validator").JsonqlValidationRule[];

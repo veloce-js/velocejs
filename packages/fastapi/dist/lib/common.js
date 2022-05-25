@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.notUndef = exports.prepareArgsFromDynamicToSpread = exports.assertDynamicRouteArgs = exports.prepareSpreadArg = exports.isSpreadFn = exports.hasSpreadArg = exports.convertStrToTypeAction = exports.convertStrToType = exports.prepareArgs = exports.extractArgs = void 0;
+exports.prepareValidateRoute = exports.mergeInfo = exports.notUndef = exports.prepareArgsFromDynamicToSpread = exports.assertDynamicRouteArgs = exports.prepareSpreadArg = exports.isSpreadFn = exports.hasSpreadArg = exports.convertStrToTypeAction = exports.convertStrToType = exports.prepareArgs = exports.extractArgs = void 0;
 const tslib_1 = require("tslib");
+const server_1 = require("@velocejs/server");
 const constants_1 = require("@jsonql/constants");
 const constants_2 = require("./constants");
 const utils_1 = require("@jsonql/utils");
@@ -106,3 +107,26 @@ exports.prepareArgsFromDynamicToSpread = prepareArgsFromDynamicToSpread;
 /** check if a value is undefined, wrapper to make the code looks cleaner */
 const notUndef = (value) => value !== undefined;
 exports.notUndef = notUndef;
+// just put them all together
+/** This method was in the rest.ts now move inside the FastApi class def
+because we need to re-organize how to init the validation object among others
+*/
+function mergeInfo(map, existingRoutes, validations, protectedRoutes) {
+    return existingRoutes.map(route => {
+        const { propertyName, type } = route;
+        if (map[propertyName]) {
+            route.args = map[propertyName];
+        }
+        route.protected = protectedRoutes && protectedRoutes.indexOf(propertyName) > -1;
+        route.validation = prepareValidateRoute(type, propertyName, validations);
+        return route;
+    });
+}
+exports.mergeInfo = mergeInfo;
+/** skip the static and raw type */
+function prepareValidateRoute(type, propertyName, validations) {
+    return (type === server_1.STATIC_TYPE || type === server_1.RAW_TYPE) ?
+        false :
+        validations[propertyName] || false;
+}
+exports.prepareValidateRoute = prepareValidateRoute;

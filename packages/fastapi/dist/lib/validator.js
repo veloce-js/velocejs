@@ -2,17 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createValidator = void 0;
 const tslib_1 = require("tslib");
-// wrap the @jsonql/validator here
-const validator_1 = require("@jsonql/validator");
 const constants_1 = require("./constants");
 const utils_1 = require("@jsonql/utils");
 const errors_1 = require("../lib/errors");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fastapi:lib:validator');
 function createValidator(propertyName, argsList, // @TODO fix types
-validationInput, // @TODO fix types
-plugins // @TODO fix types
-) {
+vObj, validationInput) {
     // first need to check if they actually apply the @Validate decorator
     if (validationInput === false) {
         debug(`skip validation --> ${propertyName}`);
@@ -22,7 +18,6 @@ plugins // @TODO fix types
     debug('input -->', validationInput);
     assert(propertyName, argsList, validationInput);
     // @TODO we might need to subclass this and create a set global plugin
-    const vObj = new validator_1.ValidatorFactory(argsList);
     if (plugins && plugins.length) {
         console.info('create plugins', plugins);
     }

@@ -1,16 +1,24 @@
 "use strict";
+/**
+  We change the thinking about how to init the server
+  before it was using the Prepare method that needs to call super.run
+  which is ugly
+
+  Here we will try to apply the Decorator at the Class level
+  and see if we could do it with just init the new class and everything should run
+*/
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Rest = void 0;
 const tslib_1 = require("tslib");
 const keys_1 = require("./keys");
 const ast_1 = require("@jsonql/ast");
-const server_1 = require("@velocejs/server");
 const constants_1 = require("../lib/constants");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fastapi:rest');
 // import debug from 'debug'
 // const debugFn = debug('velocejs:fastapi:decorator:Rest')
 /** This should be generic that could apply to different Decorator init */
+// @NOTE no matter what you do here - there will always be warning, just one or many many ...
 function Rest(constructor) {
     // Voodoo magic
     const where = (0, ast_1.pickInputFile)(new Error());
@@ -28,29 +36,10 @@ function Rest(constructor) {
                 const existingRoutes = Reflect.getOwnMetadata(keys_1.routeKey, target) || [];
                 const validations = Reflect.getOwnMetadata(keys_1.validationKey, target) || [];
                 const protectedRoute = Reflect.getOwnMetadata(keys_1.protectedKey, target) || [];
-                // little trick to get rip of the warning
-                this[constants_1.METHOD_TO_RUN](mergeInfo(map, existingRoutes, validations, protectedRoute));
+                // @NOTE little trick to get rip of the method-not-exist warning
+                this[constants_1.METHOD_TO_RUN](map, existingRoutes, validations, protectedRoute);
             });
         }
     };
 }
 exports.Rest = Rest;
-// just put them all together
-// @TODO protected route as well
-function mergeInfo(map, existingRoutes, validations, protectedRoutes) {
-    return existingRoutes.map(route => {
-        const { propertyName, type } = route;
-        if (map[propertyName]) {
-            route.args = map[propertyName];
-        }
-        route.protected = protectedRoutes && protectedRoutes.indexOf(propertyName) > -1;
-        route.validation = prepareValidateRoute(type, propertyName, validations);
-        return route;
-    });
-}
-/** skip the static and raw type */
-function prepareValidateRoute(type, propertyName, validations) {
-    return (type === server_1.STATIC_TYPE || type === server_1.RAW_TYPE) ?
-        false :
-        validations[propertyName] || false;
-}

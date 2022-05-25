@@ -6,20 +6,17 @@
   Here we will try to apply the Decorator at the Class level
   and see if we could do it with just init the new class and everything should run
 */
-import type {
-  RouteMetaInfo,
-  // JsonqlArrayValidateInput,
-  JsonqlObjectValidateInput,
-} from '../types'
+
 import { routeKey, validationKey, protectedKey } from './keys'
 import { pickInputFile, tsClassParser } from '@jsonql/ast'
-import { STATIC_TYPE, RAW_TYPE } from '@velocejs/server'
+
 import { METHOD_TO_RUN } from '../lib/constants'
 import debugFn from 'debug'
 const debug = debugFn('velocejs:fastapi:rest')
 // import debug from 'debug'
 // const debugFn = debug('velocejs:fastapi:decorator:Rest')
 /** This should be generic that could apply to different Decorator init */
+// @NOTE no matter what you do here - there will always be warning, just one or many many ...
 export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
   // Voodoo magic
   const where = pickInputFile(new Error())
@@ -37,40 +34,11 @@ export function Rest<T extends { new (...args: any[]): {} }>(constructor: T) {
           const existingRoutes = Reflect.getOwnMetadata(routeKey, target) || []
           const validations = Reflect.getOwnMetadata(validationKey, target) || []
           const protectedRoute = Reflect.getOwnMetadata(protectedKey, target) || []
-          // little trick to get rip of the warning
+          // @NOTE little trick to get rip of the method-not-exist warning
           this[METHOD_TO_RUN](
-            mergeInfo(map, existingRoutes, validations, protectedRoute)
+            map, existingRoutes, validations, protectedRoute
           )
         })
     }
   }
-}
-// just put them all together
-// @TODO protected route as well
-function mergeInfo(
-  map: object,
-  existingRoutes: Array<RouteMetaInfo>,
-  validations: JsonqlObjectValidateInput,
-  protectedRoutes: string[]
-) {
-  return existingRoutes.map(route => {
-    const { propertyName, type } = route
-    if (map[propertyName]) {
-      route.args = map[propertyName]
-    }
-    route.protected = protectedRoutes && protectedRoutes.indexOf(propertyName) > -1
-    route.validation = prepareValidateRoute(type, propertyName, validations)
-
-    return route
-  })
-}
-/** skip the static and raw type */
-function prepareValidateRoute(
-  type: string,
-  propertyName: string,
-  validations: JsonqlObjectValidateInput,
-) {
-  return (type === STATIC_TYPE || type === RAW_TYPE ) ?
-                                                false :
-                   validations[propertyName] || false
 }

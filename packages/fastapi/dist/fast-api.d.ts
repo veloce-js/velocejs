@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import type { AppOptions, HttpResponse, HttpRequest, UwsRespondBody, UwsStringPairObj } from '@velocejs/server/index';
-import type { RouteMetaInfo } from './types';
+import type { RouteMetaInfo, JsonqlObjectValidateInput } from './types';
 import { FastApiInterface } from './lib/fast-api-interface';
 export declare class FastApi implements FastApiInterface {
     private _uwsInstance;
@@ -13,6 +13,7 @@ export declare class FastApi implements FastApiInterface {
     private _onConfigReady;
     private _onConfigWait;
     private _onConfigError;
+    private _validators;
     private _validationErrStatus;
     private _dynamicRoutes;
     private _staticRouteIndex;
@@ -44,6 +45,8 @@ export declare class FastApi implements FastApiInterface {
     private _bodyParser;
     /** fetch the bodyParser config */
     private _getBodyParserConfig;
+    /** prepare validator using veloce/validators */
+    private _prepareValidators;
     /** take this out from above to keep related code in one place */
     private _prepareValidator;
     /** get call after the bodyParser, and prepare for the operation */
@@ -73,7 +76,7 @@ export declare class FastApi implements FastApiInterface {
       Dev can do @Rest(config), also for none-TS env dev can
       subclass then call this method to arhive the same effects
     */
-    protected $prepare(routes: Array<RouteMetaInfo>, apiType?: string): void;
+    protected $prepare(astMap: object, existingRoutes: Array<RouteMetaInfo>, validations: JsonqlObjectValidateInput, protectedRoutes: string[], apiType?: string): void;
     /**         HOOKS                */
     /**
       We are not going to implement this tranditional middleware system

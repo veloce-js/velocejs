@@ -8,13 +8,16 @@ import type {
   UwsRespondBody,
   UwsStringPairObj,
 } from '@velocejs/server/index' // point to the source ts
+import type {
+  VeloceAstMap
+} from '@velocejs/validators/index'
 // our deps
 import type {
   RouteMetaInfo,
   VeloceCtx,
   BodyParserConfig,
+  JsonqlObjectValidateInput,
   // JsonqlArrayValidateInput,
-  // JsonqlObjectValidateInput,
 } from './types'
 import {
   UwsServer,
@@ -75,10 +78,14 @@ import {
   assertDynamicRouteArgs,
   notUndef,
   prepareArgsFromDynamicToSpread,
+  mergeInfo
 } from './lib/common'
 import {
   createValidator
 } from './lib/validator'
+import {
+  Validators
+} from '@velocejs/validators'
 import {
   FastApiInterface
 } from './lib/fast-api-interface'
@@ -99,10 +106,11 @@ export class FastApi implements FastApiInterface {
   private _written = false
   private _headers: UwsStringPairObj = {}
   private _status: number = placeholderVal
-  private _onConfigReady: Promise<any> // fucking any script
+  private _onConfigReady: Promise<unknown>
   private _onConfigWait: (value: unknown) => void = placeholderFn
   private _onConfigError: (value: unknown) => void = placeholderFn
 
+  private _validators!: Validators
   private _validationErrStatus = 417
   private _dynamicRoutes = new Map()
   private _staticRouteIndex: Array<number> = []
@@ -178,7 +186,7 @@ export class FastApi implements FastApiInterface {
       handler: this._mapMethodToHandler(CATCH_ALL_METHOD_NAME, [], false)
     }
   }
-  
+
   /** check if there is a catch all route, otherwise create one at the end */
   private _checkCatchAllRoute(path: string, type: string) {
     if (!this._hasCatchAll) {
@@ -344,6 +352,18 @@ export class FastApi implements FastApiInterface {
       })
   }
 
+  /** prepare validator using veloce/validators */
+  private _prepareValidators(
+    astMap: object,
+    validations: JsonqlObjectValidateInput
+  ) {
+    if (!(Array.isArray(validations) && validations.length === 0)) {
+      this._validators = new Validators(astMap as VeloceAstMap)
+      // @TODO addValidationRules here if it's not automatic
+      debug(`validations`, validations)
+    }
+  }
+
   /** take this out from above to keep related code in one place */
   private _prepareValidator(
     propertyName: string,
@@ -351,11 +371,13 @@ export class FastApi implements FastApiInterface {
     validationInput: any //JsonqlObjectValidateInput || JsonqlArrayValidateInput, // this is the raw rules input by dev
   ) {
     const argNames = argsList.map(arg => arg.name)
+    const validatorInstance = this._validators.getValidator(propertyName)
     const validateFn = createValidator(
                             propertyName,
                             argsList,
-                            validationInput,
-                            this.validatorPlugins)
+                            validatorInstance,
+                            validationInput)
+                            // this.validatorPlugins)
 
     return async (ctx: VeloceCtx) => {
       const args = this._applyArgs(argNames, argsList, ctx)
@@ -538,7 +560,7 @@ export class FastApi implements FastApiInterface {
   /** Write the output
   This will be only output
   */
-  private _render(type: string, payload: any): void {
+  private _render(type: string, payload: unknown): void {
     const res = this.res as HttpResponse
     const writer = getWriter(res)
 
@@ -570,12 +592,17 @@ export class FastApi implements FastApiInterface {
     subclass then call this method to arhive the same effects
   */
   protected $prepare(
-    routes: Array<RouteMetaInfo>,
-    apiType: string = REST_NAME
+    astMap: object,
+    existingRoutes: Array<RouteMetaInfo>,
+    validations: JsonqlObjectValidateInput,
+    protectedRoutes: string[],
+    apiType: string = REST_NAME // @TODO reserved for support more api type in the future
   ):void {
     if (isDebug) {
       console.time('FastApiStartUp')
     }
+    const routes: Array<RouteMetaInfo> = mergeInfo(astMap, existingRoutes, validations, protectedRoutes)
+    this._prepareValidators(astMap, validations)
     this._uwsInstance.autoStart = false
     // @0.4.0 we change this to a chain promise start up sequence
     // check the config to see if there is one to generate contract
@@ -604,7 +631,6 @@ export class FastApi implements FastApiInterface {
     input / output will be and they just have to overwrite this hooks to
     get the result
   */
-
 
   // if the dev use this to provide an extra header
   // then we can check if the contentType is already provided
@@ -707,6 +733,7 @@ export class FastApi implements FastApiInterface {
     because when the route unmatch the server just hang up
   */
   public $_catchAll() {
+    // @TODO check if it's open by a browser then we should serve up a 404 page 
     // debug(ctx) // to see what's going on
     write404(this.res as HttpResponse)
   }

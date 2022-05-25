@@ -1,10 +1,10 @@
 // wrap the @jsonql/validator here
-import { ValidatorFactory } from '@jsonql/validator'
+import { Validators } from '@velocejs/validators'
 import {
   RULES_KEY,
   RULE_AUTOMATIC
 } from './constants'
-import { inArray, assign } from '@jsonql/utils'
+import { inArray } from '@jsonql/utils'
 import { VeloceError } from '../lib/errors'
 import debugFn from 'debug'
 const debug = debugFn('velocejs:fastapi:lib:validator')
@@ -16,19 +16,20 @@ declare type GenericKeyValue = {
 export function createValidator(
   propertyName: string,
   argsList: Array<any>, // @TODO fix types
+  vObj: Validators,
   validationInput: any, // @TODO fix types
-  plugins: Array<any> // @TODO fix types
+  // plugins: Array<any> // @TODO fix types
 ) {
   // first need to check if they actually apply the @Validate decorator
   if (validationInput === false) {
     debug(`skip validation --> ${propertyName}`)
     // return a dummy handler - we need to package it up for consistency!
-    return async (values: any) => values //  we don't need to do anyting now
+    return async (values: unknown) => values //  we don't need to do anyting now
   }
   debug('input -->', validationInput)
   assert(propertyName, argsList, validationInput)
   // @TODO we might need to subclass this and create a set global plugin
-  const vObj = new ValidatorFactory(argsList)
+
   if (plugins && plugins.length) {
     console.info('create plugins', plugins)
   }

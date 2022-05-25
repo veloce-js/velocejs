@@ -1,7 +1,10 @@
-
+/*
 import { MyExample } from './my-example'
-
 const obj = new MyExample()
+*/
+
+import { MyApi } from './my-api'
+const obj = new MyApi()
 
 
 obj.$start()

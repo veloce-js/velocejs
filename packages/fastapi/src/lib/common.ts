@@ -4,8 +4,17 @@
 // try the ts-morph facing the same situation. So we need to find away to
 // parse the file at TS stage to extract the Type info for Validation
 import type {
+  RouteMetaInfo,
+  // JsonqlArrayValidateInput,
+  JsonqlObjectValidateInput,
+} from '../types'
+import type {
   UwsStringPairObj,
 } from '@velocejs/server/index'
+import {
+  STATIC_TYPE,
+  RAW_TYPE
+} from '@velocejs/server'
 import {
   SPREAD_ARG_TYPE,
   TS_TYPE_NAME,
@@ -90,7 +99,7 @@ export function isSpreadFn(list: UwsStringPairObj) {
 }
 /** just a loop to take the value out from the params for spread fn */
 export function prepareSpreadArg(params: UwsStringPairObj) {
-  const args: any[] = []
+  const args: unknown[] = []
   for (const key in params) {
     args.push(params[key])
   }
@@ -118,7 +127,7 @@ export function prepareArgsFromDynamicToSpread(
   const processedNames: string[] = []
   const result = argsList.map((list: UwsStringPairObj, i: number) => {
     if (isSpreadFn(list)) {
-      const tmp: any[] = []
+      const tmp: unknown[] = []
       paramNames.forEach((name: string) => {
         if (!processedNames.includes(name)) {
           tmp.push(convertStrToTypeAction(list.types, params[name]))
@@ -134,4 +143,36 @@ export function prepareArgsFromDynamicToSpread(
   return flatMap(result)
 }
 /** check if a value is undefined, wrapper to make the code looks cleaner */
-export const notUndef = (value: any) => value !== undefined
+export const notUndef = (value: unknown) => value !== undefined
+
+// just put them all together
+/** This method was in the rest.ts now move inside the FastApi class def
+because we need to re-organize how to init the validation object among others 
+*/
+export function mergeInfo(
+  map: object,
+  existingRoutes: Array<RouteMetaInfo>,
+  validations: JsonqlObjectValidateInput,
+  protectedRoutes: string[]
+) {
+  return existingRoutes.map(route => {
+    const { propertyName, type } = route
+    if (map[propertyName]) {
+      route.args = map[propertyName]
+    }
+    route.protected = protectedRoutes && protectedRoutes.indexOf(propertyName) > -1
+    route.validation = prepareValidateRoute(type, propertyName, validations)
+
+    return route
+  })
+}
+/** skip the static and raw type */
+export function prepareValidateRoute(
+  type: string,
+  propertyName: string,
+  validations: JsonqlObjectValidateInput,
+) {
+  return (type === STATIC_TYPE || type === RAW_TYPE ) ?
+                                                false :
+                   validations[propertyName] || false
+}

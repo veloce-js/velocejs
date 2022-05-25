@@ -12,6 +12,7 @@ const utils_1 = require("@jsonql/utils");
 const constants_2 = require("./lib/constants");
 const common_1 = require("./lib/common");
 const validator_1 = require("./lib/validator");
+const validators_1 = require("@velocejs/validators");
 // setup
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fast-api:main');
@@ -28,9 +29,10 @@ class FastApi {
     _written = false;
     _headers = {};
     _status = placeholderVal;
-    _onConfigReady; // fucking any script
+    _onConfigReady;
     _onConfigWait = placeholderFn;
     _onConfigError = placeholderFn;
+    _validators;
     _validationErrStatus = 417;
     _dynamicRoutes = new Map();
     _staticRouteIndex = [];
@@ -228,11 +230,21 @@ class FastApi {
             return {};
         });
     }
+    /** prepare validator using veloce/validators */
+    _prepareValidators(astMap, validations) {
+        if (!(Array.isArray(validations) && validations.length === 0)) {
+            this._validators = new validators_1.Validators(astMap);
+            // @TODO addValidationRules here if it's not automatic
+            debug(`validations`, validations);
+        }
+    }
     /** take this out from above to keep related code in one place */
     _prepareValidator(propertyName, argsList, validationInput //JsonqlObjectValidateInput || JsonqlArrayValidateInput, // this is the raw rules input by dev
     ) {
         const argNames = argsList.map(arg => arg.name);
-        const validateFn = (0, validator_1.createValidator)(propertyName, argsList, validationInput, this.validatorPlugins);
+        const validatorInstance = this._validators.getValidator(propertyName);
+        const validateFn = (0, validator_1.createValidator)(propertyName, argsList, validatorInstance, validationInput);
+        // this.validatorPlugins)
         return async (ctx) => {
             const args = this._applyArgs(argNames, argsList, ctx);
             debug('args before validateFn -->', args);
@@ -415,10 +427,13 @@ class FastApi {
       Dev can do @Rest(config), also for none-TS env dev can
       subclass then call this method to arhive the same effects
     */
-    $prepare(routes, apiType = constants_1.REST_NAME) {
+    $prepare(astMap, existingRoutes, validations, protectedRoutes, apiType = constants_1.REST_NAME // @TODO reserved for support more api type in the future
+    ) {
         if (constants_2.isDebug) {
             console.time('FastApiStartUp');
         }
+        const routes = (0, common_1.mergeInfo)(astMap, existingRoutes, validations, protectedRoutes);
+        this._prepareValidators(astMap, validations);
         this._uwsInstance.autoStart = false;
         // @0.4.0 we change this to a chain promise start up sequence
         // check the config to see if there is one to generate contract
@@ -528,6 +543,7 @@ class FastApi {
       because when the route unmatch the server just hang up
     */
     $_catchAll() {
+        // @TODO check if it's open by a browser then we should serve up a 404 page 
         // debug(ctx) // to see what's going on
         (0, server_1.write404)(this.res);
     }
