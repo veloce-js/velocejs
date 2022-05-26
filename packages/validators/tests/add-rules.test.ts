@@ -34,6 +34,34 @@ test(`Should able to add inline validate rule`, async t => {
                   })
 })
 
+test(`Super simple plugin to see if it working correct`, async t => {
+
+  validators.registerPlugin('myOwnRuleSimple', {
+    main: function(v: string) {
+      const x = 'hello'
+      return !(v.indexOf(x) > -1)
+    }
+  })
+
+  const validator = validators.getValidator('posts')
+
+  validator.addValidationRules({
+    arg1: {plugin: 'myOwnRuleSimple', params: []}
+  })
+
+  const value = ['hellothere', 201]
+
+  return validator.validate(value)
+                  .then((result: Array<string|number>) => {
+                    t.deepEqual(result, value)
+                  })
+                  .catch((error: JsonqlValidationError) => {
+                    t.deepEqual(error.detail, [0,1])
+                  })
+})
+
+
+
 test(`Should able to register a plugin and call it`, async t => {
 
   validators.registerPlugin('myOwnRule', {
@@ -56,9 +84,7 @@ test(`Should able to register a plugin and call it`, async t => {
                     t.deepEqual(result, value)
                   })
                   .catch((error: JsonqlValidationError) => {
-                    
+
                     t.deepEqual(error.detail, [0,1])
                   })
-
-
 })

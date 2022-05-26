@@ -33,7 +33,7 @@
   "homepage": "https://velocejs.com",
   "dependencies": {
     "@jsonql/errors": "^0.6.1",
-    "@jsonql/validator": "^0.6.2",
+    "@jsonql/validator": "^0.7.0",
     "debug": "^4.3.4",
     "tslib": "^2.4.0"
   },

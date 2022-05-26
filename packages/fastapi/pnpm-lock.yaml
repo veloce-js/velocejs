@@ -17,7 +17,7 @@ specifiers:
   '@velocejs/bodyparser': workspace:^0.5.2
   '@velocejs/config': workspace:^0.5.2
   '@velocejs/server': workspace:^0.8.5
-  '@velocejs/validators': workspace:^0.1.1
+  '@velocejs/validators': workspace:^0.1.2
   ava: ^4.2.0
   debug: ^4.3.4
   esbuild: ^0.14.39

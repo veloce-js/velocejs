@@ -4,7 +4,7 @@ specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/ast': ^0.8.4
   '@jsonql/errors': ^0.6.1
-  '@jsonql/validator': ^0.6.2
+  '@jsonql/validator': ^0.7.0
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
@@ -26,7 +26,7 @@ specifiers:
 
 dependencies:
   '@jsonql/errors': 0.6.1
-  '@jsonql/validator': 0.6.2
+  '@jsonql/validator': 0.7.0
   debug: 4.3.4
   tslib: 2.4.0
 
@@ -366,22 +366,22 @@ packages:
       lodash-es: 4.17.21
     dev: false
 
-  /@jsonql/validator-core/0.8.3:
-    resolution: {integrity: sha512-KnovS7hY9Mv3sfYQv8LaCIPYdw6tqdiaa4mV4b5UpQZcNd8UtuLM7jhW4FpzG1DWbx9adG/3LrRWKQI0SOwqAA==}
+  /@jsonql/validator-core/0.9.5:
+    resolution: {integrity: sha512-P9Yl81UT3lJky/uo21mE1opJ69LKnSR+ZfC/20elLx8VnL6grxKjTYnOL0dZcJJTaES8cGEp/P+cpSqh5i92SQ==}
     dependencies:
       '@jsonql/constants': 0.7.2
       '@jsonql/errors': 0.6.1
       '@jsonql/utils': 0.6.9
     dev: false
 
-  /@jsonql/validator/0.6.2:
-    resolution: {integrity: sha512-hIdde5QQoIZJ8bMnCGKGu1Vi8R0IoQTg+ObJQyh4hDHFubkpIoE9z86XM4JEM+bh/9bCmoTVMVuApRUi7H5ciA==}
+  /@jsonql/validator/0.7.0:
+    resolution: {integrity: sha512-a2G3t7X4lCWKElprgjenGORmE44ejZbaA8KH1TukhLAF/xdIyeHRd1IDP+2Psaif6l6cxjiIw0IRB7xmjtFtpw==}
     dependencies:
       '@jsonql/ast': 0.8.4
       '@jsonql/constants': 0.7.2
       '@jsonql/errors': 0.6.1
       '@jsonql/utils': 0.6.9
-      '@jsonql/validator-core': 0.8.3
+      '@jsonql/validator-core': 0.9.5
       debug: 4.3.4
       reflect-metadata: 0.1.13
     transitivePeerDependencies:

@@ -16,20 +16,25 @@ export type {
 export type {
   JsonqlArrayValidateInput,
   JsonqlObjectValidateInput,
+  JsonqlValidationRule,
 } from '@jsonql/validator/index'
+import type {
+  UwsBodyParserOptions
+} from '@velocejs/bodyparser/index'
 
 export type RouteMetaInfo = {
+  type: string
   propertyName: string
   path: string
-  type: string
   excluded?: boolean // exclude this from contract
   // onAbortedHandler?: string this is deprectead
   protected?: boolean
   validation?: JsonqlArrayValidateInput | JsonqlObjectValidateInput
-  [key: string]: any // so we can store more info if we need to @TODO remove this once it's stable
+  route?: string
+  [key: string]: any // This has to be any for now because the stupid type TS compiler took the wrong key?
 }
 // this is totally pointless
-export type MetaDecorator = (path: string) => (target: any, propertyName: string, descriptor: any) => void
+export type MetaDecorator = (path: string) => (target: unknown, propertyName: string, descriptor: unknown) => void
 
 export type DescriptorMeta = {
   value: function
@@ -43,27 +48,35 @@ export type RouteOptions = {
   excluded?: boolean
   routeType?: string
 }
-/*
+
 export type ArgsListType = {
   name: string
   required: boolean
   type: string
   tstype?: string
   types?: string
-  typeParams?: any
+  typeParams?: unknown
 }
-*/
 
 export * from './lib/validate-types'
 // just stub this for now
 export type VeloceCtx = {
   propertyName: string
-  [key: string]: any
+  [key: string]: unknown
 } & UwsRespondBody
 
 export type VeloceMiddleware = (ctx: VeloceCtx) => Promise<VeloceCtx>
 
 export type BodyParserConfig = {
-  config: any,
+  config: UwsBodyParserOptions,
   onAborted?: () => void
 }
+
+export type ValidateFn = (values: Array<unknown>) => Promise<Array<unknown>>
+
+export type ValidatorsInstance = {
+  validate: ValidateFn
+  addValidationRules: (rules: JsonqlObjectValidateInput) => void
+}
+
+export type DynamicRouteCheckFn = (t: string, p: string, args: ArgsListType[]) => string

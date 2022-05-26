@@ -7,7 +7,7 @@ import { ValidatorFactory } from '@jsonql/validator'
 let myExampleObj: MyExample
 const port = 30338
 const hostname = `http://localhost:${port}`
-const logigEndpoint = `${hostname}/login`
+const loginEndpoint = `${hostname}/login`
 test.before(async () => {
   myExampleObj = new MyExample()
   await myExampleObj.$start(port)
@@ -42,7 +42,7 @@ test(`Validation with Decorator and @jsonql/validator`, async t => {
   t.plan(1)
   const login = {username: 'John', password: '123456'}
 
-  return Fetch(logigEndpoint, {
+  return Fetch(loginEndpoint, {
     method: 'POST',
     body: JSON.stringify(login),
     headers: { 'Content-Type': 'application/json' }
@@ -57,7 +57,7 @@ test(`Validation with Decorator and @jsonql/validator another success to call ap
   t.plan(1)
   const login = {username: 'Doe', password: '654321'}
 
-  return Fetch(logigEndpoint, {
+  return Fetch(loginEndpoint, {
     method: 'POST',
     body: JSON.stringify(login),
     headers: { 'Content-Type': 'application/json' }
@@ -68,28 +68,19 @@ test(`Validation with Decorator and @jsonql/validator another success to call ap
   })
 })
 
-test.only(`Validation with wrong property to cause a throw`, async t => {
+test(`Validation with wrong property to cause a throw`, async t => {
   const login = {username: 'John', password: '123'}
   t.plan(2)
-  return Fetch(logigEndpoint, {
+  return Fetch(loginEndpoint, {
     method: 'POST',
     body: JSON.stringify(login),
     headers: { 'Content-Type': 'application/json' }
   })
   .then(res => {
     t.is(res.status, 417)
-    // console.log('server status -->', res.status)
     return res.json()
   })
   .then((json: any) => {
-    // console.log('json', json)
     t.truthy(json.errors)
   })
-  /*
-  .catch((error: any) => {
-    // should get a non 200 respond
-    // console.log('catch server error here', error)
-    t.pass()
-  })
-  */
 })

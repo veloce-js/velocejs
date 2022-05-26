@@ -22,6 +22,7 @@ import type {
   ValidatorsInstance,
   DynamicRouteCheckFn,
   JsonqlValidationRule,
+  JsonqlValidationPlugin,
   ValidateFn,
 } from './types'
 import {
@@ -99,7 +100,7 @@ import debugFn from 'debug'
 const debug = debugFn('velocejs:fast-api:main')
 // dummy stuff
 const placeholderVal = -1
-const placeholderFn = (...args: any[] ) => { console.log(args) }
+const placeholderFn = (...args: unknown[] ) => { console.log(args) }
 
 // We are not going to directly sub-class from the uws-server-class
 // instead we create an instance of it
@@ -124,8 +125,6 @@ export class FastApi implements FastApiInterface {
   protected payload: UwsRespondBody | undefined
   protected res: HttpResponse | undefined
   protected req: HttpRequest | undefined
-  // override this then we could use this to add to the plugin list
-  public validatorPlugins: Array<any> = [] // @TODO fix type
 
   // store the UWS server instance when init
   constructor(config?: AppOptions) {
@@ -195,7 +194,7 @@ export class FastApi implements FastApiInterface {
   /** check if there is a catch all route, otherwise create one at the end */
   private _checkCatchAllRoute(path: string, type: string) {
     if (!this._hasCatchAll) {
-      this._hasCatchAll = path === CATCH_ALL_TYPE && type === 'any'
+      this._hasCatchAll = path === CATCH_ALL_TYPE && type === CATCH_ALL_TYPE
     }
   }
 
@@ -315,7 +314,7 @@ export class FastApi implements FastApiInterface {
     const handler = this[propertyName]
 
     return async (res: HttpResponse, req: HttpRequest) => {
-
+      // @BUG this is still a bit problematic when error happens inside, the catch has no effect
       this._handleMiddlewares([
         this._bodyParser(dynamicRoute),
         this._prepareCtx(propertyName, res, dynamicRoute),
@@ -327,7 +326,6 @@ export class FastApi implements FastApiInterface {
         }
       ],
       res, req)
-
     }
   }
 
@@ -384,7 +382,7 @@ export class FastApi implements FastApiInterface {
                             validationInput)
     }
     const argNames = argsList.map(arg => arg.name)
-    
+
     return async (ctx: VeloceCtx) => {
       const args = this._applyArgs(argNames, argsList, ctx)
       debug('args before validateFn -->', args)
@@ -488,7 +486,7 @@ export class FastApi implements FastApiInterface {
   // break out from above to make the code cleaner
   private async _handleContent(
     args: UwsStringPairObj[],
-    handler: any, // Function
+    handler: (...arg: unknown[]) => Promise<unknown>,
     type: string,
     propertyName: string
   ) {
@@ -706,11 +704,24 @@ export class FastApi implements FastApiInterface {
 
   /** @TODO SSG but this should only call when data been update and generate static files
   then it get serve up via the @ServeStatic TBC
+
   */
 
   ///////////////////////////////////////////
   //             PUBLIC                    //
   ///////////////////////////////////////////
+
+  /** overload the ValidatorPlugins registerPlugin better approach is to do that in the velocejs.config.js */
+  public $registerValidationPlugin(
+    name: string,
+    plugin: JsonqlValidationPlugin
+  ): boolean {
+    if (this._validators) {
+      this._validators.registerPlugin(name, plugin)
+      return true
+    }
+    return false
+  }
 
   // @TODO instead of using a old middleware or register style
   // we create series of hooks that allow the dev to override
