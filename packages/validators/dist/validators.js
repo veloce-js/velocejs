@@ -18,7 +18,7 @@ class Validators {
         this._validators = new Map();
         this._plugin = new validator_1.ValidatorPlugins();
         for (const propertyName in this._astMap) {
-            this._validators.set(propertyName, new validator_1.ValidatorFactory(this._astMap[propertyName], this._plugin));
+            this._validators.set(propertyName, new validator_1.Validator(this._astMap[propertyName], this._plugin));
         }
     }
     /** get the validator */
@@ -27,25 +27,18 @@ class Validators {
             const obj = this._validators.get(propertyName);
             // overload the method here
             return {
-                addValidationRules: this.addValidationRules(propertyName, obj),
+                addValidationRules: this._addValidationRules(propertyName, obj),
                 validate: obj.validate.bind(obj)
             };
         }
         throw new Error(`${propertyName} validator is not registered!`);
     }
     // ------------------- OVERLOAD ----------------------//
+    /** overload the ValidatorPlugin registerPlugin method */
     registerPlugin(name, pluginConfig) {
         this._plugin.registerPlugin(name, pluginConfig);
     }
-    loadExtPlugin(name, pluginConfig) {
-        this._plugin.loadExtPlugin(name, pluginConfig);
-    }
-    addValidationRules(propertyName, obj) {
-        return (input) => {
-            this._appendRules(propertyName, input);
-            return Reflect.apply(obj.addValidationRules, obj, [input]);
-        };
-    }
+    /** export for contract */
     export() {
         const result = {};
         this._validationRules.forEach((value, key) => {
@@ -74,6 +67,13 @@ class Validators {
             debug('adding new rule', input);
             this._validationRules.set(propertyName, [input]);
         }
+    }
+    /** overload the Validator addValidationRules */
+    _addValidationRules(propertyName, obj) {
+        return (input) => {
+            this._appendRules(propertyName, input);
+            return Reflect.apply(obj.addValidationRules, obj, [input]);
+        };
     }
 }
 exports.Validators = Validators;

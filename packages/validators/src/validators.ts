@@ -8,7 +8,7 @@ import type {
 } from './types'
 import {
   ValidatorPlugins,
-  ValidatorFactory
+  Validator
 } from '@jsonql/validator'
 
 import debugFn from 'debug'
@@ -21,7 +21,7 @@ const debug = debugFn('velocejs:validator:main')
 **/
 export class Validators {
   private _validationRules = new Map<string, ValidationRuleRecord>()
-  private _validators = new Map<string, ValidatorFactory>()
+  private _validators = new Map<string, Validator>()
   private _plugin = new ValidatorPlugins()
 
   /** main */
@@ -29,7 +29,7 @@ export class Validators {
     for (const propertyName in this._astMap) {
       this._validators.set(
         propertyName,
-        new ValidatorFactory(this._astMap[propertyName], this._plugin)
+        new Validator(this._astMap[propertyName], this._plugin)
       )
     }
   }
@@ -37,10 +37,10 @@ export class Validators {
   /** get the validator */
   public getValidator(propertyName: string) {
     if (this._validators.has(propertyName)) {
-      const obj = this._validators.get(propertyName) as ValidatorFactory
+      const obj = this._validators.get(propertyName) as Validator
       // overload the method here
       return {
-        addValidationRules: this.addValidationRules(propertyName, obj),
+        addValidationRules: this._addValidationRules(propertyName, obj),
         validate: obj.validate.bind(obj)
       }
     }
@@ -49,6 +49,7 @@ export class Validators {
 
   // ------------------- OVERLOAD ----------------------//
 
+  /** overload the ValidatorPlugin registerPlugin method */
   public registerPlugin(
     name: string,
     pluginConfig: JsonqlValidationPlugin
@@ -56,23 +57,7 @@ export class Validators {
     this._plugin.registerPlugin(name, pluginConfig)
   }
 
-  public loadExtPlugin(
-    name: string,
-    pluginConfig: JsonqlValidationPlugin
-  ) {
-    this._plugin.loadExtPlugin(name, pluginConfig)
-  }
-
-  public addValidationRules(
-    propertyName: string,
-    obj: ValidatorFactory
-  ) {
-    return (input: ValidationRuleRecord) => {
-      this._appendRules(propertyName, input)
-      return Reflect.apply(obj.addValidationRules, obj, [input])
-    }
-  }
-
+  /** export for contract */
   public export() {
     const result = {}
     this._validationRules.forEach((value: ValidationRuleRecord, key: string) => {
@@ -99,6 +84,17 @@ export class Validators {
     } else {
       debug('adding new rule', input)
       this._validationRules.set(propertyName, [input])
+    }
+  }
+
+  /** overload the Validator addValidationRules */
+  private _addValidationRules(
+    propertyName: string,
+    obj: Validator
+  ) {
+    return (input: ValidationRuleRecord) => {
+      this._appendRules(propertyName, input)
+      return Reflect.apply(obj.addValidationRules, obj, [input])
     }
   }
 }
