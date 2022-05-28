@@ -1,7 +1,6 @@
 // wrap the @jsonql/validator here
 import type {
   ValidatorsInstance,
-  // JsonqlObjectValidateInput,
   JsonqlValidationRule,
   ArgsListType,
 } from '../types'
@@ -36,11 +35,11 @@ export function createValidator(
 function assert(
     propertyName: string,
     argsList: Array<ArgsListType>,
-    validationInput: JsonqlValidationRule // @TODO fix types if I use the ValidationInput then it doesnt work below
+    validationInput: JsonqlValidationRule
   ): void {
   // silly mistake
   if (!argsList.length) {
-    throw new Error(`${propertyName} has no parameters and therefore can not apply validation!`)
+    throw new VeloceError(`${propertyName} has no parameters and therefore can not apply validation!`)
   }
   // check the name matches
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
