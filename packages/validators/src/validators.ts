@@ -22,6 +22,9 @@ export class Validators extends JsonqlValidators {
 
   public exportSchema() {
     debug('@TODO export the schema for contract')
+    const schema = this.export()
+    // do our processing here
+    return schema
   }
 
   public exportScript() {
