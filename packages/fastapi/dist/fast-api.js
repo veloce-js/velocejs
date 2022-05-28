@@ -41,8 +41,6 @@ class FastApi {
     payload;
     res;
     req;
-    // override this then we could use this to add to the plugin list
-    validatorPlugins = []; // @TODO fix type
     // store the UWS server instance when init
     constructor(config) {
         this._uwsInstance = new server_1.UwsServer(config);
@@ -96,7 +94,7 @@ class FastApi {
     /** check if there is a catch all route, otherwise create one at the end */
     _checkCatchAllRoute(path, type) {
         if (!this._hasCatchAll) {
-            this._hasCatchAll = path === constants_2.CATCH_ALL_TYPE && type === 'any';
+            this._hasCatchAll = path === constants_2.CATCH_ALL_TYPE && type === constants_2.CATCH_ALL_TYPE;
         }
     }
     /** Mapping all the string name to method and supply to UwsServer run method */
@@ -192,6 +190,7 @@ class FastApi {
     ) {
         const handler = this[propertyName];
         return async (res, req) => {
+            // @BUG this is still a bit problematic when error happens inside, the catch has no effect
             this._handleMiddlewares([
                 this._bodyParser(dynamicRoute),
                 this._prepareCtx(propertyName, res, dynamicRoute),
@@ -332,8 +331,7 @@ class FastApi {
         };
     }
     // break out from above to make the code cleaner
-    async _handleContent(args, handler, // Function
-    type, propertyName) {
+    async _handleContent(args, handler, type, propertyName) {
         // const args2 = this._applyArgs(argNames, params)
         try {
             const reply = await Reflect.apply(handler, this, args);
@@ -514,10 +512,19 @@ class FastApi {
     }
     /** @TODO SSG but this should only call when data been update and generate static files
     then it get serve up via the @ServeStatic TBC
+  
     */
     ///////////////////////////////////////////
     //             PUBLIC                    //
     ///////////////////////////////////////////
+    /** overload the ValidatorPlugins registerPlugin better approach is to do that in the velocejs.config.js */
+    $registerValidationPlugin(name, plugin) {
+        if (this._validators) {
+            this._validators.registerPlugin(name, plugin);
+            return true;
+        }
+        return false;
+    }
     // @TODO instead of using a old middleware or register style
     // we create series of hooks that allow the dev to override
     // also our Decorator will lock down on just the public method

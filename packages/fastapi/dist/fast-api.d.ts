@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import type { AppOptions, HttpResponse, HttpRequest, UwsRespondBody, UwsStringPairObj } from '@velocejs/server/index';
-import type { RouteMetaInfo, JsonqlObjectValidateInput } from './types';
+import type { RouteMetaInfo, JsonqlObjectValidateInput, JsonqlValidationPlugin } from './types';
 import { FastApiInterface } from './lib/fast-api-interface';
 export declare class FastApi implements FastApiInterface {
     private _uwsInstance;
@@ -21,7 +21,6 @@ export declare class FastApi implements FastApiInterface {
     protected payload: UwsRespondBody | undefined;
     protected res: HttpResponse | undefined;
     protected req: HttpRequest | undefined;
-    validatorPlugins: Array<any>;
     constructor(config?: AppOptions);
     /**                 PRIVATE METHODS                   */
     /** whether to setup a contract or not, if there is contract setup then we return a new route */
@@ -106,7 +105,10 @@ export declare class FastApi implements FastApiInterface {
     protected $ssr(data: UwsStringPairObj, options?: UwsStringPairObj): void;
     /** @TODO SSG but this should only call when data been update and generate static files
     then it get serve up via the @ServeStatic TBC
+  
     */
+    /** overload the ValidatorPlugins registerPlugin better approach is to do that in the velocejs.config.js */
+    $registerValidationPlugin(name: string, plugin: JsonqlValidationPlugin): boolean;
     /** register a method that will check the route */
     $registerAuthMethod(): void;
     set validationErrorStatus(status: number);
