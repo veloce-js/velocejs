@@ -20,7 +20,7 @@ export function createValidator(
   validationInput: JsonqlValidationRule,
 ) {
   debug('createValidator input -->', validationInput)
-  assert(propertyName, argsList, validationInput)
+  assertValidationInput(propertyName, argsList, validationInput)
 
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
     debug('addValidationRules', validationInput[RULES_KEY])
@@ -31,7 +31,7 @@ export function createValidator(
 }
 
 /** validate aginst the dev input first */
-function assert(
+function assertValidationInput(
     propertyName: string,
     argsList: Array<ArgsListType>,
     validationInput: JsonqlValidationRule

@@ -15,6 +15,7 @@
     "test": "pnpm build && pnpm test:ava",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
+    "build:swc": "npx swc ./src/client.ts -o client.js",
     "ts:check": "tsc -noEmit",
     "docs": "typedoc --entryPoints src/main.ts",
     "ts": "node -r esbuild-register",
@@ -26,7 +27,8 @@
     "postpublish": "pnpm update:version",
     "patch": "npm version patch",
     "minor": "npm version minor",
-    "major": "npm version major"
+    "major": "npm version major",
+    "spack": "npx spack"
   },
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "ISC",
@@ -35,11 +37,14 @@
     "@jsonql/errors": "^0.7.0",
     "@jsonql/validators": "^0.1.0",
     "debug": "^4.3.4",
+    "fs-extra": "^10.1.0",
     "tslib": "^2.4.0"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
     "@jsonql/ast": "^0.8.4",
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.192",
     "@types/debug": "^4.1.7",
     "@types/fs-extra": "^9.0.13",
     "@types/mime-types": "^2.1.1",
@@ -50,7 +55,6 @@
     "esbuild": "^0.14.41",
     "esbuild-register": "^3.3.2",
     "eslint": "^8.16.0",
-    "fs-extra": "^10.1.0",
     "node-fetch": "^3.2.4",
     "nyc": "^15.1.0",
     "open": "^8.4.0",
