@@ -8,7 +8,6 @@ import {
   RULES_KEY,
   RULE_AUTOMATIC
 } from './constants'
-import { inArray } from '@jsonql/utils'
 import { VeloceError } from '../lib/errors'
 import debugFn from 'debug'
 const debug = debugFn('velocejs:fastapi:lib:validator')
@@ -47,7 +46,7 @@ function assert(
     for (const name in validationInput[RULES_KEY]) {
       names.push(name)
     }
-    const wrongName = argsList.filter(arg => !inArray(names, arg.name))
+    const wrongName = argsList.filter(arg => !names.includes(arg.name))
     if (wrongName.length) {
       throw new VeloceError(
         `${propertyName}: Some of your validation argument name is wrong!

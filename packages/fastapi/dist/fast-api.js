@@ -3,13 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FastApi = void 0;
 const tslib_1 = require("tslib");
 const server_1 = require("@velocejs/server");
-const constants_1 = require("@jsonql/constants");
 const bodyparser_1 = tslib_1.__importStar(require("@velocejs/bodyparser"));
 const config_1 = require("@velocejs/config");
 const contract_1 = require("@jsonql/contract");
 const utils_1 = require("@jsonql/utils");
 // here
-const constants_2 = require("./lib/constants");
+const constants_1 = require("./lib/constants");
 const common_1 = require("./lib/common");
 const validator_1 = require("./lib/validator");
 const validators_1 = require("@velocejs/validators");
@@ -79,22 +78,22 @@ class FastApi {
         routes.push({
             path: config.path,
             type: config.method,
-            handler: this._mapMethodToHandler(constants_2.CONTRACT_METHOD_NAME, [], false)
+            handler: this._mapMethodToHandler(constants_1.CONTRACT_METHOD_NAME, [], false)
         });
         return routes;
     }
     /** create a catch all route to handle those unhandle url(s) */
     _createCatchAllRoute() {
         return {
-            path: constants_2.CATCH_ALL_ROUTE,
-            type: constants_2.CATCH_ALL_TYPE,
-            handler: this._mapMethodToHandler(constants_2.CATCH_ALL_METHOD_NAME, [], false)
+            path: constants_1.CATCH_ALL_ROUTE,
+            type: constants_1.CATCH_ALL_TYPE,
+            handler: this._mapMethodToHandler(constants_1.CATCH_ALL_METHOD_NAME, [], false)
         };
     }
     /** check if there is a catch all route, otherwise create one at the end */
     _checkCatchAllRoute(path, type) {
         if (!this._hasCatchAll) {
-            this._hasCatchAll = path === constants_2.CATCH_ALL_TYPE && type === constants_2.CATCH_ALL_TYPE;
+            this._hasCatchAll = path === constants_1.CATCH_ALL_TYPE && type === constants_1.CATCH_ALL_TYPE;
         }
     }
     /** Mapping all the string name to method and supply to UwsServer run method */
@@ -166,7 +165,7 @@ class FastApi {
         return (type, path, args) => {
             debug(`checkFn`, path);
             let dynamicRoute = '', upObj = null;
-            if (type === constants_2.DEFAULT_CONTRACT_METHOD && bodyparser_1.UrlPattern.check(path)) {
+            if (type === constants_1.DEFAULT_CONTRACT_METHOD && bodyparser_1.UrlPattern.check(path)) {
                 // now we need to check if the types are supported
                 (0, common_1.assertDynamicRouteArgs)(args);
                 upObj = new bodyparser_1.UrlPattern(path);
@@ -433,7 +432,7 @@ class FastApi {
     */
     $prepare(astMap, existingRoutes, validations, protectedRoutes, apiType = constants_1.REST_NAME // @TODO reserved for support more api type in the future
     ) {
-        if (constants_2.isDebug) {
+        if (constants_1.isDebug) {
             console.time('FastApiStartUp');
         }
         const routes = (0, common_1.mergeInfo)(astMap, existingRoutes, validations, protectedRoutes);
@@ -543,7 +542,7 @@ class FastApi {
      */
     $_serveContract() {
         // debug('call _serveContract') // @BUG if I remove this then it doens't work???
-        Promise.resolve(constants_2.isDev ?
+        Promise.resolve(constants_1.isDev ?
             this._contract.output() :
             this._config.getConfig(`${config_1.CONTRACT_KEY}.${config_1.CACHE_DIR}`)
                 .then((cacheDir) => this._contract.serve(cacheDir))).then((json) => {
@@ -581,7 +580,7 @@ class FastApi {
             this._onConfigReady
                 .then(() => {
                 this._uwsInstance.start();
-                if (constants_2.isDebug) {
+                if (constants_1.isDebug) {
                     console.timeEnd('FastApiStartUp');
                 }
             })
@@ -598,7 +597,7 @@ class FastApi {
       we don't really need it but good for debug */
     get $fastApiInfo() {
         return {
-            dev: constants_2.isDev,
+            dev: constants_1.isDev,
             port: this._uwsInstance.getPortNum(),
             host: this._uwsInstance.hostName,
             useContract: this._contract !== undefined,

@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ClientValidators = void 0;
+exports.Validators = void 0;
 const validators_1 = require("@jsonql/validators");
-class ClientValidators extends validators_1.Validators {
+// also call Validators just include from different path  
+class Validators extends validators_1.Validators {
     /**
       @TODO we might not init it this way
     */
@@ -10,4 +11,4 @@ class ClientValidators extends validators_1.Validators {
         super(astMap);
     }
 }
-exports.ClientValidators = ClientValidators;
+exports.Validators = Validators;

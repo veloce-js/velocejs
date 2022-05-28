@@ -7,7 +7,7 @@ import type {
   UwsRouteHandler,
   UwsRespondBody,
   UwsStringPairObj,
-} from '@velocejs/server/index' // point to the source ts
+} from '@velocejs/server/index'
 import type {
   VeloceAstMap
 } from '@velocejs/validators/index'
@@ -17,7 +17,6 @@ import type {
   VeloceCtx,
   BodyParserConfig,
   JsonqlObjectValidateInput,
-  // JsonqlArrayValidateInput,
   ArgsListType,
   ValidatorsInstance,
   DynamicRouteCheckFn,
@@ -40,9 +39,6 @@ import {
   CONTENT_TYPE,
   WEBSOCKET_ROUTE_NAME,
 } from '@velocejs/server'
-import {
-  REST_NAME,
-} from '@jsonql/constants'
 import bodyParser, {
   UrlPattern,
   GET_NAME,
@@ -76,6 +72,7 @@ import {
   CATCH_ALL_ROUTE,
   CATCH_ALL_METHOD_NAME,
   CATCH_ALL_TYPE,
+  REST_NAME,
 } from './lib/constants'
 import {
   convertStrToType,

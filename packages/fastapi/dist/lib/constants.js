@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isDebug = exports.isDev = exports.DYNAMIC_ROUTE_ALLOW_TYPES = exports.DEFAULT_CONTRACT_METHOD = exports.CATCH_ALL_TYPE = exports.CATCH_ALL_ROUTE = exports.CATCH_ALL_METHOD_NAME = exports.CONTRACT_METHOD_NAME = exports.METHOD_TO_RUN = exports.RULE_FULL = exports.RULE_SIMPLE = exports.RULE_LIST = exports.RULE_AUTOMATIC = exports.PARAMS_KEY = exports.OPTIONS_KEY = exports.RULES_KEY = exports.NIL = exports.BOUNDARY = void 0;
+exports.isDebug = exports.isDev = exports.REST_NAME = exports.DYNAMIC_ROUTE_ALLOW_TYPES = exports.DEFAULT_CONTRACT_METHOD = exports.CATCH_ALL_TYPE = exports.CATCH_ALL_ROUTE = exports.CATCH_ALL_METHOD_NAME = exports.CONTRACT_METHOD_NAME = exports.METHOD_TO_RUN = exports.RULE_FULL = exports.RULE_SIMPLE = exports.RULE_LIST = exports.RULE_AUTOMATIC = exports.PARAMS_KEY = exports.OPTIONS_KEY = exports.RULES_KEY = exports.NIL = exports.BOUNDARY = void 0;
 // this has moved to bodyparser @TODO remove later
 exports.BOUNDARY = 'boundary';
 exports.NIL = 'NIL';
@@ -20,6 +20,7 @@ exports.CATCH_ALL_ROUTE = '/*';
 exports.CATCH_ALL_TYPE = 'any';
 exports.DEFAULT_CONTRACT_METHOD = 'get';
 exports.DYNAMIC_ROUTE_ALLOW_TYPES = ['number', 'string', 'boolean'];
+exports.REST_NAME = 'rest';
 // dynamic
 exports.isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
 exports.isDebug = process.env.DEBUG !== undefined;

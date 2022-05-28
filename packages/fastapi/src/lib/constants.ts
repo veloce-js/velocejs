@@ -22,6 +22,9 @@ export const CATCH_ALL_TYPE = 'any'
 
 export const DEFAULT_CONTRACT_METHOD = 'get'
 export const DYNAMIC_ROUTE_ALLOW_TYPES = ['number', 'string', 'boolean']
+
+export const REST_NAME = 'rest'
+
 // dynamic
 export const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'
 export const isDebug = process.env.DEBUG !== undefined

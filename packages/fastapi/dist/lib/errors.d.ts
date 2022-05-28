@@ -1,7 +1,4 @@
-import { JsonqlError } from '@jsonql/errors';
+import JsonqlError from '@jsonql/errors/dist/error';
 export declare class VeloceError extends JsonqlError {
-    constructor(message?: string, details?: any);
-}
-export declare class VeloceValidationError extends JsonqlError {
-    constructor(message?: string, details?: any);
+    constructor(...args: unknown[]);
 }
