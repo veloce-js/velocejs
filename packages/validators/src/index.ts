@@ -1,2 +1,2 @@
 // start your project here
-export { ServerValidators } from './validators'
+export { Validators } from './validators'

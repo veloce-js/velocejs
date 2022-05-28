@@ -1,28 +1,12 @@
-import type { JsonqlValidationPlugin } from '@jsonql/validator-core/index';
 import type { VeloceAstMap } from './types';
+import { Validators as JsonqlValidators } from '@jsonql/validators';
 /**
-  Instead of one ast per init
-   we now pass the entire ast here
-   then get it back via the propertyName
+  Here we take the parent methods and onlly deal with the
+  generate files / contract
 **/
-export declare class Validators {
-    private _astMap;
-    private _validationRules;
-    private _validators;
-    private _plugin;
+export declare class Validators extends JsonqlValidators {
     /** main */
-    constructor(_astMap: VeloceAstMap);
-    /** get the validator */
-    getValidator(propertyName: string): {
-        addValidationRules: (input: any) => any;
-        validate: (values: unknown[], raw?: boolean | undefined) => Promise<any>;
-    };
-    /** overload the ValidatorPlugin registerPlugin method */
-    registerPlugin(name: string, pluginConfig: JsonqlValidationPlugin): void;
-    /** export for contract */
-    export(): {};
-    /** store the rules for later export */
-    private _appendRules;
-    /** overload the Validator addValidationRules */
-    private _addValidationRules;
+    constructor(astMap: VeloceAstMap);
+    exportSchema(): void;
+    exportScript(): void;
 }

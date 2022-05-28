@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/validators",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "@velocejs/validators based of @jsonql/validator",
   "main": "dist/index.js",
   "module": "dist/index.ts",

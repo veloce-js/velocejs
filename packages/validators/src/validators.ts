@@ -13,7 +13,7 @@ const debug = debugFn('velocejs:validator:main')
   Here we take the parent methods and onlly deal with the
   generate files / contract
 **/
-export class ServerValidators extends JsonqlValidators {
+export class Validators extends JsonqlValidators {
 
   /** main */
   constructor(astMap: VeloceAstMap) {
