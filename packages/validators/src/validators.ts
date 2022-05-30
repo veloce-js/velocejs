@@ -2,6 +2,9 @@
 import type {
   VeloceAstMap,
 } from './types'
+import type {
+  MixedValidationInput
+} from '@jsonql/validator/index'
 import {
  Validators as JsonqlValidators
 } from '@jsonql/validators'
@@ -20,13 +23,23 @@ export class Validators extends JsonqlValidators {
     super(astMap)
   }
 
-  public exportSchema() {
+  /** directly call the addValidationRules with the propertyName */
+  public addRules(
+    propertyName: string,
+    rules: MixedValidationInput
+  ): void {
+    this.getValidator(propertyName).addValidationRules(rules)
+  }
+
+  /** wrap around the parent export method to add our processing */
+  public exportSchema(): any {
     debug('@TODO export the schema for contract')
     const schema = this.export()
     // do our processing here
     return schema
   }
 
+  /** Will only export the list that will get generate as file */
   public exportScript() {
     debug('@TODO export the extra validation rule to a file')
   }

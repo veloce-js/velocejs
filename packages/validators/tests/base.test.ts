@@ -15,7 +15,7 @@ test.before(() => {
 })
 
 
-test(`Should able to get a validator but name and pass the validation`, async t => {
+test(`Should able to get a validator by name and pass the validation`, async t => {
   t.plan(2)
 
   const V = validators.getValidator('archive')
@@ -29,7 +29,7 @@ test(`Should able to get a validator but name and pass the validation`, async t 
 })
 
 test(`Should able to use addAdditonalRules`, async t => {
-  t.plan(2)
+  t.plan(1)
   const V1 = validators.getValidator('posts')
 
   V1.addValidationRules({
@@ -37,14 +37,12 @@ test(`Should able to use addAdditonalRules`, async t => {
       plugin: 'lessThan', num: 2
     }
   })
-  // confirm this works too
-  V1.addValidationRules({arg2: {
-    plugin: 'moreThan', num: 101
-  }})
-
-  const schema = validators.export()
-
-  t.truthy(schema)
+  // confirm this style works too
+  V1.addValidationRules({
+    arg2: {
+      plugin: 'moreThan', num: 101
+    }
+  })
 
   // console.dir(schema, {depth: null})
 
