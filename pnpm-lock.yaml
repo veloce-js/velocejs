@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@jsonql/utils': ^0.7.3
   '@swc/cli': ^0.1.57
   '@swc/core': ^1.2.194
   esbuild: ^0.14.42
@@ -12,6 +13,7 @@ specifiers:
   vuepress: ^1.9.7
 
 devDependencies:
+  '@jsonql/utils': 0.7.3
   '@swc/cli': 0.1.57_@swc+core@1.2.194
   '@swc/core': 1.2.194
   esbuild: 0.14.42
@@ -1225,6 +1227,17 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.0.5
       '@jridgewell/sourcemap-codec': 1.4.11
+    dev: true
+
+  /@jsonql/errors/0.7.0:
+    resolution: {integrity: sha512-UwMSVfkSPIvXBFiCgTVDCeDdGeqrnNlu7A2xLoaKf4XXdANexzhFkFElznaHoD09dI9KarJx6m3ynjlQdf7xpA==}
+    dev: true
+
+  /@jsonql/utils/0.7.3:
+    resolution: {integrity: sha512-l/O9tW9QvTqxmTBM6V8ZcJxxpToRaTXcEPOSvZE1rKDz1IwQK0apPY4212kNp/O4mdToLY0LvTfm2ah2Krk1MQ==}
+    dependencies:
+      '@jsonql/errors': 0.7.0
+      lodash-es: 4.17.21
     dev: true
 
   /@mrmlnc/readdir-enhanced/2.2.1:
@@ -6708,6 +6721,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       p-locate: 4.1.0
+    dev: true
+
+  /lodash-es/4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: true
 
   /lodash._reinterpolate/3.0.0:
