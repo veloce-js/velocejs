@@ -17,10 +17,10 @@ test.before(() => {
 
 test(`Should able to get a validator by name and pass the validation`, async t => {
   t.plan(2)
-
-  const V = validators.getValidator('archive')
-
-  return V.validate([1])
+  // try out different style 
+  return validators
+      .getValidator('archive')
+      .validate([1])
       .then((result: Array<number>) => {
         t.deepEqual(result, [1])
         const txt = Reflect.apply(api.archive, api, result)
@@ -43,8 +43,6 @@ test(`Should able to use addAdditonalRules`, async t => {
       plugin: 'moreThan', num: 101
     }
   })
-
-  // console.dir(schema, {depth: null})
 
   return V1.validate(['A', 100])
             .then((result: Array<string | number>) => {

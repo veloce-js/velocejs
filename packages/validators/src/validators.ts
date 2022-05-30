@@ -9,9 +9,6 @@ import {
  Validators as JsonqlValidators
 } from '@jsonql/validators'
 
-import debugFn from 'debug'
-const debug = debugFn('velocejs:validator:main')
-
 /**
   Here we take the parent methods and onlly deal with the
   generate files / contract
@@ -27,16 +24,22 @@ export class Validators extends JsonqlValidators {
   public addRules(
     propertyName: string,
     rules: MixedValidationInput
-  ): void {
-    this.getValidator(propertyName).addValidationRules(rules)
+  ) {
+    const val = this.getValidator(propertyName)
+    val.addValidationRules(rules)
+
+    return val // we return the validator to use
   }
 
   /** wrap around the parent export method to add our processing */
   public exportAll(): any {
-    debug('@TODO export the schema for contract')
-    const schema = this.export()
+    const e = this.export()
+    const o = { schema: {}, plugins: e.plugins }
     // do our processing here
-    return schema
+    for (const propName in e.schema) {
+      o.schema[propName] = e.schema[propName].rule
+    }
+    return o
   }
 
 }

@@ -60,8 +60,6 @@ test(`Super simple plugin to see if it working correct`, async t => {
                   })
 })
 
-
-
 test(`Should able to register a plugin and call it`, async t => {
 
   validators.registerPlugin('myOwnRule', {

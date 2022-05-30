@@ -1,10 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Validators = void 0;
-const tslib_1 = require("tslib");
 const validators_1 = require("@jsonql/validators");
-const debug_1 = tslib_1.__importDefault(require("debug"));
-const debug = (0, debug_1.default)('velocejs:validator:main');
 /**
   Here we take the parent methods and onlly deal with the
   generate files / contract
@@ -14,11 +11,21 @@ class Validators extends validators_1.Validators {
     constructor(astMap) {
         super(astMap);
     }
-    exportSchema() {
-        debug('@TODO export the schema for contract');
+    /** directly call the addValidationRules with the propertyName */
+    addRules(propertyName, rules) {
+        const val = this.getValidator(propertyName);
+        val.addValidationRules(rules);
+        return val; // we return the validator to use
     }
-    exportScript() {
-        debug('@TODO export the extra validation rule to a file');
+    /** wrap around the parent export method to add our processing */
+    exportAll() {
+        const e = this.export();
+        const o = { schema: {}, plugins: e.plugins };
+        // do our processing here
+        for (const propName in e.schema) {
+            o.schema[propName] = e.schema[propName].rule;
+        }
+        return o;
     }
 }
 exports.Validators = Validators;

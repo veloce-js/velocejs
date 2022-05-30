@@ -34,7 +34,7 @@ test(`Should able to export the addValidationRules script`, t => {
 
   const schema = val.exportAll()
 
-  console.dir(schema, { depth: null })
+  // console.dir(schema, { depth: null })
 
   t.truthy(schema)
 
