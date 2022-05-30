@@ -32,16 +32,11 @@ export class Validators extends JsonqlValidators {
   }
 
   /** wrap around the parent export method to add our processing */
-  public exportSchema(): any {
+  public exportAll(): any {
     debug('@TODO export the schema for contract')
     const schema = this.export()
     // do our processing here
     return schema
-  }
-
-  /** Will only export the list that will get generate as file */
-  public exportScript() {
-    debug('@TODO export the extra validation rule to a file')
   }
 
 }

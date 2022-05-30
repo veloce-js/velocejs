@@ -32,7 +32,7 @@ test(`Should able to export the addValidationRules script`, t => {
   })
 
 
-  const schema = val.exportSchema()
+  const schema = val.exportAll()
 
   console.dir(schema, { depth: null })
 
