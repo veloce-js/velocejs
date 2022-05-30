@@ -18,7 +18,8 @@
     "build:server": "pnpm -C ./packages/server build:tsc",
     "plop": "plop",
     "update:pkg": "node ./update-devs.js",
-    "gen:types": "node ./gen-types.js"
+    "gen:types": "node ./gen-types.js",
+    "ncuu": "node ./ncu.js"
   },
   "repository": {
     "type": "git",
