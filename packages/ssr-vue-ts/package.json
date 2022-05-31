@@ -20,27 +20,27 @@
   "dependencies": {
     "@velocejs/server": "workspace:^0.8.5",
     "mime-types": "^2.1.35",
-    "vue": "^3.2.33",
-    "vue-router": "^4.0.14"
+    "vue": "^3.2.36",
+    "vue-router": "^4.0.15"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
-    "@types/node": "^17.0.31",
-    "@vitejs/plugin-vue": "^2.3.1",
+    "@types/node": "^17.0.36",
+    "@vitejs/plugin-vue": "^2.3.3",
     "@vitejs/plugin-vue-jsx": "^1.3.10",
-    "@vue/compiler-sfc": "^3.2.33",
-    "@vue/server-renderer": "^3.2.33",
+    "@vue/compiler-sfc": "^3.2.36",
+    "@vue/server-renderer": "^3.2.36",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
     "dep-import-type": "link:./dep-import-type",
-    "esbuild": "^0.14.38",
+    "esbuild": "^0.14.42",
     "esbuild-register": "^3.3.2",
     "express": "^4.18.1",
-    "happy-dom": "^3.1.0",
+    "happy-dom": "^4.1.0",
     "serve-static": "^1.15.0",
-    "typescript": "^4.6.4",
-    "vite": "^2.9.6",
-    "vitest": "^0.10.0",
-    "vue-tsc": "^0.34.11"
+    "typescript": "^4.7.2",
+    "vite": "^2.9.9",
+    "vitest": "^0.13.0",
+    "vue-tsc": "^0.35.2"
   }
 }
