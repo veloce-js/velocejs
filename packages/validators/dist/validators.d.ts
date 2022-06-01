@@ -15,4 +15,11 @@ export declare class Validators extends JsonqlValidators {
     };
     /** wrap around the parent export method to add our processing */
     exportAll(): any;
+    /**
+      We only want the function and generate name for it and replace
+      the function inside the json file (for the contract)
+      then we will import it again on the client, they could use the name
+      to call it again
+    */
+    createScriptFile(filename?: string): string | void;
 }

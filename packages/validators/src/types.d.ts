@@ -12,3 +12,5 @@ export declare type VeloceAstMap = {
 // export declare type AddValidationRuleFn = (validationMap: JsonqlObjectValidateInput | JsonqlArrayValidateInput) => void
 
 export declare type ValidationRuleRecord = JsonqlObjectValidateInput | JsonqlArrayValidateInput
+
+export declare type ExportedSchema = { schema: any, plugins: any}

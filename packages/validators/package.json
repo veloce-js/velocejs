@@ -34,7 +34,7 @@
   "license": "ISC",
   "homepage": "https://velocejs.com",
   "dependencies": {
-    "@jsonql/validators": "^0.4.0",
+    "@jsonql/validators": "^0.4.1",
     "tslib": "^2.4.0"
   },
   "devDependencies": {
@@ -45,7 +45,7 @@
     "@swc/core": "^1.2.196",
     "@types/fs-extra": "^9.0.13",
     "@types/mime-types": "^2.1.1",
-    "@types/node": "^17.0.36",
+    "@types/node": "^17.0.38",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
     "ava": "^4.2.0",
