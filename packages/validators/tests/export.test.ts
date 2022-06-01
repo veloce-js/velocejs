@@ -34,18 +34,14 @@ test.before(() => {
   })
 })
 
-test.only(`Should able to export the addValidationRules script`, t => {
-
+test(`Should able to export the addValidationRules script`, t => {
   const schema = val.exportAll()
-  console.dir(schema, { depth: null })
+  // console.dir(schema, { depth: null })
   t.truthy(schema)
 })
 
 test(`Should able to output the function to a file`, t => {
-
   const file = val.createScriptFile()
-
-  console.log(file)
-
+  // console.log(file)
   t.truthy(file)
 })

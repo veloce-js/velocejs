@@ -9,7 +9,7 @@ import type {
 import {
  Validators as JsonqlValidators,
 } from '@jsonql/validators'
-import { transformMainFn } from './common/'
+import { transformMainFn } from './common'
 import { outputFileSync } from 'fs-extra'
 import {
   SCHEMA_KEY,
@@ -21,7 +21,7 @@ import {
   RULES_KEY,
 } from './constants'
 
-const KEYS = [VALIDATE_KEY, VALIDATE_ASYNC_KEY, PLUGIN_FN_KEY]
+const KEYS = [PLUGIN_FN_KEY, VALIDATE_KEY, VALIDATE_ASYNC_KEY]
 /**
   Here we take the parent methods and onlly deal with the
   generate files / contract
@@ -63,7 +63,6 @@ export class Validators extends JsonqlValidators {
   */
   public createScriptFile(filename?: string) {
     const { plugins } = this.exportAll()
-    let file = ''
     // for schema
     /*
     for (const propName in json.schema) {
@@ -71,16 +70,19 @@ export class Validators extends JsonqlValidators {
     }
     */
     // for plugins, we might only support deliver plugin and inline fucntion all treat as server only
-    plugins.forEach((plugin: any) => {
-      KEYS.forEach((key: string) => {
+    const ctn = KEYS.length
+    const files = plugins.map((plugin: any) => {
+      for (let i=0; i<ctn; ++i) {
+        const key = KEYS[i]
         if (plugin[key]) {
-          file += `const ${plugin[NAME_KEY]} = ${plugin[key].toString()}\n`
+          return `const ${plugin[NAME_KEY]} = ${transformMainFn(plugin[key].toString())}`
         }
-      })
+      }
+      return ''
     })
     if (!filename) {
-      return file
+      return files.join('\n')
     }
-    return outputFileSync(filename, file)
+    return outputFileSync(filename, files.join(''))
   }
 }

@@ -2,8 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Validators = void 0;
 const validators_1 = require("@jsonql/validators");
+const common_1 = require("./common");
 const fs_extra_1 = require("fs-extra");
-const KEYS = [validators_1.VALIDATE_KEY, validators_1.VALIDATE_ASYNC_KEY, validators_1.PLUGIN_FN_KEY];
+const constants_1 = require("./constants");
+const KEYS = [constants_1.PLUGIN_FN_KEY, constants_1.VALIDATE_KEY, constants_1.VALIDATE_ASYNC_KEY];
 /**
   Here we take the parent methods and onlly deal with the
   generate files / contract
@@ -22,10 +24,10 @@ class Validators extends validators_1.Validators {
     /** wrap around the parent export method to add our processing */
     exportAll() {
         const e = this.export();
-        const o = { schema: {}, plugins: e.plugins };
+        const o = { [constants_1.SCHEMA_KEY]: {}, [constants_1.PLUGINS_KEY]: e[constants_1.PLUGINS_KEY] };
         // do our processing here
-        for (const propName in e.schema) {
-            o.schema[propName] = e.schema[propName].rule;
+        for (const propName in e[constants_1.SCHEMA_KEY]) {
+            o[constants_1.SCHEMA_KEY][propName] = e[constants_1.SCHEMA_KEY][propName][constants_1.RULES_KEY];
         }
         return o;
     }
@@ -37,7 +39,6 @@ class Validators extends validators_1.Validators {
     */
     createScriptFile(filename) {
         const { plugins } = this.exportAll();
-        let file = '';
         // for schema
         /*
         for (const propName in json.schema) {
@@ -45,17 +46,20 @@ class Validators extends validators_1.Validators {
         }
         */
         // for plugins, we might only support deliver plugin and inline fucntion all treat as server only
-        plugins.forEach((plugin) => {
-            KEYS.forEach((key) => {
+        const ctn = KEYS.length;
+        const files = plugins.map((plugin) => {
+            for (let i = 0; i < ctn; ++i) {
+                const key = KEYS[i];
                 if (plugin[key]) {
-                    file += `const ${plugin[validators_1.NAME_KEY]} = ${plugin[key].toString()}\n`;
+                    return `const ${plugin[constants_1.NAME_KEY]} = ${(0, common_1.transformMainFn)(plugin[key].toString())}`;
                 }
-            });
+            }
+            return '';
         });
         if (!filename) {
-            return file;
+            return files.join('\n');
         }
-        return (0, fs_extra_1.outputFileSync)(filename, file);
+        return (0, fs_extra_1.outputFileSync)(filename, files.join(''));
     }
 }
 exports.Validators = Validators;
