@@ -2,9 +2,9 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ava/typescript': ^3.0.1
-  '@jsonql/ast': ^0.8.4
+  '@jsonql/ast': ^0.8.5
   '@jsonql/errors': ^0.7.0
-  '@jsonql/validators': ^0.4.1
+  '@jsonql/validators': ^0.5.2
   '@swc/cli': ^0.1.57
   '@swc/core': ^1.2.196
   '@types/fs-extra': ^9.0.13
@@ -17,22 +17,22 @@ specifiers:
   esbuild-register: ^3.3.2
   eslint: ^8.16.0
   fs-extra: ^10.1.0
-  node-fetch: ^3.2.4
+  node-fetch: ^3.2.5
   nyc: ^15.1.0
   open: ^8.4.0
   rimraf: ^3.0.2
   tslib: ^2.4.0
   typescript: ^4.7.2
   vite: ^2.9.9
-  vitest: ^0.13.0
+  vitest: ^0.13.1
 
 dependencies:
-  '@jsonql/validators': 0.4.1
+  '@jsonql/validators': 0.5.2
   tslib: 2.4.0
 
 devDependencies:
   '@ava/typescript': 3.0.1
-  '@jsonql/ast': 0.8.4
+  '@jsonql/ast': 0.8.5
   '@jsonql/errors': 0.7.0
   '@swc/cli': 0.1.57_@swc+core@1.2.196
   '@swc/core': 1.2.196
@@ -46,13 +46,13 @@ devDependencies:
   esbuild-register: 3.3.2_esbuild@0.14.42
   eslint: 8.16.0
   fs-extra: 10.1.0
-  node-fetch: 3.2.4
+  node-fetch: 3.2.5
   nyc: 15.1.0
   open: 8.4.0
   rimraf: 3.0.2
   typescript: 4.7.2
   vite: 2.9.9
-  vitest: 0.13.0
+  vitest: 0.13.1
 
 packages:
 
@@ -347,15 +347,14 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.13
     dev: true
 
-  /@jsonql/ast/0.8.4:
-    resolution: {integrity: sha512-VUqI8DSNnhDm7zdKx8JdW3owr1/w3qobQALpHZBk0GxRQ8jyTTWdNB1MOkzm/ugncUYoDPYQ89DV8lXJqY7PCg==}
+  /@jsonql/ast/0.8.5:
+    resolution: {integrity: sha512-6IgiLC1AOxNhBXPR2AWRE0GGYjQCc/mkqxcL3x1QzDLVhbd8NyJXvZ4KFbESZe32nRMNsCNS9RoF+88vnvA9lQ==}
     dependencies:
-      '@jsonql/constants': 0.7.2
+      '@jsonql/utils': 0.7.3
+      debug: 4.3.4
       tslib: 2.4.0
-    dev: true
-
-  /@jsonql/constants/0.7.2:
-    resolution: {integrity: sha512-1matJKybfmSIZp8eoSsq7463QHkYymAXZ4OzZKd6evPMT931E6XQbXqHU7F5R9UzsdLIQ4myDM309Tb7i4ceBw==}
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /@jsonql/errors/0.7.0:
@@ -366,30 +365,37 @@ packages:
     dependencies:
       '@jsonql/errors': 0.7.0
       lodash-es: 4.17.21
+    dev: true
+
+  /@jsonql/utils/0.7.5:
+    resolution: {integrity: sha512-EH5C4VuGNUd7fi1CXmnXyU7+aZjh/GZx9FOTApNXyP0NimFA1AAQ6nIHbETW/Tl+U027mEhsZq1N5wWcndoTMA==}
+    dependencies:
+      '@jsonql/errors': 0.7.0
+      lodash-es: 4.17.21
     dev: false
 
   /@jsonql/validator-core/0.9.9:
     resolution: {integrity: sha512-bs9ecFHPIojmVcwO/Kcg92M58Kke6izp4LPDtJVP8jOQfMYG6f1jtsv0UtGhzFTCgXfcclN4EKiCvSpWqY6OjA==}
     dependencies:
       '@jsonql/errors': 0.7.0
-      '@jsonql/utils': 0.7.3
+      '@jsonql/utils': 0.7.5
     dev: false
 
   /@jsonql/validator/0.8.3:
     resolution: {integrity: sha512-2T+sco2TbrJRwuBzUWzQUYflFciEZcRhVi/96U2Aai7ETpkfX5G1UeINpFni0ymadPRSxMHyhG6cvO8F8u25kQ==}
     dependencies:
       '@jsonql/errors': 0.7.0
-      '@jsonql/utils': 0.7.3
+      '@jsonql/utils': 0.7.5
       '@jsonql/validator-core': 0.9.9
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@jsonql/validators/0.4.1:
-    resolution: {integrity: sha512-ifSy4r36d/9JiU0YYU/lBnznoLwHnKNfv0JLqXfO89u8s64tb2GMKBMzHs+tDyKjwc6cCleEDQ87/UOynGfeHQ==}
+  /@jsonql/validators/0.5.2:
+    resolution: {integrity: sha512-783zs6zUrmaE2mH6W+Q/2Ja3tpM7CnddMz0DghyvNuHhxETFOsywunI97IP99KbLVQUtNgNrsP/duI7KQ7vwkQ==}
     dependencies:
-      '@jsonql/utils': 0.7.3
+      '@jsonql/utils': 0.7.5
       '@jsonql/validator': 0.8.3
       '@jsonql/validator-core': 0.9.9
     transitivePeerDependencies:
@@ -2233,7 +2239,6 @@ packages:
 
   /lodash-es/4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
-    dev: false
 
   /lodash.flattendeep/4.4.0:
     resolution: {integrity: sha1-+wMJF/hqMTTlvJvsDWngAT3f7bI=}
@@ -2351,8 +2356,8 @@ packages:
     engines: {node: '>=10.5.0'}
     dev: true
 
-  /node-fetch/3.2.4:
-    resolution: {integrity: sha512-WvYJRN7mMyOLurFR2YpysQGuwYrJN+qrrpHjJDuKMcSPdfFccRUla/kng2mz6HWSBxJcqPbvatS6Gb4RhOzCJw==}
+  /node-fetch/3.2.5:
+    resolution: {integrity: sha512-u7zCHdJp8JXBwF09mMfo2CL6kp37TslDl1KP3hRGTlCInBtag+UO3LGVy+NF0VzvnL3PVMpA2hXh1EtECFnyhQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       data-uri-to-buffer: 4.0.0
@@ -3054,8 +3059,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.13.0:
-    resolution: {integrity: sha512-vuYt3+G25MMnANgyMHHG3VK86C9K/VFi/8uH5myQ2v660W4WArv99ElakPlVFxxSXXM1jqQPiPj2ht35Bod9LQ==}
+  /vitest/0.13.1:
+    resolution: {integrity: sha512-CfSBf7YFw/i8HumSUQRtZKs0aV91DC9WU8nAgIJAlawKHaFuPHQohDwOTPIFgrxySiuFYUa0Yohf9gDFfBwjxA==}
     engines: {node: '>=v14.16.0'}
     hasBin: true
     peerDependencies:

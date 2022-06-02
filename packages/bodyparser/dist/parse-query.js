@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processQueryParameters = exports.parseQuery = void 0;
+const tslib_1 = require("tslib");
 const constants_1 = require("./constants");
 const url_pattern_1 = require("./url-pattern");
-// import debugFn from 'debug'
-// const debug = debugFn('velocejs:bodypaser:parse-query')
+const debug_1 = tslib_1.__importDefault(require("debug"));
+const debug = (0, debug_1.default)('velocejs:bodypaser:parse-query');
 // the actual function to take the query apart
 function parseQuery(url, query, config) {
     const c = config;
@@ -39,8 +40,10 @@ exports.processQueryParameters = processQueryParameters;
 /** wrap this together and divide the task here */
 function processDynamicRoute(url, config) {
     if (config[constants_1.URL_PATTERN_OBJ]) {
+        debug('parse url using UrlPattern');
         return processDynamicRouteByUrlPattern(url, config[constants_1.URL_PATTERN_OBJ]);
     }
+    debug('parse url with pattern url');
     return processDynamicRouteWithOrgRef(url, config[constants_1.ORG_ROUTE_REF]);
 }
 /** process dynamic route */
