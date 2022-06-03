@@ -34,7 +34,7 @@ test(`Test the $registerValidationPlugin method with positive result`, async t =
   return doLogin(d)
           .then((res: any) => res.json())
           .then((json:any) => {
-            console.log(json)
+            // console.log(json)
             t.truthy(json)
           })
 })
@@ -46,7 +46,7 @@ test(`Test the $registerValidationPlugin method with negative result`, async t =
   return doLogin(d)
           .then((res: any) => res.json())
           .then((json: any) => {
-            console.log('error', json)
+            // console.log('error', json)
             t.truthy(json)
           })
 

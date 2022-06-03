@@ -15,6 +15,7 @@ export declare class FastApi implements FastApiInterface {
     private _onConfigError;
     private _validators;
     private _validationErrStatus;
+    private _validationPlugins;
     private _dynamicRoutes;
     private _staticRouteIndex;
     private _hasCatchAll;
@@ -107,11 +108,16 @@ export declare class FastApi implements FastApiInterface {
     then it get serve up via the @ServeStatic TBC
   
     */
-    /** overload the ValidatorPlugins registerPlugin better approach is to do that in the velocejs.config.js */
+    /** overload the ValidatorPlugins registerPlugin better approach is
+        to do that in the velocejs.config.js
+        We got a problem here when we call this probably right after init the Fastapi
+        but the validator instance is not yet ready so it was never registered
+        so we just store it here and let the init validator deal with it
+    */
     $registerValidationPlugin(name: string, plugin: JsonqlValidationPlugin): boolean;
     /** register a method that will check the route */
     $registerAuthMethod(): void;
-    set validationErrorStatus(status: number);
+    set $validationErrorStatus(status: number);
     /**
      The interface to serve up the contract, it's public but prefix underscore to avoid override
      */

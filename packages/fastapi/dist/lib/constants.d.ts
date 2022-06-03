@@ -15,5 +15,6 @@ export declare const CATCH_ALL_TYPE = "any";
 export declare const DEFAULT_CONTRACT_METHOD = "get";
 export declare const DYNAMIC_ROUTE_ALLOW_TYPES: string[];
 export declare const REST_NAME = "rest";
+export declare const DEFAULT_ERROR_STATUS = 417;
 export declare const isDev: boolean;
 export declare const isDebug: boolean;

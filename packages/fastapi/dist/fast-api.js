@@ -10,7 +10,6 @@ const utils_1 = require("@jsonql/utils");
 // here
 const constants_1 = require("./lib/constants");
 const common_1 = require("./lib/common");
-const validator_1 = require("./lib/validator");
 const validators_1 = require("@velocejs/validators");
 // setup
 const debug_1 = tslib_1.__importDefault(require("debug"));
@@ -31,8 +30,11 @@ class FastApi {
     _onConfigReady;
     _onConfigWait = placeholderFn;
     _onConfigError = placeholderFn;
+    // validations
     _validators;
-    _validationErrStatus = 417;
+    _validationErrStatus = constants_1.DEFAULT_ERROR_STATUS;
+    _validationPlugins = new Map();
+    // special routes
     _dynamicRoutes = new Map();
     _staticRouteIndex = [];
     _hasCatchAll = false;
@@ -244,8 +246,13 @@ class FastApi {
             validateFn = async (values) => values; //  we don't need to do anyting now
         }
         else {
-            const validatorInstance = this._validators.getValidator(propertyName);
-            validateFn = (0, validator_1.createValidator)(propertyName, argsList, validatorInstance, validationInput);
+            const vali = this._validators.getValidator(propertyName);
+            // @NOTE we ditch the entire createValidator and let the Validators class to deal with it
+            if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
+                debug('addValidationRules', validationInput[constants_1.RULES_KEY]);
+                vali.addValidationRules(validationInput[constants_1.RULES_KEY]);
+            }
+            validateFn = vali.validate;
         }
         const argNames = argsList.map(arg => arg.name);
         return async (ctx) => {
@@ -424,6 +431,8 @@ class FastApi {
     _initValidators(astMap, validations) {
         if (!(Array.isArray(validations) && validations.length === 0)) {
             this._validators = new validators_1.Validators(astMap);
+            debug('call registerPlugins', this._validationPlugins);
+            this._validators.registerPlugins(this._validationPlugins);
         }
     }
     ////////////////////////////////////////////////
@@ -521,11 +530,15 @@ class FastApi {
     ///////////////////////////////////////////
     //             PUBLIC                    //
     ///////////////////////////////////////////
-    /** overload the ValidatorPlugins registerPlugin better approach is to do that in the velocejs.config.js */
+    /** overload the ValidatorPlugins registerPlugin better approach is
+        to do that in the velocejs.config.js
+        We got a problem here when we call this probably right after init the Fastapi
+        but the validator instance is not yet ready so it was never registered
+        so we just store it here and let the init validator deal with it
+    */
     $registerValidationPlugin(name, plugin) {
-        if (this._validators) {
-            debug('register validation plugin', name, plugin);
-            this._validators.registerPlugin(name, plugin);
+        if (!this._validationPlugins.has(name)) {
+            this._validationPlugins.set(name, plugin);
             return true;
         }
         return false;
@@ -540,8 +553,8 @@ class FastApi {
         debug(`@TODO registerProtectedRouteMethod`);
     }
     /* This is a global override for the status when validation failed */
-    set validationErrorStatus(status) {
-        this._validationErrStatus = status || 417;
+    set $validationErrorStatus(status) {
+        this._validationErrStatus = status || constants_1.DEFAULT_ERROR_STATUS;
     }
     /**
      The interface to serve up the contract, it's public but prefix underscore to avoid override
