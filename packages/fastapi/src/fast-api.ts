@@ -597,7 +597,8 @@ export class FastApi implements FastApiInterface {
   ) {
     if (!(Array.isArray(validations) && validations.length === 0)) {
       this._validators = new Validators(astMap as VeloceAstMap)
-      
+      debug('call registerPlugins', this._validationPlugins)
+      this._validators.registerPlugins(this._validationPlugins)
     }
   }
 
@@ -732,14 +733,6 @@ export class FastApi implements FastApiInterface {
       return true
     }
     return false
-    /*
-    if (this._validators) {
-      debug('register validation plugin', name, plugin)
-      this._validators.registerPlugin(name, plugin)
-      return true
-    }
-    return false
-    */
   }
 
   // @TODO instead of using a old middleware or register style
@@ -754,8 +747,8 @@ export class FastApi implements FastApiInterface {
   }
 
   /* This is a global override for the status when validation failed */
-  public set validationErrorStatus(status: number) {
-    this._validationErrStatus = status || 417
+  public set $validationErrorStatus(status: number) {
+    this._validationErrStatus = status || DEFAULT_ERROR_STATUS
   }
 
   /**
