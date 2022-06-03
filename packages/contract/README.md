@@ -1,5 +1,7 @@
-# contract
+# @velocejs/contract
 
-TBC
+Combining the @jsonql/contract with @velocejs/validators to create module for @velocejs/fastapi
 
 ---
+
+Joel Chu (c) 2022 
