@@ -14,7 +14,7 @@ specifiers:
   '@types/ws': ^8.5.3
   '@typescript-eslint/eslint-plugin': ^5.27.0
   '@typescript-eslint/parser': ^5.27.0
-  '@velocejs/bodyparser': workspace:^0.5.2
+  '@velocejs/bodyparser': workspace:^0.5.3
   '@velocejs/config': workspace:^0.5.2
   '@velocejs/server': workspace:^0.8.5
   '@velocejs/validators': workspace:^0.4.0

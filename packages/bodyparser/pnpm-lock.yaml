@@ -25,7 +25,6 @@ specifiers:
 
 dependencies:
   '@jsonql/utils': 0.7.5
-  '@velocejs/server': link:../server
   url-pattern: 1.0.3
 
 devDependencies:
@@ -37,6 +36,7 @@ devDependencies:
   '@types/node': 17.0.38
   '@typescript-eslint/eslint-plugin': 5.27.0_dszb5tb7atwkjjijmmov4qhi7i
   '@typescript-eslint/parser': 5.27.0_xztl6dhthcahlo6akmb2bmjmle
+  '@velocejs/server': link:../server
   ava: 4.2.0_@ava+typescript@3.0.1
   esbuild: 0.14.42
   esbuild-register: 3.3.2_esbuild@0.14.42
