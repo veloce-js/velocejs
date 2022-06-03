@@ -154,6 +154,7 @@ export class FastApi implements FastApiInterface {
           debug('config', config)
           if (config && config.cacheDir) {
             debug(apiType, this._routeForContract)
+            // console.dir(this._routeForContract, { depth: null })
             this._contract = new JsonqlContractWriter(
               this._routeForContract
             ) // we didn't provde the apiType here @TODO when we add jsonql

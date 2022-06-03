@@ -1,5 +1,7 @@
 import { FastApi, Rest, Get, Post, ServeStatic, Websocket } from '../../../src'
 import { join } from 'node:path'
+// @NOTE something weird the Date.now() inline never create a value that pass to generator
+const NOW = Date.now()
 
 @Rest
 export class ApiWithContract extends FastApi {
@@ -8,9 +10,10 @@ export class ApiWithContract extends FastApi {
   news() {
     return "some news"
   }
-
+  // @NOTE because we read this script and parse as ast
+  // therefore the NOW is a string and not the value we expected!
   @Post('/post')
-  post(title: string, content: string, date: number = Date.now()) {
+  post(title: string, content: string, date: number = NOW) {
     return {
       title,
       content,
