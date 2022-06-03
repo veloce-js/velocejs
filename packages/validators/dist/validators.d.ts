@@ -1,5 +1,5 @@
 import type { VeloceAstMap, ExportedSchema } from './types';
-import type { MixedValidationInput } from '@jsonql/validator/index';
+import type { MixedValidationInput, JsonqlValidationPlugin } from '@jsonql/validator/index';
 import { Validators as JsonqlValidators } from '@jsonql/validators';
 /**
   Here we take the parent methods and onlly deal with the
@@ -13,6 +13,8 @@ export declare class Validators extends JsonqlValidators {
         addValidationRules: (input: import("@jsonql/validators/dist/types").ValidationRuleRecord) => any;
         validate: (values: unknown[], raw?: boolean | undefined) => Promise<any>;
     };
+    /** This is created for FastApi to dump a whole set of plugins registration from a Map */
+    registerPlugins(pluginConfigs: Map<string, JsonqlValidationPlugin>): void;
     /** wrap around the parent export method to add our processing */
     exportAll(): ExportedSchema;
     /**

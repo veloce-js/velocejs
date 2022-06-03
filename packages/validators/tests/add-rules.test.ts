@@ -1,5 +1,6 @@
 // testing several situation adding rules or setting up plugins
 import test from 'ava'
+import type { JsonqlValidationPlugin } from '@jsonql/validator/index'
 import { Validators } from '../src'
 // import MultiApi from './fixtures/multi-api'
 import { readJsonSync } from 'fs-extra'
@@ -62,12 +63,16 @@ test(`Super simple plugin to see if it working correct`, async t => {
 
 test(`Should able to register a plugin and call it`, async t => {
 
-  validators.registerPlugin('myOwnRule', {
+  const pluginConfigs = new Map<string, JsonqlValidationPlugin>()
+
+  pluginConfigs.set('myOwnRule', {
     main: function(x: string, v: string) {
       return !(v.indexOf(x) > -1)
     },
     params: ['x']
   })
+
+  validators.registerPlugins(pluginConfigs)
 
   const validator = validators.getValidator('posts')
 

@@ -9,7 +9,8 @@ import type {
   UwsStringPairObj,
 } from '@velocejs/server/index'
 import type {
-  VeloceAstMap
+  VeloceAstMap,
+  MixedValidationInput,
 } from '@velocejs/validators/index'
 // our deps
 import type {
@@ -18,7 +19,7 @@ import type {
   BodyParserConfig,
   JsonqlObjectValidateInput,
   ArgsListType,
-  ValidatorsInstance,
+  // ValidatorsInstance,
   DynamicRouteCheckFn,
   JsonqlValidationRule,
   JsonqlValidationPlugin,
@@ -75,6 +76,7 @@ import {
   REST_NAME,
   RULES_KEY,
   RULE_AUTOMATIC,
+  DEFAULT_ERROR_STATUS,
 } from './lib/constants'
 import {
   convertStrToType,
@@ -111,9 +113,11 @@ export class FastApi implements FastApiInterface {
   private _onConfigReady: Promise<unknown>
   private _onConfigWait: (value: unknown) => void = placeholderFn
   private _onConfigError: (value: unknown) => void = placeholderFn
-
+  // validations
   private _validators!: Validators
-  private _validationErrStatus = 417
+  private _validationErrStatus = DEFAULT_ERROR_STATUS
+  private _validationPlugins = new Map<string, JsonqlValidationPlugin>()
+  // special routes
   private _dynamicRoutes = new Map()
   private _staticRouteIndex: Array<number> = []
   private _hasCatchAll = false
@@ -593,6 +597,7 @@ export class FastApi implements FastApiInterface {
   ) {
     if (!(Array.isArray(validations) && validations.length === 0)) {
       this._validators = new Validators(astMap as VeloceAstMap)
+      
     }
   }
 
@@ -713,17 +718,28 @@ export class FastApi implements FastApiInterface {
   ///////////////////////////////////////////
 
   /** overload the ValidatorPlugins registerPlugin better approach is
-      to do that in the velocejs.config.js */
+      to do that in the velocejs.config.js
+      We got a problem here when we call this probably right after init the Fastapi
+      but the validator instance is not yet ready so it was never registered
+      so we just store it here and let the init validator deal with it
+  */
   public $registerValidationPlugin(
     name: string,
     plugin: JsonqlValidationPlugin
   ): boolean {
+    if (!this._validationPlugins.has(name)) {
+      this._validationPlugins.set(name, plugin)
+      return true
+    }
+    return false
+    /*
     if (this._validators) {
       debug('register validation plugin', name, plugin)
       this._validators.registerPlugin(name, plugin)
       return true
     }
     return false
+    */
   }
 
   // @TODO instead of using a old middleware or register style

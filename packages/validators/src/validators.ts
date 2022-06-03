@@ -4,7 +4,8 @@ import type {
   ExportedSchema,
 } from './types'
 import type {
-  MixedValidationInput
+  MixedValidationInput,
+  JsonqlValidationPlugin,
 } from '@jsonql/validator/index'
 import {
  Validators as JsonqlValidators,
@@ -42,6 +43,15 @@ export class Validators extends JsonqlValidators {
     val.addValidationRules(rules)
 
     return val // we return the validator to use
+  }
+
+  /** This is created for FastApi to dump a whole set of plugins registration from a Map */
+  public registerPlugins(
+    pluginConfigs: Map<string, JsonqlValidationPlugin>
+  ) {
+    pluginConfigs.forEach((config: JsonqlValidationPlugin, name: string) => {
+      this.registerPlugin(name, config)
+    })
   }
 
   /** wrap around the parent export method to add our processing */

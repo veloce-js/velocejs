@@ -21,6 +21,12 @@ class Validators extends validators_1.Validators {
         val.addValidationRules(rules);
         return val; // we return the validator to use
     }
+    /** This is created for FastApi to dump a whole set of plugins registration from a Map */
+    registerPlugins(pluginConfigs) {
+        pluginConfigs.forEach((config, name) => {
+            this.registerPlugin(name, config);
+        });
+    }
     /** wrap around the parent export method to add our processing */
     exportAll() {
         const e = this.export();
