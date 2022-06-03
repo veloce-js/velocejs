@@ -377,10 +377,10 @@ export class FastApi implements FastApiInterface {
     } else {
       const validatorInstance = this._validators.getValidator(propertyName)
       validateFn = createValidator(
-                            propertyName,
-                            argsList,
-                            validatorInstance as unknown as ValidatorsInstance,
-                            validationInput)
+                      validatorInstance as unknown as ValidatorsInstance,
+                      propertyName,
+                      argsList,
+                      validationInput)
     }
     const argNames = argsList.map(arg => arg.name)
 

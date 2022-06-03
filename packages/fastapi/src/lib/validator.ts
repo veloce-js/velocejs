@@ -14,9 +14,9 @@ const debug = debugFn('velocejs:fastapi:lib:validator')
 
 /** get the validator for the propertyName and add extra rules here */
 export function createValidator(
+  vObj: ValidatorsInstance,
   propertyName: string,
   argsList: Array<ArgsListType>,
-  vObj: ValidatorsInstance,
   validationInput: JsonqlValidationRule,
 ) {
   debug('createValidator input -->', validationInput)

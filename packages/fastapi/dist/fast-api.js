@@ -189,6 +189,11 @@ class FastApi {
     ) {
         const handler = this[propertyName];
         return async (res, req) => {
+            // @BUG if we add this here, it will just hang for a while but the 500 never reported
+            res.onAborted(() => {
+                res.writeStatus('500');
+                res.end();
+            });
             // @BUG this is still a bit problematic when error happens inside, the catch has no effect
             this._handleMiddlewares([
                 this._bodyParser(dynamicRoute),
@@ -206,7 +211,7 @@ class FastApi {
     _bodyParser(dynamicRoute) {
         return async (res, req) => {
             const config = await this._getBodyParserConfig(dynamicRoute);
-            return (0, bodyparser_1.default)(res, req, config);
+            return await (0, bodyparser_1.default)(res, req, config);
         };
     }
     /** fetch the bodyParser config */
@@ -519,6 +524,7 @@ class FastApi {
     /** overload the ValidatorPlugins registerPlugin better approach is to do that in the velocejs.config.js */
     $registerValidationPlugin(name, plugin) {
         if (this._validators) {
+            debug('register validation plugin', name, plugin);
             this._validators.registerPlugin(name, plugin);
             return true;
         }

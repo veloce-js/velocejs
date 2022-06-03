@@ -39,4 +39,15 @@ test(`Test the $registerValidationPlugin method with positive result`, async t =
           })
 })
 
-test.todo(`Test the $registerValidationPlugin method with negative result`)
+test.skip(`Test the $registerValidationPlugin method with negative result`, async t => {
+  t.plan(1)
+  const d = {username: 'John', password: '123456'}
+  
+  return doLogin(d)
+          .then((res: any) => res.json())
+          .then((json:any) => {
+            console.log(json)
+            t.truthy(json)
+          })
+
+})
