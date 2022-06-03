@@ -5,6 +5,9 @@ import type {
   // ValidationObjectRule,
   // ValidationObjectSimpleRule
 } from '../types'
+import type {
+  MixedValidationInput
+} from '@velocejs/validators/index'
 import { validationKey } from './keys'
 import {
   RULES_KEY,
@@ -16,7 +19,7 @@ import { FastApiInterface } from '../lib/fast-api-interface'
 
 // Validate Decorator
 export function Validate(
-  rules?: any, // @TODO need to reply the types here
+  rules?: MixedValidationInput, // @TODO need to reply the types here
   options?: JsonValidationOption
 ) {
 

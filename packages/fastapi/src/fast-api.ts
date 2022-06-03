@@ -376,11 +376,17 @@ export class FastApi implements FastApiInterface {
       validateFn = async (values: unknown[]) => values //  we don't need to do anyting now
     } else {
       const validatorInstance = this._validators.getValidator(propertyName)
-      validateFn = createValidator(
-                      validatorInstance as unknown as ValidatorsInstance,
-                      propertyName,
-                      argsList,
-                      validationInput)
+      // @NOTE we ditch the entire createValidator and let the Validators class to deal with it
+      
+      try {
+        validateFn = createValidator(
+                        validatorInstance as unknown as ValidatorsInstance,
+                        propertyName,
+                        argsList,
+                        validationInput)
+      } catch(e) {
+        debug('create Validator error', e)
+      }
     }
     const argNames = argsList.map(arg => arg.name)
 
@@ -712,7 +718,8 @@ export class FastApi implements FastApiInterface {
   //             PUBLIC                    //
   ///////////////////////////////////////////
 
-  /** overload the ValidatorPlugins registerPlugin better approach is to do that in the velocejs.config.js */
+  /** overload the ValidatorPlugins registerPlugin better approach is
+      to do that in the velocejs.config.js */
   public $registerValidationPlugin(
     name: string,
     plugin: JsonqlValidationPlugin

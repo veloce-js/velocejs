@@ -19,8 +19,8 @@ export function createValidator(
   argsList: Array<ArgsListType>,
   validationInput: JsonqlValidationRule,
 ) {
-  debug('createValidator input -->', validationInput)
-  assertValidationInput(propertyName, argsList, validationInput)
+  debug(`createValidator ${propertyName} input -->`, argsList, validationInput)
+  assertValidationInput(propertyName, argsList) //, validationInput)
 
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
     debug('addValidationRules', validationInput[RULES_KEY])
@@ -34,13 +34,14 @@ export function createValidator(
 function assertValidationInput(
     propertyName: string,
     argsList: Array<ArgsListType>,
-    validationInput: JsonqlValidationRule
+    // validationInput: JsonqlValidationRule
   ): void {
   // silly mistake
   if (!argsList.length) {
     throw new VeloceError(`${propertyName} has no parameters and therefore can not apply validation!`)
   }
-  // check the name matches
+  // check the name matches - this is problematic at this point the rules has not been converted
+  /*
   if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
     const names: string[] = []
     for (const name in validationInput[RULES_KEY]) {
@@ -54,4 +55,5 @@ function assertValidationInput(
       )
     }
   }
+  */
 }
