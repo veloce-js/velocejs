@@ -10,17 +10,14 @@ import {
   JsonqlContractWriter
 } from '@jsonql/contract'
 
-
 export class Contract extends JsonqlContractWriter {
 
   constructor(
     astMap: VeloceAstMap,
     private _validators: Validators
   ) {
-    // @ts-ignore wait until we update the upstream types then remove this warning
     super(astMap)
   }
-
 
   public generate() {
     const { schema } = this._validators.export()
@@ -29,7 +26,7 @@ export class Contract extends JsonqlContractWriter {
     this.appendValidations( schema )
     // at this point should be the final call
     const contract = this.output()
-    
+
     return contract
   }
 

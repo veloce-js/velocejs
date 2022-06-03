@@ -7,7 +7,7 @@ import type {
 } from '@jsonql/validator/index'
 
 export declare type VeloceAstMap = {
-  [propertyName: string]: Array<JsonqlPropertyParamMap>
+  [propertyName: string]: Array<JsonqlPropertyParamMap> | JsonqlPropertyParamMap
 }
 
 export declare type ValidationRuleRecord = JsonqlObjectValidateInput | JsonqlArrayValidateInput

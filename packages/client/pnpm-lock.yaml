@@ -3,25 +3,25 @@ lockfileVersion: 5.4
 specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/constants': ^0.7.2
-  '@jsonql/contract': ^0.5.0
-  '@jsonql/utils': ^0.7.3
+  '@jsonql/contract': ^0.6.1
+  '@jsonql/utils': ^0.7.5
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
-  '@types/node': ^17.0.36
+  '@types/node': ^17.0.39
   '@types/ws': ^8.5.3
   '@typescript-eslint/eslint-plugin': ^5.27.0
   '@typescript-eslint/parser': ^5.27.0
   '@velocejs/config': workspace:^0.5.2
-  '@velocejs/fastapi': workspace:^0.8.1
+  '@velocejs/fastapi': workspace:^0.8.3
   '@velocejs/server': workspace:^0.8.5
-  ava: ^4.2.0
+  ava: ^4.3.0
   chokidar: ^3.5.3
   esbuild: ^0.14.42
   esbuild-register: ^3.3.2
   eslint: ^8.16.0
   fs-extra: ^10.1.0
-  node-fetch: ^3.2.4
+  node-fetch: ^3.2.5
   nyc: ^15.1.0
   open: ^8.4.0
   rimraf: ^3.0.2
@@ -32,8 +32,8 @@ specifiers:
 
 dependencies:
   '@jsonql/constants': 0.7.2
-  '@jsonql/contract': 0.5.0
-  '@jsonql/utils': 0.7.3
+  '@jsonql/contract': 0.6.1
+  '@jsonql/utils': 0.7.5
   '@velocejs/config': link:../config
   tslib: 2.4.0
   url-pattern: 1.0.3
@@ -43,19 +43,19 @@ devDependencies:
   '@types/debug': 4.1.7
   '@types/fs-extra': 9.0.13
   '@types/mime-types': 2.1.1
-  '@types/node': 17.0.36
+  '@types/node': 17.0.39
   '@types/ws': 8.5.3
   '@typescript-eslint/eslint-plugin': 5.27.0_dszb5tb7atwkjjijmmov4qhi7i
   '@typescript-eslint/parser': 5.27.0_xztl6dhthcahlo6akmb2bmjmle
   '@velocejs/fastapi': link:../fastapi
   '@velocejs/server': link:../server
-  ava: 4.2.0_@ava+typescript@3.0.1
+  ava: 4.3.0_@ava+typescript@3.0.1
   chokidar: 3.5.3
   esbuild: 0.14.42
   esbuild-register: 3.3.2_esbuild@0.14.42
   eslint: 8.16.0
   fs-extra: 10.1.0
-  node-fetch: 3.2.4
+  node-fetch: 3.2.5
   nyc: 15.1.0
   open: 8.4.0
   rimraf: 3.0.2
@@ -346,24 +346,26 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.13
     dev: true
 
-  /@jsonql/ast/0.8.3:
-    resolution: {integrity: sha512-vnmbT9El3BpxcT9H9FlzWkpmlPDpO3mB9gxxT2p1RxgbA9oUaeOxVHTxpSGwFmes8I7H9RODkN8YhTUfJ3Ctiw==}
+  /@jsonql/ast/0.8.6:
+    resolution: {integrity: sha512-WMF6GvumuIutmZ5zIXLanPV4KFDWdnRjWnIcrwLksucEhxW2VSxPRCuK5j0D/fiTDNsMxu/Tom8O3mM1HGDEkg==}
     dependencies:
-      '@jsonql/constants': 0.7.2
+      '@jsonql/utils': 0.7.5
+      debug: 4.3.4
       tslib: 2.4.0
+    transitivePeerDependencies:
+      - supports-color
     dev: false
 
   /@jsonql/constants/0.7.2:
     resolution: {integrity: sha512-1matJKybfmSIZp8eoSsq7463QHkYymAXZ4OzZKd6evPMT931E6XQbXqHU7F5R9UzsdLIQ4myDM309Tb7i4ceBw==}
     dev: false
 
-  /@jsonql/contract/0.5.0:
-    resolution: {integrity: sha512-CTeCxvDm3Dlocrz8QCduQur7IsoeQJRL0dv0xNjnYw5q5IYXFFgJGtAhdu7lacM46VI0+Bxw5Mtig4ShPnVBrw==}
+  /@jsonql/contract/0.6.1:
+    resolution: {integrity: sha512-PWgMSqrnFpH9R6IQFkKPD7HTYZawy4gV76fiPFFLuZDxKVBl1H4O2pyDifqp49h6EKGfXFKjEoIJP3QFg0QLtw==}
     dependencies:
-      '@jsonql/ast': 0.8.3
-      '@jsonql/constants': 0.7.2
-      '@jsonql/errors': 0.6.1
-      '@jsonql/utils': 0.6.9
+      '@jsonql/ast': 0.8.6
+      '@jsonql/errors': 0.7.0
+      '@jsonql/utils': 0.7.5
       debug: 4.3.4
       fs-extra: 10.1.0
       tslib: 2.4.0
@@ -371,26 +373,12 @@ packages:
       - supports-color
     dev: false
 
-  /@jsonql/errors/0.6.1:
-    resolution: {integrity: sha512-NuSDjMlwFTSGop2aAGnKN7QujJ7XxzgCGWrKn7DKZuIg/T4qIdnktYE9C2KaxQTAjifKTRtBex833bdKwEOFjw==}
-    dependencies:
-      '@jsonql/constants': 0.7.2
-    dev: false
-
   /@jsonql/errors/0.7.0:
     resolution: {integrity: sha512-UwMSVfkSPIvXBFiCgTVDCeDdGeqrnNlu7A2xLoaKf4XXdANexzhFkFElznaHoD09dI9KarJx6m3ynjlQdf7xpA==}
     dev: false
 
-  /@jsonql/utils/0.6.9:
-    resolution: {integrity: sha512-bfPxNN+8vmV3HGAoe9zVWTb6NVvuDHbnTDIyxJHrFNmhxEoQVLoISFX/4jm1eeegQcDg2IGYDAjUKOp03uzGsg==}
-    dependencies:
-      '@jsonql/constants': 0.7.2
-      '@jsonql/errors': 0.6.1
-      lodash-es: 4.17.21
-    dev: false
-
-  /@jsonql/utils/0.7.3:
-    resolution: {integrity: sha512-l/O9tW9QvTqxmTBM6V8ZcJxxpToRaTXcEPOSvZE1rKDz1IwQK0apPY4212kNp/O4mdToLY0LvTfm2ah2Krk1MQ==}
+  /@jsonql/utils/0.7.5:
+    resolution: {integrity: sha512-EH5C4VuGNUd7fi1CXmnXyU7+aZjh/GZx9FOTApNXyP0NimFA1AAQ6nIHbETW/Tl+U027mEhsZq1N5wWcndoTMA==}
     dependencies:
       '@jsonql/errors': 0.7.0
       lodash-es: 4.17.21
@@ -426,7 +414,7 @@ packages:
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
     dependencies:
-      '@types/node': 17.0.36
+      '@types/node': 17.0.39
     dev: true
 
   /@types/json-schema/7.0.11:
@@ -441,14 +429,14 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
-  /@types/node/17.0.36:
-    resolution: {integrity: sha512-V3orv+ggDsWVHP99K3JlwtH20R7J4IhI1Kksgc+64q5VxgfRkQG8Ws3MFm/FZOKDYGy9feGFlZ70/HpCNe9QaA==}
+  /@types/node/17.0.39:
+    resolution: {integrity: sha512-JDU3YLlnPK3WDao6/DlXLOgSNpG13ct+CwIO17V8q0/9fWJyeMJJ/VyZ1lv8kDprihvZMydzVwf0tQOqGiY2Nw==}
     dev: true
 
   /@types/ws/8.5.3:
     resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
     dependencies:
-      '@types/node': 17.0.36
+      '@types/node': 17.0.39
     dev: true
 
   /@typescript-eslint/eslint-plugin/5.27.0_dszb5tb7atwkjjijmmov4qhi7i:
@@ -680,7 +668,7 @@ packages:
     dev: true
 
   /array-find-index/1.0.2:
-    resolution: {integrity: sha1-3wEKoSh+Fku9pvlyOwqWoexBh6E=}
+    resolution: {integrity: sha512-M1HQyIXcBGtVywBt8WVdim+lrNaK7VHp99Qt5pSNziXznKHViIBbXWtfRTpEFpF/c4FdfxNAsCCwPp5phBYJtw==}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -699,9 +687,9 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /ava/4.2.0_@ava+typescript@3.0.1:
-    resolution: {integrity: sha512-96N/rH2ZlBjoh18CsjH3zfo/rzukkRoqNK7R/Z3MLRrqu6cRRf+i4Zwna7ZRYEIl55yF1BKh/nSPCZWqoXfPJA==}
-    engines: {node: '>=12.22 <13 || >=14.17 <15 || >=16.4 <17 || >=17'}
+  /ava/4.3.0_@ava+typescript@3.0.1:
+    resolution: {integrity: sha512-Ap0u8rp8wOBN6CxshgxrPSe191e8g52RWGoXeDB57ubo4fyZyStfI6OxQi/bl0yxIDEOYHhCiGwihbzlMNJw3Q==}
+    engines: {node: '>=12.22 <13 || >=14.17 <15 || >=16.4 <17 || >=18'}
     hasBin: true
     peerDependencies:
       '@ava/typescript': '*'
@@ -729,8 +717,8 @@ packages:
       concordance: 5.0.4
       currently-unhandled: 0.4.1
       debug: 4.3.4
-      del: 6.0.0
-      emittery: 0.10.2
+      del: 6.1.1
+      emittery: 0.11.0
       figures: 4.0.1
       globby: 13.1.1
       ignore-by-default: 2.1.0
@@ -742,7 +730,7 @@ packages:
       mem: 9.0.2
       ms: 2.1.3
       p-event: 5.0.1
-      p-map: 5.3.0
+      p-map: 5.4.0
       picomatch: 2.3.1
       pkg-conf: 4.0.0
       plur: 5.1.0
@@ -754,7 +742,7 @@ packages:
       supertap: 3.0.1
       temp-dir: 2.0.0
       write-file-atomic: 4.0.1
-      yargs: 17.5.0
+      yargs: 17.5.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -896,7 +884,7 @@ packages:
     dev: true
 
   /clean-yaml-object/0.1.0:
-    resolution: {integrity: sha1-Y/sRDcLOGoTcIfbZM0h20BCui2g=}
+    resolution: {integrity: sha512-3yONmlN9CSAkzNwnRCiJQ7Q2xK5mWuEfL3PuTZcAUzhObbXsfsnMptJzXwz93nc5zn9V9TwCVMmV7w4xsm43dw==}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -999,7 +987,7 @@ packages:
     dev: true
 
   /currently-unhandled/0.4.1:
-    resolution: {integrity: sha1-mI3zP+qxke95mmE2nddsF635V+o=}
+    resolution: {integrity: sha512-/fITjgjGU50vjQ4FH6eUoYu+iUoUKIXws2hL15JJpIR+BbTxaXQsMuuyjtNh2WqsSBS5nsaZHFsFecyw5CCAng==}
     engines: {node: '>=0.10.0'}
     dependencies:
       array-find-index: 1.0.2
@@ -1049,8 +1037,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /del/6.0.0:
-    resolution: {integrity: sha512-1shh9DQ23L16oXSZKB2JxpL7iMy2E0S9d517ptA1P8iw0alkPtQcrKH7ru31rYtKwF499HkTu+DRzq3TCKDFRQ==}
+  /del/6.1.1:
+    resolution: {integrity: sha512-ua8BhapfP0JUJKC/zV9yHHDW/rDoDxP4Zhn3AkA6/xT6gY7jYXJiaeyBZznYVujhZZET+UgcbZiQ7sN3WqcImg==}
     engines: {node: '>=10'}
     dependencies:
       globby: 11.1.0
@@ -1085,8 +1073,8 @@ packages:
     resolution: {integrity: sha512-0Rcpald12O11BUogJagX3HsCN3FE83DSqWjgXoHo5a72KUKMSfI39XBgJpgNNxS9fuGzytaFjE06kZkiVFy2qA==}
     dev: true
 
-  /emittery/0.10.2:
-    resolution: {integrity: sha512-aITqOwnLanpHLNXZJENbOgjUBeHocD+xsSJmNrjovKBW5HbSpW3d1pEls7GFQPUWXiwG9+0P4GtHfEqC/4M0Iw==}
+  /emittery/0.11.0:
+    resolution: {integrity: sha512-S/7tzL6v5i+4iJd627Nhv9cLFIo5weAIlGccqJFpnBoDB8U1TF2k5tez4J/QNuxyyhWuFqHg1L84Kd3m7iXg6g==}
     engines: {node: '>=12'}
     dev: true
 
@@ -1943,7 +1931,7 @@ packages:
     dev: true
 
   /js-string-escape/1.0.1:
-    resolution: {integrity: sha1-4mJbrbwNZ8dTPp7cEGjFh65BN+8=}
+    resolution: {integrity: sha512-Smw4xcfIQ5LVjAOuJCvN/zIodzA/BBSsluuoSykP+lUvScIi4U6RJLfwHet5cxFnCswUjISV8oAXaqaJDY3chg==}
     engines: {node: '>= 0.8'}
     dev: true
 
@@ -2128,8 +2116,8 @@ packages:
     engines: {node: '>=10.5.0'}
     dev: true
 
-  /node-fetch/3.2.4:
-    resolution: {integrity: sha512-WvYJRN7mMyOLurFR2YpysQGuwYrJN+qrrpHjJDuKMcSPdfFccRUla/kng2mz6HWSBxJcqPbvatS6Gb4RhOzCJw==}
+  /node-fetch/3.2.5:
+    resolution: {integrity: sha512-u7zCHdJp8JXBwF09mMfo2CL6kp37TslDl1KP3hRGTlCInBtag+UO3LGVy+NF0VzvnL3PVMpA2hXh1EtECFnyhQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       data-uri-to-buffer: 4.0.0
@@ -2236,7 +2224,7 @@ packages:
     dev: true
 
   /p-defer/1.0.0:
-    resolution: {integrity: sha1-n26xgvbJqozXQwBKfU+WsZaw+ww=}
+    resolution: {integrity: sha512-wB3wfAxZpk2AzOfUMJNL+d36xothRSyj8EXOa4f6GMqYDN9BJaaSISbsk+wS9abmnebVw95C2Kb5t85UmpCxuw==}
     engines: {node: '>=4'}
     dev: true
 
@@ -2289,8 +2277,8 @@ packages:
       aggregate-error: 3.1.0
     dev: true
 
-  /p-map/5.3.0:
-    resolution: {integrity: sha512-SRbIQFoLYNezHkqZslqeg963HYUtqOrfMCxjNrFOpJ19WTYuq26rQoOXeX8QQiMLUlLqdYV/7PuDsdYJ7hLE1w==}
+  /p-map/5.4.0:
+    resolution: {integrity: sha512-obHraaWkwl4y1NHR4vW5D5k+33+S5QrkFqsNrrvK0R7lilXdzo/DZgnloDvYUaRT+Sk6vVK47JUQMQY6cjPMXg==}
     engines: {node: '>=12'}
     dependencies:
       aggregate-error: 4.0.1
@@ -2870,8 +2858,8 @@ packages:
       yargs-parser: 18.1.3
     dev: true
 
-  /yargs/17.5.0:
-    resolution: {integrity: sha512-3sLxVhbAB5OC8qvVRebCLWuouhwh/rswsiDYx3WGxajUk/l4G20SKfrKKFeNIHboUFt2JFgv2yfn+5cgOr/t5A==}
+  /yargs/17.5.1:
+    resolution: {integrity: sha512-t6YAJcxDkNX7NFYiVtKvWUz8l+PaKTLiL63mJYWR2GnHq2gjEWISzsLp9wg3aY36dY1j+gfIEL3pIF+XlJJfbA==}
     engines: {node: '>=12'}
     dependencies:
       cliui: 7.0.4
