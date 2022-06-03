@@ -8,8 +8,6 @@ export type {
   UwsRouteSetup,
   UwsRouteHandler,
   UwsRespondBody,
-  // UwsWriter,
-  // UwsJsonWriter,
   UwsStringPairObj,
   RecognizedString,
 } from '@velocejs/server/index'
@@ -17,6 +15,7 @@ export type {
   JsonqlArrayValidateInput,
   JsonqlObjectValidateInput,
   JsonqlValidationRule,
+  JsonqlValidationPlugin,
 } from '@jsonql/validator/index'
 import type {
   UwsBodyParserOptions
