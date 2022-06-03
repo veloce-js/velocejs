@@ -73,6 +73,8 @@ import {
   CATCH_ALL_METHOD_NAME,
   CATCH_ALL_TYPE,
   REST_NAME,
+  RULES_KEY,
+  RULE_AUTOMATIC,
 } from './lib/constants'
 import {
   convertStrToType,
@@ -83,9 +85,6 @@ import {
   prepareArgsFromDynamicToSpread,
   mergeInfo
 } from './lib/common'
-import {
-  createValidator
-} from './lib/validator'
 import {
   Validators
 } from '@velocejs/validators'
@@ -375,18 +374,13 @@ export class FastApi implements FastApiInterface {
       // return a dummy handler - we need to package it up for consistency!
       validateFn = async (values: unknown[]) => values //  we don't need to do anyting now
     } else {
-      const validatorInstance = this._validators.getValidator(propertyName)
+      const vali = this._validators.getValidator(propertyName)
       // @NOTE we ditch the entire createValidator and let the Validators class to deal with it
-      
-      try {
-        validateFn = createValidator(
-                        validatorInstance as unknown as ValidatorsInstance,
-                        propertyName,
-                        argsList,
-                        validationInput)
-      } catch(e) {
-        debug('create Validator error', e)
+      if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
+        debug('addValidationRules', validationInput[RULES_KEY])
+        vali.addValidationRules(validationInput[RULES_KEY])
       }
+      validateFn = vali.validate
     }
     const argNames = argsList.map(arg => arg.name)
 
