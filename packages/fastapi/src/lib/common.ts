@@ -20,7 +20,7 @@ import {
 import {
   SPREAD_ARG_TYPE,
   TS_TYPE_NAME,
-} from '@jsonql/constants'
+} from '@jsonql/ast/dist/lib/constants'
 import {
   DYNAMIC_ROUTE_ALLOW_TYPES
 } from './constants'

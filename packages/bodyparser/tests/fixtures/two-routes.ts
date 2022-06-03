@@ -20,6 +20,9 @@ app.run([
     type: 'get',
     path: '/standard-get-route',
     handler: async (res: HttpResponse, req: HttpRequest) => {
+      res.onAborted(() => {
+        console.log(`Connection aborted`)
+      })
       const result = await bodyParser(res, req)
       jsonWriter(res)(result[QUERY_PARAM])
     }
@@ -28,6 +31,9 @@ app.run([
     type: 'get',
     path: '/dynamic/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
+      res.onAborted(() => {
+        console.log(`Connection aborted`)
+      })
       const obj = new UrlPattern('/dynamic/:key1/:key2')
       const result = await bodyParser(res, req, {
         config: {

@@ -16,12 +16,7 @@ const debugFn = (0, debug_1.default)('velocejs:body-parser:main');
 function bodyParser(res, req, options) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         debugFn('bodyparser options', options);
-        // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
-        res.onAborted(() => {
-            (options === null || options === void 0 ? void 0 : options.onAborted) ?
-                Reflect.apply(options.onAborted, null, [res]) :
-                debugFn('Aborted catch by bodyParser');
-        });
+        // @NOTE the onAborted handler never works here, its been moved back to fastapi internal 
         const url = req.getUrl();
         const query = req.getQuery();
         const method = req.getMethod();

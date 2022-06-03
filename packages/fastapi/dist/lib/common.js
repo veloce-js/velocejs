@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.prepareValidateRoute = exports.mergeInfo = exports.notUndef = exports.prepareArgsFromDynamicToSpread = exports.assertDynamicRouteArgs = exports.prepareSpreadArg = exports.isSpreadFn = exports.hasSpreadArg = exports.convertStrToTypeAction = exports.convertStrToType = exports.prepareArgs = exports.extractArgs = void 0;
 const tslib_1 = require("tslib");
 const server_1 = require("@velocejs/server");
-const constants_1 = require("@jsonql/constants");
+const constants_1 = require("@jsonql/ast/dist/lib/constants");
 const constants_2 = require("./constants");
 const utils_1 = require("@jsonql/utils");
 const debug_1 = tslib_1.__importDefault(require("debug"));

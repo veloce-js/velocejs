@@ -311,6 +311,12 @@ export class FastApi implements FastApiInterface {
     const handler = this[propertyName]
 
     return async (res: HttpResponse, req: HttpRequest) => {
+      // @BUG if we add this here, it will just hang for a while but the 500 never reported
+      res.onAborted(() => {
+        res.writeStatus('500')
+        res.end()
+      })
+
       // @BUG this is still a bit problematic when error happens inside, the catch has no effect
       this._handleMiddlewares([
         this._bodyParser(dynamicRoute),
@@ -331,7 +337,7 @@ export class FastApi implements FastApiInterface {
     return async (res: HttpResponse, req: HttpRequest) => {
       const config = await this._getBodyParserConfig(dynamicRoute)
 
-      return bodyParser(res, req, config)
+      return await bodyParser(res, req, config)
     }
   }
 
@@ -339,9 +345,7 @@ export class FastApi implements FastApiInterface {
   private async _getBodyParserConfig(dynamicRoute?: string): Promise<BodyParserConfig> {
     return this._config.getConfig()
       .then((config: {[key: string]: string}) => {
-
         debug('config', config)
-
         const bodyParserConfig = config[BODYPARSER_KEY] || VeloceConfig.getDefaults(BODYPARSER_KEY)
         if (dynamicRoute) { // this is a dynamic route
           bodyParserConfig[URL_PATTERN_OBJ] = this._dynamicRoutes.get(dynamicRoute)
@@ -714,6 +718,7 @@ export class FastApi implements FastApiInterface {
     plugin: JsonqlValidationPlugin
   ): boolean {
     if (this._validators) {
+      debug('register validation plugin', name, plugin)
       this._validators.registerPlugin(name, plugin)
       return true
     }

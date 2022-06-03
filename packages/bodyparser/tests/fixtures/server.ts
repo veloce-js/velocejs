@@ -17,6 +17,11 @@ app.run([
     type: 'get',
     path: '/some-path/*', // here is the problem
     handler: async (res: HttpResponse, req: HttpRequest) => {
+
+      res.onAborted(() => {
+        console.log(`Connection aborted`)
+      })
+
       const result = await bodyParser(res, req, {
         config: {
           [ORG_ROUTE_REF]: '/some-path/:id(/:optional)'
@@ -32,6 +37,11 @@ app.run([
     type: 'any',
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
+
+      res.onAborted(() => {
+        console.log(`Connection aborted`)
+      })
+
       const result = await bodyParser(res, req)
       // console.log(`got called here --->`, result)
       const payload =  (result.method === 'get') ?

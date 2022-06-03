@@ -9,7 +9,7 @@ const debug = (0, debug_1.default)('velocejs:fastapi:lib:validator');
 /** get the validator for the propertyName and add extra rules here */
 function createValidator(propertyName, argsList, vObj, validationInput) {
     debug('createValidator input -->', validationInput);
-    assert(propertyName, argsList, validationInput);
+    assertValidationInput(propertyName, argsList, validationInput);
     if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
         debug('addValidationRules', validationInput[constants_1.RULES_KEY]);
         vObj.addValidationRules(validationInput[constants_1.RULES_KEY]);
@@ -19,7 +19,7 @@ function createValidator(propertyName, argsList, vObj, validationInput) {
 }
 exports.createValidator = createValidator;
 /** validate aginst the dev input first */
-function assert(propertyName, argsList, validationInput) {
+function assertValidationInput(propertyName, argsList, validationInput) {
     // silly mistake
     if (!argsList.length) {
         throw new errors_1.VeloceError(`${propertyName} has no parameters and therefore can not apply validation!`);

@@ -5,7 +5,6 @@ import { BasicApiValidation } from './fixtures/basic-api-validation'
 let api: BasicApiValidation
 let url: string
 test.before(async () => {
-
   api = new BasicApiValidation()
 
   api.$registerValidationPlugin('myPasswordVal', {
@@ -13,9 +12,7 @@ test.before(async () => {
       return !(value.indexOf('123') > -1)
     }
   })
-
   url = await api.$start()
-
 })
 
 test.after(() => {
@@ -33,6 +30,7 @@ function doLogin(detail: any) {
 test(`Test the $registerValidationPlugin method with positive result`, async t => {
   t.plan(1)
   const d = {username: 'John', password: 'sfdjdljkj'}
+
   return doLogin(d)
           .then((res: any) => res.json())
           .then((json:any) => {

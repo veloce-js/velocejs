@@ -50,15 +50,10 @@ const debugFn = debug('velocejs:body-parser:main')
 export async function bodyParser(
   res: HttpResponse,
   req: HttpRequest,
-  options?: { config: UwsBodyParserOptions, onAborted?: () => void }
+  options?: { config: UwsBodyParserOptions }
 ): Promise<UwsRespondBody> {
   debugFn('bodyparser options', options)
-  // when accessing the req / res before calling the end, we need to explicitly attach the onAborted handler
-  res.onAborted(() => {
-    options?.onAborted ?
-      Reflect.apply(options.onAborted, null, [res]) :
-      debugFn('Aborted catch by bodyParser')
-  })
+  // @NOTE the onAborted handler never works here, its been moved back to fastapi internal 
   const url = req.getUrl()
   const query = req.getQuery()
   const method = req.getMethod()
