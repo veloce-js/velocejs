@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/constants': ^0.7.2
-  '@jsonql/contract': ^0.6.2
+  '@jsonql/contract': ^0.7.0
   '@jsonql/utils': ^0.7.5
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
@@ -18,7 +18,7 @@ specifiers:
   ava: ^4.3.0
   chokidar: ^3.5.3
   esbuild: ^0.14.42
-  esbuild-register: ^3.3.2
+  esbuild-register: ^3.3.3
   eslint: ^8.17.0
   fs-extra: ^10.1.0
   node-fetch: ^3.2.5
@@ -32,7 +32,7 @@ specifiers:
 
 dependencies:
   '@jsonql/constants': 0.7.2
-  '@jsonql/contract': 0.6.2
+  '@jsonql/contract': 0.7.0
   '@jsonql/utils': 0.7.5
   '@velocejs/config': link:../config
   tslib: 2.4.0
@@ -52,7 +52,7 @@ devDependencies:
   ava: 4.3.0_@ava+typescript@3.0.1
   chokidar: 3.5.3
   esbuild: 0.14.42
-  esbuild-register: 3.3.2_esbuild@0.14.42
+  esbuild-register: 3.3.3_esbuild@0.14.42
   eslint: 8.17.0
   fs-extra: 10.1.0
   node-fetch: 3.2.5
@@ -360,8 +360,8 @@ packages:
     resolution: {integrity: sha512-1matJKybfmSIZp8eoSsq7463QHkYymAXZ4OzZKd6evPMT931E6XQbXqHU7F5R9UzsdLIQ4myDM309Tb7i4ceBw==}
     dev: false
 
-  /@jsonql/contract/0.6.2:
-    resolution: {integrity: sha512-ypLv3IKHjeMkWmGucxuPninTmtAabIM0UiqN1zF44l3mt6HTMkeKIlzaOxUsQa2qL7ebOeYWgjC7KYn/1fq1wA==}
+  /@jsonql/contract/0.7.0:
+    resolution: {integrity: sha512-BH2ygDQO2hWmN2B3dlOBHquCcpegb97XI5YaDeg0aM23hJwPIew3384kL2RO7s//g/myQJD7PE5SEDRx3wjD3A==}
     dependencies:
       '@jsonql/ast': 0.8.6
       '@jsonql/errors': 0.7.0
@@ -1234,8 +1234,8 @@ packages:
     dev: true
     optional: true
 
-  /esbuild-register/3.3.2_esbuild@0.14.42:
-    resolution: {integrity: sha512-jceAtTO6zxPmCfSD5cBb3rgIK1vmuqCKYwgylHiS1BF4pq0jJiJb4K2QMuqF4BEw7XDBRatYzip0upyTzfkgsQ==}
+  /esbuild-register/3.3.3_esbuild@0.14.42:
+    resolution: {integrity: sha512-eFHOkutgIMJY5gc8LUp/7c+LLlDqzNi9T6AwCZ2WKKl3HmT+5ef3ZRyPPxDOynInML0fgaC50yszPKfPnjC0NQ==}
     peerDependencies:
       esbuild: '>=0.12 <1'
     dependencies:

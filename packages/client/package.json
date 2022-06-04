@@ -43,7 +43,7 @@
   "homepage": "https://velocejs.com",
   "dependencies": {
     "@jsonql/constants": "^0.7.2",
-    "@jsonql/contract": "^0.6.2",
+    "@jsonql/contract": "^0.7.0",
     "@jsonql/utils": "^0.7.5",
     "@velocejs/config": "workspace:^0.5.2",
     "tslib": "^2.4.0",
@@ -63,7 +63,7 @@
     "ava": "^4.3.0",
     "chokidar": "^3.5.3",
     "esbuild": "^0.14.42",
-    "esbuild-register": "^3.3.2",
+    "esbuild-register": "^3.3.3",
     "eslint": "^8.17.0",
     "fs-extra": "^10.1.0",
     "node-fetch": "^3.2.5",

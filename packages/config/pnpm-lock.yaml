@@ -12,7 +12,7 @@ specifiers:
   ava: ^4.3.0
   debug: ^4.3.4
   esbuild: ^0.14.42
-  esbuild-register: ^3.3.2
+  esbuild-register: ^3.3.3
   eslint: ^8.17.0
   fs-extra: ^10.1.0
   node-fetch: ^3.2.5
@@ -37,7 +37,7 @@ devDependencies:
   '@typescript-eslint/parser': 5.27.0_ud6rd4xtew5bv4yhvkvu24pzm4
   ava: 4.3.0_@ava+typescript@3.0.1
   esbuild: 0.14.42
-  esbuild-register: 3.3.2_esbuild@0.14.42
+  esbuild-register: 3.3.3_esbuild@0.14.42
   eslint: 8.17.0
   fs-extra: 10.1.0
   node-fetch: 3.2.5
@@ -1185,8 +1185,8 @@ packages:
     dev: true
     optional: true
 
-  /esbuild-register/3.3.2_esbuild@0.14.42:
-    resolution: {integrity: sha512-jceAtTO6zxPmCfSD5cBb3rgIK1vmuqCKYwgylHiS1BF4pq0jJiJb4K2QMuqF4BEw7XDBRatYzip0upyTzfkgsQ==}
+  /esbuild-register/3.3.3_esbuild@0.14.42:
+    resolution: {integrity: sha512-eFHOkutgIMJY5gc8LUp/7c+LLlDqzNi9T6AwCZ2WKKl3HmT+5ef3ZRyPPxDOynInML0fgaC50yszPKfPnjC0NQ==}
     peerDependencies:
       esbuild: '>=0.12 <1'
     dependencies:

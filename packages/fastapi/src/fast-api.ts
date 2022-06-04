@@ -106,7 +106,7 @@ export class FastApi implements FastApiInterface {
   private _uwsInstance: UwsServer
   private _config!: VeloceConfig
   private _contract!: JsonqlContractWriter
-  private _routeForContract = {}
+  private _routeForContract = []
   private _written = false
   private _headers: UwsStringPairObj = {}
   private _status: number = placeholderVal
@@ -261,7 +261,7 @@ export class FastApi implements FastApiInterface {
     // also add this to the route that can create contract - if we need it
     const _path = _route !== '' ? _route : path
     if (!excluded) {
-      this._prepareRouteForContract(propertyName, args, type, path)
+      this._prepareRouteForContract(propertyName, toArray(args), type, path)
     }
     return {
       type,
@@ -422,14 +422,8 @@ export class FastApi implements FastApiInterface {
     type: string,
     path: string,
   ): void {
-    const entry = {
-      [propertyName]: {
-        params: toArray(args),
-        method: type,
-        route: path
-      }
-    }
-    this._routeForContract = assign(this._routeForContract, entry)
+    const entry = JsonqlContractWriter.formatRoute(propertyName, args, type, path)
+    this._routeForContract.push(entry)
   }
 
   /** binding method to the uws server */
