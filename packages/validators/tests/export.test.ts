@@ -39,9 +39,3 @@ test(`Should able to export the addValidationRules script`, t => {
   // console.dir(schema, { depth: null })
   t.truthy(schema)
 })
-
-test(`Should able to output the function to a file`, t => {
-  const file = val.createScriptFile()
-  // console.log(file)
-  t.truthy(file)
-})

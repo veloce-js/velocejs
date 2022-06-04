@@ -17,7 +17,7 @@ test.before(() => {
 
 test(`Should able to get a validator by name and pass the validation`, async t => {
   t.plan(2)
-  // try out different style 
+  // try out different style
   return validators
       .getValidator('archive')
       .validate([1])
@@ -52,5 +52,4 @@ test(`Should able to use addAdditonalRules`, async t => {
 
               t.deepEqual(error.detail, [1,1], 'Catch error in the added rule')
             })
-
 })

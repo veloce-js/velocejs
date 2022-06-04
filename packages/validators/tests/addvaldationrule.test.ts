@@ -71,7 +71,7 @@ test(`Should able to register a plugin and call it`, async t => {
     },
     params: ['x']
   })
-
+  // register multiple plugins 
   validators.registerPlugins(pluginConfigs)
 
   const validator = validators.getValidator('posts')
