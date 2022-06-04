@@ -33,7 +33,7 @@
   "license": "ISC",
   "homepage": "https://velocejs.com",
   "dependencies": {
-    "@jsonql/contract": "^0.6.1",
+    "@jsonql/contract": "^0.6.2",
     "@velocejs/config": "workspace:^0.5.2",
     "@velocejs/validators": "workspace:^0.5.1",
     "tslib": "^2.4.0"

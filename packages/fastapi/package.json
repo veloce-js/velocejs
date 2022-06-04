@@ -37,7 +37,7 @@
   "license": "ISC",
   "dependencies": {
     "@jsonql/ast": "^0.8.6",
-    "@jsonql/contract": "^0.6.1",
+    "@jsonql/contract": "^0.6.2",
     "@jsonql/errors": "^0.7.0",
     "@jsonql/utils": "^0.7.5",
     "@velocejs/bodyparser": "workspace:^0.6.0",

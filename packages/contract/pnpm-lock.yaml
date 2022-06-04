@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ava/typescript': ^3.0.1
-  '@jsonql/contract': ^0.6.1
+  '@jsonql/contract': ^0.6.2
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
@@ -24,7 +24,7 @@ specifiers:
   typescript: ^4.7.3
 
 dependencies:
-  '@jsonql/contract': 0.6.1
+  '@jsonql/contract': 0.6.2
   '@velocejs/config': link:../config
   '@velocejs/validators': link:../validators
   tslib: 2.4.0
@@ -339,8 +339,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.13
     dev: true
 
-  /@jsonql/ast/0.8.5:
-    resolution: {integrity: sha512-6IgiLC1AOxNhBXPR2AWRE0GGYjQCc/mkqxcL3x1QzDLVhbd8NyJXvZ4KFbESZe32nRMNsCNS9RoF+88vnvA9lQ==}
+  /@jsonql/ast/0.8.6:
+    resolution: {integrity: sha512-WMF6GvumuIutmZ5zIXLanPV4KFDWdnRjWnIcrwLksucEhxW2VSxPRCuK5j0D/fiTDNsMxu/Tom8O3mM1HGDEkg==}
     dependencies:
       '@jsonql/utils': 0.7.5
       debug: 4.3.4
@@ -349,10 +349,10 @@ packages:
       - supports-color
     dev: false
 
-  /@jsonql/contract/0.6.1:
-    resolution: {integrity: sha512-PWgMSqrnFpH9R6IQFkKPD7HTYZawy4gV76fiPFFLuZDxKVBl1H4O2pyDifqp49h6EKGfXFKjEoIJP3QFg0QLtw==}
+  /@jsonql/contract/0.6.2:
+    resolution: {integrity: sha512-ypLv3IKHjeMkWmGucxuPninTmtAabIM0UiqN1zF44l3mt6HTMkeKIlzaOxUsQa2qL7ebOeYWgjC7KYn/1fq1wA==}
     dependencies:
-      '@jsonql/ast': 0.8.5
+      '@jsonql/ast': 0.8.6
       '@jsonql/errors': 0.7.0
       '@jsonql/utils': 0.7.5
       debug: 4.3.4

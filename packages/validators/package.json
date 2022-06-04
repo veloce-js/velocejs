@@ -34,7 +34,7 @@
   "license": "ISC",
   "homepage": "https://velocejs.com",
   "dependencies": {
-    "@jsonql/validators": "^0.5.3",
+    "@jsonql/validators": "^0.5.4",
     "tslib": "^2.4.0"
   },
   "devDependencies": {

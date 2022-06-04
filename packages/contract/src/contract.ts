@@ -14,16 +14,18 @@ export class Contract extends JsonqlContractWriter {
 
   constructor(
     astMap: VeloceAstMap,
-    private _validators: Validators
+    private _validators?: Validators
   ) {
     super(astMap)
   }
 
   public generate() {
-    const { schema } = this._validators.export()
+    if (this._validators) {
+      const { schema } = this._validators.exportAll()
   // console.dir( schema, { depth: null })
 
-    this.appendValidations( schema )
+      this.appendValidations( schema )
+    }
     // at this point should be the final call
     const contract = this.output()
 

@@ -34,7 +34,7 @@ glob(join(pkgsDir, '*'), (err, files) => {
     return (lastValue) => {
       // change the cmd to that packages root then run `ncu -u`
       const ps = spawn('ncu', ['-u', '--packageFile', join(cwd, 'package.json')])
-      console.log('in', cwd)
+      console.log('running ncu in', cwd)
       return new Promise((resolver, rejecter) => {
         ps.stdout.on('data', data => console.log(data.toString()))
 
@@ -51,11 +51,16 @@ glob(join(pkgsDir, '*'), (err, files) => {
 
   const ex = chainProcessPromises(fns)
   ex(0).then(result => {
-    console.log('done', result)
-    // exit and back to the project root
-
+    console.log('done update, next run install', result)
     // run pnpm install
-
+    const ps = spawn('pnpm', ['install'])
+    ps.on('close', code => {
+      if (code !== 0) {
+        throw new Error(`Fail at install`)
+      } else {
+        console.log('FIN')
+      }
+    })
     // done
   })
   .catch(err => {
