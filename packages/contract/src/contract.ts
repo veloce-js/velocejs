@@ -9,7 +9,7 @@ import {
 import {
   JsonqlContractWriter
 } from '@jsonql/contract'
-// main 
+// main
 export class Contract extends JsonqlContractWriter {
 
   constructor(
@@ -34,10 +34,11 @@ export class Contract extends JsonqlContractWriter {
     }
   }
 
+  /** output the contract without write */
   public generate() {
     if (this._validators) {
       const { schema } = this._validators.exportAll()
-      // console.dir( schema, { depth: null })
+      console.dir( schema, { depth: null })
       this.appendValidations( schema )
     }
     // at this point should be the final call

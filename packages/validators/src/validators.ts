@@ -1,60 +1,49 @@
 // main class
 import type {
   VeloceAstMap,
-  ExportedSchema,
+  ClientPluginConfigs,
 } from './types'
 import type {
   MixedValidationInput,
-  JsonqlValidationPlugin,
 } from '@jsonql/validator/index'
+import { ValidatorsFeatures } from './validators-interface'
 import {
  Validators as JsonqlValidators,
 } from '@jsonql/validators'
-import {
-  SCHEMA_KEY,
-  PLUGINS_KEY,
-  RULES_KEY,
-} from './constants'
+import { Validator } from '@jsonql/validator'
 
 /**
   Here we take the parent methods and onlly deal with the
   generate files / contract
 **/
-export class Validators extends JsonqlValidators {
+export class Validators extends JsonqlValidators implements ValidatorsFeatures {
 
   /** main */
   constructor(astMap: VeloceAstMap) {
     super(astMap)
   }
 
-  /** directly call the addValidationRules with the propertyName */
+  /**
+    directly call the addValidationRules with the propertyName
+    on the client side this get call after the contract loaded
+  */
   public addRules(
     propertyName: string,
     rules: MixedValidationInput
-  ) {
+  ): Validator {
     const val = this.getValidator(propertyName)
     val.addValidationRules(rules)
 
-    return val // we return the validator to use
+    return val as Validator // we return the validator to use
   }
 
-  /** This is created for FastApi to dump a whole set of plugins registration from a Map */
+  /** On the client side we don't need a map */
   public registerPlugins(
-    pluginConfigs: Map<string, JsonqlValidationPlugin>
+    pluginConfigs: ClientPluginConfigs
   ) {
-    pluginConfigs.forEach((config: JsonqlValidationPlugin, name: string) => {
+    for (const name in pluginConfigs) {
+      const config = pluginConfigs[name]
       this.registerPlugin(name, config)
-    })
-  }
-
-  /** wrap around the parent export method to add our processing */
-  public exportAll(): ExportedSchema {
-    const e = this.export()
-    const o = { [SCHEMA_KEY]: {}, [PLUGINS_KEY]: e[PLUGINS_KEY] }
-    // do our processing here
-    for (const propName in e[SCHEMA_KEY]) {
-      o[SCHEMA_KEY][propName] = e[SCHEMA_KEY][propName][RULES_KEY]
     }
-    return o
   }
 }

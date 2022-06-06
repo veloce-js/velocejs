@@ -1,8 +1,8 @@
 
-
-export const routeForContract = {
-  news: { params: [], method: 'get', route: '/news' },
-  post: {
+export const routeForContract = [
+  { name: 'news', params: [], method: 'get', route: '/news' },
+  {
+    name: 'posts',
     params: [
       { name: 'title', required: true, type: 'string' },
       { name: 'content', required: true, type: 'string' },
@@ -16,7 +16,7 @@ export const routeForContract = {
     method: 'post',
     route: '/post'
   },
-  archive: {
+  { name: 'archive',
     params: [
       {
         name: 'dates',
@@ -30,5 +30,9 @@ export const routeForContract = {
     method: 'get',
     route: '/archive/:year/:month/:day'
   },
-  socket: { params: [], method: 'ws', route: '/realtime' }
-}
+  { name: 'socket', params: [], method: 'ws', route: '/realtime' }
+]
+
+export const astMap = routeForContract.map((route: any) => {
+  return {[route.name]: route.params }
+}).reduce((a: any, b: any) => Object.assign(a, b), {})
