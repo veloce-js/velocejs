@@ -20,3 +20,7 @@ export type {
   JsonqlArrayValidateInput,
   MixedValidationInput,
 }
+
+export type ClientPluginConfigs = {
+  [pluginName: string]: JsonqlValidationPlugin 
+}

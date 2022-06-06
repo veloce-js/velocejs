@@ -2,7 +2,7 @@ import test from 'ava'
 import { readJsonSync } from 'fs-extra'
 import { join } from 'node:path'
 
-import { Validators } from '../src'
+import { Validators} from '../src/validators-server'
 
 let val: Validators
 
@@ -27,10 +27,10 @@ test.before(() => {
     }
   })
   val.addRules('archive', {
-    id: { plugin: 'MyCoolPlug'}
-  })
-  val.addRules('archive', {
-    id: { plugin: 'moreThan', num: 40}
+    id: [
+      { plugin: 'MyCoolPlug'},
+      { plugin: 'moreThan', num: 40}
+    ]
   })
 })
 

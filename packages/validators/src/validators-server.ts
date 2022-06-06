@@ -19,7 +19,7 @@ import {
 } from './constants'
 
 // main
-export class VelocejsValidatorsServer extends ValidatorsServer implements ValidatorsFeatures {
+export class Validators extends ValidatorsServer implements ValidatorsFeatures {
 
   /** main */
   constructor(astMap: VeloceAstMap) {
@@ -29,7 +29,10 @@ export class VelocejsValidatorsServer extends ValidatorsServer implements Valida
   /** wrap around the parent export method to add our processing */
   public exportAll(): ExportedSchema {
     const e = this.export()
-    const o = { [SCHEMA_KEY]: {}, [PLUGINS_KEY]: e[PLUGINS_KEY] }
+    const o = {
+      [SCHEMA_KEY]: {},
+      [PLUGINS_KEY]: e[PLUGINS_KEY]
+    }
     // do our processing here
     for (const propName in e[SCHEMA_KEY]) {
       o[SCHEMA_KEY][propName] = e[SCHEMA_KEY][propName][RULES_KEY]
