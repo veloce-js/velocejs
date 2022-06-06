@@ -5,7 +5,7 @@ import type {
 } from './types'
 import {
   Validators
-} from '@velocejs/validators'
+} from '@velocejs/validators/dist/validators-server'
 import {
   JsonqlContractWriter
 } from '@jsonql/contract'

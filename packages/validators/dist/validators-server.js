@@ -12,7 +12,10 @@ class Validators extends validators_server_1.ValidatorsServer {
     /** wrap around the parent export method to add our processing */
     exportAll() {
         const e = this.export();
-        const o = { [constants_1.SCHEMA_KEY]: {}, [constants_1.PLUGINS_KEY]: e[constants_1.PLUGINS_KEY] };
+        const o = {
+            [constants_1.SCHEMA_KEY]: {},
+            [constants_1.PLUGINS_KEY]: e[constants_1.PLUGINS_KEY]
+        };
         // do our processing here
         for (const propName in e[constants_1.SCHEMA_KEY]) {
             o[constants_1.SCHEMA_KEY][propName] = e[constants_1.SCHEMA_KEY][propName][constants_1.RULES_KEY];
