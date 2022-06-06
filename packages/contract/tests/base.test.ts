@@ -1,7 +1,7 @@
 import test from 'ava'
 import { routeForContract, astMap } from './fixtures/route-for-contract'
 import { Contract } from '../src'
-import { Validators } from '@velocejs/validators'
+import { Validators } from '@velocejs/validators/dist/validators-server'
 
 let con: Contract
 let val: Validators

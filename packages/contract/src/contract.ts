@@ -37,9 +37,9 @@ export class Contract extends JsonqlContractWriter {
   /** output the contract without write */
   public generate() {
     if (this._validators) {
-      const { schema } = this._validators.exportAll()
+      const { schema, plugins } = this._validators.exportAll()
       console.dir( schema, { depth: null })
-      this.appendValidations( schema )
+      this.appendValidations( schema, plugins )
     }
     // at this point should be the final call
     const contract = this.output()
