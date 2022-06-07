@@ -43,7 +43,7 @@
   "homepage": "https://velocejs.com",
   "dependencies": {
     "@jsonql/constants": "^0.7.2",
-    "@jsonql/contract": "^0.8.0",
+    "@jsonql/contract": "^0.9.0",
     "@jsonql/utils": "^0.7.5",
     "@velocejs/config": "workspace:^0.5.2",
     "tslib": "^2.4.0",

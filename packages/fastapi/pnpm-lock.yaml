@@ -3,7 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/ast': ^0.8.6
-  '@jsonql/contract': ^0.8.0
+  '@jsonql/contract': ^0.9.0
   '@jsonql/errors': ^0.7.0
   '@jsonql/utils': ^0.7.5
   '@swc/cli': ^0.1.57
@@ -37,7 +37,7 @@ specifiers:
 
 dependencies:
   '@jsonql/ast': 0.8.6
-  '@jsonql/contract': 0.8.0
+  '@jsonql/contract': 0.9.0
   '@jsonql/errors': 0.7.0
   '@jsonql/utils': 0.7.5
   '@velocejs/bodyparser': link:../bodyparser
@@ -366,8 +366,8 @@ packages:
       - supports-color
     dev: false
 
-  /@jsonql/contract/0.8.0:
-    resolution: {integrity: sha512-LwxDL+HkBeuiAOjTuEwyEtJ31+vTMJm84rk8E61rDHQ2wSXAt6L6s7iNIMZy5Mkl6cTpB+JBPIMCD35kNkKf6Q==}
+  /@jsonql/contract/0.9.0:
+    resolution: {integrity: sha512-Tqu8bYeO22G8Enzvqo/NA/ksW9EcXr28GG7kdxv4YG1D/yeqTSp5tcwDmeFopLnepFEKT+E1E4TrftflWh0o0g==}
     dependencies:
       '@jsonql/ast': 0.8.6
       '@jsonql/errors': 0.7.0

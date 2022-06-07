@@ -4,7 +4,7 @@ specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/ast': ^0.8.6
   '@jsonql/errors': ^0.7.0
-  '@jsonql/validators': ^0.6.2
+  '@jsonql/validators': ^0.7.1
   '@swc/cli': ^0.1.57
   '@swc/core': ^1.2.197
   '@types/fs-extra': ^9.0.13
@@ -27,7 +27,7 @@ specifiers:
   vitest: ^0.14.1
 
 dependencies:
-  '@jsonql/validators': 0.6.2
+  '@jsonql/validators': 0.7.1
   tslib: 2.4.0
 
 devDependencies:
@@ -366,31 +366,31 @@ packages:
       '@jsonql/errors': 0.7.0
       lodash-es: 4.17.21
 
-  /@jsonql/validator-core/0.9.11:
-    resolution: {integrity: sha512-GMgGgReio3mpz16pq4OMn7vLBMZ9m97pF1iDVEiXCCGLX8PKeZLwig++1PEgQqKUUxkCs9MehDySBYJZfqxSOw==}
+  /@jsonql/validator-core/0.10.0:
+    resolution: {integrity: sha512-Oe05gDAA9naIy3ekbAs+y95hIYRGghfOqbdlsjwM8Ybfo3CYdOzscTGh3nOZyonkuiJmO19ifhsTv0fL6J30Iw==}
     dependencies:
       '@jsonql/errors': 0.7.0
       '@jsonql/utils': 0.7.5
     dev: false
 
-  /@jsonql/validator/0.8.4:
-    resolution: {integrity: sha512-qK9M7HT/S4IVa+CDg6G4jT1N/t/RtebkhgLIpMncDercmdQV+fff4DMDDAvtgZSccF4PMghOynBjBvtFmf5VAQ==}
+  /@jsonql/validator/0.8.5:
+    resolution: {integrity: sha512-ZdTKAJWTu9bH3AmLk46K/T1kyLIbqB/SF2c+Y0UORlwjUKi9sueEgDmB03/nw411Rt1yV2pDg5e16lA+BHlCHw==}
     dependencies:
       '@jsonql/errors': 0.7.0
       '@jsonql/utils': 0.7.5
-      '@jsonql/validator-core': 0.9.11
+      '@jsonql/validator-core': 0.10.0
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@jsonql/validators/0.6.2:
-    resolution: {integrity: sha512-dbnFJgBOSNjMlOTVNWGFErpBehhagpe+J3gp1kGJeDs/2j5QlJhDZKkFah/UPtPOFYKOzT/GbEy41M/3cVRvLQ==}
+  /@jsonql/validators/0.7.1:
+    resolution: {integrity: sha512-njphTdjuJHIprOZ4l+Waw+J13DlGiNLgCrf63VZGIqopXEbA7elt9tHUkJJZYrDcqQVj2t+4GZO08561UqdaeA==}
     dependencies:
       '@jsonql/errors': 0.7.0
       '@jsonql/utils': 0.7.5
-      '@jsonql/validator': 0.8.4
-      '@jsonql/validator-core': 0.9.11
+      '@jsonql/validator': 0.8.5
+      '@jsonql/validator-core': 0.10.0
       fs-extra: 10.1.0
       glob: 8.0.3
     transitivePeerDependencies:
