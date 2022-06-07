@@ -15,6 +15,7 @@
     "test": "pnpm build && pnpm test:ava",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
+    "build:plugin": "npx esbuild ./tests/fixtures/plugins/my-export-plugin.ts --outfile=./tests/fixtures/plugins/my-export-plugin.js --format=cjs",
     "build:swc": "npx swc ./src/client.ts -o client.js",
     "ts:check": "tsc -noEmit",
     "docs": "typedoc --entryPoints src/main.ts",
