@@ -16,6 +16,7 @@ export type {
   JsonqlObjectValidateInput,
   JsonqlValidationRule,
   JsonqlValidationPlugin,
+  MixedValidationInput,
 } from '@jsonql/validator/index'
 import type {
   UwsBodyParserOptions
@@ -79,3 +80,5 @@ export type ValidatorsInstance = {
 }
 
 export type DynamicRouteCheckFn = (t: string, p: string, args: ArgsListType[]) => string
+
+export type { MixedValidationInput }

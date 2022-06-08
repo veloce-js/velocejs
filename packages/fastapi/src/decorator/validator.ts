@@ -1,13 +1,8 @@
 // Validator Decorator
 import type {
-  // JsonValidationEntry,
   JsonValidationOption,
-  // ValidationObjectRule,
-  // ValidationObjectSimpleRule
+  MixedValidationInput,
 } from '../types'
-import type {
-  MixedValidationInput
-} from '@velocejs/validators/index'
 import { validationKey } from './keys'
 import {
   RULES_KEY,
@@ -15,7 +10,6 @@ import {
   RULE_AUTOMATIC
 } from '../lib/constants'
 import { FastApiInterface } from '../lib/fast-api-interface'
-
 
 // Validate Decorator
 export function Validate(

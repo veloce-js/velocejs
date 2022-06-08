@@ -10,8 +10,7 @@ import type {
 } from '@velocejs/server/index'
 import type {
   VeloceAstMap,
-  // MixedValidationInput,
-} from '@velocejs/validators/index'
+} from '@jsonql/validators/index'
 // our deps
 import type {
   RouteMetaInfo,
@@ -52,12 +51,11 @@ import {
   CACHE_DIR,
   BODYPARSER_KEY,
 } from '@velocejs/config'
+import ValidationError from '@jsonql/errors/dist/validation-error'
 import {
-  JsonqlValidationError
-} from '@jsonql/errors'
-import {
-  JsonqlContractWriter
+  ContractWriter
 } from '@jsonql/contract'
+
 import {
   chainProcessPromises,
   queuePromisesProcess,
@@ -105,7 +103,7 @@ const placeholderFn = (...args: unknown[] ) => { console.log(args) }
 export class FastApi implements FastApiInterface {
   private _uwsInstance: UwsServer
   private _config!: VeloceConfig
-  private _contract!: JsonqlContractWriter
+  private _contract!: ContractWriter
   private _routeForContract = []
   private _written = false
   private _headers: UwsStringPairObj = {}
@@ -155,7 +153,7 @@ export class FastApi implements FastApiInterface {
           if (config && config.cacheDir) {
             debug(apiType, this._routeForContract)
             // console.dir(this._routeForContract, { depth: null })
-            this._contract = new JsonqlContractWriter(
+            this._contract = new ContractWriter(
               this._routeForContract
             ) // we didn't provde the apiType here @TODO when we add jsonql
             return this._insertContractRoute(routes, config)
@@ -177,7 +175,7 @@ export class FastApi implements FastApiInterface {
     routes.push({
       path: config.path,
       type: config.method,
-      handler: this._mapMethodToHandler(CONTRACT_METHOD_NAME, [], false)
+      handler: this._mapMethodToHandler(CONTRACT_METHOD_NAME)
     })
     return routes
   }
@@ -188,7 +186,7 @@ export class FastApi implements FastApiInterface {
     return {
       path: CATCH_ALL_ROUTE,
       type: CATCH_ALL_TYPE,
-      handler: this._mapMethodToHandler(CATCH_ALL_METHOD_NAME, [], false)
+      handler: this._mapMethodToHandler(CATCH_ALL_METHOD_NAME)
     }
   }
 
@@ -307,8 +305,8 @@ export class FastApi implements FastApiInterface {
   // transform the string name to actual method
   private _mapMethodToHandler(
     propertyName: string,
-    argsList: Array<ArgsListType>,
-    validationInput: JsonqlValidationRule, // this is the rules provide via Decorator
+    argsList: Array<ArgsListType> = [],
+    validationInput?: JsonqlValidationRule, // this is the rules provide via Decorator
     dynamicRoute?: string
     // onAbortedHandler?: string // take out
   ): UwsRouteHandler {
@@ -422,8 +420,12 @@ export class FastApi implements FastApiInterface {
     type: string,
     path: string,
   ): void {
-    const entry = JsonqlContractWriter.formatRoute(propertyName, args, type, path)
-    this._routeForContract.push(entry)
+    this._routeForContract.push({
+      type,
+      name: propertyName,
+      params: args,
+      route: path
+    })
   }
 
   /** binding method to the uws server */
@@ -463,7 +465,7 @@ export class FastApi implements FastApiInterface {
   }
 
   /** handle the errors return from validation */
-  private _handleValidationError(error: JsonqlValidationError) {
+  private _handleValidationError(error: ValidationError) {
     debug('_handleValidationError', error)
     const { detail, message, className } = error
     const payload = { errors: { message, detail, className } }

@@ -3,12 +3,12 @@ lockfileVersion: 5.4
 specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/constants': ^0.7.2
-  '@jsonql/contract': ^0.9.0
-  '@jsonql/utils': ^0.7.5
+  '@jsonql/contract': ^0.10.0
+  '@jsonql/utils': ^0.7.6
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
-  '@types/node': ^17.0.40
+  '@types/node': ^17.0.41
   '@types/ws': ^8.5.3
   '@typescript-eslint/eslint-plugin': ^5.27.1
   '@typescript-eslint/parser': ^5.27.1
@@ -32,8 +32,8 @@ specifiers:
 
 dependencies:
   '@jsonql/constants': 0.7.2
-  '@jsonql/contract': 0.9.0
-  '@jsonql/utils': 0.7.5
+  '@jsonql/contract': 0.10.0
+  '@jsonql/utils': 0.7.6
   '@velocejs/config': link:../config
   tslib: 2.4.0
   url-pattern: 1.0.3
@@ -43,7 +43,7 @@ devDependencies:
   '@types/debug': 4.1.7
   '@types/fs-extra': 9.0.13
   '@types/mime-types': 2.1.1
-  '@types/node': 17.0.40
+  '@types/node': 17.0.41
   '@types/ws': 8.5.3
   '@typescript-eslint/eslint-plugin': 5.27.1_aq7uryhocdbvbqum33pitcm3y4
   '@typescript-eslint/parser': 5.27.1_ud6rd4xtew5bv4yhvkvu24pzm4
@@ -349,7 +349,7 @@ packages:
   /@jsonql/ast/0.8.6:
     resolution: {integrity: sha512-WMF6GvumuIutmZ5zIXLanPV4KFDWdnRjWnIcrwLksucEhxW2VSxPRCuK5j0D/fiTDNsMxu/Tom8O3mM1HGDEkg==}
     dependencies:
-      '@jsonql/utils': 0.7.5
+      '@jsonql/utils': 0.7.6
       debug: 4.3.4
       tslib: 2.4.0
     transitivePeerDependencies:
@@ -360,12 +360,12 @@ packages:
     resolution: {integrity: sha512-1matJKybfmSIZp8eoSsq7463QHkYymAXZ4OzZKd6evPMT931E6XQbXqHU7F5R9UzsdLIQ4myDM309Tb7i4ceBw==}
     dev: false
 
-  /@jsonql/contract/0.9.0:
-    resolution: {integrity: sha512-Tqu8bYeO22G8Enzvqo/NA/ksW9EcXr28GG7kdxv4YG1D/yeqTSp5tcwDmeFopLnepFEKT+E1E4TrftflWh0o0g==}
+  /@jsonql/contract/0.10.0:
+    resolution: {integrity: sha512-PhxYAcTw1PmCGO8Ismixd/MnK61ksRKPRDXJ82InkkPY2PsUm7zrjz7Xtwy7z5eRcVGlEEa4gcZSxhZ0011jig==}
     dependencies:
       '@jsonql/ast': 0.8.6
-      '@jsonql/errors': 0.7.0
-      '@jsonql/utils': 0.7.5
+      '@jsonql/errors': 0.8.0
+      '@jsonql/utils': 0.7.6
       debug: 4.3.4
       fs-extra: 10.1.0
       tslib: 2.4.0
@@ -373,14 +373,13 @@ packages:
       - supports-color
     dev: false
 
-  /@jsonql/errors/0.7.0:
-    resolution: {integrity: sha512-UwMSVfkSPIvXBFiCgTVDCeDdGeqrnNlu7A2xLoaKf4XXdANexzhFkFElznaHoD09dI9KarJx6m3ynjlQdf7xpA==}
+  /@jsonql/errors/0.8.0:
+    resolution: {integrity: sha512-VEol9KuwNIXue23NwXanA0h2Zqx2JE5Hc9Y/4oafrp4KLYUhvh/Mw/sfezGefzsKRde+6XTuyZ+WCEvfAV5b1Q==}
     dev: false
 
-  /@jsonql/utils/0.7.5:
-    resolution: {integrity: sha512-EH5C4VuGNUd7fi1CXmnXyU7+aZjh/GZx9FOTApNXyP0NimFA1AAQ6nIHbETW/Tl+U027mEhsZq1N5wWcndoTMA==}
+  /@jsonql/utils/0.7.6:
+    resolution: {integrity: sha512-CSNVDdRMseJ/OD9fUGUZcfifR9Vfpfb4HA8frSdCdq4HGkDr6eIGS/6jMvqg8cl2dbpv05EWq5B3Sx+ceKhkOg==}
     dependencies:
-      '@jsonql/errors': 0.7.0
       lodash-es: 4.17.21
     dev: false
 
@@ -414,7 +413,7 @@ packages:
   /@types/fs-extra/9.0.13:
     resolution: {integrity: sha512-nEnwB++1u5lVDM2UI4c1+5R+FYaKfaAzS4OococimjVm3nQw3TuzH5UNsocrcTBbhnerblyHj4A49qXbIiZdpA==}
     dependencies:
-      '@types/node': 17.0.40
+      '@types/node': 17.0.41
     dev: true
 
   /@types/json-schema/7.0.11:
@@ -429,14 +428,14 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
-  /@types/node/17.0.40:
-    resolution: {integrity: sha512-UXdBxNGqTMtm7hCwh9HtncFVLrXoqA3oJW30j6XWp5BH/wu3mVeaxo7cq5benFdBw34HB3XDT2TRPI7rXZ+mDg==}
+  /@types/node/17.0.41:
+    resolution: {integrity: sha512-xA6drNNeqb5YyV5fO3OAEsnXLfO7uF0whiOfPTz5AeDo8KeZFmODKnvwPymMNO8qE/an8pVY/O50tig2SQCrGw==}
     dev: true
 
   /@types/ws/8.5.3:
     resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
     dependencies:
-      '@types/node': 17.0.40
+      '@types/node': 17.0.41
     dev: true
 
   /@typescript-eslint/eslint-plugin/5.27.1_aq7uryhocdbvbqum33pitcm3y4:

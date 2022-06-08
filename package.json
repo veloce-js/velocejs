@@ -32,9 +32,9 @@
   },
   "homepage": "https://velocejs.com",
   "devDependencies": {
-    "@jsonql/utils": "^0.7.5",
+    "@jsonql/utils": "^0.7.6",
     "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.2.196",
+    "@swc/core": "^1.2.197",
     "esbuild": "^0.14.42",
     "esbuild-register": "^3.3.3",
     "fs-extra": "^10.1.0",
