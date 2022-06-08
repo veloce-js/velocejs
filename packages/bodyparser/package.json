@@ -32,12 +32,12 @@
   "license": "ISC",
   "homepage": "https://velocejs.com",
   "dependencies": {
-    "@jsonql/utils": "^0.7.6",
+    "tslib": "^2.4.0",
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
-    "@jsonql/constants": "^0.7.2",
     "@ava/typescript": "^3.0.1",
+    "@jsonql/constants": "^0.7.2",
     "@types/debug": "^4.1.7",
     "@types/fs-extra": "^9.0.13",
     "@types/mime-types": "^2.1.1",

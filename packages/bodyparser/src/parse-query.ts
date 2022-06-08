@@ -1,6 +1,5 @@
 // this is taken out from util and expand it's capability
 import type {
-  // UwsStringPairObj,
   UwsBodyParserOptions
 } from './types'
 import {
