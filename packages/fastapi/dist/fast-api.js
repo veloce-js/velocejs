@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FastApi = void 0;
 const tslib_1 = require("tslib");
+// our deps
 const server_1 = require("@velocejs/server");
 const bodyparser_1 = tslib_1.__importStar(require("@velocejs/bodyparser"));
 const config_1 = require("@velocejs/config");
@@ -10,7 +11,7 @@ const utils_1 = require("@jsonql/utils");
 // here
 const constants_1 = require("./lib/constants");
 const common_1 = require("./lib/common");
-const validators_1 = require("@velocejs/validators");
+const validators_server_1 = require("@jsonql/validators/dist/validators-server");
 // setup
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fast-api:main');
@@ -23,7 +24,7 @@ class FastApi {
     _uwsInstance;
     _config;
     _contract;
-    _routeForContract = {};
+    _routeForContract = [];
     _written = false;
     _headers = {};
     _status = placeholderVal;
@@ -64,7 +65,8 @@ class FastApi {
                 debug('config', config);
                 if (config && config.cacheDir) {
                     debug(apiType, this._routeForContract);
-                    this._contract = new contract_1.JsonqlContractWriter(this._routeForContract); // we didn't provde the apiType here @TODO when we add jsonql
+                    // console.dir(this._routeForContract, { depth: null })
+                    this._contract = new contract_1.ContractWriter(this._routeForContract); // we didn't provde the apiType here @TODO when we add jsonql
                     return this._insertContractRoute(routes, config);
                     // return a new route info here
                 }
@@ -80,7 +82,7 @@ class FastApi {
         routes.push({
             path: config.path,
             type: config.method,
-            handler: this._mapMethodToHandler(constants_1.CONTRACT_METHOD_NAME, [], false)
+            handler: this._mapMethodToHandler(constants_1.CONTRACT_METHOD_NAME)
         });
         return routes;
     }
@@ -89,7 +91,7 @@ class FastApi {
         return {
             path: constants_1.CATCH_ALL_ROUTE,
             type: constants_1.CATCH_ALL_TYPE,
-            handler: this._mapMethodToHandler(constants_1.CATCH_ALL_METHOD_NAME, [], false)
+            handler: this._mapMethodToHandler(constants_1.CATCH_ALL_METHOD_NAME)
         };
     }
     /** check if there is a catch all route, otherwise create one at the end */
@@ -152,7 +154,7 @@ class FastApi {
         // also add this to the route that can create contract - if we need it
         const _path = _route !== '' ? _route : path;
         if (!excluded) {
-            this._prepareRouteForContract(propertyName, args, type, path);
+            this._prepareRouteForContract(propertyName, (0, utils_1.toArray)(args), type, path);
         }
         return {
             type,
@@ -185,7 +187,7 @@ class FastApi {
         };
     }
     // transform the string name to actual method
-    _mapMethodToHandler(propertyName, argsList, validationInput, // this is the rules provide via Decorator
+    _mapMethodToHandler(propertyName, argsList = [], validationInput, // this is the rules provide via Decorator
     dynamicRoute
     // onAbortedHandler?: string // take out
     ) {
@@ -278,13 +280,12 @@ class FastApi {
     /** just wrap this together to make it look neater */
     _prepareRouteForContract(propertyName, args, type, path) {
         const entry = {
-            [propertyName]: {
-                params: (0, utils_1.toArray)(args),
-                method: type,
-                route: path
-            }
+            type,
+            name: propertyName,
+            params: args,
+            route: path
         };
-        this._routeForContract = (0, utils_1.assign)(this._routeForContract, entry);
+        this._routeForContract.push(entry);
     }
     /** binding method to the uws server */
     async _run(routes) {
@@ -430,7 +431,7 @@ class FastApi {
     /** prepare validator using veloce/validators */
     _initValidators(astMap, validations) {
         if (!(Array.isArray(validations) && validations.length === 0)) {
-            this._validators = new validators_1.Validators(astMap);
+            this._validators = new validators_server_1.ValidatorsServer(astMap);
             debug('call registerPlugins', this._validationPlugins);
             this._validators.registerPlugins(this._validationPlugins);
         }

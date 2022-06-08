@@ -11,7 +11,10 @@ import type {
 import type {
   VeloceAstMap,
 } from '@jsonql/validators/index'
-// our deps
+import type {
+  JsonqlRouteForContract,
+  JsonqlProcessedEntry,
+} from '@jsonql/contract/index'
 import type {
   RouteMetaInfo,
   VeloceCtx,
@@ -24,6 +27,7 @@ import type {
   JsonqlValidationPlugin,
   ValidateFn,
 } from './types'
+// our deps
 import {
   UwsServer,
   serveStatic,
@@ -86,8 +90,8 @@ import {
   mergeInfo
 } from './lib/common'
 import {
-  Validators
-} from '@velocejs/validators'
+  ValidatorsServer as Validators
+} from '@jsonql/validators/dist/validators-server'
 import {
   FastApiInterface
 } from './lib/fast-api-interface'
@@ -104,7 +108,7 @@ export class FastApi implements FastApiInterface {
   private _uwsInstance: UwsServer
   private _config!: VeloceConfig
   private _contract!: ContractWriter
-  private _routeForContract = []
+  private _routeForContract: JsonqlRouteForContract = []
   private _written = false
   private _headers: UwsStringPairObj = {}
   private _status: number = placeholderVal
@@ -420,12 +424,13 @@ export class FastApi implements FastApiInterface {
     type: string,
     path: string,
   ): void {
-    this._routeForContract.push({
+    const entry = {
       type,
       name: propertyName,
       params: args,
       route: path
-    })
+    }
+    this._routeForContract.push(entry as unknown as JsonqlProcessedEntry)
   }
 
   /** binding method to the uws server */
