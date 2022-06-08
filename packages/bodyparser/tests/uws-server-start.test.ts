@@ -1,7 +1,7 @@
 // testing the UwsServer start stop methods
 import test from 'ava'
 import { UwsServer, jsonWriter } from '../dist'
-import bodyParser from '@velocejs/bodyparser'
+
 import { HttpResponse, HttpRequest } from '../dist/types'
 import Fetch from 'node-fetch'
 
@@ -13,7 +13,7 @@ test.before(() => {
     type: 'get',
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
-      const result = await bodyParser(res, req)
+      // const result = await bodyParser(res, req)
       jsonWriter(res)(result.queryParams)
     }
   }])

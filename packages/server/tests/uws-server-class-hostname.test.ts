@@ -1,7 +1,7 @@
 import test from 'ava'
 import { UwsServer } from '../dist'
 import { HttpResponse, HttpRequest } from '../src/types'
-import bodyParser from '@velocejs/bodyparser'
+
 import Fetch from 'node-fetch'
 
 let app: UwsServer = null
@@ -22,7 +22,9 @@ test(`Should able to create the server and handle request with hostname`, async 
   const msg = `Hello with hostname`
 
   app.onStart = () => {
-    console.info(`Try to overload the onStart method`)
+    if (process.env.DEBUG) {
+      console.info(`Try to overload the onStart method`)
+    }
   }
 
   // we run it without assign a port
@@ -31,8 +33,8 @@ test(`Should able to create the server and handle request with hostname`, async 
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
 
-      const result = await bodyParser(res, req)
-      t.is(result.method, 'get')
+      // const result = await bodyParser(res, req)
+      t.is( req.getMethod(), 'get')
 
       res.end(msg)
     }

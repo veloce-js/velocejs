@@ -14,7 +14,7 @@ test(`Reorganize an array based on it's content, we want all B at the end`, t =>
       bIndex.push(i)
     }
   }
-  console.log('bIndex', bIndex)
+  // console.log('bIndex', bIndex)
   for (let k = 0; k < ctn; ++k) {
     if (!bIndex.includes(k)) {
       tmp.push(routes[k])
@@ -22,7 +22,7 @@ test(`Reorganize an array based on it's content, we want all B at the end`, t =>
       bRoutes.push(routes[k])
     }
   }
-  console.log('tmp', tmp)
+  // console.log('tmp', tmp)
   const finalRoutes = tmp.concat(bRoutes)
 
   t.deepEqual(finalRoutes, ['A','F', 'E', 'D', 'B', 'B'])

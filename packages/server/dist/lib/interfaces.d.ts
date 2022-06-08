@@ -36,6 +36,7 @@ export interface UwsRouteSetup {
     type: string;
     path: string;
     handler: UwsRouteHandler | WebSocketBehavior;
+    propertyName?: string;
 }
 export interface UwsParsedResult extends UwsRespondBody {
     res: HttpResponse;
