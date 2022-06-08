@@ -424,12 +424,7 @@ export class FastApi implements FastApiInterface {
     type: string,
     path: string,
   ): void {
-    const entry = {
-      type,
-      name: propertyName,
-      params: args,
-      route: path
-    }
+    const entry = { type, name: propertyName, params: args, route: path }
     this._routeForContract.push(entry as unknown as JsonqlProcessedEntry)
   }
 
@@ -760,7 +755,7 @@ export class FastApi implements FastApiInterface {
     // debug('call _serveContract') // @BUG if I remove this then it doens't work???
     Promise.resolve(
       isDev ?
-          this._contract.output() :
+          this._contract.outputPublic(this._validators) :
           this._config.getConfig(`${CONTRACT_KEY}.${CACHE_DIR}`)
             .then((cacheDir: string) => this._contract.serve(cacheDir))
     ).then((json: UwsStringPairObj) => {

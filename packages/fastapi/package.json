@@ -37,7 +37,7 @@
   "license": "ISC",
   "dependencies": {
     "@jsonql/ast": "^0.8.6",
-    "@jsonql/contract": "^0.10.0",
+    "@jsonql/contract": "^0.10.1",
     "@jsonql/errors": "^0.8.0",
     "@jsonql/utils": "^0.7.6",
     "@jsonql/validators": "^0.8.0",
@@ -60,7 +60,7 @@
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "ava": "^4.3.0",
-    "esbuild": "^0.14.42",
+    "esbuild": "^0.14.43",
     "esbuild-register": "^3.3.3",
     "eslint": "^8.17.0",
     "node-fetch": "^3.2.5",
