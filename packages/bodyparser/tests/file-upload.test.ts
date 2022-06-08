@@ -4,16 +4,13 @@ import * as fs from 'fs'
 import { join } from 'path'
 // import FormData from 'form-data'
 import rimraf from 'rimraf'
-
-import { sendFile } from '../dev/send-file'
+import { sendFile } from './fixtures/send-file'
 import {
   createApp,
   shutdownServer,
   writeBufferToFile
-} from '../dist'
-
-import { uploadHandler } from '@velocejs/bodyparser'
-
+} from '@velocejs/server'
+import { uploadHandler } from '../src'
 import { HttpResponse } from '../dist/types'
 
 let listenSocket: any = null
@@ -47,13 +44,14 @@ test.after(()=>{
 
 
 test(`should able to capture the uploaded file and write to dist`, async (t) => {
-  t.plan(1)
+  t.plan(2)
   const response = await sendFile(
     `http://localhost:${port}/upload`,
     join(__dirname, 'fixtures', 'test.txt')
   )
   const result = await response.text()
   // console.log('RESPONSE', result)
-
+  t.truthy(result)
+  
   t.true(fs.existsSync(outFile))
 })
