@@ -45,6 +45,8 @@ export declare class FastApi implements FastApiInterface {
     private _bodyParser;
     /** fetch the bodyParser config */
     private _getBodyParserConfig;
+    /** this is split out from _prepareValidator */
+    private _prepareValidationFn;
     /** take this out from above to keep related code in one place */
     private _prepareValidator;
     /** get call after the bodyParser, and prepare for the operation */

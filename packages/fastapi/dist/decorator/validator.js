@@ -18,6 +18,8 @@ options) {
                 [constants_1.OPTIONS_KEY]: options || {}
             };
         }
+        // console.log('------------------ validator -----------------------')
+        // console.dir(existingMap, { depth: null })
         Reflect.defineMetadata(keys_1.validationKey, existingMap, target);
     };
 }

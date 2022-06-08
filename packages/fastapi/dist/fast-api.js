@@ -192,6 +192,9 @@ class FastApi {
     // onAbortedHandler?: string // take out
     ) {
         const handler = this[propertyName];
+        // @NOTE we need to prepare the validator here before it gets hit
+        // otherwise the validation info is not getting register by validators
+        const validateFn = this._prepareValidationFn(propertyName, validationInput);
         return async (res, req) => {
             // @BUG if we add this here, it will just hang for a while but the 500 never reported
             res.onAborted(() => {
@@ -203,7 +206,7 @@ class FastApi {
                 this._bodyParser(dynamicRoute),
                 this._prepareCtx(propertyName, res, dynamicRoute),
                 this._handleProtectedRoute(propertyName),
-                this._prepareValidator(propertyName, argsList, validationInput),
+                this._prepareValidator(validateFn, argsList),
                 async (ctx) => {
                     const { type, args } = ctx;
                     return this._handleContent(args, handler, type, propertyName);
@@ -238,24 +241,24 @@ class FastApi {
             throw new Error(err);
         });
     }
-    /** take this out from above to keep related code in one place */
-    _prepareValidator(propertyName, argsList, validationInput) {
-        let validateFn;
+    /** this is split out from _prepareValidator */
+    _prepareValidationFn(propertyName, validationInput) {
         // first need to check if they actually apply the @Validate decorator
         if (!validationInput) {
             debug(`skip validation --> ${propertyName}`);
             // return a dummy handler - we need to package it up for consistency!
-            validateFn = async (values) => values; //  we don't need to do anyting now
+            return async (values) => values; //  we don't need to do anyting now
         }
-        else {
-            const vali = this._validators.getValidator(propertyName);
-            // @NOTE we ditch the entire createValidator and let the Validators class to deal with it
-            if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
-                debug('addValidationRules', validationInput[constants_1.RULES_KEY]);
-                vali.addValidationRules(validationInput[constants_1.RULES_KEY]);
-            }
-            validateFn = vali.validate;
+        const validator = this._validators.getValidator(propertyName);
+        // @NOTE we ditch the entire createValidator and let the Validators class to deal with it
+        if (validationInput[constants_1.RULES_KEY] !== constants_1.RULE_AUTOMATIC) {
+            debug('addValidationRules', validationInput[constants_1.RULES_KEY]);
+            validator.addValidationRules(validationInput[constants_1.RULES_KEY]);
         }
+        return validator.validate;
+    }
+    /** take this out from above to keep related code in one place */
+    _prepareValidator(validateFn, argsList) {
         const argNames = argsList.map(arg => arg.name);
         return async (ctx) => {
             const args = this._applyArgs(argNames, argsList, ctx);
@@ -279,12 +282,7 @@ class FastApi {
     }
     /** just wrap this together to make it look neater */
     _prepareRouteForContract(propertyName, args, type, path) {
-        const entry = {
-            type,
-            name: propertyName,
-            params: args,
-            route: path
-        };
+        const entry = { type, name: propertyName, params: args, route: path };
         this._routeForContract.push(entry);
     }
     /** binding method to the uws server */
@@ -563,7 +561,7 @@ class FastApi {
     $_serveContract() {
         // debug('call _serveContract') // @BUG if I remove this then it doens't work???
         Promise.resolve(constants_1.isDev ?
-            this._contract.output() :
+            this._contract.outputPublic(this._validators) :
             this._config.getConfig(`${config_1.CONTRACT_KEY}.${config_1.CACHE_DIR}`)
                 .then((cacheDir) => this._contract.serve(cacheDir))).then((json) => {
             debug('_serveContract contract:', json);
