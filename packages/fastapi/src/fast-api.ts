@@ -315,6 +315,9 @@ export class FastApi implements FastApiInterface {
     // onAbortedHandler?: string // take out
   ): UwsRouteHandler {
     const handler = this[propertyName]
+    // @NOTE we need to prepare the validator here before it gets hit
+    // otherwise the validation info is not getting register by validators
+    const validateFn = this._prepareValidationFn(propertyName, validationInput)
 
     return async (res: HttpResponse, req: HttpRequest) => {
       // @BUG if we add this here, it will just hang for a while but the 500 never reported
@@ -322,13 +325,12 @@ export class FastApi implements FastApiInterface {
         res.writeStatus('500')
         res.end()
       })
-
       // @BUG this is still a bit problematic when error happens inside, the catch has no effect
       this._handleMiddlewares([
         this._bodyParser(dynamicRoute),
         this._prepareCtx(propertyName, res, dynamicRoute),
         this._handleProtectedRoute(propertyName),
-        this._prepareValidator(propertyName, argsList, validationInput),
+        this._prepareValidator(validateFn, argsList),
         async (ctx: VeloceCtx) => {
           const { type, args } = ctx
           return this._handleContent(args, handler, type as string, propertyName)
@@ -368,27 +370,31 @@ export class FastApi implements FastApiInterface {
       })
   }
 
-  /** take this out from above to keep related code in one place */
-  private _prepareValidator(
+  /** this is split out from _prepareValidator */
+  private _prepareValidationFn(
     propertyName: string,
-    argsList: Array<ArgsListType>,
     validationInput?: JsonqlValidationRule, // this is the raw rules input by dev
-  ) {
-    let validateFn: ValidateFn
+  ): ValidateFn {
     // first need to check if they actually apply the @Validate decorator
     if (!validationInput) {
       debug(`skip validation --> ${propertyName}`)
       // return a dummy handler - we need to package it up for consistency!
-      validateFn = async (values: unknown[]) => values //  we don't need to do anyting now
-    } else {
-      const vali = this._validators.getValidator(propertyName)
-      // @NOTE we ditch the entire createValidator and let the Validators class to deal with it
-      if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
-        debug('addValidationRules', validationInput[RULES_KEY])
-        vali.addValidationRules(validationInput[RULES_KEY])
-      }
-      validateFn = vali.validate
+      return async (values: unknown[]) => values //  we don't need to do anyting now
     }
+    const validator = this._validators.getValidator(propertyName)
+    // @NOTE we ditch the entire createValidator and let the Validators class to deal with it
+    if (validationInput[RULES_KEY] !== RULE_AUTOMATIC) {
+      debug('addValidationRules', validationInput[RULES_KEY])
+      validator.addValidationRules(validationInput[RULES_KEY])
+    }
+    return validator.validate
+  }
+
+  /** take this out from above to keep related code in one place */
+  private _prepareValidator(
+    validateFn: ValidateFn,
+    argsList: Array<ArgsListType>
+  ) {
     const argNames = argsList.map(arg => arg.name)
 
     return async (ctx: VeloceCtx) => {

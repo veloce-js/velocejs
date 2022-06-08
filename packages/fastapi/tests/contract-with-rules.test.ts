@@ -15,9 +15,7 @@ let url: string
 let contract
 test.before(async () => {
     api = new ApiWithContract()
-    await api.$start()
-    const info = api.$fastApiInfo
-    url = `http://localhost:${info.port}`
+    url = await api.$start()
     // we need to grab the contract first
     const contractUrl = `${url}${VELOCE_DEFAULTS.contract.path}`
     // console.log('contract url', contractUrl)
@@ -31,20 +29,12 @@ test.after(() => {
   removeSync(join(__dirname, 'fixtures', 'contract', 'tmp'))
 })
 
-test(`Testing API with config and contract plus excluded`, t => {
+test(`Testing API with config and contract with Validation rules`, t => {
   const _contract = contract['data']
-  console.dir(_contract, { depth: null })
-  t.false(!!_contract.filter((data:any) => data.route === '/not-here-route' ).length)
-  // console.dir(json, { depth: null })
-  // should have a ws route here
-  t.true(!!_contract.filter((data: any) => data.method === 'ws').length)
-})
+  // console.dir(_contract, { depth: null })
+  const postEntry = _contract.filter((c: any) => c.name === 'post')[0]
 
-test.skip(`Testing the dynamic route with spread parameter`, async t => {
-  t.plan(1)
+  t.true(postEntry.params.filter((param: any) => param.rules).length > 0)
 
-  const res = await Fetch(`${url}/archive/2022/5/16`)
-  const txt = await res.text()
-
-  t.is('2022-5-16', txt)
+  // t.truthy(_contract)
 })

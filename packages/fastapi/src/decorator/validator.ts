@@ -29,6 +29,9 @@ export function Validate(
         [OPTIONS_KEY]: options || {}
       }
     }
+    // console.log('------------------ validator -----------------------')
+    // console.dir(existingMap, { depth: null })
+
     Reflect.defineMetadata(validationKey, existingMap, target)
   }
 }
