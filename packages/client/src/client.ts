@@ -3,8 +3,10 @@ import type { TransportAsyncFunc, GenericKeyValue } from './types'
 import UrlPatternLib from 'url-pattern'
 // this could be problematic if the use the config to change the url
 import {
-  CONTRACT_REQUEST_METHODS
-} from '@jsonql/constants'
+  CONTRACT_REQUEST_METHOD,
+  DEFAULT_CONTRACT_PATH,
+  WEBSOCKET_METHOD,
+} from './constants'
 
 export class VeloceClient {
   private _isAppReady: Promise<GenericKeyValue>
@@ -14,9 +16,12 @@ export class VeloceClient {
   // hold all the generate methods
   public methods: GenericKeyValue = {}
   // assign the transport method on init
-  constructor(protected _transportFn: TransportAsyncFunc, options?: GenericKeyValue) {
+  constructor(
+    protected _transportFn: TransportAsyncFunc,
+    options?: GenericKeyValue
+  ) {
     this._options = options || {
-      contractUrl: '/veloce/contract'
+      contractUrl: DEFAULT_CONTRACT_PATH
     }
     this._isAppReady = new Promise((resolver, rejecter) => {
       this._isSetupSuccess = resolver
@@ -40,7 +45,7 @@ export class VeloceClient {
   private async _getContract(): Promise<GenericKeyValue> {
     return this._transportFn(
       this._options.contractUrl,
-      CONTRACT_REQUEST_METHODS[0]
+      CONTRACT_REQUEST_METHOD
     )
   }
 
@@ -53,7 +58,7 @@ export class VeloceClient {
     // @TODO how to make this callable better interface
     return async (...args: any) => {
       let _args = this._createArgs(args, params)
-      if (method !== 'ws') {
+      if (method !== WEBSOCKET_METHOD) {
         if (route.indexOf(':') > -1) {
           const urlLib = new UrlPatternLib(route)
           route = urlLib.stringify(_args)
