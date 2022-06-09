@@ -249,7 +249,6 @@ export class FastApi implements FastApiInterface {
     if (!config['open']) {
       throw new Error(`You must provide an open method for your websocket setup!`)
     }
-
     return config
   }
 
@@ -280,7 +279,7 @@ export class FastApi implements FastApiInterface {
 
   /** check if there is a dynamic route and prepare it */
   private _prepareDynamicRoute(tmpSet: WeakSet<object>) {
-    // @TODO we don't need to create the object anymore, its been handle by bodyParser
+  // @TODO we don't need to create the object anymore, its been handle by bodyParser
     return (
       type: string,
       path: string,
@@ -350,18 +349,23 @@ export class FastApi implements FastApiInterface {
   }
 
   /** fetch the bodyParser config */
-  private async _getBodyParserConfig(dynamicRoute?: string): Promise<BodyParserConfig> {
+  private async _getBodyParserConfig(
+    dynamicRoute?: string
+  ): Promise<BodyParserConfig> {
     return this._config.getConfig()
       .then((config: {[key: string]: string}) => {
         debug('config', config)
-        const bodyParserConfig = config[BODYPARSER_KEY] || VeloceConfig.getDefaults(BODYPARSER_KEY)
+        const bodyParserConfig = config[BODYPARSER_KEY]
+                               || VeloceConfig.getDefaults(BODYPARSER_KEY)
         if (dynamicRoute) { // this is a dynamic route
           bodyParserConfig[URL_PATTERN_OBJ] = this._dynamicRoutes.get(dynamicRoute)
         }
         debug('bodyParserConfig', bodyParserConfig)
         return {
           config: bodyParserConfig,
-          onAborted: () => debug(`@TODO`, 'From fastApi - need to define our own onAbortedHandler')
+          onAborted: () => debug(
+            `@TODO`, 'From fastApi - need to define our own onAbortedHandler'
+          )
         }
       })
       .catch((err: string) => {
@@ -625,7 +629,9 @@ export class FastApi implements FastApiInterface {
     if (isDebug) {
       console.time('FastApiStartUp')
     }
-    const routes: Array<RouteMetaInfo> = mergeInfo(astMap, existingRoutes, validations, protectedRoutes)
+    const routes: Array<RouteMetaInfo> = mergeInfo(
+      astMap, existingRoutes, validations, protectedRoutes
+    )
     this._initValidators(astMap, validations)
     this._uwsInstance.autoStart = false
     // @0.4.0 we change this to a chain promise start up sequence

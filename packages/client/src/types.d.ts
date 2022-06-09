@@ -6,7 +6,9 @@ export type GenericKeyValue = {
 
 export type AbortedSignal = {
   aborted: boolean
-  reason: string
+  reason: string,
+  addEventListener: any
+  removeEventListener: any
 }
 
 export type InitOptions = Partial<{
@@ -26,7 +28,7 @@ export type InitOptions = Partial<{
 }>
 
 export type FetchResponseOptions = Readonly<{
-  body: ReadableStream
+  body: ReadableStream<any> | null
   bodyUsed: boolean
   headers: GenericKeyValue // replace with Headers object later
   ok: boolean
@@ -44,7 +46,7 @@ export type FetchResponseMethods = {
   clone: () => FetchResponse
   error: () => FetchResponse
   formData: () => Promise<FormData>
-  json: () => Promise<JSON>
+  json: () => PromiseLike<JSON> | JSON
   redirect: () => FetchResponse
   text: () => Promise<string>
 }

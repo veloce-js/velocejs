@@ -1,7 +1,6 @@
 import { FastApi, Rest, Get, Post, ServeStatic, Websocket, Validate } from '@velocejs/fastapi'
 import { join } from 'node:path'
 // @NOTE something weird the Date.now() inline never create a value that pass to generator
-const NOW = Date.now()
 
 @Rest
 export class ApiWithContract extends FastApi {
