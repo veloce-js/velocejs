@@ -7,14 +7,13 @@ import {
   JsonqlContractTemplate,
   JsonqlContractEntry,
   FetchMethod,
-  JsonqlValidationRule,
   ValidateFn,
   ArgsListType,
   JsonqlPropertyParamMap,
   GenericKeyValue,
 } from './types'
 import { ValidatorsClient } from '@jsonql/validators/dist/validators-client'
-
+import { arrToObj } from '@jsonql/utils/dist/object'
 // main
 export class HttpClient {
 
@@ -22,7 +21,7 @@ export class HttpClient {
 
   constructor(
     _contract: JsonqlContractTemplate,
-    private _fetch: FetchMethod
+    // private _fetch: FetchMethod
   ) {
     this._validators = this._prepareValidators(_contract)
 
@@ -30,25 +29,36 @@ export class HttpClient {
       const propertyName = entry.name as string
       const validateFn = this._getValidatorFn(entry)
       // create the function
-      this[propertyName] = (...args: any[]) => {
+      this[propertyName] = (...args: ArgsListType[]) => {
         console.log('pass the arguments', args, 'to call', entry)
         // set validator
         return validateFn(args)
                   .then((result: GenericKeyValue) => {
-
+                    return this._executeTransport(entry, result)
                   })
-        // set http call
       }
     })
+  }
+
+  /** create the http calls */
+  private _executeTransport(
+    entry: JsonqlContractEntry,
+    result: GenericKeyValue
+  ) {
+    console.log(entry)
+    console.log(result)
+    // now call fetch
   }
 
   /** init the validators instance */
   private _prepareValidators(contract: JsonqlContractTemplate) {
     return new ValidatorsClient(
-      contract.data.map((data: JsonqlContractEntry) => ({
-        [data.name as string]: data.params as JsonqlPropertyParamMap[]
-      }))
-      .reduce((a, b) => Object.assign(a, b), {})
+      arrToObj(
+        contract.data,
+        (data: JsonqlContractEntry) => ({
+          [data.name as string]: data.params as JsonqlPropertyParamMap[]
+        })
+      )
     )
   }
 
@@ -58,12 +68,9 @@ export class HttpClient {
   ): ValidateFn {
     if (entry && entry.params && entry.params.length > 0) {
       const validator = this._validators.getValidator(entry.name as string)
-      const rules = entry.params.map((params: any) => {
-        if (params.rules) {
-          return { [ params.name ]: params.rules }
-        }
-        return {}
-      }).reduce((a, b)=> Object.assign(a, b), {})
+      const rules = arrToObj(entry.params, (params: JsonqlPropertyParamMap) => (
+        params.rules ? { [ params.name ]: params.rules } : {}
+      ))
       validator.addValidationRules(rules)
 
       return validator.validate

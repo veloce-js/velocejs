@@ -1,2 +1,2 @@
 // start your project here
-export { Client } from './client'
+export { HttpClient } from './http-client'
