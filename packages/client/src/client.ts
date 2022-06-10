@@ -1,95 +1,74 @@
-/** the velocejs client to connect to the backend */
-import type { TransportAsyncFunc, GenericKeyValue } from './types'
-import UrlPatternLib from 'url-pattern'
-// this could be problematic if the use the config to change the url
+/*
+In this version we only take the static contract files here
+if you want dynamic then create a wrapper around it.
+The reason is since we need to build the client side anyway
+*/
 import {
-  CONTRACT_REQUEST_METHOD,
-  DEFAULT_CONTRACT_PATH,
-  WEBSOCKET_METHOD,
-} from './constants'
+  JsonqlContractTemplate,
+  JsonqlContractEntry,
+  FetchMethod,
+  JsonqlValidationRule,
+  ValidateFn,
+  ArgsListType,
+  JsonqlPropertyParamMap,
+  GenericKeyValue,
+} from './types'
+import { ValidatorsClient } from '@jsonql/validators/dist/validators-client'
 
-export class VeloceClient {
-  private _isAppReady: Promise<GenericKeyValue>
-  private _isSetupSuccess!: (value: GenericKeyValue) => void
-  private _isSetupFail!: (value: Error) => void
-  private _options: GenericKeyValue
-  // hold all the generate methods
-  public methods: GenericKeyValue = {}
-  // assign the transport method on init
+// main
+export class HttpClient {
+
+  protected _validators: ValidatorsClient
+
   constructor(
-    protected _transportFn: TransportAsyncFunc,
-    options?: GenericKeyValue
+    _contract: JsonqlContractTemplate,
+    private _fetch: FetchMethod
   ) {
-    this._options = options || {
-      contractUrl: DEFAULT_CONTRACT_PATH
-    }
-    this._isAppReady = new Promise((resolver, rejecter) => {
-      this._isSetupSuccess = resolver
-      this._isSetupFail = rejecter
-      this._setup()
-        .then(methods => {
-          this._isSetupSuccess(methods)
-        })
-        .catch((e:Error) => {
-          this._isSetupFail(e)
-        })
+    this._validators = this._prepareValidators(_contract)
+
+    _contract.data.map((entry: JsonqlContractEntry) => {
+      const propertyName = entry.name as string
+      const validateFn = this._getValidatorFn(entry)
+      // create the function
+      this[propertyName] = (...args: any[]) => {
+        console.log('pass the arguments', args, 'to call', entry)
+        // set validator
+        return validateFn(args)
+                  .then((result: GenericKeyValue) => {
+
+                  })
+        // set http call
+      }
     })
   }
 
-  /** main method to get the methods */
-  public async client() {
-    return this.methods || this._isAppReady
-  }
-
-  /** The first fetch method */
-  private async _getContract(): Promise<GenericKeyValue> {
-    return this._transportFn(
-      this._options.contractUrl,
-      CONTRACT_REQUEST_METHOD
+  /** init the validators instance */
+  private _prepareValidators(contract: JsonqlContractTemplate) {
+    return new ValidatorsClient(
+      contract.data.map((data: JsonqlContractEntry) => ({
+        [data.name as string]: data.params as JsonqlPropertyParamMap[]
+      }))
+      .reduce((a, b) => Object.assign(a, b), {})
     )
   }
 
-  /** this will create the actual call method */
-  private _createMethod(
-    route: string,
-    method: string,
-    params: Array<GenericKeyValue>
-  ) {
-    // @TODO how to make this callable better interface
-    return async (...args: any) => {
-      let _args = this._createArgs(args, params)
-      if (method !== WEBSOCKET_METHOD) {
-        if (route.indexOf(':') > -1) {
-          const urlLib = new UrlPatternLib(route)
-          route = urlLib.stringify(_args)
-          // clear out the _args
-          _args = {}
+  /** create the validate or fake method */
+  private _getValidatorFn(
+    entry: JsonqlContractEntry
+  ): ValidateFn {
+    if (entry && entry.params && entry.params.length > 0) {
+      const validator = this._validators.getValidator(entry.name as string)
+      const rules = entry.params.map((params: any) => {
+        if (params.rules) {
+          return { [ params.name ]: params.rules }
         }
-        // when this route using the dynamic route we need to prepare it
-        // new UrlPattern('/api/users(/:id)')
-        return this._transportFn(route, method, _args)
-      } else {
-        console.info(`@TODO setup ws connection for`, route)
-      }
-      return false
+        return {}
+      }).reduce((a, b)=> Object.assign(a, b), {})
+      validator.addValidationRules(rules)
+
+      return validator.validate
     }
-  }
-
-  /** put the value in the params */
-  private _createArgs(args: any[], params: any[]) {
-    return params.map((param: any, i: number) => (
-      {[param.name]: args[i]}
-    )).reduce((a: any, b: any) => Object.assign(a,b), {})
-  }
-
-  /** building the client with contract */
-  public async _setup() {
-    return this._getContract()
-      .then((reader: any) => {
-        return reader.data.map((d: any) => (
-          {[d.name]: this._createMethod(d.route, d.method, d.params)}
-        ))
-        .reduce((a: any, b: any) => Object.assign(a,b), this.methods)
-      })
+    // return a dummy handler - we need to package it up for consistency!
+    return async (values: unknown[]) => values //  we don't need to do anyting now
   }
 }

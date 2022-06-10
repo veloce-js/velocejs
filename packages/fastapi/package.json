@@ -37,10 +37,10 @@
   "license": "ISC",
   "dependencies": {
     "@jsonql/ast": "^0.8.6",
-    "@jsonql/contract": "^0.10.1",
+    "@jsonql/contract": "^0.10.2",
     "@jsonql/errors": "^0.8.0",
-    "@jsonql/utils": "^0.7.6",
-    "@jsonql/validators": "^0.8.0",
+    "@jsonql/utils": "^0.8.0",
+    "@jsonql/validators": "^0.8.1",
     "@velocejs/bodyparser": "workspace:^0.7.0",
     "@velocejs/config": "workspace:^0.5.2",
     "@velocejs/server": "workspace:^0.9.0",
@@ -63,14 +63,14 @@
     "esbuild": "^0.14.43",
     "esbuild-register": "^3.3.3",
     "eslint": "^8.17.0",
-    "node-fetch": "^3.2.5",
+    "node-fetch": "^3.2.6",
     "nyc": "^15.1.0",
     "open": "^8.4.0",
     "rimraf": "^3.0.2",
     "swc-node": "^1.0.0",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3",
-    "ws": "^8.7.0"
+    "ws": "^8.8.0"
   },
   "ava": {
     "verbose": true,

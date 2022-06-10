@@ -40,7 +40,7 @@
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@jsonql/utils": "^0.7.6",
+    "@jsonql/utils": "^0.8.0",
     "debug": "^4.3.4",
     "mime-types": "^2.1.35",
     "tslib": "^2.4.0",
@@ -56,16 +56,16 @@
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "ava": "^4.3.0",
-    "esbuild": "^0.14.42",
+    "esbuild": "^0.14.43",
     "esbuild-register": "^3.3.3",
     "eslint": "^8.17.0",
     "fs-extra": "^10.1.0",
-    "node-fetch": "^3.2.5",
+    "node-fetch": "^3.2.6",
     "nyc": "^15.1.0",
     "open": "^8.4.0",
     "rimraf": "^3.0.2",
     "typescript": "^4.7.3",
-    "ws": "^8.7.0"
+    "ws": "^8.8.0"
   },
   "ava": {
     "verbose": false,

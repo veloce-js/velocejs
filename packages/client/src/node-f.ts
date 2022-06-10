@@ -5,6 +5,7 @@ import type {
   RequestInit,
   Response
 } from 'node-fetch/@types/index'
+export { Response } 
 
 // main
 export default async function main(url: string, options?: RequestInit) {
@@ -18,5 +19,5 @@ export default async function main(url: string, options?: RequestInit) {
   */
   // just stub it for now
   return fetch(url, options)
-            .then((res: Response) => res.json())
+            // .then((res: Response) => res.json())
 }

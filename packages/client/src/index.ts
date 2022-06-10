@@ -1,2 +1,2 @@
 // start your project here
-export { VeloceClient } from './client'
+export { Client } from './client'

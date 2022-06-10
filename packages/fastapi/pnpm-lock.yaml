@@ -3,10 +3,10 @@ lockfileVersion: 5.4
 specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/ast': ^0.8.6
-  '@jsonql/contract': ^0.10.1
+  '@jsonql/contract': ^0.10.2
   '@jsonql/errors': ^0.8.0
-  '@jsonql/utils': ^0.7.6
-  '@jsonql/validators': ^0.8.0
+  '@jsonql/utils': ^0.8.0
+  '@jsonql/validators': ^0.8.1
   '@swc/cli': ^0.1.57
   '@swc/core': ^1.2.197
   '@types/debug': ^4.1.7
@@ -25,7 +25,7 @@ specifiers:
   eslint: ^8.17.0
   fs-extra: ^10.1.0
   mime-types: ^2.1.35
-  node-fetch: ^3.2.5
+  node-fetch: ^3.2.6
   nyc: ^15.1.0
   open: ^8.4.0
   reflect-metadata: ^0.1.13
@@ -33,14 +33,14 @@ specifiers:
   swc-node: ^1.0.0
   ts-node: ^10.8.1
   typescript: ^4.7.3
-  ws: ^8.7.0
+  ws: ^8.8.0
 
 dependencies:
   '@jsonql/ast': 0.8.6
-  '@jsonql/contract': 0.10.1
+  '@jsonql/contract': 0.10.2
   '@jsonql/errors': 0.8.0
-  '@jsonql/utils': 0.7.6
-  '@jsonql/validators': 0.8.0
+  '@jsonql/utils': 0.8.0
+  '@jsonql/validators': 0.8.1
   '@velocejs/bodyparser': link:../bodyparser
   '@velocejs/config': link:../config
   '@velocejs/server': link:../server
@@ -63,14 +63,14 @@ devDependencies:
   esbuild: 0.14.43
   esbuild-register: 3.3.3_esbuild@0.14.43
   eslint: 8.17.0
-  node-fetch: 3.2.5
+  node-fetch: 3.2.6
   nyc: 15.1.0
   open: 8.4.0
   rimraf: 3.0.2
   swc-node: 1.0.0_typescript@4.7.3
   ts-node: 10.8.1_vslk2fq76uzvudesky66pvr6g4
   typescript: 4.7.3
-  ws: 8.7.0
+  ws: 8.8.0
 
 packages:
 
@@ -366,12 +366,12 @@ packages:
       - supports-color
     dev: false
 
-  /@jsonql/contract/0.10.1:
-    resolution: {integrity: sha512-w8EJrKP+NxC2wGpTs9RZGmw+qZl9ZtsFio+4ae+d9K8wHgHJVJapwVPWOZzi5ZXtzcsSuVpuVCBLGCY3d9dALQ==}
+  /@jsonql/contract/0.10.2:
+    resolution: {integrity: sha512-7yNle+knjNry7mQDpQV7RYeKfOx8c5X5QLYt0DIVv6ue49BBqySyenrDsaeDVTFEFEaEOVDD2sXbIGs8Re2w2Q==}
     dependencies:
       '@jsonql/ast': 0.8.6
       '@jsonql/errors': 0.8.0
-      '@jsonql/utils': 0.7.6
+      '@jsonql/utils': 0.8.0
       debug: 4.3.4
       fs-extra: 10.1.0
       tslib: 2.4.0
@@ -389,31 +389,37 @@ packages:
       lodash-es: 4.17.21
     dev: false
 
-  /@jsonql/validator-core/0.10.1:
-    resolution: {integrity: sha512-GJ8/eyTgQp5njIg+jo1tzzkstx8MU4Pn74XC7ZbD924dfiXRuCcxhZfftgZyacbOoPjMVQUAfVNG4k1MnctSvQ==}
+  /@jsonql/utils/0.8.0:
+    resolution: {integrity: sha512-YSndOpdTZhx7Ubly7YiH6uWjO/6x88hd6ME1kVeSTQ5I5Jes5LGAwq3lstmpp6mGH8zZevsxGvL6XbxCFgFHAA==}
     dependencies:
-      '@jsonql/errors': 0.8.0
-      '@jsonql/utils': 0.7.6
+      lodash-es: 4.17.21
     dev: false
 
-  /@jsonql/validator/0.8.6:
-    resolution: {integrity: sha512-F4vCx+FqgQV4SQUHUlEDTZd1ccJg14K4Mb1NNnWGvVbXRgkaqosvaE+3G/qYSrGTMqybut2a66YSgRcSuuNZQA==}
+  /@jsonql/validator-core/0.10.2:
+    resolution: {integrity: sha512-akPkcFTxdMXvjN7p80r28TmgdG+vZGuGLOKgqMkYcVQfbuvsg4O77Fr6DC/Jm9hGyTzj8PoLpRWhhUbWVS8PBg==}
     dependencies:
       '@jsonql/errors': 0.8.0
-      '@jsonql/utils': 0.7.6
-      '@jsonql/validator-core': 0.10.1
+      '@jsonql/utils': 0.8.0
+    dev: false
+
+  /@jsonql/validator/0.8.7:
+    resolution: {integrity: sha512-7lIKIzGtrSQ6k9aLLPz9Mp9bkF5d7+T2gkxG2oCauhi3faiwGoCfmC76QoCur1ur3Zdehy7n03IkK83M7AzaJA==}
+    dependencies:
+      '@jsonql/errors': 0.8.0
+      '@jsonql/utils': 0.8.0
+      '@jsonql/validator-core': 0.10.2
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /@jsonql/validators/0.8.0:
-    resolution: {integrity: sha512-7JwtTOd20vqgX0dUXtNPi9FP+ONIMMZgxwc4OOUhg8pBAKl9T6UfgPLzkQOdMBukgv7e9MiK0Dc+0ofBJKa/AA==}
+  /@jsonql/validators/0.8.1:
+    resolution: {integrity: sha512-fwzWvqhEsPSvuZObNZwsZKLOk3//lLARl7/IYFMhcF+I1EAPaLH8cb0OGSrlDtCi//Q5wvO29v/UFfbM4MfYfQ==}
     dependencies:
       '@jsonql/errors': 0.8.0
-      '@jsonql/utils': 0.7.6
-      '@jsonql/validator': 0.8.6
-      '@jsonql/validator-core': 0.10.1
+      '@jsonql/utils': 0.8.0
+      '@jsonql/validator': 0.8.7
+      '@jsonql/validator-core': 0.10.2
       fs-extra: 10.1.0
       glob: 8.0.3
     transitivePeerDependencies:
@@ -1862,7 +1868,7 @@ packages:
     dev: false
 
   /fs.realpath/1.0.0:
-    resolution: {integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=}
+    resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
 
   /fsevents/2.3.2:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
@@ -2031,7 +2037,7 @@ packages:
     dev: true
 
   /inflight/1.0.6:
-    resolution: {integrity: sha1-Sb1jMdfQLQwJvJEKEHW6gWW1bfk=}
+    resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
     dependencies:
       once: 1.4.0
       wrappy: 1.0.2
@@ -2412,8 +2418,8 @@ packages:
     engines: {node: '>=10.5.0'}
     dev: true
 
-  /node-fetch/3.2.5:
-    resolution: {integrity: sha512-u7zCHdJp8JXBwF09mMfo2CL6kp37TslDl1KP3hRGTlCInBtag+UO3LGVy+NF0VzvnL3PVMpA2hXh1EtECFnyhQ==}
+  /node-fetch/3.2.6:
+    resolution: {integrity: sha512-LAy/HZnLADOVkVPubaxHDft29booGglPFDr2Hw0J1AercRh01UiVFm++KMDnJeH9sHgNB4hsXPii7Sgym/sTbw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       data-uri-to-buffer: 4.0.0
@@ -2486,7 +2492,7 @@ packages:
     dev: true
 
   /once/1.4.0:
-    resolution: {integrity: sha1-WDsap3WWHUsROsF9nFC6753Xa9E=}
+    resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
     dependencies:
       wrappy: 1.0.2
 
@@ -3163,8 +3169,8 @@ packages:
       signal-exit: 3.0.7
     dev: true
 
-  /ws/8.7.0:
-    resolution: {integrity: sha512-c2gsP0PRwcLFzUiA8Mkr37/MI7ilIlHQxaEAtd0uNMbVMoy8puJyafRlm0bV9MbGSabUPeLrRRaqIBcFcA2Pqg==}
+  /ws/8.8.0:
+    resolution: {integrity: sha512-JDAgSYQ1ksuwqfChJusw1LSJ8BizJ2e/vVu5Lxjq3YvNJNlROv1ui4i+c/kUUrPheBvQl4c5UbERhTwKa6QBJQ==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
