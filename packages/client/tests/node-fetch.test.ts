@@ -31,7 +31,7 @@ test.after(() => {
 
 test(`TBD the client here`, async (t) => {
 
-  console.dir(client, { depth: null })
+  console.dir(client)
 
   t.pass()
 })

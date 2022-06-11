@@ -15,7 +15,7 @@ test(`You need to write some test`, t => {
 
   const jsonFile = JSON.stringify(jsonStr)
 
-  writeJsonSync(jsonOut, JSON.parse(jsonFile))
-  
+  // writeJsonSync(jsonOut, JSON.parse(jsonFile))
+
   t.truthy(jsonStr)
 })

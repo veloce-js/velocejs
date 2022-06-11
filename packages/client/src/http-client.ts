@@ -30,7 +30,7 @@ export class HttpClient {
       const propertyName = entry.name as string
       const validateFn = this._getValidatorFn(entry)
       // create the function
-      this[propertyName] = (...args: ArgsListType[]) => {
+      this[propertyName] = async (...args: ArgsListType[]) => {
         console.log('pass the arguments', args, 'to call', entry)
         // set validator
         return validateFn(args)
