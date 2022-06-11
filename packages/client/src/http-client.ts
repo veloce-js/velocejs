@@ -21,7 +21,8 @@ export class HttpClient {
 
   constructor(
     _contract: JsonqlContractTemplate,
-    // private _fetch: FetchMethod
+    // private _fetch: FetchMethod,
+    // private _host?: string
   ) {
     this._validators = this._prepareValidators(_contract)
 
