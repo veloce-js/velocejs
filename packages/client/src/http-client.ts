@@ -6,11 +6,11 @@ The reason is since we need to build the client side anyway
 import {
   JsonqlContractTemplate,
   JsonqlContractEntry,
-  // FetchMethod,
   ValidateFn,
   ArgsListType,
   JsonqlPropertyParamMap,
   GenericKeyValue,
+  HttpMethod,
 } from './types'
 import { WEBSOCKET_METHOD } from './constants'
 import { ValidatorsClient } from '@jsonql/validators/dist/validators-client'
@@ -25,8 +25,8 @@ export class HttpClient {
 
   constructor(
     contract: JsonqlContractTemplate,
-    // private _fetch: FetchMethod,
-    // private _host?: string
+    protected httpMethod: HttpMethod,
+    protected host = '/'
   ) {
     this._validators = this._prepareValidators(contract)
 
@@ -45,14 +45,14 @@ export class HttpClient {
         // set validator
         return validateFn(args)
                   .then((result: GenericKeyValue) => {
-                    return this._executeTransport(entry, result)
+                    return this._executeHttpCall(entry, result)
                   })
       }}[name]
     })
   }
 
   /** create the http calls */
-  private _executeTransport(
+  private _executeHttpCall(
     entry: JsonqlContractEntry,
     result: GenericKeyValue
   ) {

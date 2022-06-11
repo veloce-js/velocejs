@@ -51,6 +51,7 @@
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
+    "@jsonql/errors": "^0.8.0",
     "@types/debug": "^4.1.7",
     "@types/fs-extra": "^9.0.13",
     "@types/mime-types": "^2.1.1",

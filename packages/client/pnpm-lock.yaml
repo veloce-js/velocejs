@@ -3,6 +3,7 @@ lockfileVersion: 5.4
 specifiers:
   '@ava/typescript': ^3.0.1
   '@jsonql/contract': ^0.10.2
+  '@jsonql/errors': ^0.8.0
   '@jsonql/utils': ^0.8.0
   '@jsonql/validators': ^0.8.1
   '@types/debug': ^4.1.7
@@ -40,6 +41,7 @@ dependencies:
 
 devDependencies:
   '@ava/typescript': 3.0.1
+  '@jsonql/errors': 0.8.0
   '@types/debug': 4.1.7
   '@types/fs-extra': 9.0.13
   '@types/mime-types': 2.1.1
@@ -371,7 +373,6 @@ packages:
 
   /@jsonql/errors/0.8.0:
     resolution: {integrity: sha512-VEol9KuwNIXue23NwXanA0h2Zqx2JE5Hc9Y/4oafrp4KLYUhvh/Mw/sfezGefzsKRde+6XTuyZ+WCEvfAV5b1Q==}
-    dev: false
 
   /@jsonql/utils/0.7.6:
     resolution: {integrity: sha512-CSNVDdRMseJ/OD9fUGUZcfifR9Vfpfb4HA8frSdCdq4HGkDr6eIGS/6jMvqg8cl2dbpv05EWq5B3Sx+ceKhkOg==}
