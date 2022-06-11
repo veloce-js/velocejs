@@ -8,7 +8,8 @@ let contract: any
 test.before(async () => {
   api = new ApiWithContract()
   url = await api.$start()
-  contract = await fetch(url + '/veloce/contract')
+  const res = await fetch(url + '/veloce/contract')
+  contract = await res.json()
 })
 
 test.after(() => {

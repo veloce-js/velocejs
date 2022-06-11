@@ -6,7 +6,7 @@ The reason is since we need to build the client side anyway
 import {
   JsonqlContractTemplate,
   JsonqlContractEntry,
-  FetchMethod,
+  // FetchMethod,
   ValidateFn,
   ArgsListType,
   JsonqlPropertyParamMap,
