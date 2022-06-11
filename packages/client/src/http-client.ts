@@ -25,8 +25,8 @@ export class HttpClient {
 
   constructor(
     contract: JsonqlContractTemplate,
-    protected httpMethod: HttpMethod,
-    protected host = '/'
+    protected _httpMethod: HttpMethod,
+    protected _host = '/'
   ) {
     this._validators = this._prepareValidators(contract)
 
@@ -44,9 +44,9 @@ export class HttpClient {
         console.log('pass the arguments', args, 'to call', entry)
         // set validator
         return validateFn(args)
-                  .then((result: GenericKeyValue) => {
-                    return this._executeHttpCall(entry, result)
-                  })
+                  .then((result: GenericKeyValue) =>
+                    this._executeHttpCall(entry, result)
+                  )
       }}[name]
     })
   }
