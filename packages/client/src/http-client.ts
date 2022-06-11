@@ -12,32 +12,42 @@ import {
   JsonqlPropertyParamMap,
   GenericKeyValue,
 } from './types'
+import { WEBSOCKET_METHOD } from './constants'
 import { ValidatorsClient } from '@jsonql/validators/dist/validators-client'
 import { arrToObj } from '@jsonql/utils/dist/object'
+
 // main
 export class HttpClient {
-
+  // index signature
+  // [propertyName: string]: (...args: any[]) => Promise<GenericKeyValue>
+  // other properties
   protected _validators: ValidatorsClient
 
   constructor(
-    _contract: JsonqlContractTemplate,
+    contract: JsonqlContractTemplate,
     // private _fetch: FetchMethod,
     // private _host?: string
   ) {
-    this._validators = this._prepareValidators(_contract)
+    this._validators = this._prepareValidators(contract)
 
-    _contract.data.map((entry: JsonqlContractEntry) => {
-      const propertyName = entry.name as string
+    contract.data.forEach((entry: JsonqlContractEntry) => {
+      const { name, type } = entry
+      if (type === WEBSOCKET_METHOD) {
+        return // skip it
+      }
       const validateFn = this._getValidatorFn(entry)
-      // create the function
-      this[propertyName] = async (...args: ArgsListType[]) => {
+      // create the function as seen in
+      // https://stackoverflow.com/questions/5905492/dynamic-function-name-in-javascript
+      // its not amazing but at least we can see the name in console.log
+      // @TODO how to pass the type info to the arguments
+      this[name] = {[name]: async function(...args: ArgsListType[]) {
         console.log('pass the arguments', args, 'to call', entry)
         // set validator
         return validateFn(args)
                   .then((result: GenericKeyValue) => {
                     return this._executeTransport(entry, result)
                   })
-      }
+      }}[name]
     })
   }
 
