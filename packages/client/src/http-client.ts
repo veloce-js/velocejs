@@ -6,29 +6,22 @@ The reason is since we need to build the client side anyway
 import {
   JsonqlContractTemplate,
   JsonqlContractEntry,
-  ValidateFn,
   ArgsListType,
-  JsonqlPropertyParamMap,
   GenericKeyValue,
   HttpMethod,
 } from './types'
 import { WEBSOCKET_METHOD } from './constants'
-import { ValidatorsClient } from '@jsonql/validators/dist/validators-client'
-import { arrToObj } from '@jsonql/utils/dist/object'
+import { BaseClient } from './base-client'
 
 // main
-export class HttpClient {
-  // index signature
-  // [propertyName: string]: (...args: any[]) => Promise<GenericKeyValue>
-  // other properties
-  protected _validators: ValidatorsClient
+export class HttpClient extends BaseClient {
 
   constructor(
     contract: JsonqlContractTemplate,
     protected _httpMethod: HttpMethod,
     protected _host = '/'
   ) {
-    this._validators = this._prepareValidators(contract)
+    super(contract, host)
 
     contract.data.forEach((entry: JsonqlContractEntry) => {
       const { name, type } = entry
@@ -61,32 +54,4 @@ export class HttpClient {
     // now call fetch
   }
 
-  /** init the validators instance */
-  private _prepareValidators(contract: JsonqlContractTemplate) {
-    return new ValidatorsClient(
-      arrToObj(
-        contract.data,
-        (data: JsonqlContractEntry) => ({
-          [data.name as string]: data.params as JsonqlPropertyParamMap[]
-        })
-      )
-    )
-  }
-
-  /** create the validate or fake method */
-  private _getValidatorFn(
-    entry: JsonqlContractEntry
-  ): ValidateFn {
-    if (entry && entry.params && entry.params.length > 0) {
-      const validator = this._validators.getValidator(entry.name as string)
-      const rules = arrToObj(entry.params, (params: JsonqlPropertyParamMap) => (
-        params.rules ? { [ params.name ]: params.rules } : {}
-      ))
-      validator.addValidationRules(rules)
-
-      return validator.validate
-    }
-    // return a dummy handler - we need to package it up for consistency!
-    return async (values: unknown[]) => values //  we don't need to do anyting now
-  }
 }
