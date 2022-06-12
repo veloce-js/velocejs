@@ -54,11 +54,12 @@ export class HttpClient extends BaseClient {
     console.log(entry)
     console.log(result)
     // now call fetch
+    return result
   }
 
   /** The one call to handle all the traffics */
-  public comm(propertyName: string, params: any[]) {
-    return Reflect.apply(this[propertyName], this, params)
+  public comm(propertyName: string, params?: any[]) {
+    return Reflect.apply(this[propertyName], this, params || [])
   }
 
 }

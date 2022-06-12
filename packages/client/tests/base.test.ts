@@ -1,20 +1,37 @@
 import test from 'ava'
-import { writeJsonSync } from 'fs-extra'
-import { join } from 'node:path'
+// import fetch from '../src/node-f'
+import { ApiWithContract } from './fixtures/api-with-contract-with-rules'
+import ValidationError from '@jsonql/errors/dist/validation-error'
+// import { readJsonSync } from 'fs-extra'
+// import { join } from 'node:path'
+import { HttpClient } from '../src/http-client'
+import getClient from './fixtures/client'
 
-import jsonStr from './fixtures/contract/public-contract'
+let api: ApiWithContract
+let url: string
+// let contract: any
+let client: HttpClient
 
+test.before(async () => {
+  api = new ApiWithContract()
+  url = await api.$start()
+  console.log(url)
+  client = getClient(url)
+})
 
-const jsonOut = join(__dirname, 'fixtures', 'contract', 'public-contract.json')
+test.after(() => {
+  api.$stop()
+})
 
+test(`Should have a client that contains the same method as described in the contract`, async (t) => {
+  // @NOTE the way we call it to get around the non-exist member got to go into the doc
+  t.true(typeof client['post'] === 'function')
+})
 
-test(`dummy test to generate the correct contract file`, t => {
-
-  // const file = readFileSync(jsonStr)
-
-  const jsonFile = JSON.stringify(jsonStr)
-
-  writeJsonSync(jsonOut, JSON.parse(jsonFile))
-
-  t.truthy(jsonStr)
+test(`The dynamic generate method should able to perform validation`, async (t) => {
+  return client['post']('String title', 1001)
+                      .catch((error: ValidationError) => {
+                        t.is(error.message, 'string')
+                        t.deepEqual(error.detail, [1,0])
+                      })
 })

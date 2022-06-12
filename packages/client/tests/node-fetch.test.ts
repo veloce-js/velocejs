@@ -23,18 +23,15 @@ test.after(() => {
   api.$stop()
 })
 
-test(`Should have a client that contains the same method as described in the contract`, async (t) => {
-  // @NOTE this got to go into the doc
-  t.true(typeof client['post'] === 'function')
+test('Test the basic GET method', async t => {
+  return client.comm('news')
+              .then(() => {
+                t.pass()
+              })
 })
 
-test(`The dynamic generate method should able to perform validation`, async (t) => {
+test.todo('Test the POST method with validation')
 
-  return client['post']('String title', 1001)
-                      .catch((error: ValidationError) => {
-                        console.log(error.message)
-                        console.log(error.detail)
-                        t.pass()
-                      })
+test.todo('Test GET url with query params')
 
-})
+test.todo('Test GET with dynamic url with a spread argument api')
