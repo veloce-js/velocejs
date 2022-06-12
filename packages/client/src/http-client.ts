@@ -10,6 +10,7 @@ import {
   GenericKeyValue,
   HttpMethod,
 } from './types'
+import UrlPattern from 'url-pattern'
 import { WEBSOCKET_METHOD } from './constants'
 import { BaseClient } from './base-client'
 
