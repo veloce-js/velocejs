@@ -22,7 +22,7 @@ export class HttpClient extends BaseClient {
     protected _httpMethod: HttpMethod,
     protected _host = '/'
   ) {
-    super(contract, host)
+    super(contract, _host)
 
     contract.data.forEach((entry: JsonqlContractEntry) => {
       const { name, type } = entry
@@ -34,14 +34,15 @@ export class HttpClient extends BaseClient {
       // https://stackoverflow.com/questions/5905492/dynamic-function-name-in-javascript
       // its not amazing but at least we can see the name in console.log
       // @TODO how to pass the type info to the arguments
-      this[name] = {[name]: async function(...args: ArgsListType[]) {
-        console.log('pass the arguments', args, 'to call', entry)
-        // set validator
-        return validateFn(args)
+      this[name as string] = {
+        [name as string]: async function(...args: ArgsListType[]) {
+          console.log('pass the arguments', args, 'to call', entry)
+          // set validator
+          return validateFn(args)
                   .then((result: GenericKeyValue) =>
                     this._executeHttpCall(entry, result)
                   )
-      }}[name]
+      }}[name as string]
     })
   }
 
@@ -53,6 +54,11 @@ export class HttpClient extends BaseClient {
     console.log(entry)
     console.log(result)
     // now call fetch
+  }
+
+  /** The one call to handle all the traffics */
+  public comm(propertyName: string, params: any[]) {
+    return Reflect.apply(this[propertyName], this, params)
   }
 
 }

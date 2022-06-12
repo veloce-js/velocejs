@@ -11,7 +11,9 @@ import type {
 export { Response }
 
 // main
-export default async function main(params: HttpMethodParams): Promise<Response> {
+export default async function main(
+  params: HttpMethodParams
+): Promise<Response> {
   const { url, method, payload } = params
   const options: RequestInit = {}
   if (method) {

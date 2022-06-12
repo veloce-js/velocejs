@@ -4,18 +4,19 @@ import { ApiWithContract } from './fixtures/api-with-contract-with-rules'
 import ValidationError from '@jsonql/errors/dist/validation-error'
 // import { readJsonSync } from 'fs-extra'
 // import { join } from 'node:path'
-// import { HttpClient } from '../src/http-client'
-import client from './fixtures/client'
+import { HttpClient } from '../src/http-client'
+import getClient from './fixtures/client'
 
 let api: ApiWithContract
 let url: string
 // let contract: any
-// let client: HttpClient
+let client: HttpClient
 
 test.before(async () => {
   api = new ApiWithContract()
   url = await api.$start()
   console.log(url)
+  client = getClient(url)
 })
 
 test.after(() => {
