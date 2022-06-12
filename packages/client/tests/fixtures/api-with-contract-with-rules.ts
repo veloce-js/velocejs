@@ -1,13 +1,12 @@
-import { FastApi, Rest, Get, Post, ServeStatic, Websocket, Validate } from '@velocejs/fastapi'
+import { FastApi, Rest, Get, Post, ServeStatic, Websocket, Validate } from '../../../src'
 import { join } from 'node:path'
 // @NOTE something weird the Date.now() inline never create a value that pass to generator
-
 @Rest
 export class ApiWithContract extends FastApi {
 
   @Get('/news')
   news() {
-    return "some news " + Date.now()
+    return "some news"
   }
   // @NOTE because we read this script and parse as ast
   // therefore the NOW is a string and not the value we expected!
@@ -21,6 +20,12 @@ export class ApiWithContract extends FastApi {
       content,
       date
     }
+  }
+
+  @Get('/some-url')
+  @Validate()
+  someUrl(start: string, end: string) {
+    return `The start date is ${start} and the end date is ${end}`
   }
 
   // testing the dynamic route with spread
@@ -45,9 +50,7 @@ export class ApiWithContract extends FastApi {
     return {
       open: function(ws: WebSocket) {
         ws.send('Hello World')
-      },
-      // message: function() {}
+      }
     }
   }
-
 }

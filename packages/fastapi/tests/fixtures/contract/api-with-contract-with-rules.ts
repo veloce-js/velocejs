@@ -1,7 +1,7 @@
 import { FastApi, Rest, Get, Post, ServeStatic, Websocket, Validate } from '../../../src'
 import { join } from 'node:path'
 // @NOTE something weird the Date.now() inline never create a value that pass to generator
-const NOW = Date.now()
+// const NOW = Date.now()
 
 @Rest
 export class ApiWithContract extends FastApi {
@@ -22,6 +22,12 @@ export class ApiWithContract extends FastApi {
       content,
       date
     }
+  }
+
+  @Get('/some-url')
+  @Validate()
+  someUrl(start: string, end: string) {
+    return `The start date is ${start} and the end date is ${end}`
   }
 
   // testing the dynamic route with spread
@@ -49,5 +55,4 @@ export class ApiWithContract extends FastApi {
       }
     }
   }
-
 }
