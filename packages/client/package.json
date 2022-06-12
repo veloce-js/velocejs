@@ -44,7 +44,7 @@
   "dependencies": {
     "@jsonql/contract": "^0.11.0",
     "@jsonql/utils": "^0.8.0",
-    "@jsonql/validators": "^0.8.2",
+    "@jsonql/validators": "^0.9.0",
     "@velocejs/config": "workspace:^0.5.2",
     "tslib": "^2.4.0",
     "url-pattern": "^1.0.3"
@@ -59,7 +59,7 @@
     "@types/ws": "^8.5.3",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
-    "@velocejs/fastapi": "workspace:^0.8.4",
+    "@velocejs/fastapi": "workspace:^0.8.5",
     "@velocejs/server": "workspace:^0.9.0",
     "ava": "^4.3.0",
     "chokidar": "^3.5.3",
