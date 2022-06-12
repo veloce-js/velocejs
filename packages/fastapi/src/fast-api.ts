@@ -223,7 +223,7 @@ export class FastApi implements FastApiInterface {
           }
         case WEBSOCKET_ROUTE_NAME: // socket route just return the value from getter for now
           if (!m.excluded) {
-            // @TODO we set the validate to false for now, chanage later when we got to it 
+            // @TODO we set the validate to false for now, chanage later when we got to it
             this._prepareRouteForContract(propertyName, [], type, path, false)
           }
           return {
@@ -442,8 +442,7 @@ export class FastApi implements FastApiInterface {
     validate?: boolean
   ): void {
     const entry = { type, validate, name: propertyName, params: args, route: path }
-    console.log('contract entry', entry)
-    // @TODO add excluded for validation if any
+    
     this._routeForContract.push(entry as unknown as JsonqlProcessedEntry)
   }
 

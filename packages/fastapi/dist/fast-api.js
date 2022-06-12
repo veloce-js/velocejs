@@ -121,7 +121,8 @@ class FastApi {
                     };
                 case server_1.WEBSOCKET_ROUTE_NAME: // socket route just return the value from getter for now
                     if (!m.excluded) {
-                        this._prepareRouteForContract(propertyName, [], type, path);
+                        // @TODO we set the validate to false for now, chanage later when we got to it 
+                        this._prepareRouteForContract(propertyName, [], type, path, false);
                     }
                     return {
                         path, type, propertyName, handler: this._prepareSocketRoute(propertyName)
@@ -186,7 +187,7 @@ class FastApi {
             return dynamicRoute;
         };
     }
-    // transform the string name to actual method
+    /** transform the string name to actual method */
     _mapMethodToHandler(propertyName, argsList = [], validationInput, // this is the rules provide via Decorator
     dynamicRoute
     // onAbortedHandler?: string // take out
@@ -283,7 +284,8 @@ class FastApi {
     }
     /** just wrap this together to make it look neater */
     _prepareRouteForContract(propertyName, args, type, path, validate) {
-        const entry = { type, name: propertyName, params: args, route: path, validate };
+        const entry = { type, validate, name: propertyName, params: args, route: path };
+        console.log('contract entry', entry);
         // @TODO add excluded for validation if any
         this._routeForContract.push(entry);
     }

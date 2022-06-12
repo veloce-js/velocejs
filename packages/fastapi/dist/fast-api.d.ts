@@ -40,6 +40,7 @@ export declare class FastApi implements FastApiInterface {
     private _prepareNormalRoute;
     /** check if there is a dynamic route and prepare it */
     private _prepareDynamicRoute;
+    /** transform the string name to actual method */
     private _mapMethodToHandler;
     /** wrap this together to make it clearer what it does */
     private _bodyParser;
