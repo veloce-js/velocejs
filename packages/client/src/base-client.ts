@@ -43,16 +43,20 @@ export class BaseClient {
     const validator = this._validators.getValidator(entry.name as string)
     // TS stupid check for this ugly programming style not me
     if (entry && entry.params && entry.params.length === 0) {
-      return () => []
+      return async () => []
     } else if (entry.params && entry.validate === true) {
       const rules = arrToObj(entry.params, (params: JsonqlPropertyParamMap) => (
         params.rules ? { [ params.name ]: params.rules } : {}
       ))
       validator.addValidationRules(rules)
-      // @TODO the result need to package up 
+      // @TODO the result need to package up
       return validator.validate
     } else if (entry.validate === false) {
-      return validator.prepareArgValues
+      return async (args: any[]) => Reflect.apply(
+                                      validator.prepareArgValues,
+                                      validator,
+                                      args
+                                    )
     }
   }
 
