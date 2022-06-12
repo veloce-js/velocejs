@@ -121,7 +121,7 @@ class FastApi {
                     };
                 case server_1.WEBSOCKET_ROUTE_NAME: // socket route just return the value from getter for now
                     if (!m.excluded) {
-                        // @TODO we set the validate to false for now, chanage later when we got to it 
+                        // @TODO we set the validate to false for now, chanage later when we got to it
                         this._prepareRouteForContract(propertyName, [], type, path, false);
                     }
                     return {
@@ -285,8 +285,6 @@ class FastApi {
     /** just wrap this together to make it look neater */
     _prepareRouteForContract(propertyName, args, type, path, validate) {
         const entry = { type, validate, name: propertyName, params: args, route: path };
-        console.log('contract entry', entry);
-        // @TODO add excluded for validation if any
         this._routeForContract.push(entry);
     }
     /** binding method to the uws server */
