@@ -185,7 +185,6 @@ export class FastApi implements FastApiInterface {
   }
 
   /** create a catch all route to handle those unhandle url(s) */
-
   private _createCatchAllRoute() {
     return {
       path: CATCH_ALL_ROUTE,
@@ -262,7 +261,13 @@ export class FastApi implements FastApiInterface {
     // also add this to the route that can create contract - if we need it
     const _path = _route !== '' ? _route : path
     if (!excluded) {
-      this._prepareRouteForContract(propertyName, toArray(args), type, path)
+      this._prepareRouteForContract(
+        propertyName,
+        toArray(args),
+        type,
+        path,
+        validation ? true : false
+      )
     }
     return {
       type,
@@ -433,8 +438,10 @@ export class FastApi implements FastApiInterface {
     args: UwsStringPairObj[],
     type: string,
     path: string,
+    validate?: boolean
   ): void {
-    const entry = { type, name: propertyName, params: args, route: path }
+    const entry = { type, name: propertyName, params: args, route: path, validate }
+    // @TODO add excluded for validation if any
     this._routeForContract.push(entry as unknown as JsonqlProcessedEntry)
   }
 
@@ -495,7 +502,8 @@ export class FastApi implements FastApiInterface {
       return bodyParserProcessedResult
     }
   }
-  // break out from above to make the code cleaner
+
+  /** handle rendering content */
   private async _handleContent(
     args: UwsStringPairObj[],
     handler: (...arg: unknown[]) => Promise<unknown>,
@@ -597,12 +605,14 @@ export class FastApi implements FastApiInterface {
     }
   }
 
-  /** prepare validator using veloce/validators */
+  /** prepare validators */
   private _initValidators(
     astMap: object,
     validations: JsonqlObjectValidateInput
   ) {
     if (!(Array.isArray(validations) && validations.length === 0)) {
+      // @TODO we might want to exclucded some of the api from the astMap
+      // because if they don't need validation then there is no point to init it
       this._validators = new Validators(astMap as VeloceAstMap)
       debug('call registerPlugins', this._validationPlugins)
       this._validators.registerPlugins(this._validationPlugins)

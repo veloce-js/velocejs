@@ -31,10 +31,14 @@ test.after(() => {
 
 test(`Testing API with config and contract with Validation rules`, t => {
   const _contract = contract['data']
+
   // console.dir(_contract, { depth: null })
+
   const postEntry = _contract.filter((c: any) => c.name === 'post')[0]
 
   t.true(postEntry.params.filter((param: any) => param.rules).length > 0)
 
-  // t.truthy(_contract)
+  const archiveEntry = _contract.filter((c: any) => c.name === 'archive')[0]
+
+  t.false(archiveEntry.validate)
 })

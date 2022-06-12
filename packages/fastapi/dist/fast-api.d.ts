@@ -61,6 +61,7 @@ export declare class FastApi implements FastApiInterface {
     private _handleValidationError;
     /** @TODO handle protected route, also we need another library to destruct those pattern route */
     private _handleProtectedRoute;
+    /** handle rendering content */
     private _handleContent;
     private _applyArgs;
     private _setTemp;
@@ -69,7 +70,7 @@ export declare class FastApi implements FastApiInterface {
     This will be only output
     */
     private _render;
-    /** prepare validator using veloce/validators */
+    /** prepare validators */
     private _initValidators;
     /**           PROTECTED METHODS               */
     /**

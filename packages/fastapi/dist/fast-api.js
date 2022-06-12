@@ -154,7 +154,7 @@ class FastApi {
         // also add this to the route that can create contract - if we need it
         const _path = _route !== '' ? _route : path;
         if (!excluded) {
-            this._prepareRouteForContract(propertyName, (0, utils_1.toArray)(args), type, path);
+            this._prepareRouteForContract(propertyName, (0, utils_1.toArray)(args), type, path, validation ? true : false);
         }
         return {
             type,
@@ -226,7 +226,8 @@ class FastApi {
         return this._config.getConfig()
             .then((config) => {
             debug('config', config);
-            const bodyParserConfig = config[config_1.BODYPARSER_KEY] || config_1.VeloceConfig.getDefaults(config_1.BODYPARSER_KEY);
+            const bodyParserConfig = config[config_1.BODYPARSER_KEY]
+                || config_1.VeloceConfig.getDefaults(config_1.BODYPARSER_KEY);
             if (dynamicRoute) { // this is a dynamic route
                 bodyParserConfig[bodyparser_1.URL_PATTERN_OBJ] = this._dynamicRoutes.get(dynamicRoute);
             }
@@ -281,8 +282,9 @@ class FastApi {
         };
     }
     /** just wrap this together to make it look neater */
-    _prepareRouteForContract(propertyName, args, type, path) {
-        const entry = { type, name: propertyName, params: args, route: path };
+    _prepareRouteForContract(propertyName, args, type, path, validate) {
+        const entry = { type, name: propertyName, params: args, route: path, validate };
+        // @TODO add excluded for validation if any
         this._routeForContract.push(entry);
     }
     /** binding method to the uws server */
@@ -340,7 +342,7 @@ class FastApi {
             return bodyParserProcessedResult;
         };
     }
-    // break out from above to make the code cleaner
+    /** handle rendering content */
     async _handleContent(args, handler, type, propertyName) {
         // const args2 = this._applyArgs(argNames, params)
         try {
@@ -426,9 +428,11 @@ class FastApi {
                 (0, server_1.jsonWriter)(res)(payload, this._status);
         }
     }
-    /** prepare validator using veloce/validators */
+    /** prepare validators */
     _initValidators(astMap, validations) {
         if (!(Array.isArray(validations) && validations.length === 0)) {
+            // @TODO we might want to exclucded some of the api from the astMap
+            // because if they don't need validation then there is no point to init it
             this._validators = new validators_server_1.ValidatorsServer(astMap);
             debug('call registerPlugins', this._validationPlugins);
             this._validators.registerPlugins(this._validationPlugins);
