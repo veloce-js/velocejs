@@ -26,6 +26,15 @@ export const DYNAMIC_ROUTE_ALLOW_TYPES = ['number', 'string', 'boolean']
 export const REST_NAME = 'rest'
 
 export const DEFAULT_ERROR_STATUS = 417
+// copy from velocejs/client
+export const CONTENT_TYPE = 'application/vnd.api+json'
+export const CHARSET = 'charset=utf-8'
+export const DEFAULT_HEADER = {
+  'Accept': CONTENT_TYPE,
+  'Content-Type': [ CONTENT_TYPE, CHARSET ].join('')
+}
+export const CLIENT_KEY = 'x-client'
+export const CLIENT_NAME = 'velocejs'
 
 // dynamic
 export const isDev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test'

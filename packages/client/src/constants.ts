@@ -12,3 +12,6 @@ export const DEFAULT_HEADER = {
   'Accept': CONTENT_TYPE,
   'Content-Type': [ CONTENT_TYPE, CHARSET ].join('')
 }
+
+export const CLIENT_KEY = 'x-client'
+export const CLIENT_NAME = 'velocejs'

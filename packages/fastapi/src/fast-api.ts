@@ -87,7 +87,9 @@ import {
   assertDynamicRouteArgs,
   notUndef,
   prepareArgsFromDynamicToSpread,
-  mergeInfo
+  mergeInfo,
+  isJsonql,
+  formatJsonql,
 } from './lib/common'
 import {
   ValidatorsServer as Validators
@@ -112,6 +114,7 @@ export class FastApi implements FastApiInterface {
   private _written = false
   private _headers: UwsStringPairObj = {}
   private _status: number = placeholderVal
+  private _jsonql: boolean | null = null
   private _onConfigReady: Promise<unknown>
   private _onConfigWait: (value: unknown) => void = placeholderFn
   private _onConfigError: (value: unknown) => void = placeholderFn
@@ -442,7 +445,7 @@ export class FastApi implements FastApiInterface {
     validate?: boolean
   ): void {
     const entry = { type, validate, name: propertyName, params: args, route: path }
-    
+
     this._routeForContract.push(entry as unknown as JsonqlProcessedEntry)
   }
 
@@ -561,12 +564,14 @@ export class FastApi implements FastApiInterface {
     res: HttpResponse
     /*, req?: HttpRequest */
   ): void {
-    this._headers = {}
+    const { headers } = payload
+    // @TODO check for auth header
+    this._jsonql = isJsonql(headers)
+    this._headers = headers
     this._status = placeholderVal
     this._written = false
     this.payload = payload
     this.res = res
-    // we have the dynamic generate _writer _jsonWriter they are useless
   }
 
   // call this after the call finish
@@ -576,34 +581,30 @@ export class FastApi implements FastApiInterface {
       ['res', 'payload'].forEach(fn => {
         this[fn] = undefined
       })
+      this._jsonql = null
       this._written = false
       this._headers = {}
       this._status = placeholderVal
     }, 0)
   }
 
-  /** Write the output
-  This will be only output
-  */
+  /** Write the output to client */
   private _render(type: string, payload: unknown): void {
     const res = this.res as HttpResponse
     const writer = getWriter(res)
-
-    switch (type) {
-      case IS_OTHER:
-        writer(payload, this._headers, this._status)
-        break
-      default:
-        // check if they set a different content-type header
-        // if so we don't use the jsonWriter
-        for (const key in this._headers) {
-          if (key.toLowerCase() === CONTENT_TYPE) {
-            // exit here
-            return writer(payload, this._headers, this._status)
-          }
-        }
-        jsonWriter(res)(payload, this._status)
+    if (type === IS_OTHER) {
+      return writer(payload, this._headers, this._status)
     }
+    const _payload = this._jsonql ? formatJsonql({ data: payload }) : payload
+    // check if they set a different content-type header
+    // if so we don't use the jsonWriter
+    for (const key in this._headers) {
+      if (key.toLowerCase() === CONTENT_TYPE) {
+        // exit here
+        return writer(_payload, this._headers, this._status)
+      }
+    }
+    jsonWriter(res)(_payload, this._status)
   }
 
   /** prepare validators */
@@ -687,14 +688,15 @@ export class FastApi implements FastApiInterface {
   /**
     We have experience a lot of problem when delivery the content try to intercept
     the content type, instead we now force the finally output to use one of the following
-    all with a $ to start to make sure no conflict with the regular public names
+    they all start with a $ to make sure no conflict with the regular public names
   */
 
   /** Apart from serving the standard html, when using the json contract system
   this will get wrap inside the delivery format - next protobuf as well */
   protected $json(content: UwsStringPairObj) {
     if (this.res && !this._written) {
-      return jsonWriter(this.res)(content)
+      const payload = this._jsonql ? formatJsonql({ data: content }) : content
+      return jsonWriter(this.res)(payload)
     }
   }
 
@@ -731,7 +733,6 @@ export class FastApi implements FastApiInterface {
 
   /** @TODO SSG but this should only call when data been update and generate static files
   then it get serve up via the @ServeStatic TBC
-
   */
 
   ///////////////////////////////////////////
@@ -772,7 +773,7 @@ export class FastApi implements FastApiInterface {
   }
 
   /**
-   The interface to serve up the contract, it's public but prefix underscore to avoid override
+   The interface to serve up the contract, it's public but prefix underscore to avoid name collison 
    */
   public $_serveContract() {
     // debug('call _serveContract') // @BUG if I remove this then it doens't work???

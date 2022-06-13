@@ -22,7 +22,9 @@ import {
   TS_TYPE_NAME,
 } from '@jsonql/ast/dist/lib/constants'
 import {
-  DYNAMIC_ROUTE_ALLOW_TYPES
+  DYNAMIC_ROUTE_ALLOW_TYPES,
+  CLIENT_KEY,
+  CLIENT_NAME,
 } from './constants'
 import {
   strToNum,
@@ -179,4 +181,20 @@ export function prepareValidateRoute(
     return validations[propertyName]
   }
   return undefined
+}
+
+/** check if the client is using jsonql */
+export function isJsonql(headers: UwsStringPairObj) {
+  return !!(headers[CLIENT_KEY] && headers[CLIENT_KEY] === CLIENT_NAME)
+}
+
+/** when _jsonql === true then we wrap the result into this structure */
+export function formatJsonql(
+  payload: Partial<{ data: any, meta: any, error: any }> // @TODO import the type from jsonql/contract
+) {
+  return {
+    data: payload.data || null,
+    meta: payload.meta || null,
+    error: payload.error || null
+  }
 }

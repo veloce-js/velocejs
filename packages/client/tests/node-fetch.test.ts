@@ -33,7 +33,7 @@ test('Test the basic GET method', async t => {
               })
 })
 
-test.only('Test the POST method with validation', async t => {
+test('Test the POST method with validation', async t => {
   return client['post']('today headline', 'na na na', 2000)
                   .then((result: ClientResult) => {
                     console.log(result)
