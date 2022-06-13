@@ -28,7 +28,7 @@ export class HttpClient extends BaseClient {
   constructor(
     contract: JsonqlContractTemplate,
     protected _httpMethod: HttpMethod,
-    protected _host = '/'
+    protected _host = ''
   ) {
     super(contract, _host)
 
@@ -60,7 +60,7 @@ export class HttpClient extends BaseClient {
     args: GenericKeyValue
   ) {
     const httpOpts: HttpMethodParams = {
-      url: this._prepareUrl(entry, args)
+      url: [this._host, this._prepareUrl(entry, args)].join('')
     }
     if (entry.method !== DEFAULT_REQUEST_METHOD)  {
       //console.log(entry)

@@ -23,7 +23,8 @@ export default async function main(
     }
   }
   // @TODO headers
-
+  options.headers = {'x-client': 'Velocejs'}
+  console.log('fetch options', options)
   // just stub it for now
   return fetch(url, options)
 }
