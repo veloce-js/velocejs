@@ -13,13 +13,15 @@ export type {
 export type GenericKeyValue = {
   [key: string]: any
 }
-
+export type ClientResult = GenericKeyValue
 export type GenericArrayValue = Array<any>
 
 import type {
   RequestInit,
   Response
 } from 'node-fetch/@types/index' // might have to copy this over
+
+import ValidationError from '@jsonql/errors/dist/validation-error'
 
 /*
 Because we want to allow the dev to use different library to handle the actual
@@ -44,7 +46,7 @@ export type HttpMethodParams = {
   [key: string]: any
 }
 
-export type HttpMethod = (params: HttpMethodParams) => Promise<Response>
+export type HttpMethod = (params: HttpMethodParams) => Promise<JSON>
 
 // re-export
 export type {
@@ -52,6 +54,7 @@ export type {
   Response,
   JsonqlContractTemplate,
   JsonqlContractEntry,
+  ValidationError,
 }
 
 // ---------------- try ------------------

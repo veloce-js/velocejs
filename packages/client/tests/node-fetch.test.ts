@@ -1,7 +1,6 @@
 import test from 'ava'
-// import fetch from '../src/node-f'
+import { ClientResult, ValidationError } from '../src/types'
 import { ApiWithContract } from './fixtures/api-with-contract-with-rules'
-import ValidationError from '@jsonql/errors/dist/validation-error'
 // import { readJsonSync } from 'fs-extra'
 // import { join } from 'node:path'
 import { HttpClient } from '../src/http-client'
@@ -28,13 +27,19 @@ test('Test the basic GET method', async t => {
               .then(() => {
                 t.pass()
               })
-              .catch(err => {
+              .catch((err: ValidationError) => {
                 console.log(err)
                 t.pass()
               })
 })
 
-test.todo('Test the POST method with validation')
+test.only('Test the POST method with validation', async t => {
+  return client['post']('today headline', 'na na na', 2000)
+                  .then((result: ClientResult) => {
+                    console.log(result)
+                    t.pass()
+                  })
+})
 
 test.todo('Test GET url with query params')
 

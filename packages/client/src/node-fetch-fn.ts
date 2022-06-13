@@ -13,7 +13,7 @@ export { Response }
 // main
 export default async function main(
   params: HttpMethodParams
-): Promise<Response> {
+): Promise<JSON> {
   const { url, method, payload } = params
   const options: RequestInit = {}
   if (method) {
@@ -24,7 +24,9 @@ export default async function main(
   }
   // @TODO headers
   options.headers = {'x-client': 'Velocejs'}
-  console.log('fetch options', options)
+  console.log('fetch options', options, params)
   // just stub it for now
   return fetch(url, options)
+                .then((res: Response) => res.json() as unknown as JSON)
+                // @TODO if the result contains the error then we need to deal with it here
 }

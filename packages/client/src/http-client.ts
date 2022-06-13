@@ -62,9 +62,8 @@ export class HttpClient extends BaseClient {
     const httpOpts: HttpMethodParams = {
       url: [this._host, this._prepareUrl(entry, args)].join('')
     }
-    if (entry.method !== DEFAULT_REQUEST_METHOD)  {
-      //console.log(entry)
-      // console.log(args)
+    if (entry.type !== DEFAULT_REQUEST_METHOD)  {
+      httpOpts.method = entry.type
       httpOpts.payload = args
     }
     // now call fetch
