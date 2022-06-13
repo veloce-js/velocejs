@@ -9,7 +9,7 @@ import type {
   HttpMethodParams,
 } from './types'
 export { Response }
-
+import { DEFAULT_HEADER } from './constants'
 // main
 export default async function main(
   params: HttpMethodParams
@@ -23,7 +23,9 @@ export default async function main(
     }
   }
   // @TODO headers
-  options.headers = {'x-client': 'Velocejs'}
+  options.headers = Object.assign({
+    'x-client': 'Velocejs'
+  }, DEFAULT_HEADER)
   console.log('fetch options', options, params)
   // just stub it for now
   return fetch(url, options)
