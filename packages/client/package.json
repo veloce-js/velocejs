@@ -44,7 +44,7 @@
   "dependencies": {
     "@jsonql/contract": "^0.11.0",
     "@jsonql/utils": "^0.8.0",
-    "@jsonql/validators": "^0.9.0",
+    "@jsonql/validators": "^0.9.1",
     "@velocejs/config": "workspace:^0.5.2",
     "tslib": "^2.4.0",
     "url-pattern": "^1.0.3"

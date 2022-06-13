@@ -5,7 +5,7 @@ specifiers:
   '@jsonql/contract': ^0.11.0
   '@jsonql/errors': ^0.8.0
   '@jsonql/utils': ^0.8.0
-  '@jsonql/validators': ^0.9.0
+  '@jsonql/validators': ^0.9.1
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
@@ -14,7 +14,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.27.1
   '@typescript-eslint/parser': ^5.27.1
   '@velocejs/config': workspace:^0.5.2
-  '@velocejs/fastapi': workspace:^0.8.5
+  '@velocejs/fastapi': workspace:^0.8.7
   '@velocejs/server': workspace:^0.9.0
   ava: ^4.3.0
   chokidar: ^3.5.3
@@ -34,7 +34,7 @@ specifiers:
 dependencies:
   '@jsonql/contract': 0.11.0
   '@jsonql/utils': 0.8.0
-  '@jsonql/validators': 0.9.0
+  '@jsonql/validators': 0.9.1
   '@velocejs/config': link:../config
   tslib: 2.4.0
   url-pattern: 1.0.3
@@ -393,8 +393,8 @@ packages:
       '@jsonql/utils': 0.8.0
     dev: false
 
-  /@jsonql/validator/0.9.0:
-    resolution: {integrity: sha512-qeFhaudt1lywdHJivkHfYRgfsnOzYU9pmXg2E1VgiBTkGrYL+596AG2jSdvxQtoU2+WZXLbCSgPs602grhVZiw==}
+  /@jsonql/validator/0.10.1:
+    resolution: {integrity: sha512-iLD13zUH/tXq/zmk9BHHfECngugrHwWmHU2mSg7pLVUh2uSpuqk7FOOwo0gAKmOdP5x+P4m2LCMVFNnBsI/9zg==}
     dependencies:
       '@jsonql/errors': 0.8.0
       '@jsonql/utils': 0.8.0
@@ -404,12 +404,12 @@ packages:
       - supports-color
     dev: false
 
-  /@jsonql/validators/0.9.0:
-    resolution: {integrity: sha512-QXbwwancPCPBKZ4al+qfYoRgwVe8eTCHcxFy38D7nUkUJeUgpe0RsFEZHCLNoZVYEyKW42zQGXxFUsWdMhTTmQ==}
+  /@jsonql/validators/0.9.1:
+    resolution: {integrity: sha512-oahzffBE9Eb2h404m2Ps9oPbVgUngHARXpywYvL5O5aNeeZfgLGKU+/6jOdPuF+Cp4EYkN5vrqYdfg3U6bK24A==}
     dependencies:
       '@jsonql/errors': 0.8.0
       '@jsonql/utils': 0.8.0
-      '@jsonql/validator': 0.9.0
+      '@jsonql/validator': 0.10.1
       '@jsonql/validator-core': 0.10.2
       fs-extra: 10.1.0
       glob: 8.0.3

@@ -8,7 +8,7 @@ import {
 } from './types'
 import { arrToObj } from '@jsonql/utils/dist/object'
 import { ValidatorsClient } from '@jsonql/validators/dist/validators-client'
-
+import { RETURN_AS_OBJ } from '@jsonql/validators'
 // main
 export class BaseClient {
 
@@ -50,7 +50,11 @@ export class BaseClient {
       ))
       validator.addValidationRules(rules)
       // @TODO the result need to package up
-      return validator.validate
+      return async (args: any[]) => Reflect.apply(
+                                      validator.validate,
+                                      validator,
+                                      [args, RETURN_AS_OBJ]
+                                    )
     } else if (entry.validate === false) {
       return async (args: any[]) => Reflect.apply(
                                       validator.prepareArgValues,

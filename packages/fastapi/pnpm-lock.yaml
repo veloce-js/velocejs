@@ -6,7 +6,7 @@ specifiers:
   '@jsonql/contract': ^0.11.0
   '@jsonql/errors': ^0.8.0
   '@jsonql/utils': ^0.8.0
-  '@jsonql/validators': ^0.9.0
+  '@jsonql/validators': ^0.9.1
   '@swc/cli': ^0.1.57
   '@swc/core': ^1.2.198
   '@types/debug': ^4.1.7
@@ -40,7 +40,7 @@ dependencies:
   '@jsonql/contract': 0.11.0
   '@jsonql/errors': 0.8.0
   '@jsonql/utils': 0.8.0
-  '@jsonql/validators': 0.9.0
+  '@jsonql/validators': 0.9.1
   '@velocejs/bodyparser': link:../bodyparser
   '@velocejs/config': link:../config
   '@velocejs/server': link:../server
@@ -402,8 +402,8 @@ packages:
       '@jsonql/utils': 0.8.0
     dev: false
 
-  /@jsonql/validator/0.9.0:
-    resolution: {integrity: sha512-qeFhaudt1lywdHJivkHfYRgfsnOzYU9pmXg2E1VgiBTkGrYL+596AG2jSdvxQtoU2+WZXLbCSgPs602grhVZiw==}
+  /@jsonql/validator/0.10.1:
+    resolution: {integrity: sha512-iLD13zUH/tXq/zmk9BHHfECngugrHwWmHU2mSg7pLVUh2uSpuqk7FOOwo0gAKmOdP5x+P4m2LCMVFNnBsI/9zg==}
     dependencies:
       '@jsonql/errors': 0.8.0
       '@jsonql/utils': 0.8.0
@@ -413,12 +413,12 @@ packages:
       - supports-color
     dev: false
 
-  /@jsonql/validators/0.9.0:
-    resolution: {integrity: sha512-QXbwwancPCPBKZ4al+qfYoRgwVe8eTCHcxFy38D7nUkUJeUgpe0RsFEZHCLNoZVYEyKW42zQGXxFUsWdMhTTmQ==}
+  /@jsonql/validators/0.9.1:
+    resolution: {integrity: sha512-oahzffBE9Eb2h404m2Ps9oPbVgUngHARXpywYvL5O5aNeeZfgLGKU+/6jOdPuF+Cp4EYkN5vrqYdfg3U6bK24A==}
     dependencies:
       '@jsonql/errors': 0.8.0
       '@jsonql/utils': 0.8.0
-      '@jsonql/validator': 0.9.0
+      '@jsonql/validator': 0.10.1
       '@jsonql/validator-core': 0.10.2
       fs-extra: 10.1.0
       glob: 8.0.3
