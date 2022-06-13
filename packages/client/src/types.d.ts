@@ -47,7 +47,8 @@ export type HttpMethodParams = {
 export type HttpMethod = (params: HttpMethodParams) => Promise<Response>
 
 // re-export
-export {
+export type {
+  RequestInit,
   Response,
   JsonqlContractTemplate,
   JsonqlContractEntry,

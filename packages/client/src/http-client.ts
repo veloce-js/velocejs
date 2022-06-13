@@ -9,9 +9,17 @@ import {
   ArgsListType,
   GenericKeyValue,
   HttpMethod,
+  HttpMethodParams,
 } from './types'
 import UrlPattern from 'url-pattern'
-import { WEBSOCKET_METHOD } from './constants'
+import {
+  WEBSOCKET_METHOD,
+  DYNAMIC_ROUTE_PATTERN,
+  DEFAULT_REQUEST_METHOD,
+} from './constants'
+import {
+  hasArgs
+} from './common'
 import { BaseClient } from './base-client'
 
 // main
@@ -49,12 +57,40 @@ export class HttpClient extends BaseClient {
   /** create the http calls */
   private _executeHttpCall(
     entry: JsonqlContractEntry,
-    result: GenericKeyValue
+    args: GenericKeyValue
   ) {
-    console.log(entry)
-    console.log(result)
+    const httpOpts: HttpMethodParams = {
+      url: this._prepareUrl(entry, args)
+    }
+    if (entry.method !== DEFAULT_REQUEST_METHOD)  {
+      //console.log(entry)
+      // console.log(args)
+      httpOpts.payload = args
+    }
     // now call fetch
-    return result
+    return this._httpMethod(httpOpts)
+  }
+
+  /** prepare the url */
+  private _prepareUrl(
+    entry: JsonqlContractEntry,
+    args: GenericKeyValue
+  ): string {
+    const route = entry.route as string
+    // handle dynamic route
+    if (route.indexOf(DYNAMIC_ROUTE_PATTERN) > -1) {
+      return (new UrlPattern(route)).stringify(args)
+    }
+    // ugly but works ...
+    if (entry.method === DEFAULT_REQUEST_METHOD && hasArgs(args)) {
+      const url = route + '?'
+      const params: string[] = []
+      for (const key in args) {
+        params.push(`${key}=${args[key]}`)
+      }
+      return url + params.join('&')
+    }
+    return route
   }
 
   /** The one call to handle all the traffics */
