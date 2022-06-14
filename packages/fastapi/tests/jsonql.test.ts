@@ -33,30 +33,27 @@ test.after(() => {
   api.$stop()
 })
 
-test.only(`Testing the class extends from FastApi`, async (t) => {
+test(`Testing the class extends from FastApi`, async (t) => {
   t.plan(1)
   const response = await fetchClient(`${hostname}/some-where`)
   // console.log('HEADERS',  response.headers)
   const json = await response.json() as JsonqlStruct
-
   t.is(json.data, msg1)
 })
-
 
 test(`Testing the post method handler`, async (t) => {
   t.plan(1)
   const todo = {name: 'John', value: 'something'}
   const endpoint = `${hostname}/submit`
 
-  await Fetch(endpoint, {
+  await fetchClient(endpoint, {
     method: 'POST',
     body: JSON.stringify(todo),
-    headers: { 'Content-Type': 'application/json' }
   })
   .then(res => {
-    return res.json()
+    return res.json() as unknown as JsonqlStruct
   })
   .then(text => {
-    t.deepEqual(text, {msg: `John is doing something`})
+    t.deepEqual(text.data, {msg: `John is doing something`})
   })
 })
