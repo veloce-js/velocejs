@@ -471,7 +471,7 @@ export class FastApi implements FastApiInterface {
     if (!this._hasCatchAll) {
       _routes.push(this._createCatchAllRoute())
     }
-    debug('all setup routes', _routes)
+    debug('ALL ROUTES', _routes)
     return this._uwsInstance.run(_routes)
   }
 
@@ -489,7 +489,7 @@ export class FastApi implements FastApiInterface {
   private _handleValidationError(error: ValidationError) {
     debug('_handleValidationError', error)
     const { detail, message, className } = error
-    const payload = { errors: { message, detail, className } }
+    const payload = formatJsonql({ error: { message, detail, className } })
     if (this.res && !this._written) {
       return jsonWriter(this.res)(payload, this._validationErrStatus)
     }
@@ -514,12 +514,10 @@ export class FastApi implements FastApiInterface {
     type: string,
     propertyName: string
   ) {
-    // const args2 = this._applyArgs(argNames, params)
     try {
       const reply = await Reflect.apply(handler, this, args)
-      // @TODO we should get rip of this
-      // @TODO create a register test handler to test this output directly?
       if (reply && !this._written) {
+        debug('_handleContent', reply)
         this._render(type, reply)
       }
     } catch (e) {
@@ -592,6 +590,7 @@ export class FastApi implements FastApiInterface {
   private _render(type: string, payload: unknown): void {
     const res = this.res as HttpResponse
     const writer = getWriter(res)
+    debug('_render', type)
     if (type === IS_OTHER) {
       return writer(payload, this._headers, this._status)
     }
@@ -773,7 +772,7 @@ export class FastApi implements FastApiInterface {
   }
 
   /**
-   The interface to serve up the contract, it's public but prefix underscore to avoid name collison 
+   The interface to serve up the contract, it's public but prefix underscore to avoid name collison
    */
   public $_serveContract() {
     // debug('call _serveContract') // @BUG if I remove this then it doens't work???
