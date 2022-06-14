@@ -29,8 +29,10 @@ test('test the isJson method can understand the jsonql headers', t => {
   // mimic the getHeaders method
   const headers = getHeaders(DEFAULT_HEADERS)
   const res = isJson(headers)
-
+  
   t.true(res)
+
+  t.true(headers['content-type'].indexOf('; ') > -1)
 })
 
 test('Testing the GET url param with a jsonql header', async (t) => {
