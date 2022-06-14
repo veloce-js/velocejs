@@ -14,11 +14,11 @@ import {
   IS_JSON,
   IS_MULTI,
   IS_OTHER,
+  IS_DYNAMIC,
   GET_NAME,
   DYNAMIC_PARAM,
   DYNAMIC_NAMES,
   QUERY_PARAM,
-  IS_DYNAMIC,
 } from './constants'
 import {
   getHeaders,
@@ -28,7 +28,7 @@ import {
   isEmptyObj,
   isJson,
   isForm,
-  isFile,
+  isMultipart,
   applyConfig,
 } from './utils'
 import {
@@ -53,7 +53,7 @@ export async function bodyParser(
   options?: { config: UwsBodyParserOptions }
 ): Promise<UwsRespondBody> {
   debugFn('bodyparser options', options)
-  // @NOTE the onAborted handler never works here, its been moved back to fastapi internal 
+  // @NOTE the onAborted handler never works here, its been moved back to fastapi internal
   const url = req.getUrl()
   const query = req.getQuery()
   const method = req.getMethod()
@@ -87,7 +87,7 @@ export async function bodyParser(
           body.type = IS_FORM
           body.params = processQueryParameters(buffer.toString())
           break
-        case isFile(headers):
+        case isMultipart(headers):
           body.type = IS_MULTI
           body.params = parseMultipart(headers, buffer)
           break
@@ -128,33 +128,34 @@ export function parseMultipart(
   return {}
 }
 
-// break it out from above for clearity
+/** process the file upload array */
 function processFileArray(
   params: Array<Record<string, UwsBodyParserMixEntry>>
 ) {
-  return params.filter(param => param.filename && param.type)
-               .map(param => {
-                 const { name, type, filename, data } = param
-                 const [ strName, arr ] = takeApartName(name as unknown as string)
-                 const content = { type, filename, data }
-                 const value = arr ? [ content ] : content
+  return params
+     .filter(param => param.filename && param.type)
+     .map(param => {
+       const { name, type, filename, data } = param
+       const [ strName, arr ] = takeApartName(name as unknown as string)
+       const content = { type, filename, data }
+       const value = arr ? [ content ] : content
 
-                 return { name: strName as string, value }
-               })
-               // from https://stackoverflow.com/questions/57379778/typescript-type-for-reduce
-               // @TODO the output type still problematic
-               .reduce<Record<string, UwsBodyParserMixEntry>>((a , b): any => {
-                 switch (true) {
-                  case (isEmptyObj(a)):
-                    return { [b.name]: b.value } // init
-                  case (a[b.name] !== undefined):
-                    return Object.assign(a , {
-                      [b.name]: toArr(a[b.name]).concat(toArr(b.value))
-                    })
-                  default:
-                    return Object.assign(a, {[b.name]: b.value})
-                 }
-               }, {})
+       return { name: strName as string, value }
+     })
+     // from https://stackoverflow.com/questions/57379778/typescript-type-for-reduce
+     // @TODO the output type still problematic
+     .reduce<Record<string, UwsBodyParserMixEntry>>((a , b): any => {
+       switch (true) {
+        case (isEmptyObj(a)):
+          return { [b.name]: b.value } // init
+        case (a[b.name] !== undefined):
+          return Object.assign(a , {
+            [b.name]: toArr(a[b.name]).concat(toArr(b.value))
+          })
+        default:
+          return Object.assign(a, {[b.name]: b.value})
+       }
+     }, {})
 }
 
 /** when the result is simple text then we parse it to string not buffer */
