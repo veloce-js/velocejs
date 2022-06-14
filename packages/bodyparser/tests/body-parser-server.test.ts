@@ -34,11 +34,10 @@ test(`Testing the POST json`, async (t) => {
 
 
 test('Testing the POST form-data', async (t) => {
-
   const params = new URLSearchParams()
-  params.append('a', 1)
-  params.append('b', 2)
-  params.append('c', 3)
+  params.append('a', '1')
+  params.append('b', '2')
+  params.append('c', '3')
 
   const result = await fetch(`${url}/some-form-end-point`, {
     method: 'POST',
@@ -46,5 +45,4 @@ test('Testing the POST form-data', async (t) => {
   })
   const json = await result.json()
   t.deepEqual(json, testResultParam)
-
 })

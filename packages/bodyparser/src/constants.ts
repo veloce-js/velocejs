@@ -34,7 +34,7 @@ export const CHARSET = 'charset=utf-8'
 export const CLIENT_KEY = 'x-client'
 export const CLIENT_NAME = 'velocejs'
 // combine default jsonql headers
-export const DEFAULT_HEADER = {
+export const DEFAULT_HEADERS = {
   'Accept': CONTENT_TYPE,
   'Content-Type': [ JSONQL_CONTENT_TYPE, CHARSET ].join(''),
   [CLIENT_KEY]: CLIENT_NAME

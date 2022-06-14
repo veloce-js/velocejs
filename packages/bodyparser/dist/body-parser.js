@@ -16,7 +16,7 @@ const debugFn = (0, debug_1.default)('velocejs:body-parser:main');
 function bodyParser(res, req, options) {
     return tslib_1.__awaiter(this, void 0, void 0, function* () {
         debugFn('bodyparser options', options);
-        // @NOTE the onAborted handler never works here, its been moved back to fastapi internal 
+        // @NOTE the onAborted handler never works here, its been moved back to fastapi internal
         const url = req.getUrl();
         const query = req.getQuery();
         const method = req.getMethod();
@@ -34,7 +34,10 @@ function bodyParser(res, req, options) {
             body.type = constants_1.IS_DYNAMIC;
         }
         if (method === constants_1.GET_NAME) {
-            body.type = body.type || constants_1.IS_OTHER;
+            if (!body.type) { // not set in the last process
+                // even without a payload it could have a json header
+                body.type = (0, utils_1.isJson)(headers) ? constants_1.IS_JSON : constants_1.IS_OTHER;
+            }
             return Promise.resolve(body);
         }
         // we should only call this when the header is not GET - there is nobody to process
@@ -50,7 +53,7 @@ function bodyParser(res, req, options) {
                         body.type = constants_1.IS_FORM;
                         body.params = (0, parse_query_1.processQueryParameters)(buffer.toString());
                         break;
-                    case (0, utils_1.isFile)(headers):
+                    case (0, utils_1.isMultipart)(headers):
                         body.type = constants_1.IS_MULTI;
                         body.params = parseMultipart(headers, buffer);
                         break;
@@ -85,9 +88,10 @@ function parseMultipart(headers, body) {
     return {};
 }
 exports.parseMultipart = parseMultipart;
-// break it out from above for clearity
+/** process the file upload array */
 function processFileArray(params) {
-    return params.filter(param => param.filename && param.type)
+    return params
+        .filter(param => param.filename && param.type)
         .map(param => {
         const { name, type, filename, data } = param;
         const [strName, arr] = (0, utils_1.takeApartName)(name);

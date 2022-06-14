@@ -11,7 +11,7 @@ test(`it will throw if we pass a wrong pattern url`, t => {
   t.throws(() => new UrlPattern('/:something/:id'))
 })
 
-test(`Testing a pattern that failed in FastApi`, t => {
+test(`Testing a pattern that failed on FastApi`, t => {
   const urlObj = new UrlPattern('/mix-spread/:category/:subcategory/:id/:subcatid')
   const params = urlObj.parse('/mix-spread/shoes/socks/1024/3456')
 

@@ -37,14 +37,12 @@ app.run([
     type: 'any',
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
-
       res.onAborted(() => {
         console.log(`Connection aborted`)
       })
-
       const result = await bodyParser(res, req)
-      // console.log(`got called here --->`, result)
-      const payload =  (result.method === 'get') ?
+      // console.log(`got called here with result --->`, result)
+      const payload = (result.method === 'get') ?
         result.queryParams : result.params
       // we only return the result.params
       jsonWriter(res)(payload)

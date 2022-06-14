@@ -71,7 +71,10 @@ export async function bodyParser(
     body.type = IS_DYNAMIC
   }
   if (method === GET_NAME) {
-    body.type = body.type || IS_OTHER
+    if (!body.type) { // not set in the last process
+      // even without a payload it could have a json header
+      body.type = isJson(headers) ? IS_JSON : IS_OTHER
+    }
     return Promise.resolve(body)
   }
   // we should only call this when the header is not GET - there is nobody to process
