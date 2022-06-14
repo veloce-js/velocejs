@@ -594,7 +594,8 @@ export class FastApi implements FastApiInterface {
     if (type === IS_OTHER) {
       return writer(payload, this._headers, this._status)
     }
-    const _payload = this._jsonql ? formatJsonql({ data: payload }) : payload
+    const _payload = this._jsonql ? JSON.stringify(formatJsonql({ data: payload }))
+                                  : payload
     // check if they set a different content-type header
     // if so we don't use the jsonWriter
     for (const key in this._headers) {
