@@ -2,7 +2,7 @@
 import test from 'ava'
 import Fetch from 'node-fetch'
 import { assign } from '@jsonql/utils'
-import { DEFAULT_HEADER, CLIENT_KEY, CLIENT_NAME } from '../src/lib/constants'
+import { DEFAULT_HEADERS, CLIENT_KEY, CLIENT_NAME } from '../src/lib/constants'
 // import { ValidatorFactory } from '@jsonql/validator'
 import { MyApi, msg1, msg2, msg3 } from './fixtures/my-api'
 // tmp
@@ -11,7 +11,7 @@ declare type JsonqlStruct = { data: any, error: any, meta: any }
 // custom fetch
 async function fetchClient(url: string, options?: any) {
   const headers = assign(
-    DEFAULT_HEADER,
+    DEFAULT_HEADERS,
     { [CLIENT_KEY]: CLIENT_NAME }
   )
   const config = { headers }
