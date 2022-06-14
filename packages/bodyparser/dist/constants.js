@@ -35,7 +35,7 @@ exports.CLIENT_KEY = 'x-client';
 exports.CLIENT_NAME = 'velocejs';
 // combine default jsonql headers
 exports.DEFAULT_HEADERS = {
-    'Accept': exports.CONTENT_TYPE,
-    'Content-Type': [exports.JSONQL_CONTENT_TYPE, exports.CHARSET].join(''),
+    'Accept': exports.JSONQL_CONTENT_TYPE,
+    'Content-Type': [exports.JSONQL_CONTENT_TYPE, exports.CHARSET].join('; '),
     [exports.CLIENT_KEY]: exports.CLIENT_NAME
 };

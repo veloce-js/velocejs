@@ -35,7 +35,7 @@ export const CLIENT_KEY = 'x-client'
 export const CLIENT_NAME = 'velocejs'
 // combine default jsonql headers
 export const DEFAULT_HEADERS = {
-  'Accept': CONTENT_TYPE,
+  'Accept': JSONQL_CONTENT_TYPE,
   'Content-Type': [ JSONQL_CONTENT_TYPE, CHARSET ].join('; '),
   [CLIENT_KEY]: CLIENT_NAME
 }

@@ -4,7 +4,7 @@ import test from 'ava'
 import fetch from 'node-fetch'
 import app from './fixtures/server'
 import { isJson } from '../src/utils'
-import { DEFAULT_HEADERS } from '../src/constants'
+import { DEFAULT_HEADERS, JSONQL_CONTENT_TYPE } from '../src/constants'
 const testResultParam = { a: '1', b: '2', c: '3' }
 let url = 'http://localhost:'
 
@@ -29,10 +29,10 @@ test('test the isJson method can understand the jsonql headers', t => {
   // mimic the getHeaders method
   const headers = getHeaders(DEFAULT_HEADERS)
   const res = isJson(headers)
-  
-  t.true(res)
 
+  t.true(res)
   t.true(headers['content-type'].indexOf('; ') > -1)
+  t.is(headers['accept'], JSONQL_CONTENT_TYPE)
 })
 
 test('Testing the GET url param with a jsonql header', async (t) => {

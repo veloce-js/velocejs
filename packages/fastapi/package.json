@@ -41,7 +41,7 @@
     "@jsonql/errors": "^0.8.0",
     "@jsonql/utils": "^0.8.0",
     "@jsonql/validators": "^0.9.1",
-    "@velocejs/bodyparser": "workspace:^0.8.0",
+    "@velocejs/bodyparser": "workspace:^0.8.1",
     "@velocejs/config": "workspace:^0.5.2",
     "@velocejs/server": "workspace:^0.9.0",
     "debug": "^4.3.4",

@@ -6,12 +6,13 @@ export const WEBSOCKET_METHOD = 'ws'
 // The same from bodyparser
 export const DYNAMIC_ROUTE_PATTERN = '/:'
 
-export const CONTENT_TYPE = 'application/vnd.api+json'
+export const JSONQL_CONTENT_TYPE = 'application/vnd.api+json'
 export const CHARSET = 'charset=utf-8'
-export const DEFAULT_HEADER = {
-  'Accept': CONTENT_TYPE,
-  'Content-Type': [ CONTENT_TYPE, CHARSET ].join('')
-}
-
 export const CLIENT_KEY = 'x-client'
 export const CLIENT_NAME = 'velocejs'
+// combine default jsonql headers
+export const DEFAULT_HEADERS = {
+  'Accept': JSONQL_CONTENT_TYPE,
+  'Content-Type': [ JSONQL_CONTENT_TYPE, CHARSET ].join('; '),
+  [CLIENT_KEY]: CLIENT_NAME
+}
