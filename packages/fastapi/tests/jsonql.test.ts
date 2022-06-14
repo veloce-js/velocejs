@@ -5,6 +5,9 @@ import { assign } from '@jsonql/utils'
 import { DEFAULT_HEADER, CLIENT_KEY, CLIENT_NAME } from '../src/lib/constants'
 // import { ValidatorFactory } from '@jsonql/validator'
 import { MyApi, msg1, msg2, msg3 } from './fixtures/my-api'
+// tmp
+declare type JsonqlStruct = { data: any, error: any, meta: any }
+
 // custom fetch
 async function fetchClient(url: string, options?: any) {
   const headers = assign(
@@ -34,12 +37,9 @@ test.only(`Testing the class extends from FastApi`, async (t) => {
   t.plan(1)
   const response = await fetchClient(`${hostname}/some-where`)
   // console.log('HEADERS',  response.headers)
-  const json = await response.json()
+  const json = await response.json() as JsonqlStruct
 
-  console.log(json)
-
-  t.truthy(json)
-  // t.is(text, msg1)
+  t.is(json.data, msg1)
 })
 
 
