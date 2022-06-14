@@ -28,6 +28,7 @@ class FastApi {
     _written = false;
     _headers = {};
     _status = placeholderVal;
+    _jsonql = null;
     _onConfigReady;
     _onConfigWait = placeholderFn;
     _onConfigError = placeholderFn;
@@ -310,7 +311,7 @@ class FastApi {
         if (!this._hasCatchAll) {
             _routes.push(this._createCatchAllRoute());
         }
-        debug('all setup routes', _routes);
+        debug('ALL ROUTES', _routes);
         return this._uwsInstance.run(_routes);
     }
     /** split out from above because we still need to handle the user provide middlewares */
@@ -326,7 +327,7 @@ class FastApi {
     _handleValidationError(error) {
         debug('_handleValidationError', error);
         const { detail, message, className } = error;
-        const payload = { errors: { message, detail, className } };
+        const payload = (0, common_1.formatJsonql)({ error: { message, detail, className } });
         if (this.res && !this._written) {
             return (0, server_1.jsonWriter)(this.res)(payload, this._validationErrStatus);
         }
@@ -344,12 +345,10 @@ class FastApi {
     }
     /** handle rendering content */
     async _handleContent(args, handler, type, propertyName) {
-        // const args2 = this._applyArgs(argNames, params)
         try {
             const reply = await Reflect.apply(handler, this, args);
-            // @TODO we should get rip of this
-            // @TODO create a register test handler to test this output directly?
             if (reply && !this._written) {
+                debug('_handleContent', reply);
                 this._render(type, reply);
             }
         }
@@ -387,12 +386,14 @@ class FastApi {
     _setTemp(payload, res
     /*, req?: HttpRequest */
     ) {
-        this._headers = {};
+        const { headers } = payload;
+        // @TODO check for auth header
+        this._jsonql = (0, common_1.isJsonql)(headers);
+        this._headers = headers;
         this._status = placeholderVal;
         this._written = false;
         this.payload = payload;
         this.res = res;
-        // we have the dynamic generate _writer _jsonWriter they are useless
     }
     // call this after the call finish
     _unsetTemp() {
@@ -401,32 +402,31 @@ class FastApi {
             ['res', 'payload'].forEach(fn => {
                 this[fn] = undefined;
             });
+            this._jsonql = null;
             this._written = false;
             this._headers = {};
             this._status = placeholderVal;
         }, 0);
     }
-    /** Write the output
-    This will be only output
-    */
+    /** Write the output to client */
     _render(type, payload) {
         const res = this.res;
         const writer = (0, server_1.getWriter)(res);
-        switch (type) {
-            case server_1.IS_OTHER:
-                writer(payload, this._headers, this._status);
-                break;
-            default:
-                // check if they set a different content-type header
-                // if so we don't use the jsonWriter
-                for (const key in this._headers) {
-                    if (key.toLowerCase() === server_1.CONTENT_TYPE) {
-                        // exit here
-                        return writer(payload, this._headers, this._status);
-                    }
-                }
-                (0, server_1.jsonWriter)(res)(payload, this._status);
+        debug('_render', type);
+        if (type === server_1.IS_OTHER) {
+            return writer(payload, this._headers, this._status);
         }
+        const _payload = this._jsonql ? JSON.stringify((0, common_1.formatJsonql)({ data: payload }))
+            : payload;
+        // check if they set a different content-type header
+        // if so we don't use the jsonWriter
+        for (const key in this._headers) {
+            if (key.toLowerCase() === server_1.CONTENT_TYPE) {
+                // exit here
+                return writer(_payload, this._headers, this._status);
+            }
+        }
+        (0, server_1.jsonWriter)(res)(_payload, this._status);
     }
     /** prepare validators */
     _initValidators(astMap, validations) {
@@ -491,13 +491,14 @@ class FastApi {
     /**
       We have experience a lot of problem when delivery the content try to intercept
       the content type, instead we now force the finally output to use one of the following
-      all with a $ to start to make sure no conflict with the regular public names
+      they all start with a $ to make sure no conflict with the regular public names
     */
     /** Apart from serving the standard html, when using the json contract system
     this will get wrap inside the delivery format - next protobuf as well */
     $json(content) {
         if (this.res && !this._written) {
-            return (0, server_1.jsonWriter)(this.res)(content);
+            const payload = this._jsonql ? (0, common_1.formatJsonql)({ data: content }) : content;
+            return (0, server_1.jsonWriter)(this.res)(payload);
         }
     }
     /** just a string */
@@ -528,7 +529,6 @@ class FastApi {
     }
     /** @TODO SSG but this should only call when data been update and generate static files
     then it get serve up via the @ServeStatic TBC
-  
     */
     ///////////////////////////////////////////
     //             PUBLIC                    //
@@ -560,7 +560,7 @@ class FastApi {
         this._validationErrStatus = status || constants_1.DEFAULT_ERROR_STATUS;
     }
     /**
-     The interface to serve up the contract, it's public but prefix underscore to avoid override
+     The interface to serve up the contract, it's public but prefix underscore to avoid name collison
      */
     $_serveContract() {
         // debug('call _serveContract') // @BUG if I remove this then it doens't work???

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.prepareValidateRoute = exports.mergeInfo = exports.notUndef = exports.prepareArgsFromDynamicToSpread = exports.assertDynamicRouteArgs = exports.prepareSpreadArg = exports.isSpreadFn = exports.hasSpreadArg = exports.convertStrToTypeAction = exports.convertStrToType = exports.prepareArgs = exports.extractArgs = void 0;
+exports.formatJsonql = exports.isJsonql = exports.prepareValidateRoute = exports.mergeInfo = exports.notUndef = exports.prepareArgsFromDynamicToSpread = exports.assertDynamicRouteArgs = exports.prepareSpreadArg = exports.isSpreadFn = exports.hasSpreadArg = exports.convertStrToTypeAction = exports.convertStrToType = exports.prepareArgs = exports.extractArgs = void 0;
 const tslib_1 = require("tslib");
 const server_1 = require("@velocejs/server");
 const constants_1 = require("@jsonql/ast/dist/lib/constants");
@@ -131,3 +131,18 @@ function prepareValidateRoute(type, propertyName, validations) {
     return undefined;
 }
 exports.prepareValidateRoute = prepareValidateRoute;
+/** check if the client is using jsonql */
+function isJsonql(headers) {
+    return !!(headers[constants_2.CLIENT_KEY] && headers[constants_2.CLIENT_KEY] === constants_2.CLIENT_NAME);
+}
+exports.isJsonql = isJsonql;
+/** when _jsonql === true then we wrap the result into this structure */
+function formatJsonql(payload // @TODO import the type from jsonql/contract
+) {
+    return {
+        data: payload.data || null,
+        meta: payload.meta || null,
+        error: payload.error || null
+    };
+}
+exports.formatJsonql = formatJsonql;

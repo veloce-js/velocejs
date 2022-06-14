@@ -10,6 +10,7 @@ export declare class FastApi implements FastApiInterface {
     private _written;
     private _headers;
     private _status;
+    private _jsonql;
     private _onConfigReady;
     private _onConfigWait;
     private _onConfigError;
@@ -67,9 +68,7 @@ export declare class FastApi implements FastApiInterface {
     private _applyArgs;
     private _setTemp;
     private _unsetTemp;
-    /** Write the output
-    This will be only output
-    */
+    /** Write the output to client */
     private _render;
     /** prepare validators */
     private _initValidators;
@@ -93,7 +92,7 @@ export declare class FastApi implements FastApiInterface {
     /**
       We have experience a lot of problem when delivery the content try to intercept
       the content type, instead we now force the finally output to use one of the following
-      all with a $ to start to make sure no conflict with the regular public names
+      they all start with a $ to make sure no conflict with the regular public names
     */
     /** Apart from serving the standard html, when using the json contract system
     this will get wrap inside the delivery format - next protobuf as well */
@@ -110,7 +109,6 @@ export declare class FastApi implements FastApiInterface {
     protected $ssr(data: UwsStringPairObj, options?: UwsStringPairObj): void;
     /** @TODO SSG but this should only call when data been update and generate static files
     then it get serve up via the @ServeStatic TBC
-  
     */
     /** overload the ValidatorPlugins registerPlugin better approach is
         to do that in the velocejs.config.js
@@ -123,7 +121,7 @@ export declare class FastApi implements FastApiInterface {
     $registerAuthMethod(): void;
     set $validationErrorStatus(status: number);
     /**
-     The interface to serve up the contract, it's public but prefix underscore to avoid override
+     The interface to serve up the contract, it's public but prefix underscore to avoid name collison
      */
     $_serveContract(): void;
     /** @TODO this is reserved for serving up generated (js) script for validator */

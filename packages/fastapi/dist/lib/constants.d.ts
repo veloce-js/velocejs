@@ -16,5 +16,13 @@ export declare const DEFAULT_CONTRACT_METHOD = "get";
 export declare const DYNAMIC_ROUTE_ALLOW_TYPES: string[];
 export declare const REST_NAME = "rest";
 export declare const DEFAULT_ERROR_STATUS = 417;
+export declare const CONTENT_TYPE = "application/vnd.api+json";
+export declare const CHARSET = "charset=utf-8";
+export declare const DEFAULT_HEADER: {
+    Accept: string;
+    'Content-Type': string;
+};
+export declare const CLIENT_KEY = "x-client";
+export declare const CLIENT_NAME = "velocejs";
 export declare const isDev: boolean;
 export declare const isDebug: boolean;

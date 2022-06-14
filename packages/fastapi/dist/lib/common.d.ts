@@ -25,3 +25,15 @@ because we need to re-organize how to init the validation object among others
 export declare function mergeInfo(map: object, existingRoutes: Array<RouteMetaInfo>, validations: JsonqlObjectValidateInput, protectedRoutes: string[]): RouteMetaInfo[];
 /** skip the static and raw type */
 export declare function prepareValidateRoute(type: string, propertyName: string, validations: JsonqlObjectValidateInput): JsonqlValidationRule | undefined;
+/** check if the client is using jsonql */
+export declare function isJsonql(headers: UwsStringPairObj): boolean;
+/** when _jsonql === true then we wrap the result into this structure */
+export declare function formatJsonql(payload: Partial<{
+    data: any;
+    meta: any;
+    error: any;
+}>): {
+    data: any;
+    meta: any;
+    error: any;
+};

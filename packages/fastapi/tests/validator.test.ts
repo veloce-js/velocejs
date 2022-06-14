@@ -59,6 +59,6 @@ test(`Validation with wrong property to cause a throw`, async t => {
     return res.json()
   })
   .then((json: any) => {
-    t.truthy(json.errors)
+    t.truthy(json.error)
   })
 })
