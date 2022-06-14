@@ -8,6 +8,7 @@ export declare class FastApi implements FastApiInterface {
     private _contract;
     private _routeForContract;
     private _written;
+    private _incomingHeaders;
     private _headers;
     private _status;
     private _jsonql;

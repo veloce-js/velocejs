@@ -26,6 +26,7 @@ class FastApi {
     _contract;
     _routeForContract = [];
     _written = false;
+    _incomingHeaders = {};
     _headers = {};
     _status = placeholderVal;
     _jsonql = null;
@@ -389,7 +390,7 @@ class FastApi {
         const { headers } = payload;
         // @TODO check for auth header
         this._jsonql = (0, common_1.isJsonql)(headers);
-        this._headers = headers;
+        this._incomingHeaders = headers;
         this._status = placeholderVal;
         this._written = false;
         this.payload = payload;
@@ -404,7 +405,7 @@ class FastApi {
             });
             this._jsonql = null;
             this._written = false;
-            this._headers = {};
+            this._incomingHeaders = {};
             this._status = placeholderVal;
         }, 0);
     }
@@ -421,9 +422,10 @@ class FastApi {
             : payload;
         // check if they set a different content-type header
         // if so we don't use the jsonWriter
+        // this create a problem with node-fetch ?
         for (const key in this._headers) {
             if (key.toLowerCase() === server_1.CONTENT_TYPE) {
-                // exit here
+                // we need to only send part of the headers back not all of them
                 return writer(_payload, this._headers, this._status);
             }
         }

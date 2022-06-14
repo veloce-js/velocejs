@@ -9,7 +9,7 @@ import type {
   HttpMethodParams,
 } from './types'
 export { Response }
-import { DEFAULT_HEADER } from './constants'
+import { DEFAULT_HEADERS } from './constants'
 // main
 export default async function main(
   params: HttpMethodParams
@@ -25,10 +25,13 @@ export default async function main(
   // @TODO headers
   options.headers = Object.assign({
     'x-client': 'Velocejs'
-  }, DEFAULT_HEADER)
-  console.log('fetch options', options, params)
+  }, DEFAULT_HEADERS)
+  // console.log('fetch options', options, params)
   // just stub it for now
   return fetch(url, options)
-                .then((res: Response) => res.json() as unknown as JSON)
+                .then((res: Response) => {
+                  console.log('raw headers', res.headers.raw())
+                  return res.json() as unknown as JSON
+                })
                 // @TODO if the result contains the error then we need to deal with it here
 }

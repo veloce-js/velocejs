@@ -112,6 +112,7 @@ export class FastApi implements FastApiInterface {
   private _contract!: ContractWriter
   private _routeForContract: JsonqlRouteForContract = []
   private _written = false
+  private _incomingHeaders: UwsStringPairObj = {}
   private _headers: UwsStringPairObj = {}
   private _status: number = placeholderVal
   private _jsonql: boolean | null = null
@@ -565,7 +566,7 @@ export class FastApi implements FastApiInterface {
     const { headers } = payload
     // @TODO check for auth header
     this._jsonql = isJsonql(headers)
-    this._headers = headers
+    this._incomingHeaders = headers
     this._status = placeholderVal
     this._written = false
     this.payload = payload
@@ -581,7 +582,7 @@ export class FastApi implements FastApiInterface {
       })
       this._jsonql = null
       this._written = false
-      this._headers = {}
+      this._incomingHeaders = {}
       this._status = placeholderVal
     }, 0)
   }
@@ -599,9 +600,10 @@ export class FastApi implements FastApiInterface {
                    : payload
     // check if they set a different content-type header
     // if so we don't use the jsonWriter
+    // this create a problem with node-fetch ?
     for (const key in this._headers) {
       if (key.toLowerCase() === CONTENT_TYPE) {
-        // exit here
+        // we need to only send part of the headers back not all of them
         return writer(_payload, this._headers, this._status)
       }
     }
