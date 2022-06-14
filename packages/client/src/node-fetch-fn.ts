@@ -22,10 +22,9 @@ export default async function main(
       options.body = JSON.stringify(payload)
     }
   }
-  // @TODO headers
-  options.headers = Object.assign({
-    'x-client': 'Velocejs'
-  }, DEFAULT_HEADERS)
+  options.headers = Object.assign(
+    params.headers || {}
+  , DEFAULT_HEADERS)
   // console.log('fetch options', options, params)
   // just stub it for now
   return fetch(url, options)

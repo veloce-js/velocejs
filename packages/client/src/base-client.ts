@@ -5,6 +5,7 @@ import {
   JsonqlContractEntry,
   ValidateFn,
   JsonqlPropertyParamMap,
+  Whatever
 } from './types'
 import { arrToObj } from '@jsonql/utils/dist/object'
 import { ValidatorsClient } from '@jsonql/validators/dist/validators-client'
@@ -49,19 +50,19 @@ export class BaseClient {
         params.rules ? { [ params.name ]: params.rules } : {}
       ))
       validator.addValidationRules(rules)
-      // @TODO the result need to package up
-      return async (args: any[]) => Reflect.apply(
+      const fn = 'validate'
+      return {[fn]: async (args: Whatever[]) => Reflect.apply(
                                       validator.validate,
                                       validator,
                                       [args, RETURN_AS_OBJ]
-                                    )
+                                    )}[fn]
     } else if (entry.validate === false) {
-      return async (args: any[]) => Reflect.apply(
+      const fn = 'noValdiate'
+      return {[fn]: async (args: Whatever[]) => Reflect.apply(
                                       validator.prepareArgValues,
                                       validator,
-                                      args
-                                    )
+                                      [args]
+                                    )}[fn]
     }
   }
-
 }

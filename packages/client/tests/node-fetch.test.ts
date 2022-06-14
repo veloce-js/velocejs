@@ -41,7 +41,7 @@ test('Test the POST method with validation', async t => {
                   })
 })
 
-test.only('Test GET url with query params', async t => {
+test('Test GET url with query params', async t => {
 
   return client.comm('someUrl', ['2022-05-01', '2022-06-01'])
                .then((result: ClientResult) => {
@@ -54,4 +54,16 @@ test.only('Test GET url with query params', async t => {
                })
 })
 
-test.todo('Test GET with dynamic url with a spread argument api')
+test.only('Test GET with dynamic url with a spread argument api', async t => {
+
+  return client.comm('archive', [2022, 6, 14])
+                .then((result: ClientResult) => {
+                  console.log('someUrl', result)
+                  t.truthy(result.data)
+                })
+                .catch((error: ValidationError) => {
+                  console.log('error?', error)
+                  t.pass()
+                })
+
+})

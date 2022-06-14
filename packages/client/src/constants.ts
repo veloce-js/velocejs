@@ -16,3 +16,7 @@ export const DEFAULT_HEADERS = {
   'Content-Type': [ JSONQL_CONTENT_TYPE, CHARSET ].join('; '),
   [CLIENT_KEY]: CLIENT_NAME
 }
+
+// copy over from validator
+export const TS_TYPE_NAME = 'tstype'
+export const SPREAD_ARG_TYPE = 'RestElement'

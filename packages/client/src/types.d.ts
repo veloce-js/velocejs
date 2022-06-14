@@ -10,11 +10,13 @@ export type {
   JsonqlPropertyParamMap,
 } from '@jsonql/validators/index'
 
+export type Whatever = any
+
 export type GenericKeyValue = {
-  [key: string]: any
+  [key: string]: Whatever
 }
 export type ClientResult = GenericKeyValue
-export type GenericArrayValue = Array<any>
+export type GenericArrayValue = Array<Whatever>
 
 import type {
   RequestInit,
@@ -43,7 +45,7 @@ export type HttpMethodParams = {
   method?: string
   payload?: GenericKeyValue | GenericArrayValue
   headers?: GenericKeyValue
-  [key: string]: any
+  [key: string]: Whatever
 }
 
 export type HttpMethod = (params: HttpMethodParams) => Promise<JSON>
