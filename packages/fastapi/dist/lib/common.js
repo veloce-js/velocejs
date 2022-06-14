@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatJsonql = exports.isJsonql = exports.prepareValidateRoute = exports.mergeInfo = exports.notUndef = exports.prepareArgsFromDynamicToSpread = exports.assertDynamicRouteArgs = exports.prepareSpreadArg = exports.isSpreadFn = exports.hasSpreadArg = exports.convertStrToTypeAction = exports.convertStrToType = exports.prepareArgs = exports.extractArgs = void 0;
+exports.prepareRecognizableString = exports.formatJsonql = exports.isJsonql = exports.prepareValidateRoute = exports.mergeInfo = exports.notUndef = exports.prepareArgsFromDynamicToSpread = exports.assertDynamicRouteArgs = exports.prepareSpreadArg = exports.isSpreadFn = exports.hasSpreadArg = exports.convertStrToTypeAction = exports.convertStrToType = exports.prepareArgs = exports.extractArgs = void 0;
 const tslib_1 = require("tslib");
 const server_1 = require("@velocejs/server");
 const constants_1 = require("@jsonql/ast/dist/lib/constants");
@@ -146,3 +146,20 @@ function formatJsonql(payload // @TODO import the type from jsonql/contract
     };
 }
 exports.formatJsonql = formatJsonql;
+/** check if the payload the recognizable string buffer or array buffer then convert it */
+function prepareRecognizableString(payload) {
+    try {
+        if ('byteLength' in payload) {
+            return payload; // Buffer of ArrayBuffer
+        }
+    }
+    catch (e) {
+        if (typeof payload === 'string') {
+            return payload;
+        }
+        if (typeof payload === 'object') {
+            return JSON.stringify(payload);
+        }
+    }
+}
+exports.prepareRecognizableString = prepareRecognizableString;

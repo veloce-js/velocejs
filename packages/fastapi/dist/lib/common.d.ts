@@ -37,3 +37,5 @@ export declare function formatJsonql(payload: Partial<{
     meta: any;
     error: any;
 };
+/** check if the payload the recognizable string buffer or array buffer then convert it */
+export declare function prepareRecognizableString(payload: any): any;

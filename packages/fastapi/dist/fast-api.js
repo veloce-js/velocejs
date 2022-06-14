@@ -416,7 +416,8 @@ class FastApi {
         if (type === server_1.IS_OTHER) {
             return writer(payload, this._headers, this._status);
         }
-        const _payload = this._jsonql ? JSON.stringify((0, common_1.formatJsonql)({ data: payload }))
+        const _payload = this._jsonql
+            ? JSON.stringify((0, common_1.formatJsonql)({ data: payload }))
             : payload;
         // check if they set a different content-type header
         // if so we don't use the jsonWriter

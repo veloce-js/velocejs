@@ -198,3 +198,19 @@ export function formatJsonql(
     error: payload.error || null
   }
 }
+
+/** check if the payload the recognizable string buffer or array buffer then convert it */
+export function prepareRecognizableString(payload: any) {
+  try {
+    if ('byteLength' in payload) {
+      return payload // Buffer of ArrayBuffer
+    }
+  } catch(e) {
+    if (typeof payload === 'string') {
+      return payload
+    }
+    if (typeof payload === 'object') {
+      return JSON.stringify(payload)
+    }
+  }
+}
