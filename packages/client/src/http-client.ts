@@ -44,7 +44,7 @@ export class HttpClient extends BaseClient {
       // @TODO how to pass the type info to the arguments
       this[name as string] = {
         [name as string]: async function(...args: ArgsListType[]) {
-          console.log('pass the arguments', args, 'to call', entry)
+          // console.log('pass the arguments', args, 'to call', entry)
           // set validator
           return validateFn(args)
                   .then((result: GenericKeyValue) =>
@@ -66,6 +66,7 @@ export class HttpClient extends BaseClient {
       httpOpts.method = entry.type
       httpOpts.payload = args
     }
+    console.log('httpOpts', httpOpts, args)
     // now call fetch
     return this._httpMethod(httpOpts)
   }
@@ -81,7 +82,7 @@ export class HttpClient extends BaseClient {
       return (new UrlPattern(route)).stringify(args)
     }
     // ugly but works ...
-    if (entry.method === DEFAULT_REQUEST_METHOD && hasArgs(args)) {
+    if (entry.type === DEFAULT_REQUEST_METHOD && hasArgs(args)) {
       const url = route + '?'
       const params: string[] = []
       for (const key in args) {
