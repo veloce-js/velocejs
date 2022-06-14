@@ -42,10 +42,7 @@ export class BaseClient {
     entry: JsonqlContractEntry
   ): ValidateFn {
     const validator = this._validators.getValidator(entry.name as string)
-    // TS stupid check for this ugly programming style not me
-    if (entry && entry.params && entry.params.length === 0) {
-      return async () => []
-    } else if (entry.params && entry.validate === true) {
+    if (entry.params && entry.validate === true) {
       const rules = arrToObj(entry.params, (params: JsonqlPropertyParamMap) => (
         params.rules ? { [ params.name ]: params.rules } : {}
       ))
@@ -57,12 +54,15 @@ export class BaseClient {
                                       [args, RETURN_AS_OBJ]
                                     )}[fn]
     } else if (entry.validate === false) {
-      const fn = 'noValdiate'
+      const fn = 'notValidate'
       return {[fn]: async (args: Whatever[]) => Reflect.apply(
                                       validator.prepareArgValues,
                                       validator,
                                       [args]
                                     )}[fn]
     }
+    // everything else
+    const fn = 'dummy'
+    return {[fn]: async () => []}[fn]
   }
 }

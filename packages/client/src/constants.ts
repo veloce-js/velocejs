@@ -20,3 +20,4 @@ export const DEFAULT_HEADERS = {
 // copy over from validator
 export const TS_TYPE_NAME = 'tstype'
 export const SPREAD_ARG_TYPE = 'RestElement'
+// just to give a name to the different validation methods

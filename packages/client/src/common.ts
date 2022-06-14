@@ -2,6 +2,7 @@
 import {
   JsonqlContractEntry,
   GenericKeyValue,
+  Whatever
 } from './types'
 import UrlPattern from 'url-pattern'
 import {
@@ -29,7 +30,7 @@ export function prepareUrl(
 }
 
 /** just check if the arguments has key but not account for the value is array */
-export function hasArgs(args: any) {
+export function hasArgs(args: Whatever) {
   return !!Object.keys(args).length
 }
 
