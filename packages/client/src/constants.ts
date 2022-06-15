@@ -10,10 +10,12 @@ export const JSONQL_CONTENT_TYPE = 'application/vnd.api+json'
 export const CHARSET = 'charset=utf-8'
 export const CLIENT_KEY = 'x-client'
 export const CLIENT_NAME = 'velocejs'
+
+export const CONTENT_TYPE = 'Content-type'
 // combine default jsonql headers
 export const DEFAULT_HEADERS = {
   'Accept': JSONQL_CONTENT_TYPE,
-  'Content-Type': [ JSONQL_CONTENT_TYPE, CHARSET ].join('; '),
+  [CONTENT_TYPE]: [ JSONQL_CONTENT_TYPE, CHARSET ].join('; '),
   [CLIENT_KEY]: CLIENT_NAME
 }
 

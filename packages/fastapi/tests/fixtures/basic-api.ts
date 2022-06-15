@@ -7,7 +7,7 @@ export class BasicApi extends FastApi {
 
   @Get('/first')
   first() {
-    this.$text('FIRST')
+    return 'FIRST'
   }
-  
+
 }

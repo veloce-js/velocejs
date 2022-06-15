@@ -21,6 +21,9 @@ export type {
 import type {
   UwsBodyParserOptions
 } from '@velocejs/bodyparser/index'
+export type {
+  JsonqlContractTemplate
+} from '@jsonql/contract/index'
 
 export type RouteMetaInfo = {
   type: string

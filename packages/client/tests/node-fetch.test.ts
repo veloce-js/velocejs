@@ -23,6 +23,7 @@ test.after(() => {
 })
 
 test('Test the basic GET method', async t => {
+  t.plan(1)
   return client.comm('news')
               .then(() => {
                 t.pass()
@@ -33,37 +34,29 @@ test('Test the basic GET method', async t => {
               })
 })
 
+test.only('Test GET url with query params', async t => {
+  t.plan(1)
+  return client.comm('someUrl', ['2022-05-01', '2022-06-01'])
+               .then((result: ClientResult) => {
+                 console.log(result)
+                 t.truthy(result.data)
+               })
+})
+
+test('Test GET with dynamic url with a spread argument api', async t => {
+  t.plan(1)
+  return client.comm('archive', [2022, 6, 14])
+                .then((result: string) => {
+                  // because the server call $text
+                  t.is(result, '2022-6-14')
+                })
+})
+
 test('Test the POST method with validation', async t => {
+  t.plan(1)
   return client['post']('today headline', 'na na na', 2000)
                   .then((result: ClientResult) => {
                     // console.log('--->', result)
                     t.truthy(result.data)
                   })
-})
-
-test('Test GET url with query params', async t => {
-
-  return client.comm('someUrl', ['2022-05-01', '2022-06-01'])
-               .then((result: ClientResult) => {
-                 console.log('someUrl', result)
-                 t.truthy(result.data)
-               })
-               .catch((error: ValidationError) => {
-                 console.log('error?', error)
-                 t.pass()
-               })
-})
-
-test.only('Test GET with dynamic url with a spread argument api', async t => {
-
-  return client.comm('archive', [2022, 6, 14])
-                .then((result: ClientResult) => {
-                  console.log('someUrl', result)
-                  t.truthy(result.data)
-                })
-                .catch((error: ValidationError) => {
-                  console.log('error?', error)
-                  t.pass()
-                })
-
 })

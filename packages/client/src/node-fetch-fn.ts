@@ -7,13 +7,15 @@ import type {
 } from 'node-fetch/@types/index'
 import type {
   HttpMethodParams,
+  Whatever,
 } from './types'
 export { Response }
 import { DEFAULT_HEADERS } from './constants'
+import { isJsonLike } from './common'
 // main
 export default async function main(
   params: HttpMethodParams
-): Promise<JSON> {
+): Promise<Whatever> {
   const { url, method, payload } = params
   const options: RequestInit = {}
   if (method) {
@@ -28,9 +30,8 @@ export default async function main(
   // console.log('fetch options', options, params)
   // just stub it for now
   return fetch(url, options)
-                .then((res: Response) => {
-                  console.log('raw headers', res.headers.raw())
-                  return res.json() as unknown as JSON
-                })
-                // @TODO if the result contains the error then we need to deal with it here
+                .then((res: Response) =>
+                  isJsonLike(res.headers.raw()) ? res.json() : res.text()
+                )
+                // @TODO if the result contains `error` then we need to deal with it here
 }
