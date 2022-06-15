@@ -48,11 +48,10 @@
     "@jsonql/contract": "^0.11.0",
     "@jsonql/utils": "^0.8.0",
     "@jsonql/validators": "^0.9.1",
+    "@swc/core": "^1.2.198",
     "@velocejs/config": "workspace:^0.5.2",
-    "@xn-sakina/phoenix": "^1.0.2",
     "tslib": "^2.4.0",
-    "url-pattern": "^1.0.3",
-    "vitest": "^0.14.2"
+    "url-pattern": "^1.0.3"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
@@ -76,6 +75,8 @@
     "nyc": "^15.1.0",
     "open": "^8.4.0",
     "rimraf": "^3.0.2",
+    "rollup": "^2.75.6",
+    "rollup-plugin-swc3": "^0.3.0",
     "typescript": "^4.7.3",
     "ws": "^8.8.0"
   },

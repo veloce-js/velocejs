@@ -1,17 +1,22 @@
-// using node-fetch
-// as experiement interface keep the same as the fetch api for compatibility
-import fetch from 'node-fetch'
-import type {
-  Response,
-  RequestInit
-} from 'node-fetch/@types/index'
+// the browser bundle entry point
 import type {
   HttpMethodParams,
   Whatever,
 } from './types'
 import { DEFAULT_HEADERS } from './constants'
 import { isJsonLike } from './common'
-// main
+
+/**
+check the type of the payload and decided what to do
+*/
+function prepareBody(payload: any) {
+  return payload instanceof FormData
+       ? payload
+       : (typeof payload === 'object' ? JSON.stringify(payload)
+                                      : payload)
+}
+
+// browser fetch wrapper
 export default async function main(
   params: HttpMethodParams
 ): Promise<Whatever> {
@@ -20,7 +25,7 @@ export default async function main(
   if (method) {
     options.method = method
     if (payload) {
-      options.body = JSON.stringify(payload)
+      options.body = prepareBody(payload)
     }
   }
   options.headers = Object.assign(
@@ -30,7 +35,7 @@ export default async function main(
   // just stub it for now
   return fetch(url, options)
                 .then((res: Response) =>
-                  isJsonLike(res.headers.raw()) ? res.json() : res.text()
+                  isJsonLike(res.headers) ? res.json() : res.text()
                 )
                 // @TODO if the result contains `error` then we need to deal with it here
 }
