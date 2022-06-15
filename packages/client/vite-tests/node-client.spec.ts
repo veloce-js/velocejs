@@ -1,7 +1,7 @@
 // using vitest
-import { test, beforeAll, afterAll } from 'vitest'
+import { test, beforeAll, afterAll, expect } from 'vitest'
 
-import { ClientResult, ValidationError } from '../src/types'
+// import { ClientResult, ValidationError } from '../src/types'
 import { ApiWithContract } from './fixtures/api-with-contract-with-rules'
 // import { readJsonSync } from 'fs-extra'
 // import { join } from 'node:path'
@@ -29,6 +29,6 @@ test('Test the basic GET method', async t => {
   const result = await client.comm('news')
 
   console.log(result)
-  
 
+  expect(result.data).toBe('some news')
 })
