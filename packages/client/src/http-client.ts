@@ -53,7 +53,7 @@ export class HttpClient extends BaseClient {
     // @TODO how to pass the type info to the arguments
     this[name as string] = {
       [name as string]: async function(...args: ArgsListType[]) {
-        console.log('pass the arguments', args, 'to call', entry)
+        // console.log('pass the arguments', args, 'to call', entry)
         // set validator
         return validateFn(args)
                 .then((result: GenericKeyValue) =>
@@ -62,8 +62,10 @@ export class HttpClient extends BaseClient {
     }}[name as string]
   }
 
-  /** create the http calls */
-  private _executeHttpCall(
+  /** create the http calls, it was a private but keep having this method is declare but not read?
+  warning - which stop the compiler but its read - see above! 
+  */
+  protected _executeHttpCall(
     entry: JsonqlContractEntry,
     args: GenericKeyValue
   ) {
