@@ -8,9 +8,9 @@ import type {
 import type {
   HttpMethodParams,
   Whatever,
-} from './types'
-import { DEFAULT_HEADERS } from './constants'
-import { isJsonLike } from './common'
+} from '../types'
+import { DEFAULT_HEADERS } from '../lib/constants'
+import { isJsonLike } from '../lib/common'
 // main
 export default async function main(
   params: HttpMethodParams

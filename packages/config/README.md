@@ -4,7 +4,7 @@ Reading the project configuration files in various format and provide to differe
 
 ## veloce.config.js
 
-This is the default file name; we also support `veloce.config.cjs` (Must be in commonJs format)
+This is the default file name; we also support `veloce.config.cjs` (Must be in commonJs format at the moment)
 
 For example:
 
@@ -30,7 +30,10 @@ const cacheDir = c.getConfig('contract.cacheDir')
 
 ```
 
-@TODO add the full matching of all Veloce Config options then add the `@jsonql/config-check` module
+@TODO
+- add the full matching of all Veloce Config options then add the `@jsonql/config-check` module
+- support other file format (.ts, .json)
+- read from other config file (vite!)
 
 ---
 

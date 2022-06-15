@@ -2,9 +2,9 @@
   "name": "@velocejs/client",
   "version": "0.0.1",
   "description": "@velocejs/client generate client code using contract",
-  "main": "dist/index.js",
-  "module": "dist/index.ts",
-  "browser": "./dist/velocejs-client.min.js",
+  "main": "dist/client.js",
+  "module": "dist/client-module.js",
+  "browser": "./client.js",
   "files": [
     "dist",
     "src",
@@ -56,6 +56,8 @@
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
     "@jsonql/errors": "^0.8.0",
+    "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
     "@types/debug": "^4.1.7",
     "@types/fs-extra": "^9.0.13",
     "@types/mime-types": "^2.1.1",

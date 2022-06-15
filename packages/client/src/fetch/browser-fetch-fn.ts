@@ -9,7 +9,7 @@ import { isJsonLike } from '../lib/common'
 /**
 check the type of the payload and decided what to do
 */
-function prepareBody(payload: any) {
+function prepareBody(payload: unknown)  {
   return payload instanceof FormData
        ? payload
        : (typeof payload === 'object' ? JSON.stringify(payload)
@@ -25,7 +25,7 @@ export default async function main(
   if (method) {
     options.method = method
     if (payload) {
-      options.body = prepareBody(payload)
+      options.body = prepareBody(payload) as string
     }
   }
   options.headers = Object.assign(
