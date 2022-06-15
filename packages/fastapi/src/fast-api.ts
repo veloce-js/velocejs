@@ -839,6 +839,9 @@ export class FastApi implements FastApiInterface {
   // wrapper around the shutdown
   public $stop(): void {
     this._uwsInstance.shutdown()
+    if (process.env.NODE_ENV === 'test') {
+      console.info('shutdown ...')
+    }
   }
 
   /* return stuff about the server,

@@ -617,6 +617,9 @@ class FastApi {
     // wrapper around the shutdown
     $stop() {
         this._uwsInstance.shutdown();
+        if (process.env.NODE_ENV === 'test') {
+            console.info('shutdown ...');
+        }
     }
     /* return stuff about the server,
       we don't really need it but good for debug */
