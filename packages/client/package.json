@@ -15,6 +15,9 @@
   "scripts": {
     "dev": "pnpm build:fetch:dev && DEBUG=velocejs:* pnpm run:dev",
     "run:dev": "NODE_ENV=development VELOCE_CONFIG=./dev/veloce.config.js pnpm ts ./dev/start.ts",
+    "test:vite:watch": "vitest",
+    "test:vite": "vitest run",
+    "test:vite:coverage": "vitest run --coverage",
     "test:ava": "ava",
     "test:nyc": "nyc ava",
     "test": "pnpm build && pnpm test:ava",
@@ -47,7 +50,8 @@
     "@jsonql/validators": "^0.9.1",
     "@velocejs/config": "workspace:^0.5.2",
     "tslib": "^2.4.0",
-    "url-pattern": "^1.0.3"
+    "url-pattern": "^1.0.3",
+    "vitest": "^0.14.2"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",

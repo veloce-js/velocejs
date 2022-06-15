@@ -1,1 +1,0 @@
-export { VeloceClient } from './client';
