@@ -6,10 +6,10 @@ import {
   ValidateFn,
   JsonqlPropertyParamMap,
   Whatever
-} from './types'
+} from '../types'
 import { arrToObj } from '@jsonql/utils/dist/object'
 import { ValidatorsClient } from '@jsonql/validators/dist/validators-client'
-import { RETURN_AS_OBJ } from '@jsonql/validators'
+import { RETURN_AS_OBJ } from './constants'
 // main
 export class BaseClient {
 

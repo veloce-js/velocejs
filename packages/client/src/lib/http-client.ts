@@ -11,7 +11,7 @@ import {
   HttpMethod,
   HttpMethodParams,
   Whatever,
-} from './types'
+} from '../types'
 import {
   WEBSOCKET_METHOD,
   DEFAULT_REQUEST_METHOD,
@@ -63,7 +63,7 @@ export class HttpClient extends BaseClient {
   }
 
   /** create the http calls, it was a private but keep having this method is declare but not read?
-  warning - which stop the compiler but its read - see above! 
+  warning - which stop the compiler but its read - see above!
   */
   protected _executeHttpCall(
     entry: JsonqlContractEntry,
@@ -76,7 +76,7 @@ export class HttpClient extends BaseClient {
       httpOpts.method = entry.type
       httpOpts.payload = args
     }
-    console.log('httpOpts', httpOpts, args)
+    // console.log('httpOpts', httpOpts, args)
     // now call fetch
     return this._httpMethod(httpOpts)
   }

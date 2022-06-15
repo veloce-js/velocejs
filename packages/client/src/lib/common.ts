@@ -3,7 +3,8 @@ import {
   JsonqlContractEntry,
   GenericKeyValue,
   Whatever
-} from './types'
+} from '../types'
+// @TODO create a separate module and import on demand?
 import UrlPattern from 'url-pattern'
 import {
   DYNAMIC_ROUTE_PATTERN,

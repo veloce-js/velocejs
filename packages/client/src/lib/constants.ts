@@ -23,3 +23,6 @@ export const DEFAULT_HEADERS = {
 export const TS_TYPE_NAME = 'tstype'
 export const SPREAD_ARG_TYPE = 'RestElement'
 // just to give a name to the different validation methods
+
+// was import from '@jsonql/validators'
+export const RETURN_AS_OBJ = 'object'
