@@ -4,7 +4,7 @@ import { HttpClient } from './lib/http-client'
 import nodeFetchFn from './fetch/node-fetch-fn'
 
 /** factory method to create a new node client */
-export function nodeClient(
+export function velocejsClient(
   contract: JsonqlContractTemplate,
   host?: string
 ) {

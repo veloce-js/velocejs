@@ -30,6 +30,7 @@ specifiers:
   open: ^8.4.0
   rimraf: ^3.0.2
   rollup: ^2.75.6
+  rollup-plugin-polyfill-node: ^0.9.0
   rollup-plugin-swc3: ^0.3.0
   tslib: ^2.4.0
   typescript: ^4.7.3
@@ -70,6 +71,7 @@ devDependencies:
   open: 8.4.0
   rimraf: 3.0.2
   rollup: 2.75.6
+  rollup-plugin-polyfill-node: 0.9.0_rollup@2.75.6
   rollup-plugin-swc3: 0.3.0_3pzzx6opysh2ktf3wi32ts7djm
   typescript: 4.7.3
   ws: 8.8.0
@@ -461,6 +463,17 @@ packages:
       is-reference: 1.2.1
       magic-string: 0.25.9
       resolve: 1.22.0
+      rollup: 2.75.6
+    dev: true
+
+  /@rollup/plugin-inject/4.0.4_rollup@2.75.6:
+    resolution: {integrity: sha512-4pbcU4J/nS+zuHk+c+OL3WtmEQhqxlZ9uqfjQMQDOHOPld7PsCd8k5LWs8h5wjwJN7MgnAn768F2sDxEP4eNFQ==}
+    peerDependencies:
+      rollup: ^1.20.0 || ^2.0.0
+    dependencies:
+      '@rollup/pluginutils': 3.1.0_rollup@2.75.6
+      estree-walker: 2.0.2
+      magic-string: 0.25.9
       rollup: 2.75.6
     dev: true
 
@@ -2792,6 +2805,15 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.0
+    dev: true
+
+  /rollup-plugin-polyfill-node/0.9.0_rollup@2.75.6:
+    resolution: {integrity: sha512-cVqm7LjgBqtZ77M9hLYayXrLz18nLIVPp3MPqNi2suStrFDg1LsA2cSdMIighr2yeuAQrphu8ymXTAsJNVABow==}
+    peerDependencies:
+      rollup: ^1.20.0 || ^2.0.0
+    dependencies:
+      '@rollup/plugin-inject': 4.0.4_rollup@2.75.6
+      rollup: 2.75.6
     dev: true
 
   /rollup-plugin-swc3/0.3.0_3pzzx6opysh2ktf3wi32ts7djm:

@@ -2,8 +2,8 @@
   "name": "@velocejs/client",
   "version": "0.0.1",
   "description": "@velocejs/client generate client code using contract",
-  "main": "dist/client.js",
-  "module": "dist/client-module.js",
+  "main": "dist/velocejs-client.cjs.js",
+  "module": "dist/velocejs-client.es.js",
   "browser": "./client.js",
   "files": [
     "dist",
@@ -78,6 +78,7 @@
     "open": "^8.4.0",
     "rimraf": "^3.0.2",
     "rollup": "^2.75.6",
+    "rollup-plugin-polyfill-node": "^0.9.0",
     "rollup-plugin-swc3": "^0.3.0",
     "typescript": "^4.7.3",
     "ws": "^8.8.0"
