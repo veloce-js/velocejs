@@ -85,5 +85,13 @@ export function createQueryUrl(
 /** check if the incoming header looks like json */
 export function isJsonLike(headers: GenericKeyValue) {
   const ct = CONTENT_TYPE.toLowerCase()
-  return (headers[ct] && headers[ct].indexOf('json') > -1)
+  if (headers[ct]) {
+    const header = headers[ct]
+    if (Array.isArray(header)) {
+      return !!header.filter((h: string) => h.indexOf('json') > -1).length
+    }
+    return header.indexOf('json') > -1
+  }
+
+  return false
 }
