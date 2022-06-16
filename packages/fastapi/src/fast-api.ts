@@ -79,7 +79,7 @@ import {
   RULES_KEY,
   RULE_AUTOMATIC,
   DEFAULT_ERROR_STATUS,
-  // JSONQL_CONTENT_TYPE,
+  JSONQL_CONTENT_TYPE,
 } from './lib/constants'
 import {
   convertStrToType,
@@ -792,9 +792,8 @@ export class FastApi implements FastApiInterface {
       debug('_serveContract contract:', json)
       // we need to diy the render here otherwise it will get double warp
       if (this.res && !this._written) {
-        // set out default headers as well
-
-        jsonWriter(this.res)(JSON.stringify(json))
+        // set our jsonql headers as well
+        jsonWriter(this.res, {[CONTENT_TYPE]: JSONQL_CONTENT_TYPE})(json)
       }
     })
   }

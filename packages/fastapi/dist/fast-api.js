@@ -330,6 +330,7 @@ class FastApi {
         const { detail, message, className } = error;
         const payload = (0, common_1.formatJsonql)({ error: { message, detail, className } });
         if (this.res && !this._written) {
+            // @TODO need to allow jsonWriter to accep extra headers
             return (0, server_1.jsonWriter)(this.res)(payload, this._validationErrStatus);
         }
     }
@@ -575,7 +576,8 @@ class FastApi {
             debug('_serveContract contract:', json);
             // we need to diy the render here otherwise it will get double warp
             if (this.res && !this._written) {
-                (0, server_1.jsonWriter)(this.res)(JSON.stringify(json));
+                // set our jsonql headers as well
+                (0, server_1.jsonWriter)(this.res, { [server_1.CONTENT_TYPE]: constants_1.JSONQL_CONTENT_TYPE })(json);
             }
         });
     }
