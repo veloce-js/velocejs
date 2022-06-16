@@ -6,6 +6,7 @@ var UrlPattern = require('url-pattern');
 var require$$1$2 = require('tty');
 var require$$1$3 = require('util');
 var require$$0$1 = require('os');
+var fetch = require('node-fetch');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -13,11 +14,27 @@ var UrlPattern__default = /*#__PURE__*/_interopDefaultLegacy(UrlPattern);
 var require$$1__default = /*#__PURE__*/_interopDefaultLegacy(require$$1$2);
 var require$$1__default$1 = /*#__PURE__*/_interopDefaultLegacy(require$$1$3);
 var require$$0__default = /*#__PURE__*/_interopDefaultLegacy(require$$0$1);
+var fetch__default = /*#__PURE__*/_interopDefaultLegacy(fetch);
 
 const DEFAULT_REQUEST_METHOD = 'get';
+const DEFAULT_CONTRACT_PATH = '/veloce/contract';
 const WEBSOCKET_METHOD = 'ws';
 // The same from bodyparser
 const DYNAMIC_ROUTE_PATTERN = '/:';
+const JSONQL_CONTENT_TYPE = 'application/vnd.api+json';
+const CHARSET = 'charset=utf-8';
+const CLIENT_KEY = 'x-client';
+const CLIENT_NAME = 'velocejs';
+const CONTENT_TYPE = 'Content-type';
+// combine default jsonql headers
+const DEFAULT_HEADERS = {
+    'Accept': JSONQL_CONTENT_TYPE,
+    [CONTENT_TYPE]: [
+        JSONQL_CONTENT_TYPE,
+        CHARSET
+    ].join('; '),
+    [CLIENT_KEY]: CLIENT_NAME
+};
 // just to give a name to the different validation methods
 // was import from '@jsonql/validators'
 const RETURN_AS_OBJ$1 = 'object';
@@ -69,6 +86,10 @@ const RETURN_AS_OBJ$1 = 'object';
         params.push(`${key}=${args[key]}`);
     }
     return url + params.join('&');
+}
+/** check if the incoming header looks like json */ function isJsonLike(headers) {
+    const ct = CONTENT_TYPE.toLowerCase();
+    return headers[ct] && headers[ct].indexOf('json') > -1;
 }
 
 function getAugmentedNamespace(n) {
@@ -9054,5 +9075,37 @@ class HttpClient extends BaseClient {
 class WsClient {
 }
 
+// using node-fetch
+// main
+async function main(params) {
+    const { url , method , payload  } = params;
+    const options = {};
+    if (method) {
+        options.method = method;
+        if (payload) {
+            options.body = JSON.stringify(payload);
+        }
+    }
+    options.headers = Object.assign(params.headers || {}, DEFAULT_HEADERS);
+    // console.log('fetch options', options, params)
+    // just stub it for now
+    return fetch__default["default"](url, options).then((res)=>isJsonLike(res.headers.raw()) ? res.json() : res.text());
+// @TODO if the result contains `error` then we need to deal with it here
+}
+
+/** factory method to create a new node client */ function velocejsClient(contract, host) {
+    return new HttpClient(contract, main, host);
+}
+/** export another one which is async */ async function velocejsClientAynsc(host = '') {
+    return main({
+        url: [
+            host,
+            DEFAULT_CONTRACT_PATH
+        ].join('')
+    }).then((contract)=>new HttpClient(contract, main, host));
+}
+
 exports.HttpClient = HttpClient;
 exports.WsClient = WsClient;
+exports.velocejsClient = velocejsClient;
+exports.velocejsClientAynsc = velocejsClientAynsc;

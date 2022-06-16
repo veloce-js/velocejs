@@ -5,6 +5,7 @@
 })(this, (function (exports) { 'use strict';
 
   const DEFAULT_REQUEST_METHOD = 'get';
+  const DEFAULT_CONTRACT_PATH = '/veloce/contract';
   const WEBSOCKET_METHOD = 'ws';
   // The same from bodyparser
   const DYNAMIC_ROUTE_PATTERN = '/:';
@@ -8576,11 +8577,11 @@
   // @TODO if the result contains `error` then we need to deal with it here
   }
 
-  /** factory method to create a new node client */ async function velocejsClientAsync(host = '/') {
+  /** factory method to create a new node client */ async function velocejsClientAsync(host = '') {
       return main({
           url: [
               host,
-              'veloce/contract'
+              DEFAULT_CONTRACT_PATH
           ].join('')
       }).then((contract)=>new HttpClient(contract, main, host));
   }

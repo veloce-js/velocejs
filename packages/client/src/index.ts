@@ -2,3 +2,7 @@
 // they will require to actually comm layer to work
 export { HttpClient } from './lib/http-client'
 export { WsClient } from './lib/ws-client'
+export {
+  velocejsClient,
+  velocejsClientAynsc
+} from './node-client'
