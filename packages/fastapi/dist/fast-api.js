@@ -576,8 +576,11 @@ class FastApi {
             debug('_serveContract contract:', json);
             // we need to diy the render here otherwise it will get double warp
             if (this.res && !this._written) {
+                const jsonqlHeader = {
+                    [server_1.CONTENT_TYPE]: [constants_1.JSONQL_CONTENT_TYPE, server_1.DEFAULT_CHARTSET].join('; ')
+                };
                 // set our jsonql headers as well
-                (0, server_1.jsonWriter)(this.res, { [server_1.CONTENT_TYPE]: constants_1.JSONQL_CONTENT_TYPE })(json);
+                (0, server_1.jsonWriter)(this.res, jsonqlHeader)(json);
             }
         });
     }

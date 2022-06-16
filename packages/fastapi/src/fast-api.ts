@@ -42,6 +42,7 @@ import {
   IS_OTHER,
   CONTENT_TYPE,
   WEBSOCKET_ROUTE_NAME,
+  DEFAULT_CHARTSET,
 } from '@velocejs/server'
 import bodyParser, {
   UrlPattern,
@@ -792,8 +793,11 @@ export class FastApi implements FastApiInterface {
       debug('_serveContract contract:', json)
       // we need to diy the render here otherwise it will get double warp
       if (this.res && !this._written) {
+        const jsonqlHeader = {
+          [CONTENT_TYPE]: [JSONQL_CONTENT_TYPE, DEFAULT_CHARTSET].join('; ')
+        }
         // set our jsonql headers as well
-        jsonWriter(this.res, {[CONTENT_TYPE]: JSONQL_CONTENT_TYPE})(json)
+        jsonWriter(this.res, jsonqlHeader)(json)
       }
     })
   }
