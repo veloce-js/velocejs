@@ -17,10 +17,7 @@ export async function velocejsClientAsync(
 ): Promise<HttpClient | void> {
   return nodeFetchFn({
     url: [host, DEFAULT_CONTRACT_PATH].join('')
-  }).then((contract: JsonqlContractTemplate) => { // need to fix that type again
-    console.dir(contract, { depth: null })
-    return new HttpClient(contract, nodeFetchFn, host)
-  }).catch(error => {
-    console.log(error)
-  })
+  }).then((contract: JsonqlContractTemplate) =>
+    new HttpClient(contract, nodeFetchFn, host)
+  )
 }

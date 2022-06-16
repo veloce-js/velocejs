@@ -4,7 +4,7 @@ import { ApiWithContract } from './fixtures/api-with-contract-with-rules'
 // import { readJsonSync } from 'fs-extra'
 // import { join } from 'node:path'
 import { HttpClient } from '../src/lib/http-client'
-import { velocejsClientAsync } from '../src/node-client'
+import { velocejsClientAsync } from '../dist/velocejs-client.cjs'
 
 let api: ApiWithContract
 let url: string
@@ -22,7 +22,7 @@ test.after(() => {
   api.$stop()
 })
 
-test('Test the basic GET method', async t => {
+test('Test the basic GET method with velocejsClientAsync', async t => {
   t.plan(1)
   return client.comm('news')
               .then(() => {
@@ -34,7 +34,7 @@ test('Test the basic GET method', async t => {
               })
 })
 
-test('Test GET url with query params', async t => {
+test('Test GET url with query params with velocejsClientAsync', async t => {
   t.plan(1)
   const result:ClientResult = await client.comm('someUrl', ['2022-05-01', '2022-06-01'])
 
@@ -43,7 +43,7 @@ test('Test GET url with query params', async t => {
   // t.truthy(result.data) // if I use this then I get a 134? 128+6 exit code
 })
 
-test('Test GET with dynamic url with a spread argument api', async t => {
+test('Test GET with dynamic url with a spread argument api with velocejsClientAsync', async t => {
   t.plan(1)
   return client.comm('archive', [2022, 6, 14])
                 .then((result: string) => {
@@ -52,7 +52,7 @@ test('Test GET with dynamic url with a spread argument api', async t => {
                 })
 })
 
-test('Test the POST method with validation', async t => {
+test('Test the POST method with validation with velocejsClientAsync', async t => {
   t.plan(1)
   return client['post']('today headline', 'na na na', 2000)
                   .then((result: ClientResult) => {
