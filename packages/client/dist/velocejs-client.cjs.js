@@ -9096,7 +9096,7 @@ async function main(params) {
 /** factory method to create a new node client */ function velocejsClient(contract, host) {
     return new HttpClient(contract, main, host);
 }
-/** export another one which is async */ async function velocejsClientAynsc(host = '') {
+/** export another one which is async */ async function velocejsClientAsync(host = '') {
     return main({
         url: [
             host,
@@ -9108,4 +9108,4 @@ async function main(params) {
 exports.HttpClient = HttpClient;
 exports.WsClient = WsClient;
 exports.velocejsClient = velocejsClient;
-exports.velocejsClientAynsc = velocejsClientAynsc;
+exports.velocejsClientAsync = velocejsClientAsync;

@@ -4,5 +4,5 @@ export { HttpClient } from './lib/http-client'
 export { WsClient } from './lib/ws-client'
 export {
   velocejsClient,
-  velocejsClientAynsc
+  velocejsClientAsync
 } from './node-client'

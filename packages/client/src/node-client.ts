@@ -12,7 +12,7 @@ export function velocejsClient(
 }
 
 /** export another one which is async */
-export async function velocejsClientAynsc(
+export async function velocejsClientAsync(
   host = ''
 ): Promise<HttpClient> {
   return nodeFetchFn({
