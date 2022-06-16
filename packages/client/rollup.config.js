@@ -3,6 +3,8 @@ import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
 import pkg from './package.json'
+
+const isDev = process.env.NODE_ENV === 'dev'
 /*
 import tsConfig from './tsconfig.json'
 const tscConfig = {}
@@ -32,7 +34,7 @@ export default [
     format: 'umd',
     name: 'velocejsClient'
   },{
-    file: 'client.es.js',
+    file: (isDev ? 'dist/' : '') + 'client.es.js',
     format: 'es'
   }],
   plugins: sharePlugins
@@ -44,7 +46,7 @@ export default [
     format: 'umd',
     name: 'velocejsClientAsync'
   },{
-    file: 'async-client.es.js',
+    file: (isDev ? 'dist/' : '') + 'async-client.es.js',
     format: 'es'
   }],
   plugins: sharePlugins
