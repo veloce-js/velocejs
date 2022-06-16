@@ -7,12 +7,14 @@ import { DEFAULT_CONTRACT_PATH } from './lib/constants'
 export function velocejsClient(
   contract: JsonqlContractTemplate,
   host?: string
-) {
+): HttpClient {
   return new HttpClient(contract, nodeFetchFn, host)
 }
 
 /** export another one which is async */
-export async function velocejsClientAynsc(host = '') {
+export async function velocejsClientAynsc(
+  host = ''
+): Promise<HttpClient> {
   return nodeFetchFn({
     url: [host, DEFAULT_CONTRACT_PATH].join('')
   }).then((contract: JsonqlContractTemplate) =>

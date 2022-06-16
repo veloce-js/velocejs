@@ -3,8 +3,12 @@ import { ClientResult, ValidationError } from '../src/types'
 import { ApiWithContract } from './fixtures/api-with-contract-with-rules'
 // import { readJsonSync } from 'fs-extra'
 // import { join } from 'node:path'
-import { HttpClient } from '../src/http-client'
-import getClient from './fixtures/client'
+import { HttpClient } from '../src/lib/http-client'
+import { velocejsClient } from '../src/node-client'
+
+import { readJsonSync } from 'fs-extra'
+import { join } from 'node:path'
+const contract = readJsonSync(join(__dirname, 'contract', 'public-contract.json'))
 
 let api: ApiWithContract
 let url: string
@@ -15,7 +19,7 @@ test.before(async () => {
   api = new ApiWithContract()
   url = await api.$start()
   console.log(url)
-  client = getClient(url)
+  client = velocejsClient(contract, url) as unknown as HttpClient
 })
 
 test.after(() => {
