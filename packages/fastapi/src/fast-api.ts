@@ -79,6 +79,7 @@ import {
   RULES_KEY,
   RULE_AUTOMATIC,
   DEFAULT_ERROR_STATUS,
+  // JSONQL_CONTENT_TYPE,
 } from './lib/constants'
 import {
   convertStrToType,
@@ -492,6 +493,7 @@ export class FastApi implements FastApiInterface {
     const { detail, message, className } = error
     const payload = formatJsonql({ error: { message, detail, className } })
     if (this.res && !this._written) {
+      // @TODO need to allow jsonWriter to accep extra headers
       return jsonWriter(this.res)(payload, this._validationErrStatus)
     }
   }
@@ -567,6 +569,7 @@ export class FastApi implements FastApiInterface {
     // @TODO check for auth header
     this._jsonql = isJsonql(headers)
     this._incomingHeaders = headers
+    debug('_incomingHeaders', this._incomingHeaders) // this will be useful in the future
     this._status = placeholderVal
     this._written = false
     this.payload = payload
@@ -787,7 +790,12 @@ export class FastApi implements FastApiInterface {
             .then((cacheDir: string) => this._contract.serve(cacheDir))
     ).then((json: UwsStringPairObj) => {
       debug('_serveContract contract:', json)
-      this.$json(json)
+      // we need to diy the render here otherwise it will get double warp
+      if (this.res && !this._written) {
+        // set out default headers as well
+
+        jsonWriter(this.res)(JSON.stringify(json))
+      }
     })
   }
 

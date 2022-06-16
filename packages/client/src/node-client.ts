@@ -14,10 +14,13 @@ export function velocejsClient(
 /** export another one which is async */
 export async function velocejsClientAsync(
   host = ''
-): Promise<HttpClient> {
+): Promise<HttpClient | void> {
   return nodeFetchFn({
     url: [host, DEFAULT_CONTRACT_PATH].join('')
-  }).then((contract: JsonqlContractTemplate) =>
-    new HttpClient(contract, nodeFetchFn, host)
-  )
+  }).then((contract: any) => { // need to fix that type again
+    console.dir(contract, { depth: null })
+    return new HttpClient(contract['data'], nodeFetchFn, host)
+  }).catch(error => {
+    console.log(error)
+  })
 }

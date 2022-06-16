@@ -24,6 +24,9 @@ test.before(async () => {
     // t.pass()
     const res = await Fetch(contractUrl)
     contract = await res.json()
+
+    // console.log('headers', res.headers.raw())
+    // console.dir(contract, { depth: null })
 })
 
 test.after(() => {

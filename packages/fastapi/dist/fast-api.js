@@ -391,6 +391,7 @@ class FastApi {
         // @TODO check for auth header
         this._jsonql = (0, common_1.isJsonql)(headers);
         this._incomingHeaders = headers;
+        debug('_incomingHeaders', this._incomingHeaders); // this will be useful in the future
         this._status = placeholderVal;
         this._written = false;
         this.payload = payload;
@@ -572,7 +573,10 @@ class FastApi {
             this._config.getConfig(`${config_1.CONTRACT_KEY}.${config_1.CACHE_DIR}`)
                 .then((cacheDir) => this._contract.serve(cacheDir))).then((json) => {
             debug('_serveContract contract:', json);
-            this.$json(json);
+            // we need to diy the render here otherwise it will get double warp
+            if (this.res && !this._written) {
+                (0, server_1.jsonWriter)(this.res)(JSON.stringify(json));
+            }
         });
     }
     /** @TODO this is reserved for serving up generated (js) script for validator */

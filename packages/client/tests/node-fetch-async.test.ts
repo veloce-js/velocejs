@@ -4,8 +4,7 @@ import { ApiWithContract } from './fixtures/api-with-contract-with-rules'
 // import { readJsonSync } from 'fs-extra'
 // import { join } from 'node:path'
 import { HttpClient } from '../src/lib/http-client'
-import { velocejsClientAsync } from '../dist/velocejs-client.cjs'
-
+import { velocejsClientAsync } from '../src/node-client'
 
 let api: ApiWithContract
 let url: string
@@ -16,7 +15,7 @@ test.before(async () => {
   api = new ApiWithContract()
   url = await api.$start()
   console.log(url)
-  client = velocejsClientAsync(url) as unknown as HttpClient
+  client = await velocejsClientAsync(url) as unknown as HttpClient
 })
 
 test.after(() => {

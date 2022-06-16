@@ -10,7 +10,8 @@ const utils_1 = require("@jsonql/utils");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)('velocejs:server:writers');
 /** just write the header and encode the JSON to string */
-const jsonWriter = (res) => {
+const jsonWriter = (res, headers // add this here because laziness ...
+) => {
     const writer = (0, exports.getWriter)(res);
     // return fn
     return (jsonObj, status) => {
@@ -19,7 +20,8 @@ const jsonWriter = (res) => {
             debugFn('jsonObj', jsonObj);
             throw new Error(`input is not in correct json format!`);
         }
-        writer(JSON.stringify(json), { [constants_1.CONTENT_TYPE]: constants_1.JSON_HEADER }, status);
+        const defaultHeader = { [constants_1.CONTENT_TYPE]: constants_1.JSON_HEADER };
+        writer(JSON.stringify(json), headers ? Object.assign(defaultHeader, headers) : defaultHeader, status);
     };
 };
 exports.jsonWriter = jsonWriter;

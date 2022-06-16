@@ -16,7 +16,7 @@ test.after(() => {
 })
 
 test(`Testing the readJsonAsync method`, async (t) => {
-  t.plan(2)
+  t.plan(3)
 
   createApp()
     .post('/*', async (res: HttpResponse) => {
@@ -24,7 +24,7 @@ test(`Testing the readJsonAsync method`, async (t) => {
       // test (1)
       t.deepEqual(result, payload)
       reply.l = payload.data.length
-      jsonWriter(res)(reply)
+      jsonWriter(res, {'x-server': 'velocejs'})(reply)
     })
     .listen(port, (token: any) => {
       listenSocket = token
@@ -34,8 +34,9 @@ test(`Testing the readJsonAsync method`, async (t) => {
     })
 
   // request
-  await sendJson(`http://localhost:${port}`, payload)
-    .then(json => {
+  await sendJson(`http://localhost:${port}`, payload, true)
+    .then(({json, headers}) => {
       t.is(json.l , 3)
+      t.deepEqual(headers['x-server'], ['velocejs'])
     })
 })

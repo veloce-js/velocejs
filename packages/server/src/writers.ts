@@ -14,18 +14,25 @@ import debug from 'debug'
 const debugFn = debug('velocejs:server:writers')
 
 /** just write the header and encode the JSON to string */
-export const jsonWriter = (res: HttpResponse): UwsJsonWriter => {
+export const jsonWriter = (
+  res: HttpResponse,
+  headers?: UwsStringPairObj // add this here because laziness ...
+): UwsJsonWriter => {
   const writer = getWriter(res)
   // return fn
-  return (jsonObj: any, status?: number): void => {
+  return (
+    jsonObj: UwsStringPairObj | Array<UwsStringPairObj>,
+    status?: number
+  ): void => {
     const json = parseJson(jsonObj, true)
     if (!json) {
       debugFn('jsonObj', jsonObj)
       throw new Error(`input is not in correct json format!`)
     }
+    const defaultHeader = { [CONTENT_TYPE]: JSON_HEADER }
     writer(
       JSON.stringify(json),
-      { [CONTENT_TYPE]: JSON_HEADER },
+      headers ? Object.assign(defaultHeader, headers) : defaultHeader,
       status
     )
   }
