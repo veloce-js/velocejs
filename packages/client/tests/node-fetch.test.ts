@@ -4,11 +4,11 @@ import { ApiWithContract } from './fixtures/api-with-contract-with-rules'
 // import { readJsonSync } from 'fs-extra'
 // import { join } from 'node:path'
 import { HttpClient } from '../src/lib/http-client'
-import { velocejsClient } from '../src/node-client'
+import { velocejsClient } from '../dist/velocejs-client.cjs'
 
 import { readJsonSync } from 'fs-extra'
 import { join } from 'node:path'
-const contract = readJsonSync(join(__dirname, 'contract', 'public-contract.json'))
+const contract = readJsonSync(join(__dirname, 'fixtures', 'contract', 'public-contract.json'))
 
 let api: ApiWithContract
 let url: string
