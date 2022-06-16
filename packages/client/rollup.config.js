@@ -2,10 +2,9 @@ import { swc, defineRollupSwcOption } from 'rollup-plugin-swc3'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
-
 import pkg from './package.json'
+/*
 import tsConfig from './tsconfig.json'
-
 const tscConfig = {}
 const excluded = ['module', 'moduleResolution', 'outDir', 'types']
 for (const name in tsConfig.compilerOptions) {
@@ -13,9 +12,20 @@ for (const name in tsConfig.compilerOptions) {
     tscConfig[name] = tsConfig[name]
   }
 }
+*/
+
+const sharePlugins = [
+  nodePolyfills(),
+  resolve({
+    preferBuiltins: true
+  }), // so Rollup can find `ms`
+  commonjs(), // so Rollup can convert `ms` to an ES module
+  swc(defineRollupSwcOption()),
+]
 
 // first try out to build the node version
-export default [{
+export default [
+{
   input: 'src/client.ts',
   output: [{
     file: 'client.js',
@@ -25,20 +35,21 @@ export default [{
     file: 'client.es.js',
     format: 'es'
   }],
-  plugins: [
-    nodePolyfills(),
-		resolve({
-      preferBuiltins: true
-    }), // so Rollup can find `ms`
-		commonjs(), // so Rollup can convert `ms` to an ES module
-    swc(
-      defineRollupSwcOption(
-        /* Object.assign({
-          tsconfig: false,
-        }, tscConfig) */
-    )),
-	]
-}, {
+  plugins: sharePlugins
+},
+{
+  input: 'src/async-client.ts',
+  output: [{
+    file: 'async-client.js',
+    format: 'umd',
+    name: 'velocejsClientAsync'
+  },{
+    file: 'async-client.es.js',
+    format: 'es'
+  }],
+  plugins: sharePlugins
+},
+{
   input: 'src/index.ts',
 	external: [
     '@jsonql/utils',
@@ -53,8 +64,8 @@ export default [{
   plugins: [
 		resolve({
       preferBuiltins: true
-    }), // so Rollup can find `ms`
-		commonjs(), // so Rollup can convert `ms` to an ES module
+    }),
+		commonjs(),
     swc()
 	]
 }]
