@@ -1,4 +1,4 @@
-import { swc, defineRollupSwcOption } from 'rollup-plugin-swc3'
+import { swc } from 'rollup-plugin-swc3'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import nodePolyfills from 'rollup-plugin-polyfill-node'
@@ -20,7 +20,7 @@ const sharePlugins = [
     preferBuiltins: true
   }), // so Rollup can find `ms`
   commonjs(), // so Rollup can convert `ms` to an ES module
-  swc(defineRollupSwcOption()),
+  swc(),
 ]
 
 // first try out to build the node version

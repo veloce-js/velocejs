@@ -2,13 +2,13 @@
 import type { JsonqlContractTemplate } from './types'
 import { HttpClient } from './lib/http-client'
 import nodeFetchFn from './fetch/browser-fetch-fn'
-
+import { DEFAULT_CONTRACT_PATH } from './lib/constants'
 /** factory method to create a new node client */
 export async function velocejsClientAsync(
-  host = '/'
+  host = ''
 ) {
   return nodeFetchFn({
-    url: [host, 'veloce/contract'].join('')
+    url: [host, DEFAULT_CONTRACT_PATH].join('')
   }).then(
     (contract: JsonqlContractTemplate) =>
       new HttpClient(contract, nodeFetchFn, host)
