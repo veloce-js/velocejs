@@ -34,13 +34,13 @@
   "devDependencies": {
     "@jsonql/utils": "^0.8.0",
     "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.2.198",
-    "esbuild": "^0.14.43",
+    "@swc/core": "^1.2.203",
+    "esbuild": "^0.14.44",
     "esbuild-register": "^3.3.3",
     "fs-extra": "^10.1.0",
     "glob": "^8.0.3",
     "lodash": "^4.17.21",
-    "plop": "^3.1.0",
+    "plop": "^3.1.1",
     "vuepress": "^1.9.7"
   },
   "ava": {
