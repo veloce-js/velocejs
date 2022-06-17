@@ -1,5 +1,5 @@
 import test from 'ava'
-import { ClientResult, ValidationError } from '../src/types'
+// import { ClientResult, ValidationError } from '../src/types'
 import { ApiWithContract } from './fixtures/api-with-contract-with-rules'
 // import { readJsonSync } from 'fs-extra'
 // import { join } from 'node:path'
@@ -14,7 +14,7 @@ let client: HttpClient
 test.before(async () => {
   api = new ApiWithContract()
   url = await api.$start()
-  console.log(url)
+  // console.log(url)
   client = await velocejsClientAsync(url) as unknown as HttpClient
 })
 
@@ -28,17 +28,13 @@ test('Test the basic GET method with velocejsClientAsync', async t => {
               .then(() => {
                 t.pass()
               })
-              .catch((err: ValidationError) => {
-                console.log(err)
-                t.pass()
-              })
 })
 
 test('Test GET url with query params with velocejsClientAsync', async t => {
   t.plan(1)
-  const result:ClientResult = await client.comm('someUrl', ['2022-05-01', '2022-06-01'])
+  await client.comm('someUrl', ['2022-05-01', '2022-06-01'])
 
-  console.log('ClientResult', result)
+  // console.log('ClientResult', result)
   t.pass()
   // t.truthy(result.data) // if I use this then I get a 134? 128+6 exit code
 })
@@ -55,8 +51,8 @@ test('Test GET with dynamic url with a spread argument api with velocejsClientAs
 test('Test the POST method with validation with velocejsClientAsync', async t => {
   t.plan(1)
   return client['post']('today headline', 'na na na', 2000)
-                  .then((result: ClientResult) => {
-                    console.log('--->', result)
+                  .then(() => {
+                    // console.log('--->', result)
                     // t.truthy(result.data)
                     t.pass()
                   })

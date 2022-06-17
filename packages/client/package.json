@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/client",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "@velocejs/client generate client code using contract",
   "main": "dist/velocejs-client.cjs.js",
   "module": "dist/velocejs-client.es.js",
