@@ -42,8 +42,7 @@
     "postpublish": "pnpm update:version",
     "patch": "npm version patch",
     "minor": "npm version minor",
-    "major": "npm version major",
-    "qunit": "node ./tests/qunit/run-qunit.cjs"
+    "major": "npm version major"
   },
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "ISC",
@@ -92,8 +91,7 @@
   "ava": {
     "verbose": true,
     "files": [
-      "tests/**/*.test.ts",
-      "!tests/qunit/*.*"
+      "tests/**/*.test.ts"
     ],
     "extensions": [
       "ts"
