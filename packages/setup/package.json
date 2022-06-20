@@ -7,7 +7,7 @@
   "scripts": {
     "test": "ava",
     "plop": "NODE_ENV=test node ./index.mjs",
-    "start": "NODE_ENV=test plop"
+    "start": "NODE_ENV=test plop",
     "copy": "node ./src/copy.mjs",
     "prepublishOnly": "nyc ava"
   },

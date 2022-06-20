@@ -1,8 +1,9 @@
 // plop file for all the commands
 import { join } from 'path'
 import fs from 'fs-extra'
-import getDirname from './src/dirname.js'
-import { importPlopfile } from './src/import-plopfile.js'
+import getDirname from './src/dirname.mjs'
+import { importPlopfile } from './src/import-plopfile.mjs'
+import { spaceInValue } from './src/common.mjs'
 
 const __dirname = getDirname(import.meta.url)
 
@@ -62,7 +63,7 @@ export default function (
       type: 'input',
       name: 'name',
       message: 'Project Name',
-      validate: (value) => !(/^[\w\s]{1,}$/.test(value)) // @BUG this is broken!
+      validate: spaceInValue // @BUG this is broken!
     }, {
       type: 'list',
       name: 'lang',
