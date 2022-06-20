@@ -9,8 +9,8 @@ import { checkUpdate } from '../src/check-update.js'
 const __dirname = getDirname(import.meta.url)
 
 test('testing the regex for the project name input', t => {
-    const result = /^[\w\s]{1,}$/.test(`Hello world`)
-    t.true(result)
+  const result = /^[\w\s]{1,}$/.test('Hello world')
+  t.true(result)
 })
 
 test('should able to get the version before timeout', t => {
@@ -23,11 +23,9 @@ test('should able to get the version before timeout', t => {
     })
 })
 
-
-test(`Should able to dynamically import other esm module`, t => {
+test('Should able to dynamically import other esm module', t => {
   t.plan(1)
-
-  return findPlopfile(join(__dirname, 'fixtures' ,'dummy'))
+  return findPlopfile(join(__dirname, 'fixtures', 'dummy'))
     .then(fns => {
       if (fns && fns.length) {
         t.true(typeof fns[0].default === 'function')

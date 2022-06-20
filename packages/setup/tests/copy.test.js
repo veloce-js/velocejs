@@ -9,9 +9,8 @@ const baseDir = join(__dirname, '..', 'templates')
 
 const frameworks = ['ssr-vue', 'ssr-vue-ts']
 
-test(`Testing the copy template function`, t => {
+test('Testing the copy template function', t => {
   t.plan(4)
-
   return copyTemplate()
     .then(() => {
       frameworks.forEach(fw => {
@@ -21,12 +20,11 @@ test(`Testing the copy template function`, t => {
     })
 })
 
-test(`Test the copy package.json function`, t => {
+test('Test the copy package.json function', t => {
   t.plan(4)
-
   return copyPkgJson()
     .then(() => {
-      frameworks.forEach(fw =>  {
+      frameworks.forEach(fw => {
         const pkgTplFile = join(baseDir, fw, 'package.tpl.json')
         t.true(fs.existsSync(pkgTplFile))
         // should also check the content

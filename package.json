@@ -34,8 +34,8 @@
   "devDependencies": {
     "@jsonql/utils": "^0.8.0",
     "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.2.203",
-    "esbuild": "^0.14.44",
+    "@swc/core": "^1.2.204",
+    "esbuild": "^0.14.46",
     "esbuild-register": "^3.3.3",
     "fs-extra": "^10.1.0",
     "glob": "^8.0.3",

@@ -52,7 +52,7 @@
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
     "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.2.203",
+    "@swc/core": "^1.2.204",
     "@types/debug": "^4.1.7",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.0.0",
@@ -60,16 +60,16 @@
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "ava": "^4.3.0",
-    "esbuild": "^0.14.44",
+    "esbuild": "^0.14.46",
     "esbuild-register": "^3.3.3",
-    "eslint": "^8.17.0",
+    "eslint": "^8.18.0",
     "node-fetch": "^3.2.6",
     "nyc": "^15.1.0",
     "open": "^8.4.0",
     "rimraf": "^3.0.2",
     "swc-node": "^1.0.0",
     "ts-node": "^10.8.1",
-    "typescript": "^4.7.3",
+    "typescript": "^4.7.4",
     "ws": "^8.8.0"
   },
   "ava": {

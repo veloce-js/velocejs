@@ -5,20 +5,18 @@ import { getConfigProp } from './get-config-prop.js'
  * @param {string} pathToFiles where to search
  * @return {Array<unknown>} list of functions
  */
-export async function findPlopfile(pathToFiles, options = {}) {
-
-  return new Promise((resolver, rejecter) => {
+export async function findPlopfile (pathToFiles, options = {}) {
+  return new Promise((resolve, reject) => {
     // @TODO should we clean that pathToFiles via dirname
     glob(`${pathToFiles}/*.js`, options, function (er, files) {
       if (er) {
-        return rejecter(er)
+        return reject(er)
       }
       if (!files.length) {
         // nothing to import
-        resolver(false)
+        resolve(false)
       }
-
-      resolver(
+      resolve(
         Promise.all(
           files.map(file => import(file))
         )
@@ -28,7 +26,7 @@ export async function findPlopfile(pathToFiles, options = {}) {
 }
 
 // run everything together
-export async function importPlopfile(projectRoot, plop) {
+export async function importPlopfile (projectRoot, plop) {
   return getConfigProp(projectRoot)
     .then(opt => {
       if (opt && opt.plopfileDir) {

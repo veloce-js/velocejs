@@ -35,14 +35,8 @@ import {
 import debugFn from 'debug'
 const debug = debugFn('velocejs:fastapi:common')
 
-// ugly but simple and it works
-export function extractArgs(fnStr: string): Array<string> {
-
-  return splitMethod(fnStr)
-}
-
 // 0.103 -- this is 50% faster then regex!
-function splitMethod(fnStr: string): Array<string> {
+export function extractArgs(fnStr: string): Array<string> {
 
   return fnStr.split('(')[1]
               .split(')')[0]

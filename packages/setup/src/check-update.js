@@ -15,17 +15,16 @@ const urls = {
  * @param {number} timeout set a timeout if the result not return before that we just resolve it
  * @return Promise<any> json
  */
-export async function checkUpdate(timeout = 2000) {
-
-  return new Promise((resolver, rejecter) => {
+export async function checkUpdate (timeout = 2000) {
+  return new Promise((resolve, reject) => {
     // set a timeout to resolve it
     const timer = setTimeout(() => {
-      resolver(false)
+      resolve(false)
     }, timeout)
     // making the call
     https.get(`https://${urls.cn}/@velocejs/setup`, {
       headers: {
-        'Accept': 'application/vnd.npm.install-v1+json'
+        Accept: 'application/vnd.npm.install-v1+json'
       }
     }, res => {
       res.setEncoding('utf8')
@@ -41,9 +40,9 @@ export async function checkUpdate(timeout = 2000) {
           // "dist-tags":{"latest":"0.0.2"}
           const version = parsedData['dist-tags'].latest
 
-          resolver(version)
+          resolve(version)
         } catch (e) {
-          rejecter(e.message)
+          reject(e.message)
         }
       })
     })
