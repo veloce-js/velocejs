@@ -34,6 +34,7 @@ export default function (
 
   // setting up the package.json
   plop.setActionType('setupPackageJson', function (answers, config, plop) {
+    console.log(answers)
     const { name } = answers
     const pkg = fs.readJsonSync(join(tplDir, 'package.tpl.json'))
     pkg.name = name

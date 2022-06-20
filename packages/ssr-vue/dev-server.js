@@ -12,11 +12,11 @@ const isTest = process.env.NODE_ENV === 'test' || !!process.env.VITE_TEST_BUILD
  * There was a isProd param which has been taken out here
  *
  */
-export async function createDevServer(
+export async function createDevServer (
   root = process.cwd()
 ) {
   const resolve = (p) => path.resolve(__dirname, p)
-  const indexProd = ''
+  // const indexProd = ''
   const manifest = {}
   const app = express()
   const vite = await createServer({
@@ -36,19 +36,19 @@ export async function createDevServer(
   app.use('*', async (req, res) => {
     try {
       const url = req.originalUrl
-      let template, render
+      let template
       // always read fresh template in dev
       template = fs.readFileSync(resolve('index.html'), 'utf-8')
       template = await vite.transformIndexHtml(url, template)
-      render = (await vite.ssrLoadModule('/app/entry-server.js')).render
+      const render = (await vite.ssrLoadModule('/app/entry-server.js')).render
 
       const [appHtml, preloadLinks] = await render(url, manifest)
       const html = template
-        .replace(`<!--preload-links-->`, preloadLinks)
-        .replace(`<!--app-html-->`, appHtml)
+        .replace('<!--preload-links-->', preloadLinks)
+        .replace('<!--app-html-->', appHtml)
 
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
-    } catch(e) {
+    } catch (e) {
       vite && vite.ssrFixStacktrace(e)
       console.log(e.stack)
       res.status(500).end(e.stack)
