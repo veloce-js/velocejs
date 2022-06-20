@@ -1,8 +1,8 @@
 import test from 'ava'
 import fs from 'fs-extra'
 import { join } from 'path'
-import getDirname from '../src/dirname.js'
-import { copyPkgJson, copyTemplate } from '../src/copy.js'
+import getDirname from '../src/dirname.mjs'
+import { copyPkgJson, copyTemplate } from '../src/copy.mjs'
 
 const __dirname = getDirname(import.meta.url)
 const baseDir = join(__dirname, '..', 'templates')

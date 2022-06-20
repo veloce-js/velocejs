@@ -2,7 +2,7 @@
 // excluding some of the things we don't need
 import fs from 'fs-extra'
 import { join, basename } from 'path'
-import getDirname from './dirname.js'
+import getDirname from './dirname.mjs'
 
 const __dirname = getDirname(import.meta.url)
 // props

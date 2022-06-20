@@ -61,8 +61,8 @@ export default function (
     prompts: [{
       type: 'input',
       name: 'name',
-      message: 'Project Name'
-      // validate: (value) => !(/^[\w\s]{1,}$/.test(value)) // @BUG this is broken!
+      message: 'Project Name',
+      validate: (value) => !(/^[\w\s]{1,}$/.test(value)) // @BUG this is broken!
     }, {
       type: 'list',
       name: 'lang',

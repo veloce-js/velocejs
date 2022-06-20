@@ -2,9 +2,9 @@
 import test from 'ava'
 
 import { join } from 'path'
-import { findPlopfile } from '../src/import-plopfile.js'
-import getDirname from '../src/dirname.js'
-import { checkUpdate } from '../src/check-update.js'
+import { findPlopfile } from '../src/import-plopfile.mjs'
+import getDirname from '../src/dirname.mjs'
+import { checkUpdate } from '../src/check-update.mjs'
 
 const __dirname = getDirname(import.meta.url)
 

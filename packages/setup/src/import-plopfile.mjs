@@ -1,6 +1,6 @@
 // dynamically import more plopfiles
 import glob from 'glob'
-import { getConfigProp } from './get-config-prop.js'
+import { getConfigProp } from './get-config-prop.mjs'
 /**
  * @param {string} pathToFiles where to search
  * @return {Array<unknown>} list of functions

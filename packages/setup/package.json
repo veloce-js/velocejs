@@ -3,12 +3,13 @@
   "version": "0.1.1",
   "type": "module",
   "description": "Interactively setup velocejs",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
     "test": "ava",
-    "plop": "NODE_ENV=test node ./index.js",
-    "start": "NODE_ENV=test plop",
-    "copy": "node ./src/copy.js"
+    "plop": "NODE_ENV=test node ./index.mjs",
+    "start": "NODE_ENV=test plop"
+    "copy": "node ./src/copy.mjs",
+    "prepublishOnly": "nyc ava"
   },
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "ISC",
@@ -20,11 +21,11 @@
     "plop": "^3.1.1"
   },
   "bin": {
-    "veloce": "./index.js"
+    "veloce": "./index.mjs"
   },
   "ava": {
     "files": [
-      "tests/**/*.test.js"
+      "tests/**/*.test.mjs"
     ]
   },
   "devDependencies": {
