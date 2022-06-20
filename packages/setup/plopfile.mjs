@@ -3,10 +3,8 @@ import { join } from 'path'
 import fs from 'fs-extra'
 import getDirname from './src/dirname.mjs'
 import { importPlopfile } from './src/import-plopfile.mjs'
-import { spaceInValue } from './src/common.mjs'
-
+// import { spaceInValue } from './src/common.mjs'
 const __dirname = getDirname(import.meta.url)
-
 const tplDir = join(__dirname, 'templates')
 const isTest = process.env.NODE_ENV === 'test'
 const destDir = isTest ? join(__dirname, 'tests', 'fixtures') : process.cwd()
@@ -22,7 +20,7 @@ export default function (
   // create custom actions
   plop.setActionType('copyTemplates', function (answers, config, plop) {
     const { name, lang } = answers
-    const d = 'vue' + lang
+    const d = lang === 'js' ? 'ssr-vue' : 'ssr-vue-ts'
 
     return fs.copy(
       join(tplDir, d),
@@ -62,8 +60,8 @@ export default function (
     prompts: [{
       type: 'input',
       name: 'name',
-      message: 'Project Name',
-      validate: spaceInValue // @BUG this is broken!
+      message: 'Project Name'
+      // validate: spaceInValue // @BUG this is broken!
     }, {
       type: 'list',
       name: 'lang',
