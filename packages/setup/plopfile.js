@@ -14,12 +14,12 @@ const projectRoot = isTest ? __dirname : process.cwd()
 // if yes then import it here and run within the method also
 
 // export
-export default function(
+export default function (
   /** @type {import('plop').NodePlopAPI} */
   plop
 ) {
   // create custom actions
-  plop.setActionType('copyTemplates', function(answers, config, plop) {
+  plop.setActionType('copyTemplates', function (answers, config, plop) {
     const { name, lang } = answers
     const d = 'vue' + lang
 
@@ -34,26 +34,24 @@ export default function(
   })
 
   // setting up the package.json
-  plop.setActionType('setupPackageJson', function(answers, config, plop) {
+  plop.setActionType('setupPackageJson', function (answers, config, plop) {
     const { name } = answers
-    const pkg = fs.readJsonSync( join(tplDir, 'package.tpl.json') )
+    const pkg = fs.readJsonSync(join(tplDir, 'package.tpl.json'))
     pkg.name = name
-    fs.writeJsonSync( join(destDir, name, 'package.json') , pkg, { spaces: 2 })
+    fs.writeJsonSync(join(destDir, name, 'package.json'), pkg, { spaces: 2 })
 
-    return `package.json created`
+    return 'package.json created'
   })
 
-  plop.setActionType('copyVeloceConfig', function(answers) {
-
+  plop.setActionType('copyVeloceConfig', function (answers) {
     return fs.copy(
       join(tplDir, 'veloce.config.tpl.js'),
       join(destDir, answers.name, 'veloce.config.js')
     )
   })
 
-  plop.setActionType('justEndMessage', function() {
-
-    return `Setup completed, now please run "npm install" then run "npm run dev"`
+  plop.setActionType('justEndMessage', function () {
+    return 'Setup completed, now please run "npm install" then run "npm run dev"'
   })
 
   // create the generator
@@ -63,15 +61,15 @@ export default function(
     prompts: [{
       type: 'input',
       name: 'name',
-      message: 'Project Name',
-      validate: (value) => !(/^[\w\s]{1,}$/.test(value))
-    },{
+      message: 'Project Name'
+      // validate: (value) => !(/^[\w\s]{1,}$/.test(value)) // @BUG this is broken!
+    }, {
       type: 'list',
       name: 'lang',
       message: 'Select development langauge',
       choices: [
-        {name: 'Javascript', value: 'js'},
-        {name: 'Typescript', value: 'ts'}
+        { name: 'Javascript', value: 'js' },
+        { name: 'Typescript', value: 'ts' }
       ],
       default: 'js'
     }],
@@ -90,7 +88,6 @@ export default function(
       }
     ]
   })
-
   // next we will try to import plopfile that is written by the developer
   // then import it here
   importPlopfile(projectRoot, plop)
