@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.C500 = exports.C451 = exports.C431 = exports.C429 = exports.C428 = exports.C426 = exports.C425 = exports.C424 = exports.C423 = exports.C422 = exports.C421 = exports.C418 = exports.C417 = exports.C416 = exports.C415 = exports.C414 = exports.C413 = exports.C412 = exports.C411 = exports.C410 = exports.C409 = exports.C408 = exports.C407 = exports.C406 = exports.C405 = exports.C404 = exports.C403 = exports.C402 = exports.C401 = exports.C400 = exports.C308 = exports.C307 = exports.C304 = exports.C303 = exports.C302 = exports.C301 = exports.C300 = exports.C226 = exports.C208 = exports.C207 = exports.C206 = exports.C205 = exports.C204 = exports.C203 = exports.C201 = exports.C200 = exports.C103 = exports.C102 = exports.C101 = exports.C100 = void 0;
 exports.lookupStatus = exports.C511 = exports.C510 = exports.C508 = exports.C507 = exports.C506 = exports.C505 = exports.C504 = exports.C503 = exports.C502 = exports.C501 = void 0;
 // all the status related code here
-const utils_1 = require("@jsonql/utils");
 // ----------------------- HTTP RESPONSE STATUS ------------------ //
 // FROM: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 // successful
@@ -138,7 +137,7 @@ const STATUS_MAP = {
 };
 /** look up the code by the number or by the key string */
 function lookupStatus(status) {
-    const key = (0, utils_1.isString)(status) ? status : `C${status}`;
+    const key = typeof status === 'string' ? status : `C${status}`;
     return STATUS_MAP[key];
 }
 exports.lookupStatus = lookupStatus;

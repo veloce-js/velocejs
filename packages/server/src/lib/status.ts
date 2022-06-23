@@ -1,5 +1,4 @@
 // all the status related code here
-import { isString } from '@jsonql/utils'
 // ----------------------- HTTP RESPONSE STATUS ------------------ //
 // FROM: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 // successful
@@ -135,7 +134,7 @@ const STATUS_MAP = {
 
 /** look up the code by the number or by the key string */
 export function lookupStatus(status: number | string): string {
-  const key = isString(status) ? status : `C${status}`
-  
+  const key = typeof status === 'string' ? status : `C${status}`
+
   return STATUS_MAP[key]
 }
