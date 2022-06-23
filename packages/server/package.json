@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/server",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Server core using uWebsocket.js with additional helpers",
   "main": "dist/index.js",
   "module": "dist/index.d.ts",
@@ -42,6 +42,7 @@
   "dependencies": {
     "@jsonql/utils": "^0.8.0",
     "debug": "^4.3.4",
+    "fs-extra": "^10.1.0",
     "mime-types": "^2.1.35",
     "tslib": "^2.4.0",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.10.0"
@@ -59,7 +60,6 @@
     "esbuild": "^0.14.46",
     "esbuild-register": "^3.3.3",
     "eslint": "^8.18.0",
-    "fs-extra": "^10.1.0",
     "node-fetch": "^3.2.6",
     "nyc": "^15.1.0",
     "open": "^8.4.0",
