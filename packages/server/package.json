@@ -1,9 +1,8 @@
 {
   "name": "@velocejs/server",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Server core using uWebsocket.js with additional helpers",
   "main": "dist/index.js",
-  "module": "dist/index.d.ts",
   "files": [
     "dist",
     "src",
@@ -40,7 +39,7 @@
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "UNLICENSED",
   "dependencies": {
-    "@jsonql/utils": "^0.8.0",
+    "@jsonql/utils": "^0.9.1",
     "debug": "^4.3.4",
     "fs-extra": "^10.1.0",
     "mime-types": "^2.1.35",
@@ -54,10 +53,10 @@
     "@types/mime-types": "^2.1.1",
     "@types/node": "^18.0.0",
     "@types/ws": "^8.5.3",
-    "@typescript-eslint/eslint-plugin": "^5.28.0",
-    "@typescript-eslint/parser": "^5.28.0",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
     "ava": "^4.3.0",
-    "esbuild": "^0.14.46",
+    "esbuild": "^0.14.47",
     "esbuild-register": "^3.3.3",
     "eslint": "^8.18.0",
     "node-fetch": "^3.2.6",

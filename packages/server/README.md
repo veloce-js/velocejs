@@ -17,7 +17,7 @@ lower level code.
 ### shutdownServer(token: us_listen_socket)
 
 ```ts
-import { createApp, shutdown } from '@velocejs/server'
+import { createApp, shutdownServer } from '@velocejs/server'
 const port = 9001
 let connectedSocket
 

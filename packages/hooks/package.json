@@ -29,10 +29,10 @@
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
     "@types/node": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.28.0",
-    "@typescript-eslint/parser": "^5.28.0",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
     "ava": "^4.3.0",
-    "esbuild": "^0.14.46",
+    "esbuild": "^0.14.47",
     "esbuild-register": "^3.3.3",
     "eslint": "^8.18.0",
     "rimraf": "^3.0.2",
