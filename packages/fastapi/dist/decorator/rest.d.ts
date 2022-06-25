@@ -6,11 +6,13 @@
   Here we will try to apply the Decorator at the Class level
   and see if we could do it with just init the new class and everything should run
 */
-import type { AnyTypeArr } from '../types';
+import type { AnyTypeArr, AnyType } from '../types';
 /** This should be generic that could apply to different Decorator init */
 /** if we follow what the type hint said, the this object becomes useless */
 export declare function Rest<T extends {
-    new (...args: AnyTypeArr): {};
+    new (...args: AnyTypeArr): AnyType;
 }>(constructor: T): {
-    new (...args: AnyTypeArr): {};
+    new (...args: AnyTypeArr): {
+        [x: string]: any;
+    };
 } & T;

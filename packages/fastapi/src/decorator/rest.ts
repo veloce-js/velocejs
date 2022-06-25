@@ -19,7 +19,7 @@ const debug = debugFn('velocejs:fastapi:rest')
 // @NOTE no matter what you do here - there will always be warning, just one or many many ...
 // export function Rest<T extends { new (...args: AnyTypeArr): Record<string, unknown> }>(constructor: T) {
 /** if we follow what the type hint said, the this object becomes useless */
-export function Rest<T extends { new (...args: AnyTypeArr): {} }>(constructor: T) {
+export function Rest<T extends { new (...args: AnyTypeArr): AnyType }>(constructor: T) {
   // Voodoo magic
   const where = pickInputFile(new Error())
   // from https://stackoverflow.com/questions/51124979/typescript-calling-class-methods-inside-constructor-decorator
