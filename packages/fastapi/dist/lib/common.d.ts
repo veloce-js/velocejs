@@ -1,4 +1,4 @@
-import type { RouteMetaInfo, JsonqlObjectValidateInput, JsonqlValidationRule, ArgsListType } from '../types';
+import type { RouteMetaInfo, JsonqlObjectValidateInput, JsonqlValidationRule, ArgsListType, AnyType } from '../types';
 import type { UwsStringPairObj } from '@velocejs/server/index';
 export declare function extractArgs(fnStr: string): Array<string>;
 /** The validate result now comes in an object, we need to turn into array for apply */
@@ -16,7 +16,7 @@ export declare function prepareSpreadArg(params: UwsStringPairObj): unknown[];
 /** check if the dynamic route parameter is valid or not, this throw to hail */
 export declare function assertDynamicRouteArgs(argsList: ArgsListType[]): void;
 /** this is a mouthful! */
-export declare function prepareArgsFromDynamicToSpread(argNames: Array<string>, argsList: Array<ArgsListType>, params: UwsStringPairObj, paramNames: string[]): any;
+export declare function prepareArgsFromDynamicToSpread(argNames: Array<string>, argsList: Array<ArgsListType>, params: UwsStringPairObj, paramNames: string[]): any[];
 /** check if a value is undefined, wrapper to make the code looks cleaner */
 export declare const notUndef: (value: unknown) => boolean;
 /** This method was in the rest.ts now move inside the FastApi class def
@@ -29,13 +29,13 @@ export declare function prepareValidateRoute(type: string, propertyName: string,
 export declare function isJsonql(headers: UwsStringPairObj): boolean;
 /** when _jsonql === true then we wrap the result into this structure */
 export declare function formatJsonql(payload: Partial<{
-    data: any;
-    meta: any;
-    error: any;
+    data: AnyType;
+    meta: AnyType;
+    error: AnyType;
 }>): {
     data: any;
     meta: any;
     error: any;
 };
 /** check if the payload the recognizable string buffer or array buffer then convert it */
-export declare function prepareRecognizableString(payload: any): any;
+export declare function prepareRecognizableString(payload: AnyType): any;

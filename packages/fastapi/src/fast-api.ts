@@ -644,7 +644,7 @@ export class FastApi implements FastApiInterface {
     validations: JsonqlObjectValidateInput,
     protectedRoutes: string[],
     apiType: string = REST_NAME // @TODO reserved for support more api type in the future
-  ):void {
+  ): void {
     if (isDebug) {
       console.time('FastApiStartUp')
     }

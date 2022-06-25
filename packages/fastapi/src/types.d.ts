@@ -1,5 +1,4 @@
 // move from @velocejs/server
-
 export type {
   AppOptions,
   WebSocket,
@@ -24,6 +23,7 @@ import type {
 export type {
   JsonqlContractTemplate
 } from '@jsonql/contract/index'
+import type { AnyType, AnyTypeArr } from '@jsonql/utils/index'
 
 export type RouteMetaInfo = {
   type: string
@@ -34,7 +34,7 @@ export type RouteMetaInfo = {
   protected?: boolean
   validation?: JsonqlArrayValidateInput | JsonqlObjectValidateInput
   route?: string
-  [key: string]: any // This has to be any for now because the stupid type TS compiler took the wrong key?
+  [key: string]: AnyType // This has to be any for now because the stupid type TS compiler took the wrong key?
 }
 // this is totally pointless
 export type MetaDecorator = (path: string) => (target: unknown, propertyName: string, descriptor: unknown) => void
@@ -84,4 +84,4 @@ export type ValidatorsInstance = {
 
 export type DynamicRouteCheckFn = (t: string, p: string, args: ArgsListType[]) => string
 
-export type { MixedValidationInput }
+export type { MixedValidationInput, AnyType, AnyTypeArr }

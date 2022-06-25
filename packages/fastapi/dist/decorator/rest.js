@@ -1,12 +1,4 @@
 "use strict";
-/**
-  We change the thinking about how to init the server
-  before it was using the Prepare method that needs to call super.run
-  which is ugly
-
-  Here we will try to apply the Decorator at the Class level
-  and see if we could do it with just init the new class and everything should run
-*/
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Rest = void 0;
 const tslib_1 = require("tslib");
@@ -19,6 +11,8 @@ const debug = (0, debug_1.default)('velocejs:fastapi:rest');
 // const debugFn = debug('velocejs:fastapi:decorator:Rest')
 /** This should be generic that could apply to different Decorator init */
 // @NOTE no matter what you do here - there will always be warning, just one or many many ...
+// export function Rest<T extends { new (...args: AnyTypeArr): Record<string, unknown> }>(constructor: T) {
+/** if we follow what the type hint said, the this object becomes useless */
 function Rest(constructor) {
     // Voodoo magic
     const where = (0, ast_1.pickInputFile)(new Error());

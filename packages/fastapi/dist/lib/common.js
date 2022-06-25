@@ -8,19 +8,15 @@ const constants_2 = require("./constants");
 const utils_1 = require("@jsonql/utils");
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debug = (0, debug_1.default)('velocejs:fastapi:common');
-// ugly but simple and it works
-function extractArgs(fnStr) {
-    return splitMethod(fnStr);
-}
-exports.extractArgs = extractArgs;
 // 0.103 -- this is 50% faster then regex!
-function splitMethod(fnStr) {
+function extractArgs(fnStr) {
     return fnStr.split('(')[1]
         .split(')')[0]
         .split(',')
         .map(t => t.trim())
         .filter(t => t !== '');
 }
+exports.extractArgs = extractArgs;
 /** The validate result now comes in an object, we need to turn into array for apply */
 function prepareArgs(argList, result) {
     return argList.map(name => result[name]);

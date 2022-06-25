@@ -9,6 +9,7 @@ import type {
   JsonqlObjectValidateInput,
   JsonqlValidationRule,
   ArgsListType,
+  AnyType
 } from '../types'
 import type {
   UwsStringPairObj,
@@ -184,7 +185,7 @@ export function isJsonql(headers: UwsStringPairObj) {
 
 /** when _jsonql === true then we wrap the result into this structure */
 export function formatJsonql(
-  payload: Partial<{ data: any, meta: any, error: any }> // @TODO import the type from jsonql/contract
+  payload: Partial<{ data: AnyType, meta: AnyType, error: AnyType }> // @TODO import the type from jsonql/contract
 ) {
   return {
     data: payload.data || null,
@@ -194,7 +195,7 @@ export function formatJsonql(
 }
 
 /** check if the payload the recognizable string buffer or array buffer then convert it */
-export function prepareRecognizableString(payload: any) {
+export function prepareRecognizableString(payload: AnyType) {
   try {
     if ('byteLength' in payload) {
       return payload // Buffer of ArrayBuffer
