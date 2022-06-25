@@ -1,12 +1,14 @@
 // from write-json and change the interface to be the same
-import fs from 'fs-extra'
-import {
+import type {
   HttpResponse,
   UwsStringPairObj,
   RecognizedString,
   UwsWriter,
-  UwsJsonWriter
+  UwsJsonWriter,
+  AnyType
 } from './types'
+
+import fs from 'fs-extra'
 import { CONTENT_TYPE, JSON_HEADER } from './lib/constants'
 import { C200, C404, lookupStatus } from './lib/status'
 import { parseJson } from '@jsonql/utils'
@@ -70,8 +72,12 @@ export const write404 = (res: HttpResponse): void => {
 }
 
 /** writing the Buffer to a file */
-export function writeBufferToFile(buffer: Buffer, path: string, permission=0o666): boolean {
-  let fileDescriptor: any
+export function writeBufferToFile(
+  buffer: Buffer,
+  path: string,
+  permission=0o666
+): boolean {
+  let fileDescriptor: AnyType
   try {
     fileDescriptor = fs.openSync(path, 'w', permission)
   } catch (e) {

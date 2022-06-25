@@ -1,17 +1,16 @@
 // server static methods
+import type { HttpResponse, HttpRequest } from './types'
 import fs from 'node:fs'
 import path from 'node:path'
-import { HttpResponse, HttpRequest } from './types'
 import { DEFAULT_FILE } from './lib/constants'
 import { write404 } from './writers'
 import { renderFile } from './render'
 import { isFunction, toArray } from '@jsonql/utils'
 
-// import { toArray } from '@jsonql/utils'
-// import { toArr } from '@velocejs/bodyparser/utils'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:serve-static')
 
+// @TODO investigate the compression
 /** serve static files from assetDir */
 export function serveStatic(
   assetDir: string | string[],

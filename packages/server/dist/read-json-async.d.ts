@@ -1,2 +1,2 @@
-import { HttpResponse } from './types';
-export declare function readJsonAsync(res: HttpResponse): Promise<any>;
+import { HttpResponse, AnyType } from './types';
+export declare function readJsonAsync(res: HttpResponse): Promise<AnyType>;

@@ -13,7 +13,7 @@ function bconcat(args, str) {
 }
 // Reading buffer from response and return the json object
 async function readJsonAsync(res) {
-    return new Promise((resolver, rejecter) => {
+    return new Promise((resolve, reject) => {
         let buffer;
         res.onData((ab, isLast) => {
             const chunk = Buffer.from(ab);
@@ -25,9 +25,9 @@ async function readJsonAsync(res) {
                     }
                     catch (e) {
                         res.close(); // Do we need to call close here?
-                        return rejecter(e);
+                        return reject(e);
                     }
-                    return resolver(json);
+                    return resolve(json);
                 }
                 else {
                     try {
@@ -35,16 +35,16 @@ async function readJsonAsync(res) {
                     }
                     catch (e) {
                         res.close();
-                        return rejecter(e);
+                        return reject(e);
                     }
                 }
-                return resolver(json);
+                return resolve(json);
             }
             else {
                 buffer = buffer ? bconcat([buffer, chunk]) : bconcat([chunk]);
             }
         });
-        res.onAborted(rejecter);
+        res.onAborted(reject);
     }); // end promise
 }
 exports.readJsonAsync = readJsonAsync;

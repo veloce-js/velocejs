@@ -1,6 +1,6 @@
 // completely re-organize the code from writer and rename to render
 // also the server-static render method will be here for the next ssr feature
-import { HttpResponse } from './types'
+import type { HttpResponse, AnyType } from './types'
 import { readFileSync } from 'fs-extra'
 import { getWriter } from './writers'
 import { lookupMimeType } from './lib/mime'
@@ -28,7 +28,7 @@ export function getRenderFn(res: HttpResponse) {
 
   const writer = getWriter(res)
 
-  return (type: string, content: any): void => {
+  return (type: string, content: AnyType): void => {
     const mimeType = lookupMimeType(type)
     // here we make sure this is a string
     const output = Buffer.from(content).toString()

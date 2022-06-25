@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { HttpResponse, UwsStringPairObj, UwsWriter, UwsJsonWriter } from './types';
+import type { HttpResponse, UwsStringPairObj, UwsWriter, UwsJsonWriter } from './types';
 /** just write the header and encode the JSON to string */
 export declare const jsonWriter: (res: HttpResponse, headers?: UwsStringPairObj) => UwsJsonWriter;
 /** create a writer for output to respond */

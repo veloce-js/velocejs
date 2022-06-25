@@ -19,7 +19,8 @@ function toArrayBuffer(buffer) {
 }
 exports.toArrayBuffer = toArrayBuffer;
 /* Either onAborted or simply finished request */
-function onAbortedOrFinishedResponse(res, readStream) {
+function onAbortedOrFinishedResponse(res, readStream // should this  be a buffer? stream.Readable but no such type?
+) {
     if (res.id == -1) {
         console.log("ERROR! onAbortedOrFinishedResponse called twice for the same res!");
     }
@@ -40,9 +41,9 @@ function pipeStreamOverResponse(res, readStream, totalSize) {
         /* We only take standard V8 units of data */
         const ab = toArrayBuffer(chunk);
         /* Store where we are, globally, in our response */
-        let lastOffset = res.getWriteOffset();
+        const lastOffset = res.getWriteOffset();
         /* Streaming a chunk returns whether that chunk was sent, and if that chunk was last */
-        let [ok, done] = res.tryEnd(ab, totalSize);
+        const [ok, done] = res.tryEnd(ab, totalSize);
         /* Did we successfully send last chunk? */
         if (done) {
             onAbortedOrFinishedResponse(res, readStream);
@@ -57,7 +58,7 @@ function pipeStreamOverResponse(res, readStream, totalSize) {
             res.onWritable((offset) => {
                 /* Here the timeout is off, we can spend as much time before calling tryEnd we want to */
                 /* On failure the timeout will start */
-                let [ok, done] = res.tryEnd(res.ab.slice(offset - res.abOffset), totalSize);
+                const [ok, done] = res.tryEnd(res.ab.slice(offset - res.abOffset), totalSize);
                 if (done) {
                     onAbortedOrFinishedResponse(res, readStream);
                 }

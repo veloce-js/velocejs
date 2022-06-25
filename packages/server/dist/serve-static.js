@@ -2,17 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.serveStatic = void 0;
 const tslib_1 = require("tslib");
-// server static methods
 const node_fs_1 = tslib_1.__importDefault(require("node:fs"));
 const node_path_1 = tslib_1.__importDefault(require("node:path"));
 const constants_1 = require("./lib/constants");
 const writers_1 = require("./writers");
 const render_1 = require("./render");
 const utils_1 = require("@jsonql/utils");
-// import { toArray } from '@jsonql/utils'
-// import { toArr } from '@velocejs/bodyparser/utils'
 const debug_1 = tslib_1.__importDefault(require("debug"));
 const debugFn = (0, debug_1.default)('velocejs:server:serve-static');
+// @TODO investigate the compression
 /** serve static files from assetDir */
 function serveStatic(assetDir, onAbortedHandler) {
     const dirs = (0, utils_1.toArray)(assetDir);

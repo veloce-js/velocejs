@@ -1,5 +1,5 @@
 import { HttpResponse, HttpRequest, CompressOptions, us_socket_context_t } from 'uWebSockets.js';
-import { UwsRespondBody } from './types';
+import { UwsRespondBody, AnyType } from './types';
 /** A structure holding settings and handlers for a WebSocket URL route handler. */
 export interface WebSocketBehavior {
     /** Maximum length of received message. If a client tries to send you a message larger than this, the connection is immediately closed. Defaults to 16 * 1024. */
@@ -31,7 +31,7 @@ export interface WebSocketBehavior {
     /** Handler for received pong control message. */
     pong?: (ws: WebSocket, message: ArrayBuffer) => void;
 }
-export declare type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => WebSocketBehavior | Promise<any> | void;
+export declare type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => WebSocketBehavior | Promise<AnyType> | void;
 export interface UwsRouteSetup {
     type: string;
     path: string;

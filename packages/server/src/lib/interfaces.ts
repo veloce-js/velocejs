@@ -1,7 +1,7 @@
 // group all the interface(s) here for easier re-use
 
 import { HttpResponse, HttpRequest, CompressOptions, us_socket_context_t } from 'uWebSockets.js' // if we reference to ../types then become a circular reference
-import { UwsRespondBody } from './types'
+import { UwsRespondBody, AnyType } from './types'
 
 /** A structure holding settings and handlers for a WebSocket URL route handler. */
 export interface WebSocketBehavior {
@@ -35,7 +35,7 @@ export interface WebSocketBehavior {
     pong?: (ws: WebSocket, message: ArrayBuffer) => void;
 }
 
-export type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => WebSocketBehavior | Promise<any> | void
+export type UwsRouteHandler = (res: HttpResponse, req: HttpRequest) => WebSocketBehavior | Promise<AnyType> | void
 
 export interface UwsRouteSetup {
   type: string

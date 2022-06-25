@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.writeBufferToFile = exports.write404 = exports.getWriter = exports.jsonWriter = void 0;
 const tslib_1 = require("tslib");
-// from write-json and change the interface to be the same
 const fs_extra_1 = tslib_1.__importDefault(require("fs-extra"));
 const constants_1 = require("./lib/constants");
 const status_1 = require("./lib/status");

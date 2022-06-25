@@ -13,7 +13,7 @@ export function shutdownServer(listenSocket: us_listen_socket): void {
   uWS.us_listen_socket_close(listenSocket)
 }
 // when the port set to 0 at start up, it will automatically pick up a port number
-export function getPort(token: any): number {
+export function getPort(token: us_listen_socket): number {
 
   return uWS.us_socket_local_port(token)
 }

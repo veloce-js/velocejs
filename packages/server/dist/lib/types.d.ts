@@ -24,3 +24,5 @@ export type UwsBodyParserFileEntry = {
 export type UwsBodyParserMixEntry = {
   [key: string]: string | Buffer | UwsBodyParserFileEntry
 }
+
+export type { AnyType, AnyTypeArr } from '@jsonql/utils/index'
