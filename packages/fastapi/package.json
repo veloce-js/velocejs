@@ -3,16 +3,18 @@
   "version": "0.9.5",
   "description": "Built on top of @velocejs/server that let you build your API in no time",
   "main": "dist/index.js",
-  "module": "dist/index.ts",
+  "module": "esm.js",
   "files": [
     "dist",
-    "index.d.ts"
+    "index.d.ts",
+    "esm.js"
   ],
   "scripts": {
     "test:ava": "ava",
     "test:nyc": "nyc ava",
     "test": "pnpm build && pnpm test:nyc",
-    "build": "pnpm clean:dist && pnpm build:tsc",
+    "build": "pnpm clean:dist && pnpm build:tsc && pnpm build:esm",
+    "build:esm": "esbuild ./src/index.ts --format=esm --platform=node --bundle --outfile=./esm.js",
     "prepare:types": "cp ./src/types.d.ts ./index.d.ts",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
     "build:tsc": "tsc -p tsconfig.json",
@@ -60,8 +62,6 @@
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
     "ava": "^4.3.0",
-    "esbuild": "^0.14.47",
-    "esbuild-register": "^3.3.3",
     "eslint": "^8.18.0",
     "node-fetch": "^3.2.6",
     "nyc": "^15.1.0",
