@@ -3,17 +3,15 @@
   "version": "0.9.5",
   "description": "Built on top of @velocejs/server that let you build your API in no time",
   "main": "dist/index.js",
-  "module": "esm.js",
   "files": [
     "dist",
-    "index.d.ts",
-    "esm.js"
+    "index.d.ts"
   ],
   "scripts": {
     "test:ava": "ava",
     "test:nyc": "nyc ava",
     "test": "pnpm build && pnpm test:nyc",
-    "build": "pnpm clean:dist && pnpm build:tsc && pnpm build:esm",
+    "build": "pnpm clean:dist && pnpm build:tsc",
     "build:esm": "esbuild ./src/index.ts --format=esm --platform=node --bundle --outfile=./esm.js",
     "prepare:types": "cp ./src/types.d.ts ./index.d.ts",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
