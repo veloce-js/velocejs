@@ -69,7 +69,7 @@
     "@types/ws": "^8.5.3",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
-    "@velocejs/fastapi": "workspace:^0.9.5",
+    "@velocejs/fastapi": "workspace:^0.9.6",
     "@velocejs/server": "workspace:^0.9.5",
     "ava": "^4.3.0",
     "chokidar": "^3.5.3",
