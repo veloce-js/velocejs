@@ -9,7 +9,7 @@ specifiers:
   '@types/node': ^18.0.0
   '@typescript-eslint/eslint-plugin': ^5.29.0
   '@typescript-eslint/parser': ^5.29.0
-  '@velocejs/server': workspace:^0.9.3
+  '@velocejs/server': workspace:^0.9.4
   ava: ^4.3.0
   esbuild: ^0.14.47
   esbuild-register: ^3.3.3

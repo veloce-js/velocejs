@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ava/typescript': ^3.0.1
-  '@jsonql/utils': ^0.9.1
+  '@jsonql/utils': ^1.0.0
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
@@ -23,7 +23,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  '@jsonql/utils': 0.9.1
+  '@jsonql/utils': 1.0.0
   debug: 4.3.4
   tslib: 2.4.0
 
@@ -330,8 +330,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.13
     dev: true
 
-  /@jsonql/utils/0.9.1:
-    resolution: {integrity: sha512-8sWp1Ihot6sntNV9nAnnLyz3svKRXAi2Y+C3dped44GBz0sY3NWwZ/+8B6lQbcHk1RYwWsysbN+p5UsnI+y1lQ==}
+  /@jsonql/utils/1.0.0:
+    resolution: {integrity: sha512-gxE9egXbz6gNV9z7LLOd31nVZuROeLt9cIuMLEa0bSQtxUs98zLZIujxnz/QCkRsl0RKLBaYT/W3Ac3h3GcdQw==}
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
