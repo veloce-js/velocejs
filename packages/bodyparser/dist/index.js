@@ -1,9 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UrlPattern = exports.getBoundary = exports.parseMultipart = exports.uploadHandler = exports.isDynamicRoute = exports.getHeaders = void 0;
+exports.UrlPattern = exports.getBoundary = exports.parseMultipart = exports.uploadHandler = exports.isDynamicRoute = exports.getHeaders = exports.bodyParser = void 0;
 const tslib_1 = require("tslib");
 // main export interface
+// 0.10.0 change to named export because the esm build screws up!
 const body_parser_1 = require("./body-parser");
+Object.defineProperty(exports, "bodyParser", { enumerable: true, get: function () { return body_parser_1.bodyParser; } });
 // this way the default is bodyparser and if wanted we can named import the others
 exports.default = body_parser_1.bodyParser;
 // sub export
@@ -18,5 +20,5 @@ Object.defineProperty(exports, "getBoundary", { enumerable: true, get: function 
 // 0.3.0 dynamic url
 var url_pattern_1 = require("./url-pattern");
 Object.defineProperty(exports, "UrlPattern", { enumerable: true, get: function () { return url_pattern_1.UrlPattern; } });
-// export all constants 
+// export all constants
 tslib_1.__exportStar(require("./constants"), exports);

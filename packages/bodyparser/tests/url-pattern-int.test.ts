@@ -8,7 +8,7 @@ import {
   HttpRequest
 } from '@velocejs/server/index'
 import fetch from 'node-fetch'
-import bodyParser , { UrlPattern } from '../src'
+import { bodyParser, UrlPattern } from '../src'
 import { URL_PATTERN_OBJ } from '../src'
 // setup
 let app: UwsServer

@@ -7,7 +7,8 @@ import {
   HttpResponse,
   HttpRequest
 } from '@velocejs/server/index'
-import bodyParser, {
+import {
+  bodyParser,
   UrlPattern,
   URL_PATTERN_OBJ,
   QUERY_PARAM

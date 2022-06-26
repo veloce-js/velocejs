@@ -1624,6 +1624,7 @@ export {
   STRIP_UNDERSCORE,
   URL_PATTERN_OBJ,
   UrlPattern,
+  bodyParser,
   src_default as default,
   getBoundary,
   getHeaders,
@@ -1631,4 +1632,3 @@ export {
   parse as parseMultipart,
   uploadHandler
 };
-//# sourceMappingURL=esm.js.map

@@ -1,13 +1,14 @@
 // test server to send back whatever you send it, with a timestamp
+import type {
+  HttpResponse,
+  HttpRequest
+} from '@velocejs/server/index'
+
 import {
   UwsServer,
   jsonWriter
 } from '@velocejs/server'
-import {
-  HttpResponse,
-  HttpRequest
-} from '@velocejs/server/index'
-import bodyParser from '../../src'
+import { bodyParser } from '../../src'
 import { ORG_ROUTE_REF } from '../../src'
 
 const app = new UwsServer()

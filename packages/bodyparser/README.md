@@ -2,8 +2,10 @@
 
 This module is for use with `uWebSocket.js`, not for standard node.js http library.
 
+__(0.10.0) breaking change - it's now named export along with the default exports; the default will get remove in the future release. Please follow the example below__
+
 ```ts
-import bodyParser from '@velocejs/bodyparser'
+import { bodyParser } from '@velocejs/bodyparser'
 import uws from 'uWebsocket.js'
 
 uws.App()
@@ -22,7 +24,7 @@ it will able to produce the result you want.
 ## Example using our @velocejs/server
 
 ```ts
-import bodyParser from '@velocejs/bodyparser'
+import { bodyParser } from '@velocejs/bodyparser'
 
 const app = createApp()
   .get('/*', async (res: HttpResponse, req: HttpRequest) => {
@@ -41,9 +43,7 @@ const app = createApp()
 The `result` is a `UwsRespondBody` type object with this signature:
 
 ```ts
-// BREAKING CHANGE in 0.5.0
-
-type UwsRespondBody = {
+export type UwsRespondBody = {
   url: string
   method: string
   query: string
@@ -85,7 +85,7 @@ Once it got to the server and processed by `bodyParser`:
 
 ```ts
 // server setup etc
-  .post('/setup-user', async (res: HttpResponse, req: HttpRequest): void => {
+app.post('/setup-user', async (res: HttpResponse, req: HttpRequest): void => {
     const result = await bodyParser(res, req, () => console.error(`Server aborted!`))
     // now inside your params you will get the following data
     // THIS IS FAKE CODE!!!! DON'T COPY AND PASTED!!!! //
@@ -117,8 +117,11 @@ so you have to deal with it yourself.
 
 *BREAKING CHANGE in V.0.5.0*
 
-More to come
+You can now pass url like this:
 
+**/first_part_must_be_a_fixed_string/:id(:/optional)**
+
+And the bodyParser will able to work out the items value from the url and put into the `params` result field.
 
 ## Extra export from this module
 

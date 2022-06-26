@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/bodyparser",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "@velocejs/bodyparser all-in-one solution for uWebSocket.js Request / Response",
   "main": "dist/index.js",
   "module": "esm.js",
