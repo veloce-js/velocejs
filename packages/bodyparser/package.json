@@ -1,14 +1,15 @@
 {
   "name": "@velocejs/bodyparser",
   "version": "0.10.0",
-  "description": "@velocejs/bodyparser all-in-one solution for uWebSocket.js Request / Response",
+  "description": "@velocejs/bodyparser all-in-one solution for uWebSocket.js / Velocejs Request / Response",
   "main": "dist/index.js",
   "module": "esm.js",
   "files": [
     "dist",
     "src",
     "index.d.ts",
-    "esm.js"
+    "esm.js",
+    "esm.js.map"
   ],
   "scripts": {
     "test:ava": "ava",
@@ -23,7 +24,7 @@
     "update:version": "node ../../update-devs.js bodyparser",
     "clean:dist": "rimraf ./dist",
     "build": "pnpm clean:dist && pnpm build:tsc && pnpm build:esm && pnpm prepare:types",
-    "build:esm": "esbuild ./src/index.ts --format=esm --platform=node --bundle --outfile=./esm.js",
+    "build:esm": "esbuild ./src/index.ts --format=esm --platform=node --bundle --sourcemap --outfile=./esm.js",
     "prepublishOnly": "pnpm build && pnpm test:nyc",
     "postpublish": "pnpm update:version",
     "patch": "npm version patch",
