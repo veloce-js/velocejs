@@ -4,7 +4,7 @@ exports.FastApi = void 0;
 const tslib_1 = require("tslib");
 // our deps
 const server_1 = require("@velocejs/server");
-const bodyparser_1 = tslib_1.__importStar(require("@velocejs/bodyparser"));
+const bodyparser_1 = require("@velocejs/bodyparser");
 const config_1 = require("@velocejs/config");
 const contract_1 = require("@jsonql/contract");
 const utils_1 = require("@jsonql/utils");
@@ -221,7 +221,7 @@ class FastApi {
     _bodyParser(dynamicRoute) {
         return async (res, req) => {
             const config = await this._getBodyParserConfig(dynamicRoute);
-            return await (0, bodyparser_1.default)(res, req, config);
+            return await (0, bodyparser_1.bodyParser)(res, req, config);
         };
     }
     /** fetch the bodyParser config */

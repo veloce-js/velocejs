@@ -1,6 +1,6 @@
 {
   "name": "@velocejs/fastapi",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "Built on top of @velocejs/server that let you build your API in no time",
   "main": "dist/index.js",
   "files": [
@@ -41,7 +41,7 @@
     "@jsonql/errors": "^0.8.0",
     "@jsonql/utils": "^1.0.0",
     "@jsonql/validators": "^0.10.2",
-    "@velocejs/bodyparser": "workspace:^0.9.0",
+    "@velocejs/bodyparser": "workspace:^0.10.0",
     "@velocejs/config": "workspace:^0.5.2",
     "@velocejs/server": "workspace:^0.9.5",
     "debug": "^4.3.4",

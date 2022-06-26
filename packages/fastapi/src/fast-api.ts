@@ -44,7 +44,8 @@ import {
   WEBSOCKET_ROUTE_NAME,
   DEFAULT_CHARTSET,
 } from '@velocejs/server'
-import bodyParser, {
+import {
+  bodyParser,
   UrlPattern,
   GET_NAME,
   QUERY_PARAM,
