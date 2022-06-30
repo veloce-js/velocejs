@@ -9,7 +9,7 @@ import type {
 } from '../src/types'
 import test from 'ava'
 import { createApp, getPort, shutdownServer, jsonWriter } from '@velocejs/server'
-import bodyParser from '../src'
+import { bodyParser } from '../src'
 
 import fetch from 'node-fetch'
 
@@ -21,7 +21,6 @@ test.before(async () => {
   app.post('/whatever', async (res: HttpResponse, req: HttpRequest) => {
     res.onAborted(() => { console.log('aborted') })
     const result = await bodyParser(res, req)
-    // console.log(result)
     jsonWriter(res)(result)
   })
 
@@ -38,14 +37,19 @@ test.after(() => {
 })
 
 test('Should able to connect to the raw app setup server', async t => {
+  t.plan(2)
   const payload = { whatever: 'whatever' }
-  const res = await fetch(`${url}/whatever`, {
-    method: 'post',
-    body: JSON.stringify(payload),
-    headers: {'Content-Type': 'application/json; chartset=utf8'}
+  return new Promise(resolve => {
+    fetch(`${url}/whatever`, {
+      method: 'post',
+      body: JSON.stringify(payload),
+      headers: {'Content-Type': 'application/json; chartset=utf8'}
+    }).then(res => {
+      t.is(res.status, 200)
+      return res.json()
+    }).then((json: UwsRespondBody) => {
+      t.deepEqual(json.params, payload)
+      resolve()
+    })
   })
-  t.is(res.status, 200)
-  const json = await res.json() as UwsRespondBody
-  // console.log(json)
-  t.deepEqual(json.params, payload)
 })

@@ -2,7 +2,6 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ava/typescript': ^3.0.1
-  '@jsonql/constants': ^0.7.2
   '@types/debug': ^4.1.7
   '@types/fs-extra': ^9.0.13
   '@types/mime-types': ^2.1.1
@@ -27,7 +26,6 @@ dependencies:
 
 devDependencies:
   '@ava/typescript': 3.0.1
-  '@jsonql/constants': 0.7.2
   '@types/debug': 4.1.7
   '@types/fs-extra': 9.0.13
   '@types/mime-types': 2.1.1
@@ -326,10 +324,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.0.6
       '@jridgewell/sourcemap-codec': 1.4.11
-    dev: true
-
-  /@jsonql/constants/0.7.2:
-    resolution: {integrity: sha512-1matJKybfmSIZp8eoSsq7463QHkYymAXZ4OzZKd6evPMT931E6XQbXqHU7F5R9UzsdLIQ4myDM309Tb7i4ceBw==}
     dev: true
 
   /@nodelib/fs.scandir/2.1.5:

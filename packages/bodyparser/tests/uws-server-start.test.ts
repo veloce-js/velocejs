@@ -14,6 +14,7 @@ test.before(() => {
     path: '/*',
     handler: async (res: HttpResponse, req: HttpRequest) => {
       const result = await bodyParser(res, req)
+      // console.log(result)
       jsonWriter(res)(result.queryParams)
     }
   }])
@@ -23,21 +24,21 @@ test.after(() => {
   app.shutdown()
 })
 
-test(`It shouldn't be running if we don't manually call start`, t => {
-
+test.serial(`It shouldn't be running if we don't manually call start`, t => {
   t.false(app.running)
 })
 
-test(`After we call start then it should able to take request`, async (t) => {
-  app.start()
-
-  t.true(app.running)
-
-  const result = await Fetch(`http://localhost:${app.getPortNum()}/thing?value=whatever`)
-  const text = await result.json()
-
-  // console.log(text)
-
-  t.deepEqual(text, {value: 'whatever'})
+test.serial(`After we call start then it should able to take request`, async (t) => {
+  t.plan(2)
+  return new Promise(resolve => {
+    app.start()
+    t.true(app.running)
+    Fetch(`http://localhost:${app.getPortNum()}/thing?value=whatever`)
+      .then(res => res.json())
+      .then(text => {
+        t.deepEqual(text, {value: 'whatever'})
+        resolve()
+      })
+  })
 
 })

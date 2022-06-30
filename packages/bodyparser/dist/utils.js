@@ -29,7 +29,8 @@ exports.toBuffer = toBuffer;
 /* see if its array like name such as data[]
   we just discard whatever is inside, because its pointless to have this stupid name */
 function takeApartName(name) {
-    return (name.indexOf('[') > -1) ? [name.split('[')[0], true]
+    return (name.indexOf('[') > -1)
+        ? [name.split('[')[0], true]
         : [name, false]; // return a tuple
 }
 exports.takeApartName = takeApartName;

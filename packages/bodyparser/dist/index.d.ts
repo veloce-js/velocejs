@@ -1,5 +1,4 @@
 import { bodyParser } from './body-parser';
-export default bodyParser;
 export { bodyParser };
 export { getHeaders, isDynamicRoute } from './utils';
 export { uploadHandler } from './handle-upload';

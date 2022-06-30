@@ -39,8 +39,9 @@ export function toBuffer(data: unknown): Buffer {
 /* see if its array like name such as data[]
   we just discard whatever is inside, because its pointless to have this stupid name */
 export function takeApartName(name: string): Array<string | boolean> {
-  return (name.indexOf('[') > -1) ? [ name.split('[')[0], true ]
-                                  : [ name, false ] // return a tuple
+  return (name.indexOf('[') > -1)
+    ? [ name.split('[')[0], true ]
+    : [ name, false ] // return a tuple
 }
 
 /* check if the object is empty for the init run */

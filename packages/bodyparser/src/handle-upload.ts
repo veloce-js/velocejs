@@ -1,5 +1,5 @@
 // return the upload Data
-import { HttpResponse } from './types'
+import type { HttpResponse, AnyType } from './types'
 import debug from 'debug'
 const debugFn = debug('velocejs:server:body-parser:handle-upload')
 
@@ -20,7 +20,7 @@ export function uploadHandler(
 // we take the onData callback further for re-use in the body parser method
 export function onDataHandler(
   res: HttpResponse,
-  bufferHandler: (b: Buffer | any) => void
+  bufferHandler: (b: Buffer | AnyType) => void
 ) {
   let data: Buffer
   res.onData((chunk: ArrayBuffer, isLast: boolean) => {

@@ -1,8 +1,6 @@
 // main export interface
 // 0.10.0 change to named export because the esm build screws up!
 import { bodyParser } from './body-parser'
-// this way the default is bodyparser and if wanted we can named import the others
-export default bodyParser
 // also export a named export until we fix all the other libs
 export { bodyParser }
 // sub export

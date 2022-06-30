@@ -1,5 +1,5 @@
 // specify your types here
-
+export type AnyType = any // cheating
 // for parse-multipart
 export type Part = {
   header: string
@@ -56,7 +56,7 @@ export type UwsStringPairObj = {
 }
 
 export type UwsStringAnyObj = {
-  [key: string]: any
+  [key: string]: AnyType
 }
 
 // Typing the result object
@@ -87,6 +87,6 @@ export type UwsBodyParserMixEntry = {
 export type UwsBodyParserOptions = {
   stripUnderscoreParam?: boolean
   _originalRouteDef?: string // this is private
-  _urlPatternObj?: any
+  _urlPatternObj?: AnyType
   // [key: string]: any
 }

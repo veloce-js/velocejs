@@ -6,8 +6,6 @@ const tslib_1 = require("tslib");
 // 0.10.0 change to named export because the esm build screws up!
 const body_parser_1 = require("./body-parser");
 Object.defineProperty(exports, "bodyParser", { enumerable: true, get: function () { return body_parser_1.bodyParser; } });
-// this way the default is bodyparser and if wanted we can named import the others
-exports.default = body_parser_1.bodyParser;
 // sub export
 var utils_1 = require("./utils");
 Object.defineProperty(exports, "getHeaders", { enumerable: true, get: function () { return utils_1.getHeaders; } });

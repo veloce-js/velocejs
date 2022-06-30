@@ -7,6 +7,7 @@ import type {
   UwsBodyParserMixEntry,
   UwsBodyParserOptions,
   UwsStringAnyObj,
+  AnyType
 } from './types'
 import {
   CONTENT_TYPE,
@@ -147,7 +148,7 @@ function processFileArray(
      })
      // from https://stackoverflow.com/questions/57379778/typescript-type-for-reduce
      // @TODO the output type still problematic
-     .reduce<Record<string, UwsBodyParserMixEntry>>((a , b): any => {
+     .reduce<Record<string, UwsBodyParserMixEntry>>((a , b): AnyType => {
        switch (true) {
         case (isEmptyObj(a)):
           return { [b.name]: b.value } // init

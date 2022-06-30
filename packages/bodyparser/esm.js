@@ -1595,9 +1595,6 @@ function processTextArray(params) {
 function processParams(params) {
   return Object.assign(processFileArray(params), processTextArray(params));
 }
-
-// src/index.ts
-var src_default = bodyParser;
 export {
   BOUNDARY,
   CHARSET,
@@ -1625,7 +1622,6 @@ export {
   URL_PATTERN_OBJ,
   UrlPattern,
   bodyParser,
-  src_default as default,
   getBoundary,
   getHeaders,
   isDynamicRoute,

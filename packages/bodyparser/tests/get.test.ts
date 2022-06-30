@@ -2,7 +2,8 @@
 import test from 'ava'
 import fetch from 'node-fetch'
 import app from './fixtures/server'
-import { CONTENT_TYPE } from '@jsonql/constants'
+
+const CONTENT_TYPE = 'application/json; charset=utf8'
 let url = 'http://localhost:'
 
 test.before(() => {

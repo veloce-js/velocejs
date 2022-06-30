@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UrlPattern = void 0;
 const tslib_1 = require("tslib");
+// import type { UrlPattern } from 'url-pattern'
 const url_pattern_1 = tslib_1.__importDefault(require("url-pattern"));
 const utils_1 = require("./utils");
 const constants_1 = require("./constants");

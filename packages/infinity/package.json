@@ -1,7 +1,7 @@
 {
-  "name": "@velocejs/fastapi",
-  "version": "0.9.8",
-  "description": "An ADI (Application Development Interface) built on top of @velocejs/server that let you build your e2e application in no time",
+  "name": "@velocejs/infinity",
+  "version": "0.0.1",
+  "description": "",
   "main": "dist/index.js",
   "files": [
     "dist",

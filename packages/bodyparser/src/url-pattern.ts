@@ -1,5 +1,6 @@
 // using the url-pattern lib to match against the dynamic url
 import type { UwsStringPairObj } from '../index'
+// import type { UrlPattern } from 'url-pattern'
 import UrlPatternLib from 'url-pattern'
 import { isDynamicRoute } from './utils'
 import { DYNAMIC_ROUTE_PATTERN } from './constants'
