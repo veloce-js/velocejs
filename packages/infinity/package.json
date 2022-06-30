@@ -36,18 +36,6 @@
   "author": "Joel Chu <joelchu@foxmail.com>",
   "license": "ISC",
   "dependencies": {
-    "@jsonql/ast": "^0.8.6",
-    "@jsonql/contract": "^0.12.2",
-    "@jsonql/errors": "^0.8.0",
-    "@jsonql/utils": "^1.0.0",
-    "@jsonql/validators": "^0.10.2",
-    "@velocejs/bodyparser": "workspace:^0.10.0",
-    "@velocejs/config": "workspace:^0.5.2",
-    "@velocejs/server": "workspace:^0.9.5",
-    "debug": "^4.3.4",
-    "fs-extra": "^10.1.0",
-    "mime-types": "^2.1.35",
-    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
